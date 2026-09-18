@@ -406,11 +406,14 @@
   .method .logos a:hover,.method .logos a:focus-visible{color:var(--ink);border-color:var(--rule)}
   .method .logos svg{display:block;width:100%;max-width:148px;height:44px;fill:currentColor}
   .method .logos span{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .method .logos a:last-child:nth-child(3n+1){grid-column:1/-1}
   .method .lnote{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:10px;max-width:none}
   .method .foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.6}
   @media (max-width:880px){
     .method{padding:24px 18px 100px}
     .method .logos{grid-template-columns:repeat(2,1fr)}
+    .method .logos a:last-child:nth-child(3n+1){grid-column:auto}
+    .method .logos a:last-child:nth-child(2n+1){grid-column:1/-1}
     .method .spec{grid-template-columns:1fr}
     .method .spec dt{padding-bottom:2px;border-top:1px solid var(--rule-soft)}
     .method .spec dd{border-top:0;padding-top:4px}
@@ -1930,15 +1933,16 @@ function renderMethod(){
       Group, published via IATI. Map data © OpenStreetMap contributors, ODbL. Basemap by Natural Earth,
       public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
-    <div class="logos" aria-label="Data sources">
+    <div class="logos" aria-label="Data sources and publisher">
       ${logoTile("global-energy-monitor", "https://globalenergymonitor.org/", "Global Energy Monitor", "Power assets")}
       ${logoTile("african-development-bank", "https://www.afdb.org/", "African Development Bank Group", "Finance")}
       ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
       ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
       ${logoTile("natural-earth", "https://www.naturalearthdata.com/", "Natural Earth", "Basemap")}${PAGES ? `
       ${logoTile("eox", "https://s2maps.eu/", "EOX IT Services, Sentinel-2 cloudless", "Satellite imagery")}` : ""}
+      ${logoTile("code-for-africa", "https://codeforafrica.org/", "Code for Africa", "Publisher")}
     </div>
-    <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data.</p>
+    <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data and its publisher.</p>
     <p class="foot">
       Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
       ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works ·

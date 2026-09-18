@@ -1,6 +1,6 @@
 # brand/sources/
 
-Monochrome marks of the datasets behind the map, shown in a grid under
+Monochrome marks of the datasets behind the map and of its publisher, shown in a grid under
 **Sources and reuse → Attribution** in the Methodology. `shared.py` reads every
 `*.svg` here and inlines them as the `SOURCE_LOGOS` object where a template
 carries the `/*__SOURCE_LOGOS__*/{}` marker (only `map.template.html` does);
@@ -18,11 +18,12 @@ themes. Nothing else was redrawn.
 | `openstreetmap.svg` | OpenStreetMap | OSM wiki, `Logo_simple.svg` (the official one-colour silhouette) | CC BY-SA 2.0; OSMF trademark policy |
 | `natural-earth.svg` | Natural Earth | `naturalearthdata.com`, site header (`nev_logo.png`, raster) | Public domain project |
 | `eox.svg` | EOX IT Services (Sentinel-2 cloudless) | `eox.at`, site header (`EOX_Logo.svg`) | © EOX IT Services GmbH, trademark. Shown only in the site build, with the Satellite view |
+| `code-for-africa.svg` | Code for Africa (publisher of this project) | Supplied by the author as a PNG with transparent background; wrapped like the Natural Earth mark | © Code for Africa, trademark |
 
-The Natural Earth mark exists only as a PNG, so `natural-earth.svg` wraps it:
-the raster's alpha channel (white on transparent, base64 inside the file) is
-an SVG `<mask>` over a `currentColor` rectangle. Replace it with a vector if
-the project ever publishes one.
+The Natural Earth and Code for Africa marks exist only as PNGs, so their SVGs
+wrap them: the raster's alpha channel (white on transparent, base64 inside the file) is
+an SVG `<mask>` over a `currentColor` rectangle. Replace them with vectors when
+available.
 
 Fetched 18 Sep 2026. The logos are used solely to credit the data sources and
 imply no endorsement; if an owner objects, delete the file and the tile
