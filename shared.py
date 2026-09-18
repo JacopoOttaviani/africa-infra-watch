@@ -463,7 +463,8 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {head_part.strip()}
-{jsonld}{extra_head}</head>
+{jsonld}{extra_head}<script data-goatcounter="https://jacopo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
 <body>
 {fallback}{body_part.strip()}
 </body>
