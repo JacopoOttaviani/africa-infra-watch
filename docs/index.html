@@ -162,11 +162,32 @@
   .notes .src .sd b{color:var(--ink);font-weight:600}
   .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
 
+  /* ---------- support button (always visible) ---------- */
+  .coffee{position:fixed;right:12px;top:12px;z-index:8;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
+  .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
+  .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .coffee .cup{transform-box:fill-box;transform-origin:50% 100%}
+  .coffee .steam{opacity:0;transition:opacity .2s}
+  .coffee:hover,.coffee:focus-visible{background:#FFE733;transform:translateY(-2px) rotate(-2deg) scale(1.05);box-shadow:0 8px 22px -8px rgba(217,185,0,.85),0 2px 4px rgba(22,33,28,.12)}
+  .coffee:hover::before,.coffee:focus-visible::before{animation:cshine .75s ease-out forwards}
+  .coffee:hover .cup,.coffee:focus-visible .cup{animation:cwiggle .55s ease}
+  .coffee:hover .steam,.coffee:focus-visible .steam{opacity:1;animation:csteam 1.1s ease-in-out infinite}
+  .coffee:active{transform:translateY(0) scale(.98)}
+  @keyframes cshine{to{transform:translateX(130%)}}
+  @keyframes cwiggle{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}65%{transform:rotate(9deg)}}
+  @keyframes csteam{0%{transform:translateY(1px);opacity:0}35%{opacity:1}100%{transform:translateY(-3px);opacity:0}}
+  @media (max-width:600px){.coffee{padding:0 7px;gap:0}.coffee span{display:none}}
+  @media (prefers-reduced-motion:reduce){.coffee,.coffee::before,.coffee .cup,.coffee .steam{animation:none!important;transition:none!important}.coffee:hover{transform:none}}
+  .byline{font-size:11.5px;color:var(--ink-3);line-height:1.5}
+  .byline a{display:inline-flex;align-items:center;gap:4px;color:var(--ink-2);font-weight:600;text-decoration:none;border-bottom:1px solid var(--rule)}
+  .byline a:hover{color:var(--accent);border-color:var(--accent)}
+  .byline a svg{width:12px;height:12px;fill:currentColor}
+
   /* ---------- HUD ---------- */
   .hud{position:absolute;z-index:3;display:flex;gap:6px;align-items:flex-start;pointer-events:none}
   .hud > *{pointer-events:auto}
-  .hud-tl{left:12px;top:12px;flex-wrap:wrap;max-width:calc(100% - 120px)}
-  .hud-tr{right:12px;top:12px;flex-direction:column}
+  .hud-tl{left:12px;top:12px;flex-wrap:wrap;max-width:calc(100% - 180px)}
+  .hud-tr{right:12px;top:54px;flex-direction:column}
   .pill{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:5px 9px;font-size:11.5px;font-weight:600;box-shadow:var(--shadow);display:flex;gap:7px;align-items:center;white-space:nowrap}
   .pill .m{font-size:11.5px;color:var(--ink)}
   .pill.scope{color:var(--accent-ink)}
@@ -233,8 +254,9 @@
     .legend .col.sizes{display:none}
     .detail{right:12px;left:12px;width:auto;bottom:12px;max-height:60%}
     .credit{max-width:230px;text-align:right}
-    .hud-tl{max-width:calc(100% - 60px)}
+    .hud-tl{max-width:calc(100% - 180px)}
   }
+  @media (max-width:600px){.hud-tl{max-width:calc(100% - 60px)}.mtop{padding-right:56px}}
   /* ---------- site-only chrome (GitHub Pages build) ---------- */
   .pages-only{display:none}
   html[data-host="pages"] .pages-only{display:inline-flex}
@@ -277,7 +299,7 @@
   #method{position:absolute;inset:0;overflow-y:auto;background:var(--paper);display:none;scroll-behavior:smooth;scrollbar-width:thin}
   body[data-tab="method"] #method{display:block}
   @media (prefers-reduced-motion:reduce){#method{scroll-behavior:auto}}
-  .mtop{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 24px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule-soft)}
+  .mtop{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 176px 10px 24px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule-soft)}
   .mtop .back{display:inline-flex;gap:6px;align-items:center;white-space:nowrap;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink);box-shadow:var(--shadow)}
   .mtop .back svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
   .mtop .where{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -452,6 +474,7 @@ async function loadPayload(){
       <span>Three sources that share no identifier, one status vocabulary, and limits worth carrying into any conclusion.</span>
       <button id="tomethod">Read the methodology →</button>
       <a class="pages-only" href="dashboard.html">Open the dashboard view →</a>
+      <span class="byline">A project by <a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
     </div>
 
     <div class="panel method-only" style="border-bottom:0">
@@ -508,6 +531,10 @@ async function loadPayload(){
     <div id="toast" role="status"></div>
     <div class="scrim" id="scrim"></div>
   </main>
+<a class="coffee" href="https://ko-fi.com/jacopoottaviani" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
+  <span>Buy me a coffee</span>
+</a>
 </div>
 
 <script type="module">
@@ -548,7 +575,9 @@ const my = lat => { const s = Math.sin(lat*D2R); return 0.5 - Math.log((1+s)/(1-
 const invLon = x => x*360-180;
 const invLat = y => Math.atan(Math.sinh(Math.PI*(1-2*y)))/D2R;
 
-const ZMIN = 2.2, ZMAX = 12.6;
+/* ZMIN is a floor set per viewport (see setZoomFloor): a touch past the
+   whole continent, never the whole world. */
+let ZMIN = 2.2; const ZMAX = 12.6;
 const view = {cx:mx(17), cy:my(2), z:3.6};
 let W=0, H=0, S=256, OX=0, OY=0;
 function setScale(){ S = 256*Math.pow(2,view.z); OX = W/2 - view.cx*S; OY = H/2 - view.cy*S; }
@@ -583,7 +612,7 @@ const ADMIN1 = BM.admin1.map(a => ({a3:a.a3, rings:a.r.map(prepRing)}));
 const LABELS = BM.labels.map(l => ({...l, X:mx(l.x), Y:my(l.y)}));
 const PLACES = BM.places.map(p => ({...p, X:mx(p.x), Y:my(p.y)}))
   .sort((a,b) => (b.cap-a.cap) || (a.z-b.z) || (b.pop-a.pop));
-const AFRICA_BOX = unionBox(AFRICA.filter(c=>c.iso!=="CV").map(c=>({b:c.b})));
+const HOME_BOX = unionBox(AFRICA.filter(c=>!["CV","MU","SC"].includes(c.iso)).map(c=>({b:c.b})));
 
 /* ================= records ================= */
 function inflate(layer, block){
@@ -651,14 +680,30 @@ function fit(){
   W = Math.max(1, Math.round(rect.width)); H = Math.max(1, Math.round(rect.height));
   cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
   ctx.setTransform(dpr,0,0,dpr,0,0);
+  setZoomFloor();
   setScale();
 }
-function fitBounds(b, pad=40, zmax=ZMAX){
+/* zoom at which box b fills the viewport minus padding P */
+function fitZoom(b, P){
   const dx = b[2]-b[0], dy = b[3]-b[1];
-  const z = Math.log2(Math.min((W-2*pad)/(dx*256), (H-2*pad)/(dy*256)));
-  return {cx:(b[0]+b[2])/2, cy:(b[1]+b[3])/2, z:Math.max(ZMIN, Math.min(zmax, z))};
+  return Math.log2(Math.min((W-P.l-P.r)/(dx*256), (H-P.t-P.b)/(dy*256)));
 }
-function homeView(){ return fitBounds(AFRICA_BOX, W<600?12:36, 6); }
+function fitBounds(b, pad=40, zmax=ZMAX){
+  const P = typeof pad==="number" ? {t:pad, r:pad, b:pad, l:pad} : pad;
+  const z = Math.max(ZMIN, Math.min(zmax, fitZoom(b, P)));
+  const S1 = 256*Math.pow(2, z);
+  /* centre the box in the padded area, not the raw viewport */
+  return {cx:(b[0]+b[2])/2 - (P.l-P.r)/(2*S1), cy:(b[1]+b[3])/2 - (P.t-P.b)/(2*S1), z};
+}
+/* Whole continent, as large as the viewport allows, clear of the toolbar row
+   at the top and the legend/scale row at the bottom. */
+const homePad = () => W < 600 ? {t:58, r:12, b:22, l:12} : {t:64, r:30, b:44, l:30};
+function homeView(){ return fitBounds(HOME_BOX, homePad(), 6.5); }
+/* You can pull back a little past the home view, and no further. */
+function setZoomFloor(){
+  ZMIN = Math.max(1.8, fitZoom(HOME_BOX, homePad()) - 0.3);
+  if(view.z < ZMIN) view.z = ZMIN;
+}
 
 function ringVisible(b){
   return !(b[2]*S+OX < -30 || b[0]*S+OX > W+30 || b[3]*S+OY < -30 || b[1]*S+OY > H+30);
@@ -1669,7 +1714,8 @@ function renderMethod(){
     <p class="foot">
       Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
       ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works ·
-      ${allCts} countries and territories · africa-infra-watch
+      ${allCts} countries and territories · africa-infra-watch · a project by
+      <a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">Jacopo Ottaviani</a>
     </p>
   </section>`;
 

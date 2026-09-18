@@ -32,6 +32,9 @@ SDR_NOTE = "1 SDR = 1.37 USD (IMF, Sep 2026)"
 # Where the site lives. Canonical and social-preview URLs point here; the pages
 # themselves use only relative links, so they also work at any other address.
 SITE_URL = os.environ.get("AIW_SITE_URL", "https://jacopoottaviani.com/africa-infra-watch/")
+# Personal links carried by both pages (support button, byline). Change here, rebuild.
+COFFEE_URL = os.environ.get("AIW_COFFEE_URL", "https://ko-fi.com/jacopoottaviani")
+AUTHOR_URL = os.environ.get("AIW_AUTHOR_URL", "https://www.linkedin.com/in/jacopo-ottaviani/")
 
 # The repository the site is deployed from, linked from the Methodology tab
 # when set (e.g. "https://github.com/<user>/africa-infra-watch"). Optional.
@@ -118,7 +121,9 @@ def brand_assets(page):
         if marker not in page:
             raise SystemExit(f"template missing the {marker} marker")
     return (page.replace("<!--__FAVICON__-->", f'<link rel="icon" href="{FAVICON}">')
-                .replace("<!--__LOGO__-->", LOGO_MARK))
+                .replace("<!--__LOGO__-->", LOGO_MARK)
+                .replace("__COFFEE_URL__", COFFEE_URL)
+                .replace("__AUTHOR_URL__", AUTHOR_URL))
 
 
 def wrap_document(fragment, *, title, description, path="", host="pages", extra_head=""):
