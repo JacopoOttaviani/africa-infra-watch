@@ -20,7 +20,7 @@ diamonds (AfDB and World Bank projects, sized by commitment), thin lines (constr
 OpenStreetMap), haloed lines (oil and gas pipeline routes) and lines ending in
 dots (submarine cables, dots at their African landing points). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
-**Cluster markers** toggle (`cl=1` in the hash) regroups the records that pass
+**Cluster markers** toggle (on by default; `cl=0` in the hash turns it off) regroups the records that pass
 the filters into donuts, sized by count and sliced by status (pipelines and
 submarine cables stay drawn as lines), using
 Leaflet.markercluster over the same projection (libraries in `vendor/`, inlined

@@ -168,6 +168,8 @@
   .rec .s i{font-style:normal;color:var(--ink-3)}
   .empty{color:var(--ink-3);font-size:12.5px;padding:8px 0}
   .more{margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+  .showmore{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;margin-top:8px;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink)}
+  .showmore:hover{background:var(--surface-3)}
 
   .notes{padding:14px 20px 22px;font-size:12px;color:var(--ink-2);line-height:1.5;margin-top:auto}
   .notes summary{cursor:pointer;font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center}
@@ -511,7 +513,10 @@ async function loadPayload(){
   <aside class="rail" id="rail" aria-label="Filters and records">
     <div class="brand">
       <div class="row">
-        <div class="titlerow"><a class="home" href="index.html"><svg class="mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1em" height="1em">
+        <span class="kicker">Geopolitics of Africa</span>
+        <button class="close" id="railclose" aria-label="Close filters">×</button>
+      </div>
+      <div class="titlerow"><a class="home" href="index.html"><svg class="mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1em" height="1em">
 
 <defs>
   <mask id="aiw-cut">
@@ -525,8 +530,6 @@ async function loadPayload(){
 </defs>
 <path d="M411 1 L416 3 L420 6 L421 13 L421 21 L418 32 L424 44 L438 55 L459 67 L489 79 L512 87 L528 92 L539 94 L542 92 L545 89 L548 85 L549 81 L550 77 L552 73 L554 69 L558 67 L563 65 L572 65 L587 67 L607 72 L633 79 L653 83 L670 86 L682 86 L689 83 L698 82 L707 81 L718 81 L729 82 L738 85 L745 88 L750 93 L752 99 L753 105 L752 111 L751 117 L749 122 L746 126 L743 130 L740 131 L737 132 L737 136 L740 142 L745 153 L753 166 L759 176 L763 184 L765 190 L764 193 L765 196 L767 199 L771 203 L776 207 L780 213 L783 221 L786 231 L788 242 L791 253 L795 263 L800 273 L806 283 L814 292 L824 303 L836 314 L849 326 L859 335 L865 343 L868 348 L867 352 L868 355 L871 359 L875 363 L881 367 L892 369 L906 368 L924 366 L947 361 L961 363 L968 372 L967 387 L958 410 L944 434 L925 459 L901 485 L872 513 L850 535 L833 553 L823 566 L819 574 L816 583 L814 593 L813 604 L814 617 L815 628 L818 638 L821 647 L825 655 L829 665 L831 677 L832 692 L831 709 L826 725 L816 741 L802 756 L782 771 L769 785 L760 799 L758 813 L761 827 L760 839 L756 849 L749 858 L739 865 L730 872 L725 881 L721 890 L720 901 L716 912 L709 924 L699 936 L685 950 L673 961 L662 970 L651 977 L642 982 L632 985 L622 987 L611 988 L600 988 L589 989 L578 990 L568 993 L558 996 L550 999 L544 1000 L539 999 L536 998 L534 995 L531 992 L528 987 L524 981 L522 975 L521 970 L521 966 L522 962 L520 956 L515 946 L507 933 L497 918 L489 902 L482 885 L477 868 L473 851 L469 834 L463 819 L456 804 L447 790 L441 776 L437 763 L436 750 L437 737 L440 724 L443 712 L448 700 L453 688 L456 674 L455 658 L452 640 L446 620 L438 601 L430 584 L420 568 L409 554 L402 540 L397 524 L396 508 L399 492 L399 478 L399 468 L397 462 L393 458 L388 456 L382 455 L375 455 L366 456 L358 455 L351 453 L344 448 L339 441 L332 436 L324 433 L314 432 L303 433 L292 435 L281 438 L270 441 L259 446 L249 449 L238 450 L227 450 L217 449 L206 448 L196 449 L186 450 L175 453 L164 452 L150 447 L134 439 L117 427 L102 416 L90 405 L81 394 L75 383 L69 374 L62 367 L56 360 L50 356 L44 350 L39 343 L35 335 L31 326 L30 317 L31 308 L34 299 L38 290 L41 279 L42 267 L41 254 L39 240 L37 227 L38 216 L40 207 L43 199 L48 191 L55 180 L64 168 L74 154 L85 142 L96 131 L107 122 L119 114 L129 106 L135 98 L139 89 L140 79 L143 71 L147 64 L154 58 L162 52 L169 47 L174 42 L179 36 L183 30 L189 26 L197 24 L208 24 L221 26 L234 27 L247 25 L260 22 L272 17 L289 13 L309 9 L333 6 L361 3 L382 1 L396 0 L403 0 L403 0 L404 0 L407 0Z M960 703 L964 716 L967 725 L969 732 L969 736 L968 737 L967 738 L966 738 L964 738 L963 737 L962 737 L961 738 L961 741 L961 744 L959 754 L955 770 L948 791 L939 819 L931 841 L923 857 L916 866 L910 869 L904 871 L899 871 L894 870 L889 868 L885 864 L881 859 L878 852 L875 844 L874 835 L875 825 L877 816 L881 805 L884 796 L885 787 L885 778 L883 771 L882 764 L882 758 L883 753 L885 749 L888 746 L892 743 L897 741 L903 739 L909 737 L915 734 L921 730 L926 726 L931 721 L936 714 L941 707 L946 698 L949 692 L952 687 L953 685 L953 685 L954 688 L956 694Z" fill="currentColor" mask="url(#aiw-cut)" fill-rule="evenodd"/>
 </svg><h1>Africa Infrastructure Map</h1></a></div>
-        <button class="close" id="railclose" aria-label="Close filters">×</button>
-      </div>
       <p class="lede" id="lede"></p>
       <p class="asof" id="asof"></p>
       <div class="tabs" role="tablist" aria-label="View">
@@ -567,6 +570,7 @@ async function loadPayload(){
     <div class="panel map-only">
       <h3>Largest in view <span class="hint" id="listhint"></span></h3>
       <div class="list" id="list"></div>
+      <button class="showmore" id="listtoggle" hidden aria-controls="list" aria-expanded="false"></button>
       <div class="more" id="listmore"></div>
     </div>
 
@@ -1376,7 +1380,7 @@ function renderLegend(){
       <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(COL.ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
       <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = not yet built</span></div>
-      ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix · routes stay lines</span></div>` : ""}
+      ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
     </div>`;
 }
 
@@ -1388,6 +1392,7 @@ function inView(){
   for(const r of VIS_LINES){ const b=r.b; if(!(b[2]<x0||b[0]>x1||b[3]<y0||b[1]>y1)) out.push(r); }
   return out;
 }
+let listExpanded = false;
 function renderView(){
   const v = inView();
   const A = v.filter(r=>r.layer==="assets"), F = v.filter(r=>r.layer==="finance"), G = v.filter(r=>r.layer==="ground");
@@ -1412,10 +1417,15 @@ function renderView(){
     <div class="stat"><span class="glyph">${glyph.cables(COL.approved)}</span>
       <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>African landings</span></span></span></div>`;
 
-  const CAP = 60;
+  const CAP = 60, FIRST = 10;
   const ranked = v.filter(r=>r.size!=null).sort((a,b)=>(b.size/P95[b.layer])-(a.size/P95[a.layer]));
-  const show = ranked.slice(0,CAP);
+  const avail = ranked.slice(0,CAP);
+  const show = listExpanded ? avail : avail.slice(0,FIRST);
   el("listhint").textContent = show.length ? `${fmt(show.length)} of ${fmt(v.length)}` : "";
+  const tog = el("listtoggle");
+  tog.hidden = avail.length <= FIRST;
+  tog.textContent = listExpanded ? "Show less ↑" : `Show more ↓ (${fmt(avail.length-FIRST)})`;
+  tog.setAttribute("aria-expanded", String(listExpanded));
   el("list").innerHTML = show.map((r,i) => `
     <button class="rec${S_.picked===r?" picked":""}" data-i="${i}" title="${esc(r.name)}">
       <span class="g">${glyphStatus(r.layer,r.status,r.lender)}</span>
@@ -1426,6 +1436,8 @@ function renderView(){
     b.onclick = () => { pick(show[+b.dataset.i], true); });
   el("listmore").textContent = ranked.length>CAP ? `${fmt(ranked.length-CAP)} more in view · zoom in to see them ranked` : "";
 }
+
+el("listtoggle").onclick = () => { listExpanded = !listExpanded; renderView(); };
 
 /* ================= detail card ================= */
 function pick(r, fly){
@@ -1852,7 +1864,7 @@ function writeHash(){
     if(S_.sector) parts.push("k="+S_.sector);
     if(S_.lender) parts.push("ln="+S_.lender);
     if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
-    if(S_.cluster !== MOBILE) parts.push("cl="+(S_.cluster?1:0));   /* only when it departs from the device default */
+    if(!S_.cluster) parts.push("cl=0");   /* clustering is the default; only its absence is worth recording */
     if(S_.sat) parts.push("sat=1");
     if(document.body.dataset.tab==="method") parts.push("t=m");
     history.replaceState(null, "", "#"+parts.join("&"));
@@ -1878,10 +1890,9 @@ function readHash(){
   }
   return ok;
 }
-/* Phones start clustered: 9,000 marks on a small screen read as noise,
+/* The map starts clustered on every screen: 9,000 marks read as noise,
    donuts read as a map. The hash overrides either way (cl=1 / cl=0). */
-const MOBILE = matchMedia("(max-width:880px)").matches;
-let wantTab = "map", wantCluster = MOBILE, wantSat = false;
+let wantTab = "map", wantCluster = true, wantSat = false;
 
 /* ================= methodology ================= */
 function setTab(t, write=true){
@@ -2258,7 +2269,7 @@ function renderMethod(){
     </p>
     <h3>Clusters</h3>
     <p>
-      <strong>Cluster markers</strong>, in the toolbar, groups records that would overlap at the
+      <strong>Cluster markers</strong>, in the toolbar and on by default, groups records that would overlap at the
       current zoom into donuts. The number is how many records the donut holds; the slices are their
       status mix, in the status colours. Click a donut to zoom into it. Records that share one
       location, such as AfDB projects placed at a country centroid, fan out around the donut at the
