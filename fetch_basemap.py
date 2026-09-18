@@ -3,17 +3,20 @@
 Build the vector basemap for the interactive map from Natural Earth 1:10m.
 
 Downloads (once, into a cache dir) the Natural Earth GeoJSON mirrors kept in
-the nvkelso/natural-earth-vector repository, clips them to an Africa window
-and writes a single compact file:
+the nvkelso/natural-earth-vector repository and writes a single compact file:
 
     data/africa_basemap_10m.json
 
 Layers kept, and why:
-  countries   Africa in full; Europe / Middle East within the window as grey
-              context so the Mediterranean and Red Sea read as seas, not edges
+  countries   the whole world. Africa in full detail; every other country as
+              grey context, simplified harder, so wherever the map is panned
+              there is land under it and a cable to India or a pipeline into
+              Spain ends on a coast, not in open sea
   admin1      first-level subdivisions, Africa only, for orientation when zoomed in
-  lakes       the Rift lakes, Chad, Volta, Nasser, Kariba …
-  rivers      Nile, Congo, Niger, Zambezi, Orange … by Natural Earth scalerank
+  lakes       the Rift lakes, Chad, Volta, Nasser, Kariba … in full; the large
+              lakes of the rest of the world coarsely
+  rivers      Nile, Congo, Niger, Zambezi, Orange … by Natural Earth scalerank;
+              the rest of the world's major rivers coarsely
   places      capitals and cities with Natural Earth's own min_zoom threshold
   labels      one label anchor per country (Natural Earth LABEL_X/Y, MIN_LABEL)
 
@@ -43,9 +46,15 @@ FILES = {
     "places": "ne_10m_populated_places_simple.geojson",
 }
 
-# Map window: the continent plus enough margin that the Mediterranean, the
-# Arabian peninsula and the Mascarene islands give the eye something to hold.
+# Detail window: the continent plus enough margin that the Mediterranean, the
+# Arabian peninsula and the Mascarene islands are drawn with the same care.
+# Water inside it is kept at full detail; outside, only the large features,
+# coarsely. Land is kept everywhere.
 WIN = (-27.0, -41.0, 66.0, 43.0)  # lon0, lat0, lon1, lat1
+
+# The whole world in Web Mercator. Antarctica runs to the pole, which the
+# projection cannot place, so land is clipped at the usual 85° parallels.
+WORLD = (-180.0, -85.0, 180.0, 85.0)
 
 # Natural Earth codes Somaliland "-99" and Western Sahara "EH". Keep both as
 # drawn; the page labels them plainly rather than hiding the boundary source's
@@ -186,17 +195,21 @@ def build_countries(feats):
         rings_out = []
         for poly in polys(f["geometry"]):
             outer = poly[0]
-            if not touches(outer, WIN):
-                continue
+            # near = context land inside the detail window (Europe, the
+            # Middle East), drawn a little finer than the far side of the world
+            near = is_af or touches(outer, WIN)
             new_poly = []
             for j, ring in enumerate(poly):
-                r = ring if is_af else clip_ring(ring, WIN)
+                r = ring if is_af else clip_ring(ring, WORLD)
                 if len(r) < 4:
                     continue
-                r = rnd(dp(r, 0.0025 if is_af else 0.01))
-                if len(r) >= 4 and (j == 0 or ring_area(r) > 0.0005):
+                # tolerance and decimals go together: 0.03° needs no more
+                # than two decimals (about 1 km) to hold what is left
+                r = (rnd(dp(r, 0.0025)) if is_af else
+                     rnd(dp(r, 0.01), 3) if near else rnd(dp(r, 0.03), 2))
+                if len(r) >= 4 and (j == 0 or ring_area(r) > (0.0005 if near else 0.02)):
                     new_poly.append(r)
-            if new_poly and (is_af or ring_area(new_poly[0]) > 0.02):
+            if new_poly and (is_af or ring_area(new_poly[0]) > (0.02 if near else 0.1)):
                 rings_out.append(new_poly)
         if not rings_out:
             continue
@@ -238,9 +251,10 @@ def build_lakes(feats):
     for f in feats:
         p = f["properties"]
         for poly in polys(f["geometry"]):
-            if not touches(poly[0], WIN):
-                continue
-            rings = [rnd(dp(r, 0.003)) for r in poly]
+            near = touches(poly[0], WIN)
+            if not near and (ring_area(poly[0]) < 0.3 or p.get("scalerank", 9) > 3):
+                continue   # far away: only the big ones (Baikal, the Great Lakes …)
+            rings = [rnd(dp(r, 0.003)) if near else rnd(dp(r, 0.03), 2) for r in poly]
             rings = [r for r in rings if len(r) >= 4]
             if rings:
                 out.append({"n": p.get("name_en") or p.get("name"),
@@ -253,19 +267,15 @@ def build_rivers(feats):
     for f in feats:
         p = f["properties"]
         for ln in lines(f["geometry"]):
-            if not touches(ln, WIN):
-                continue
-            pts = rnd(dp(clip_line(ln), 0.004))
+            near = touches(ln, WIN)
+            if not near and p.get("scalerank", 9) > 4:
+                continue   # far away: only the great rivers
+            pts = rnd(dp(ln, 0.004)) if near else rnd(dp(ln, 0.04), 2)
             if len(pts) >= 2:
                 out.append({"n": p.get("name_en") or p.get("name"),
                             "s": p.get("scalerank", 9), "z": p.get("min_zoom", 6),
                             "c": pts})
     return out
-
-
-def clip_line(ln):
-    x0, y0, x1, y1 = WIN
-    return [p for p in ln if x0 <= p[0] <= x1 and y0 <= p[1] <= y1]
 
 
 def build_places(feats, africa):
@@ -286,7 +296,7 @@ def build_places(feats, africa):
 def main():
     print("countries …")
     countries, labels, africa = build_countries(fetch("countries"))
-    print(f"   {len(countries)} polygons, {sum(c['af'] for c in countries)} African")
+    print(f"   {len(countries)} countries, {sum(c['af'] for c in countries)} African")
     print("admin1 …")
     admin1 = build_admin1(fetch("admin1"), africa)
     print(f"   {len(admin1)} units")
@@ -302,7 +312,7 @@ def main():
 
     payload = {
         "src": "Natural Earth 1:10m, public domain",
-        "win": WIN,
+        "win": WIN, "world": WORLD,
         "countries": countries, "labels": labels, "admin1": admin1,
         "lakes": lakes, "rivers": rivers, "places": places,
     }

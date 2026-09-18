@@ -489,13 +489,13 @@ Country outlines: Natural Earth. Built 18 Sep 2026 by
 </noscript>
 <div class="loading" id="loading" role="status">
   <div class="lbox"><b>Africa Infrastructure Map</b>
-  <span>Loading the basemap and 11,155 records, about 5 MB…</span><i></i></div>
+  <span>Loading the basemap and 11,155 records, about 6 MB…</span><i></i></div>
 </div>
 <script>
 async function loadPayload(){
   const box = document.getElementById("loading");
   try{
-    const res = await fetch("data/map.json?v=2bfdc3d382");
+    const res = await fetch("data/map.json?v=d4a1ce63aa");
     if(!res.ok) throw new Error(res.status + " " + res.statusText);
     const data = await res.json();
     box.remove();
@@ -710,7 +710,21 @@ const invLat = y => Math.atan(Math.sinh(Math.PI*(1-2*y)))/D2R;
 let ZMIN = 2.2; const ZMAX = 12.6;
 const view = {cx:mx(17), cy:my(2), z:3.6};
 let W=0, H=0, S=256, OX=0, OY=0;
-function setScale(){ S = 256*Math.pow(2,view.z); OX = W/2 - view.cx*S; OY = H/2 - view.cy*S; }
+/* The basemap is drawn in repeating world copies (see draw), the records only
+   once, in the copy that holds Africa. Keeping the centre within half a world
+   of the continent means that copy is always the one nearest the viewer, so
+   panning east past the Pacific comes back round to the marked Africa. */
+const AFRICA_CX = mx(17);
+function setScale(){
+  view.cx -= Math.round(view.cx - AFRICA_CX);
+  S = 256*Math.pow(2,view.z); OX = W/2 - view.cx*S; OY = H/2 - view.cy*S;
+}
+/* horizontal offsets, in world widths, of the copies that reach the viewport */
+function worldCopies(){
+  const out = [];
+  for(let k=-1;k<=1;k++){ const ox = OX + k*S; if(ox < W+30 && ox+S > -30) out.push(k); }
+  return out;
+}
 const sx = x => x*S+OX, sy = y => y*S+OY;
 
 /* ================= geometry prep ================= */
@@ -995,16 +1009,24 @@ function draw(){
   ctx.clearRect(0,0,W,H);
   ctx.lineJoin = "round"; ctx.lineCap = "round";
   const focus = S_.country;
+  /* The basemap covers the whole world and is drawn in every world copy that
+     reaches the viewport, so the dateline is never an edge. OX is shifted a
+     copy at a time and restored before the records, which are drawn once. */
+  const OX0 = OX, copies = worldCopies();
   if(S_.sat){
     drawTiles();
     if(focus){
       /* dim everything but the focused country, so the imagery still reads as a filter */
       ctx.beginPath();
-      for(const c of COUNTRIES){ if(c.iso===focus && c.af) continue; if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
+      for(const k of copies){ OX = OX0 + k*S;
+        for(const c of COUNTRIES){ if(c.iso===focus && c.af) continue; if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
+      }
+      OX = OX0;
       ctx.fillStyle = SAT.dim; ctx.fill("evenodd");
     }
   } else {
   ctx.fillStyle = COL.sea; ctx.fillRect(0,0,W,H);
+  for(const k of copies){ OX = OX0 + k*S;
 
   /* context land */
   ctx.beginPath();
@@ -1033,8 +1055,11 @@ function draw(){
     ctx.lineWidth = r.s<=3 ? Math.min(2.2, 0.9+(view.z-3)*0.18) : 0.7;
     ctx.beginPath(); trace(r.a); ctx.stroke();
   }
+  }   /* end of one world copy */
+  OX = OX0;
   }   /* end of the drawn basemap; borders, works and marks follow in both views */
 
+  for(const k of copies){ OX = OX0 + k*S;
   /* admin-1 */
   if(view.z >= 5.1){
     ctx.beginPath();
@@ -1051,6 +1076,8 @@ function draw(){
     for(const c of COUNTRIES){ if(c.iso!==focus || !c.af) continue; for(const poly of c.polys) pathRings(poly); }
     ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.6; ctx.stroke();
   }
+  }   /* end of one world copy */
+  OX = OX0;
 
   /* lines: submarine cables, pipeline routes, traced works — in that order,
      so the thin works stay legible over the wider pipelines */
@@ -1816,7 +1843,8 @@ let hashT=null;
 function writeHash(){
   clearTimeout(hashT);
   hashT = setTimeout(()=>{
-    const parts = [`${view.z.toFixed(2)}/${invLat(view.cy).toFixed(3)}/${invLon(view.cx).toFixed(3)}`];
+    const lon = ((invLon(view.cx)+180)%360+360)%360-180;
+    const parts = [`${view.z.toFixed(2)}/${invLat(view.cy).toFixed(3)}/${lon.toFixed(3)}`];
     const L = LAYER_ORDER.filter(k=>S_.layers[k]).map(k=>LAYER_KEY[k]).join("");
     if(L!==ALL_LAYER_KEYS) parts.push("l="+L);
     if(S_.status.size<STATUS_ORDER.length) parts.push("s="+STATUS_ORDER.filter(s=>S_.status.has(s)).map(s=>STATUS_KEY[s]).join(","));
@@ -2241,9 +2269,12 @@ function renderMethod(){
     <h3>Basemap</h3>
     <p>
       Borders, provinces, rivers, lakes and cities come from <strong>Natural Earth</strong>, a
-      public-domain dataset. It draws Somaliland, Western Sahara and Bir Tawil as separate shapes.
-      That is the dataset's choice, not a position taken here, and it is why the territory count
-      exceeds the 54 member states of the African Union.
+      public-domain dataset. The whole world is drawn: Africa in full detail, every other country
+      in grey as context, simplified harder the further it is from the continent, so a cable to
+      India or a pipeline into Spain ends on a coast rather than in open sea. Natural Earth draws
+      Somaliland, Western Sahara and Bir Tawil as separate shapes. That is the dataset's choice,
+      not a position taken here, and it is why the territory count exceeds the 54 member states
+      of the African Union.
     </p>${PAGES ? `
     <p>
       <strong>Satellite</strong>, in the toolbar, swaps the drawn basemap for ${SAT_SRC.method}.

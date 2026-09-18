@@ -13,7 +13,8 @@ the same two pages, served by GitHub Pages from `docs/`. Data is refreshed by
 hand about twice a year; the header of each page says when.
 
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
-Earth 1:10m basemap (coastlines, borders, provinces, rivers, lakes, cities), with
+Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
+rivers, lakes and cities around Africa), with
 the five data layers drawn as circles (power units, sized by MW), squares and
 diamonds (AfDB and World Bank projects, sized by commitment), thin lines (construction ways traced in
 OpenStreetMap), haloed lines (oil and gas pipeline routes) and lines ending in
@@ -89,8 +90,10 @@ count in `data/meta.json`; the pages read their "data as of" dates from there.
 
 `fetch_basemap.py` downloads the Natural Earth GeoJSON mirrors from
 `nvkelso/natural-earth-vector` (~70 MB, cached in `data/.ne_cache/`, or pass a
-cache directory as the first argument), clips them to an Africa window and
-Douglas-Peucker simplifies them into a 2.3 MB file.
+cache directory as the first argument) and Douglas-Peucker simplifies them into
+a 3.4 MB file: the whole world's land, Africa at full detail and the rest coarser
+as grey context; provinces and cities for Africa only; lakes and rivers in full
+around the continent and only the largest elsewhere.
 
 `data/africa_basemap.json` (Natural Earth 1:110m, Africa only, 32 KB) is
 committed rather than fetched — it draws the dashboard and clips the OSM results.

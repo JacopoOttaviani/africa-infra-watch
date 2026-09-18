@@ -119,9 +119,15 @@ def draw(assets, finance, ground, countries, is10m):
 
     # -- land
     africa, ctx = [], []
+    # the 10m basemap holds the whole world; only land that reaches the
+    # card's window (with a margin) is worth a path
+    lo0, lo1, la0, la1 = LON0 - 12, LON1 + 12, LAT0 - 8, LAT1 + 8
+    near = lambda ring: any(lo0 <= x <= lo1 and la0 <= y <= la1 for x, y in ring)
     for c in countries:
         af = str(c.get("af", "1")) == "1" if is10m else True
-        (africa if af else ctx).append(poly_paths(c["p"], proj))
+        polys = c["p"] if af else [poly for poly in c["p"] if near(poly[0])]
+        if polys:
+            (africa if af else ctx).append(poly_paths(polys, proj))
     out.append(f'<clipPath id="win"><rect x="{MAP_X0}" y="{MAP_Y0}" width="{MAP_X1 - MAP_X0}" height="{MAP_Y1 - MAP_Y0}" rx="10"/></clipPath>')
     out.append('<g clip-path="url(#win)">')
     out.append(f'<g fill="{C["ctx"]}" stroke="{C["border"]}" stroke-width=".5" stroke-opacity=".5">'
@@ -146,7 +152,9 @@ def draw(assets, finance, ground, countries, is10m):
     sq = []
     for r in sorted(finance["rows"], key=lambda r: -(r[fi["usd_m"]] or 0)):
         x, y = proj(r[fi["lon"]], r[fi["lat"]])
-        side = min(10, 3 + math.sqrt(r[fi["usd_m"]] or 1) * 0.28)
+        # a net commitment can be negative after cancellations (two World Bank
+        # activities are): size those as the smallest square
+        side = min(10, 3 + math.sqrt(max(0, r[fi["usd_m"]] or 1)) * 0.28)
         col = C.get(r[fi["status"]], C["stalled"])
         sq.append(f'<rect x="{x - side / 2:.1f}" y="{y - side / 2:.1f}" width="{side:.1f}" height="{side:.1f}" fill="{col}"/>')
     out.append(f'<g opacity=".82" stroke="{C["paper"]}" stroke-width=".6">' + "".join(sq) + "</g>")
