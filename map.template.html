@@ -189,6 +189,42 @@
   .ib svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ib.menu{display:none}
   .ib.share{margin-top:6px}
+  .pill.toggle{cursor:pointer;color:var(--ink-2);gap:6px}
+  .pill.toggle svg{width:13px;height:13px;flex:none}
+  .pill.toggle:hover{background:var(--surface-3)}
+  .pill.toggle[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .pill.toggle[aria-pressed="true"]:hover{background:var(--accent-ink)}
+  .pill.toggle[aria-pressed="true"] .hole{fill:var(--accent)}
+  .pill.toggle svg.ico{stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .pill.toggle.pages-only{display:none}
+  html[data-host="pages"] .pill.toggle.pages-only{display:flex}
+
+  /* cluster overlay: Leaflet places the icons, the canvas keeps the pointer.
+     Only the Leaflet CSS the overlay needs (no tiles, controls or popups). */
+  #lmap{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;background:transparent}
+  #lmap[hidden]{display:none}
+  #lmap .leaflet-pane,#lmap .leaflet-marker-icon,#lmap .leaflet-pane>svg{position:absolute;left:0;top:0}
+  #lmap .leaflet-pane{z-index:400}
+  #lmap .leaflet-overlay-pane{z-index:400}
+  #lmap .leaflet-marker-pane{z-index:600}
+  #lmap .leaflet-map-pane svg{z-index:200}
+  #lmap .leaflet-marker-icon{display:block;pointer-events:none}
+  #lmap .leaflet-zoom-animated{transform-origin:0 0}
+  #lmap .leaflet-cluster-anim .leaflet-marker-icon{transition:transform .3s ease-out,opacity .3s ease-in}
+  #lmap .leaflet-cluster-spider-leg{transition:stroke-dashoffset .3s ease-out,stroke-opacity .3s ease-in}
+  .donut svg{display:block;overflow:visible}
+  .donut .halo{fill:var(--surface);opacity:.6}
+  .donut .hole{fill:var(--surface)}
+  .donut text{font-family:var(--mono);font-weight:600;fill:var(--ink)}
+  .pmw{display:flex;align-items:center;justify-content:center}
+  .pm{display:block;width:10px;height:10px;border-radius:50%;background:var(--c,var(--st-stalled));box-shadow:0 0 0 1px var(--surface);opacity:.92}
+  .pm.finance{width:9px;height:9px;border-radius:1px}
+  .pm.ground{width:14px;height:3.5px;border-radius:2px;transform:rotate(-32deg)}
+  .pm.stalled{background:transparent;border:1.6px solid var(--st-stalled);box-shadow:none}
+  .pm.announced{--c:var(--st-announced)} .pm.approved{--c:var(--st-approved)}
+  .pm.under_construction{--c:var(--st-construction)} .pm.operating{--c:var(--st-operating)}
+  #tip .tr .sw{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:0}
+  #tip .tr.hint{color:var(--ink-3);font-style:italic;margin-top:3px}
 
   .legend{position:absolute;left:12px;bottom:12px;z-index:3;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:9px 11px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto auto;gap:4px 18px;font-size:11px}
   .legend .col{display:flex;flex-direction:column;gap:4px}
@@ -441,6 +477,7 @@
 
   <main class="stage" id="stage">
     <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB-financed projects and construction works"></canvas>
+    <div id="lmap" hidden aria-hidden="true"></div>
 
     <div class="hud hud-tl">
       <button class="ib menu" id="railopen" aria-label="Open filters" title="Filters and records">
@@ -448,6 +485,10 @@
       </button>
       <span class="pill scope" id="scope" hidden><span id="scopename"></span><button id="scopeclear" aria-label="Clear country filter">×</button></span>
       <span class="pill"><span class="m" id="vis">0</span> records match</span>
+      <button class="pill toggle" id="cluster" aria-pressed="false" title="Group nearby records into donuts sized by count and sliced by status">Cluster markers</button>
+      <button class="pill toggle pages-only" id="sat" aria-pressed="false" title="Show satellite imagery under the records (Esri World Imagery)">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7 9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4Z"/><path d="m16 8 3-3"/><path d="M9 21a6 6 0 0 0-6-6"/></svg>Satellite
+      </button>
       <button class="pill link" id="hudmethod" title="Sources, method and limits">Methodology</button>
     </div>
 
@@ -469,7 +510,7 @@
 
     <div class="attrib">
       <div class="scale" id="scale"></div>
-      <div class="credit">Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div>
+      <div class="credit"><span id="satcredit" hidden>Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">Esri</a>, Maxar, Earthstar Geographics · </span>Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div>
     </div>
 
     <article id="method" aria-label="Methodology">
@@ -493,6 +534,7 @@
 </a>
 </div>
 
+<script>/*__VENDOR__*/</script>
 <script>
 const DATA = /*__PAYLOAD__*/;
 
@@ -516,6 +558,7 @@ function readColors(){
     admin:css("--admin"),lake:css("--lake"),river:css("--river"),label:css("--label"),labelCity:css("--label-city"),
     halo:css("--halo"),accent:css("--accent"),accentSoft:css("--accent-soft"),surface:css("--surface"),ink:css("--ink")};
   for(const s of STATUS_ORDER) COL[s] = css("--st-"+(s==="under_construction"?"construction":s));
+  if(S_.sat) Object.assign(COL, {halo:SAT.halo, label:SAT.label, labelCity:SAT.labelCity, border:SAT.border, admin:SAT.admin});
 }
 const statusColor = s => COL[s] || COL.stalled;
 const el = id => document.getElementById(id);
@@ -621,12 +664,69 @@ const S_ = {
   status:new Set(STATUS_ORDER),
   country:"", sector:"", q:"",
   picked:null,
+  cluster:false,
+  sat:false,
 };
 const pass = r =>
   S_.layers[r.layer] && S_.status.has(r.status) &&
   (!S_.country || r.iso===S_.country) && (!S_.sector || r.sector===S_.sector) &&
   (!S_.q || r.text.includes(S_.q));
 let VIS = [], VIS_PTS = [], VIS_LINES = [];
+
+/* ================= satellite (site only) ================= */
+/* Esri World Imagery, drawn straight onto the canvas under the vector layers.
+   Same Web Mercator world as the projection above: at integer zoom Z the tile
+   (tx,ty) covers [tx/2^Z, (tx+1)/2^Z] of the unit square, so it lands at
+   sx(tx/2^Z), sy(ty/2^Z) with side S/2^Z pixels. The artifact build cannot
+   reach a tile server, so the toggle only exists in the site build. */
+const SAT_URL = (z,x,y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
+const SAT_MAXZ = 17, SAT_CACHE = 700;
+const SAT = { dark:"#0B1418", halo:"rgba(6,12,10,.82)", label:"#DCE5DF", labelCity:"#FFFFFF",
+              border:"rgba(255,255,255,.55)", admin:"rgba(255,255,255,.28)", dim:"rgba(4,10,8,.5)" };
+const tiles = new Map();
+function tile(z,x,y){
+  const k = z+"/"+x+"/"+y;
+  let t = tiles.get(k);
+  if(t){ tiles.delete(k); tiles.set(k, t); return t; }   /* refresh: Map keeps insertion order */
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  t = {img, ok:false};
+  img.onload = () => { t.ok = true; if(S_.sat) queue(); };
+  img.onerror = () => { t.err = true; };
+  img.src = SAT_URL(z,x,y);
+  tiles.set(k, t);
+  if(tiles.size > SAT_CACHE){ for(const [kk,v] of tiles){ if(tiles.size <= SAT_CACHE*0.8) break; if(v.ok || v.err) tiles.delete(kk); } }
+  return t;
+}
+/* the tile, or the matching quadrant of the nearest loaded ancestor */
+function blitTile(z,x,y,px,py,side){
+  for(let up=0; up<=4 && z-up>=1; up++){
+    const zz = z-up, f = 1<<up, t = tile(zz, Math.floor(x/f), Math.floor(y/f));
+    if(!t.ok) continue;
+    const sub = 256/f, sx0 = (x % f)*sub, sy0 = (y % f)*sub;
+    ctx.drawImage(t.img, sx0, sy0, sub, sub, px, py, side, side);
+    return;
+  }
+}
+function drawTiles(){
+  const Z = Math.max(1, Math.min(SAT_MAXZ, Math.ceil(view.z)));
+  const n = 1<<Z, side = S/n;
+  const x0 = Math.floor(-OX/side), x1 = Math.floor((W-OX)/side);
+  const y0 = Math.max(0, Math.floor(-OY/side)), y1 = Math.min(n-1, Math.floor((H-OY)/side));
+  ctx.fillStyle = SAT.dark; ctx.fillRect(0,0,W,H);
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+  for(let ty=y0; ty<=y1; ty++) for(let tx=x0; tx<=x1; tx++){
+    const px = Math.round(tx*side+OX), py = Math.round(ty*side+OY);
+    const wrapped = ((tx % n)+n) % n;
+    blitTile(Z, wrapped, ty, px, py, Math.ceil(side)+0.5);   /* overlap a hair: no seams at fractional zoom */
+  }
+}
+function setSat(on){
+  S_.sat = on;
+  el("sat").setAttribute("aria-pressed", String(on));
+  el("satcredit").hidden = !on;
+  readColors(); renderLegend(); draw(); writeHash();
+}
 
 /* ================= canvas ================= */
 const stage = el("stage"), cv = el("map"), ctx = cv.getContext("2d");
@@ -638,6 +738,7 @@ function fit(){
   ctx.setTransform(dpr,0,0,dpr,0,0);
   setZoomFloor();
   setScale();
+  if(LM && S_.cluster){ LM.invalidateSize({animate:false, pan:false}); lview = null; }
 }
 /* zoom at which box b fills the viewport minus padding P */
 function fitZoom(b, P){
@@ -693,10 +794,21 @@ function markerR(r){
 
 function draw(){
   setScale();
+  if(S_.cluster) syncLeaflet();
   if(css("--sea") !== COL.sea){ readColors(); renderLegend(); const c = counts(); renderLayers(c); renderStatuses(c); }
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = COL.sea; ctx.fillRect(0,0,W,H);
   ctx.lineJoin = "round"; ctx.lineCap = "round";
+  const focus = S_.country;
+  if(S_.sat){
+    drawTiles();
+    if(focus){
+      /* dim everything but the focused country, so the imagery still reads as a filter */
+      ctx.beginPath();
+      for(const c of COUNTRIES){ if(c.iso===focus && c.af) continue; if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
+      ctx.fillStyle = SAT.dim; ctx.fill("evenodd");
+    }
+  } else {
+  ctx.fillStyle = COL.sea; ctx.fillRect(0,0,W,H);
 
   /* context land */
   ctx.beginPath();
@@ -704,7 +816,6 @@ function draw(){
   ctx.fillStyle = COL.landCtx; ctx.fill("evenodd");
 
   /* African land */
-  const focus = S_.country;
   ctx.beginPath();
   for(const c of COUNTRIES){ if(!c.af || (focus && c.iso===focus)) continue; if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
   ctx.fillStyle = focus ? COL.landDim : COL.land; ctx.fill("evenodd");
@@ -726,6 +837,7 @@ function draw(){
     ctx.lineWidth = r.s<=3 ? Math.min(2.2, 0.9+(view.z-3)*0.18) : 0.7;
     ctx.beginPath(); trace(r.a); ctx.stroke();
   }
+  }   /* end of the drawn basemap; borders, works and marks follow in both views */
 
   /* admin-1 */
   if(view.z >= 5.1){
@@ -745,7 +857,7 @@ function draw(){
   }
 
   /* ground works */
-  if(S_.layers.ground){
+  if(S_.layers.ground && !S_.cluster){
     const lw = Math.max(1.3, Math.min(4.5, 1.3 + (view.z-4)*0.55));
     ctx.globalAlpha = 0.88;
     for(const r of VIS_LINES){
@@ -761,7 +873,7 @@ function draw(){
   }
 
   /* points: big first so small ones stay on top */
-  for(const r of VIS_PTS){
+  if(!S_.cluster) for(const r of VIS_PTS){
     const x = r.x*S+OX, y = r.y*S+OY;
     if(x<-20||x>W+20||y<-20||y>H+20) continue;
     const col = statusColor(r.status), rad = markerR(r), hollow = r.status==="stalled";
@@ -786,8 +898,13 @@ function draw(){
         ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.5; ctx.stroke();
       }
     }
-    const x = p.x*S+OX, y = p.y*S+OY;
-    ctx.beginPath(); ctx.arc(x,y,15,0,6.2832);
+    let x = p.x*S+OX, y = p.y*S+OY, rr = 15;
+    if(S_.cluster && CG && p._m){
+      /* ring the donut that holds the record when it is clustered away */
+      const vp = CG.getVisibleParent(p._m);
+      if(vp){ const ll = vp.getLatLng(); x = sx(mx(ll.lng)); y = sy(my(ll.lat)); if(vp!==p._m) rr = donutSize(vp.getChildCount())/2 + 5; }
+    }
+    ctx.beginPath(); ctx.arc(x,y,rr,0,6.2832);
     ctx.strokeStyle = COL.surface; ctx.lineWidth = 4; ctx.stroke();
     ctx.strokeStyle = COL.accent; ctx.lineWidth = 2; ctx.stroke();
   }
@@ -856,6 +973,7 @@ function updateScale(){
 
 /* ================= hit testing ================= */
 function nearest(px_, py_){
+  if(S_.cluster) return null;   /* the overlay holds the marks; see clusterHit */
   let best=null, bd=100;
   for(let i=VIS_PTS.length-1;i>=0;i--){
     const r = VIS_PTS[i];
@@ -981,6 +1099,7 @@ function renderLegend(){
       <div class="lg">${glyph.finance(COL.ink)}<span><b>AfDB project</b> · size = commitment</span></div>
       <div class="lg">${glyph.ground(COL.ink)}<span><b>Works traced</b> in OpenStreetMap</span></div>
       <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = proposed alignment</span></div>
+      ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
     </div>`;
 }
 
@@ -1104,6 +1223,7 @@ function apply(){
   el("scopename").textContent = S_.country ? (NAMES[S_.country]||S_.country) : "";
   const c = counts();
   renderLayers(c); renderStatuses(c); renderSelects();
+  if(S_.cluster) syncMarkers();
   draw(); renderView(); writeHash();
 }
 
@@ -1135,7 +1255,149 @@ function zoomAt(px_, py_, dz){
 let raf=null;
 function queue(){ if(!raf) raf = requestAnimationFrame(()=>{ raf=null; draw(); }); }
 let mt=null;
-function moved(){ clearTimeout(mt); mt = setTimeout(()=>{ renderView(); writeHash(); }, 90); }
+function moved(){ clearTimeout(mt); mt = setTimeout(()=>{ if(S_.cluster && lpending) syncLeaflet(true); renderView(); writeHash(); }, 90); }
+
+/* ================= clusters (Leaflet.markercluster) ================= */
+/* A second view of the same records: marks that would overlap at the current
+   zoom are grouped into donuts, sized by count and sliced by status. Leaflet
+   runs as a transparent, non-interactive overlay kept in lock-step with the
+   canvas (both are Web Mercator at 256·2^z pixels), so the canvas keeps the
+   basemap, the pointer and the hit-testing; Leaflet only places the icons. */
+let LM = null, CG = null, lview = null, lpending = false;
+const STATUS_VAR = s => "--st-" + (s==="under_construction" ? "construction" : s);
+const donutSize = n => Math.round(Math.min(56, 30 + 8*Math.log10(Math.max(1, n))));
+const shortN = n => n>=10000 ? Math.round(n/1000)+"k" : n>=1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"k" : String(n);
+/* arcs of a ring, one per status present, in status order from 12 o'clock */
+function donutArcs(by, n, c, r, gap){
+  const C = 2*Math.PI*r; let off = 0, out = "";
+  for(const s of STATUS_ORDER.filter(s=>by[s])){
+    const len = C*by[s]/n, on = Math.max(0, len-gap);
+    out += `<circle cx="${c}" cy="${c}" r="${r}" style="stroke:var(${STATUS_VAR(s)})" stroke-dasharray="${on.toFixed(2)} ${(C-on).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;
+    off += len;
+  }
+  return out;
+}
+function donutSVG(by, n, d){
+  const c = d/2, r = c-4.5, segs = Object.keys(by).filter(s=>by[s]).length;
+  return `<svg viewBox="0 0 ${d} ${d}" width="${d}" height="${d}" aria-hidden="true">
+    <circle cx="${c}" cy="${c}" r="${r+4.2}" class="halo"/><circle cx="${c}" cy="${c}" r="${r-3.2}" class="hole"/>
+    <g fill="none" stroke-width="6.5" transform="rotate(-90 ${c} ${c})">${donutArcs(by, n, c, r, segs>1 ? 1.4 : 0)}</g>
+    <text x="${c}" y="${c}" text-anchor="middle" dominant-baseline="central" font-size="${n>=1000 ? 10.5 : 11.5}">${shortN(n)}</text></svg>`;
+}
+/* the small legend / button glyph: a three-slice donut */
+function donutGlyph(){
+  return `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.4" class="hole" fill="none"/>
+    <g fill="none" stroke-width="3.4" transform="rotate(-90 8 8)">${donutArcs({operating:3, approved:2, under_construction:1}, 6, 8, 5.3, 1)}</g></svg>`;
+}
+const ICONS = {};
+function iconFor(r){
+  const k = r.layer+"|"+r.status;
+  return ICONS[k] || (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html:`<i class="pm ${r.layer} ${r.status}"></i>`}));
+}
+function markerFor(r){
+  if(!r._m){ r._m = L.marker([r.lat, r.lon], {icon:iconFor(r), interactive:false, keyboard:false}); r._m.rec = r; }
+  return r._m;
+}
+function ensureLeaflet(){
+  if(LM) return true;
+  if(typeof L==="undefined" || !L.MarkerClusterGroup){ showToast("Clustering is not available in this build"); return false; }
+  const box = el("lmap"); box.hidden = false;
+  LM = L.map(box, {zoomSnap:0, zoomDelta:0, minZoom:1, maxZoom:13, zoomControl:false, attributionControl:false,
+    dragging:false, touchZoom:false, scrollWheelZoom:false, doubleClickZoom:false, boxZoom:false, keyboard:false, tapHold:false,
+    zoomAnimation:false, fadeAnimation:false, markerZoomAnimation:false, inertia:false, trackResize:false});
+  syncLeaflet(true);
+  CG = L.markerClusterGroup({
+    maxClusterRadius:64, chunkedLoading:true, showCoverageOnHover:false, zoomToBoundsOnClick:false,
+    spiderfyOnMaxZoom:false, spiderfyDistanceMultiplier:1.35,
+    spiderLegPolylineOptions:{weight:1.2, color:"#888", opacity:.7},
+    iconCreateFunction: c => {
+      const kids = c.getAllChildMarkers(), n = kids.length, by = {};
+      for(const m of kids) by[m.rec.status] = (by[m.rec.status]||0)+1;
+      const d = donutSize(n);
+      return L.divIcon({className:"donut", iconSize:[d,d], html:donutSVG(by, n, d)});
+    },
+  });
+  LM.addLayer(CG);
+  return true;
+}
+/* same centre, same fractional zoom: Leaflet's EPSG:3857 scale is 256·2^z too.
+   A pan just slides Leaflet's pane (markercluster keeps a viewport of margin
+   around the view); zooms and the settle after a gesture re-cluster in full. */
+function syncLeaflet(force){
+  if(!LM) return;
+  const same = lview && lview.z===view.z && lview.W===W && lview.H===H;
+  if(!force && same && lview.cx===view.cx && lview.cy===view.cy) return;
+  if(!force && same && LM._loaded){
+    LM._rawPanBy(L.point((view.cx-lview.cx)*S, (view.cy-lview.cy)*S));
+    lview.cx = view.cx; lview.cy = view.cy; lpending = true;
+    return;
+  }
+  if(CG && CG._spiderfied && LM._loaded && Math.abs(LM.getZoom()-view.z) > 1e-6) CG.unspiderfy();
+  LM.setView([invLat(view.cy), invLon(view.cx)], view.z, {animate:false});
+  lview = {cx:view.cx, cy:view.cy, z:view.z, W, H}; lpending = false;
+}
+/* the overlay holds exactly the records that pass the filters */
+function syncMarkers(){
+  if(!CG) return;
+  const have = new Set(); CG.eachLayer(m => have.add(m.rec));
+  const drop = [...have].filter(r => !pass(r)).map(r => r._m);
+  const add = VIS.filter(r => !have.has(r)).map(markerFor);
+  if(drop.length) CG.removeLayers(drop);
+  if(add.length) CG.addLayers(add);
+}
+function setCluster(on){
+  if(on && !ensureLeaflet()) on = false;
+  S_.cluster = on;
+  el("cluster").setAttribute("aria-pressed", String(on));
+  const box = el("lmap");
+  if(on){ box.hidden = false; LM.invalidateSize({animate:false, pan:false}); lview = null; syncMarkers(); }
+  else if(CG){ CG.unspiderfy(); box.hidden = true; }
+  renderLegend(); draw(); writeHash();
+}
+/* what the overlay shows under a canvas point: a cluster, a single marker or nothing */
+function clusterHit(px_, py_){
+  if(!S_.cluster || !CG) return null;
+  let best=null, bd=1e9;
+  CG._featureGroup.eachLayer(m => {
+    const ll = m.getLatLng(), dx = sx(mx(ll.lng))-px_, dy = sy(my(ll.lat))-py_, d = dx*dx+dy*dy;
+    const rad = m instanceof L.MarkerCluster ? donutSize(m.getChildCount())/2 : 8;
+    if(d < rad*rad && d < bd){ bd=d; best=m; }
+  });
+  return best;
+}
+function clusterClick(m){
+  if(!(m instanceof L.MarkerCluster)){ pick(m.rec, false); return; }
+  const b = m.getBounds(), box = [mx(b.getWest()), my(b.getNorth()), mx(b.getEast()), my(b.getSouth())];
+  const spread = Math.max(box[2]-box[0], box[3]-box[1]) * S;           /* px at this zoom */
+  const zSplit = view.z + Math.log2(70/Math.max(spread, 1e-6));          /* where it would come apart */
+  if(zSplit > ZMAX || view.z >= ZMAX-0.05){
+    /* they share one spot, or we are as close as the map goes: fan them out */
+    CG.options.spiderLegPolylineOptions.color = css("--ink-2");
+    if(CG._spiderfied && CG._spiderfied!==m) CG.unspiderfy();
+    m.spiderfy();
+    return;
+  }
+  const t = fitBounds(box, 70, ZMAX);
+  t.z = Math.max(t.z, Math.min(ZMAX, view.z+1));
+  flyTo(t);
+}
+function clusterTip(c){
+  const kids = c.getAllChildMarkers(), by = {}, byL = {assets:0, finance:0, ground:0};
+  for(const m of kids){ by[m.rec.status] = (by[m.rec.status]||0)+1; byL[m.rec.layer]++; }
+  const rows = STATUS_ORDER.filter(s=>by[s]).map(s =>
+    `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${STATUS_LABEL[s]}</span><b>${fmt(by[s])}</b></div>`).join("");
+  const src = LAYER_ORDER.filter(k=>byL[k]).map(k => `${fmt(byL[k])} ${SHORT[k]}`).join(" · ");
+  return `<div class="tn">${fmt(kids.length)} records</div>${rows}<div class="tr"><span>Source</span><b>${src}</b></div><div class="tr hint">Click to zoom in</div>`;
+}
+function recTip(hit){
+  const bits = [["Status", STATUS_LABEL[hit.status]||"—"], ["Country", hit.country]];
+  if(hit.size!=null) bits.push([hit.unit==="$m"?"Committed":hit.unit==="km"?"Traced":"Capacity", (hit.unit==="$m"?"$":"")+fmt1(hit.size)+(hit.unit==="$m"?"m":" "+hit.unit)]);
+  bits.push(["Source", LAYER_SUB[hit.layer]]);
+  return `<div class="tn">${esc(hit.name)}</div>` + bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${esc(b)}</b></div>`).join("");
+}
+el("cluster").insertAdjacentHTML("afterbegin", donutGlyph());
+el("cluster").onclick = () => setCluster(!S_.cluster);
+el("sat").onclick = () => setSat(!S_.sat);
 
 const tip = el("tip");
 let drag=null, movedPx=0, pointers=new Map(), pinch=null;
@@ -1169,12 +1431,10 @@ cv.addEventListener("pointermove", e => {
     queue(); return;
   }
   if(e.pointerType==="touch") return;
-  const hit = nearest(e.offsetX, e.offsetY);
+  const ch = clusterHit(e.offsetX, e.offsetY);
+  const hit = ch || nearest(e.offsetX, e.offsetY);
   if(hit){
-    const bits = [["Status", STATUS_LABEL[hit.status]||"—"], ["Country", hit.country]];
-    if(hit.size!=null) bits.push([hit.unit==="$m"?"Committed":hit.unit==="km"?"Traced":"Capacity", (hit.unit==="$m"?"$":"")+fmt1(hit.size)+(hit.unit==="$m"?"m":" "+hit.unit)]);
-    bits.push(["Source", LAYER_SUB[hit.layer]]);
-    tip.innerHTML = `<div class="tn">${esc(hit.name)}</div>` + bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${esc(b)}</b></div>`).join("");
+    tip.innerHTML = ch ? (ch instanceof L.MarkerCluster ? clusterTip(ch) : recTip(ch.rec)) : recTip(hit);
     tip.style.opacity=1;
     const tw = tip.offsetWidth, th = tip.offsetHeight;
     tip.style.left = Math.min(Math.max(4, e.offsetX+16), W-tw-4)+"px";
@@ -1189,8 +1449,11 @@ function endPointer(e){
   if(pointers.size===0){
     cv.classList.remove("dragging");
     if(wasDrag && movedPx<4 && !wasPinch && e.type==="pointerup"){
-      const hit = nearest(e.offsetX, e.offsetY);
-      if(hit){ pick(hit,false); }
+      const ch = clusterHit(e.offsetX, e.offsetY);
+      const hit = ch ? null : nearest(e.offsetX, e.offsetY);
+      if(ch){ clusterClick(ch); }
+      else if(CG && CG._spiderfied){ CG.unspiderfy(); }
+      else if(hit){ pick(hit,false); }
       else {
         const c = countryAt(e.offsetX, e.offsetY);
         if(c){
@@ -1222,7 +1485,7 @@ document.addEventListener("keydown", e => {
   if(e.target.matches("input,select,textarea")) return;
   if(e.key==="+"||e.key==="=") el("zin").click();
   else if(e.key==="-") el("zout").click();
-  else if(e.key==="Escape"){ if(S_.picked){ S_.picked=null; renderDetail(); draw(); renderView(); } railToggle(false); }
+  else if(e.key==="Escape"){ if(CG && CG._spiderfied) CG.unspiderfy(); if(S_.picked){ S_.picked=null; renderDetail(); draw(); renderView(); } railToggle(false); }
   else if(e.key.startsWith("Arrow")){
     const d = 80/S;
     if(e.key==="ArrowLeft") view.cx-=d; if(e.key==="ArrowRight") view.cx+=d;
@@ -1271,6 +1534,8 @@ function writeHash(){
     if(S_.country) parts.push("c="+S_.country);
     if(S_.sector) parts.push("k="+S_.sector);
     if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
+    if(S_.cluster) parts.push("cl=1");
+    if(S_.sat) parts.push("sat=1");
     if(document.body.dataset.tab==="method") parts.push("t=m");
     history.replaceState(null, "", "#"+parts.join("&"));
   }, 120);
@@ -1289,10 +1554,12 @@ function readHash(){
     else if(k==="k") S_.sector=v;
     else if(k==="q"){ S_.q=decodeURIComponent(v); el("q").value=S_.q; }
     else if(k==="t" && v==="m") wantTab = "method";
+    else if(k==="cl") wantCluster = v==="1";
+    else if(k==="sat") wantSat = v==="1";
   }
   return ok;
 }
-let wantTab = "map";
+let wantTab = "map", wantCluster = false, wantSat = false;
 
 /* ================= methodology ================= */
 function setTab(t, write=true){
@@ -1557,13 +1824,28 @@ function renderMethod(){
       country means a project somewhere in that country, not a project in the desert.
       OpenStreetMap works follow their traced route.
     </p>
+    <h3>Clusters</h3>
+    <p>
+      <strong>Cluster markers</strong>, in the toolbar, groups records that would overlap at the
+      current zoom into donuts. The number is how many records the donut holds; the slices are their
+      status mix, in the status colours. Click a donut to zoom into it. Records that share one
+      location, such as AfDB projects placed at a country centroid, fan out around the donut at the
+      closest zoom. Grouping is done by Leaflet.markercluster on the same projection as the canvas.
+    </p>
     <h3>Basemap</h3>
     <p>
       Borders, provinces, rivers, lakes and cities come from <strong>Natural Earth</strong>, a
       public-domain dataset. It draws Somaliland, Western Sahara and Bir Tawil as separate shapes.
       That is the dataset's choice, not a position taken here, and it is why the territory count
       exceeds the 54 member states of the African Union.
-    </p>
+    </p>${PAGES ? `
+    <p>
+      <strong>Satellite</strong>, in the toolbar, swaps the drawn basemap for Esri World Imagery,
+      fetched tile by tile from Esri's servers as you pan. Borders, labels and every record stay
+      on top, so a marker can be checked against what the ground looks like. The imagery is a
+      mosaic of different dates and does not show a site's current state; a dam may be drawn
+      as under construction over a picture taken before work began. It is off by default.
+    </p>` : ""}
     <h3>Counting</h3>
     <ul>
       <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres apart.</li>
@@ -1616,7 +1898,7 @@ function renderMethod(){
     <p>
       Power asset data © Global Energy Monitor, CC BY 4.0. Finance data © African Development Bank
       Group, published via IATI. Map data © OpenStreetMap contributors, ODbL. Basemap by Natural Earth,
-      public domain. When you reuse a figure from this map, attribute the layer it came from, not the map.
+      public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? " Satellite imagery © Esri, Maxar, Earthstar Geographics and the GIS User Community, loaded only when the Satellite view is on." : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
     <p class="foot">
       Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
@@ -1663,6 +1945,8 @@ new MutationObserver(()=>{ readColors(); renderLegend(); apply(); }).observe(doc
 readColors(); renderLede(); renderLegend(); fit();
 if(!readHash()) Object.assign(view, homeView());
 apply();
+if(wantCluster) setCluster(true);
+if(wantSat && PAGES) setSat(true);
 if(wantTab==="method") setTab("method", false);
 document.fonts && document.fonts.ready.then(()=>draw());
 </script>

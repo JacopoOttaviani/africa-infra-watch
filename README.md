@@ -18,6 +18,11 @@ the three data layers drawn as circles (power units, sized by MW), squares
 (AfDB projects, sized by commitment) and lines (construction ways traced in
 OpenStreetMap). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
+**Cluster markers** toggle (`cl=1` in the hash) regroups the records that pass
+the filters into donuts, sized by count and sliced by status, using
+Leaflet.markercluster over the same projection (libraries in `vendor/`, inlined
+at build time). A **Satellite** toggle (`sat=1`), site build only, draws Esri
+World Imagery tiles under the borders, labels and records; off by default. A
 **Methodology** tab (also reachable with `t=m` in the hash) documents each
 source's origin, access route, unit of observation, filters, status mapping,
 what it can and cannot answer, the drawing rules and the counting rules; its
