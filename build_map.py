@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Compile the five ingested layers plus the 1:10m basemap into the map page.
+The record builders for pipelines and cables live in build_dashboard.py, so
+both pages compile the same rows; only the route simplification differs.
 
 Reads   data/*.geojson  +  data/africa_basemap_10m.json  (+ africa_basemap.json
         for the fast country lookup)
@@ -18,7 +20,6 @@ column-wise JSON payload either way.
 
 import hashlib
 import json
-import math
 import pathlib
 import re
 import shutil
@@ -49,7 +50,7 @@ def vendor_js():
 # Shared with build_dashboard.py so the two pages quote the same figure.
 from build_dashboard import (  # noqa: E402
     NAME_TO_ISO, ISO_TO_NAME, DAC_SECTOR, SDR_USD,
-    build_lookup, locate, load,
+    build_lookup, locate, load, build_pipelines, build_cables,
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
@@ -228,105 +229,6 @@ def build_ground(idx):
             "rows": rows}
 
 
-def _length_km(geoms):
-    """Sum of segment lengths of already-simplified [lon, lat] parts."""
-    total = 0.0
-    for g in geoms:
-        for a, b in zip(g, g[1:]):
-            dx = (b[0] - a[0]) * 111.32 * abs(math.cos(math.radians(a[1])))
-            dy = (b[1] - a[1]) * 110.57
-            total += (dx * dx + dy * dy) ** 0.5
-    return total
-
-
-def _isos(names):
-    out = []
-    for n in names or []:
-        iso = NAME_TO_ISO.get(n)
-        if iso and iso not in out:
-            out.append(iso)
-    return out
-
-
-def build_pipelines(idx):
-    """One record per GEM pipeline segment that has a route. Routes are
-    coarser than OSM ways, so the simplification tolerance is looser."""
-    rows = []
-    for f in load("gem_oil_gas_pipelines.geojson"):
-        p = f["properties"]
-        if not p.get("dash_status"):
-            continue
-        parts = sorted(f["geometry"]["coordinates"], key=len, reverse=True)
-        geoms = [g for g in (simplify(part, 0.001) for part in parts) if len(g) >= 2]
-        if not geoms:
-            continue
-        mid = geoms[0][len(geoms[0]) // 2]
-        isos = _isos(p.get("countries"))
-        iso = isos[0] if isos else locate(mid[0], mid[1], idx)[0]
-        cap = None
-        if p.get("capacity") is not None and p.get("capacity_units"):
-            cap = f"{p['capacity']:,.0f} {p['capacity_units']}".replace(".0 ", " ")
-        rows.append([
-            (p.get("name") or "").strip()[:110] or None, iso, mid[0], mid[1],
-            p["dash_status"], (p.get("fuel") or "").strip()[:12] or None,
-            round(p["length_km"], 1) if p.get("length_km") else round(_length_km(geoms), 1),
-            cap, p.get("capacity_bcm_y"), p.get("capacity_boed"),
-            (p.get("start_year") or "")[:4] or None,
-            (p.get("owner") or "").strip()[:120] or None,
-            (p.get("start_location") or "").strip()[:50] or None,
-            (p.get("end_location") or "").strip()[:50] or None,
-            p.get("diameter") or None,
-            p.get("project_id") or None, p.get("url") or None, p.get("tracker"),
-            isos or None, (p.get("pipeline") or "").strip()[:90] or None, geoms,
-        ])
-    return {"cols": ["name", "iso", "lon", "lat", "status", "fuel", "km", "cap", "bcm", "boed",
-                     "yr", "owner", "from", "to", "dia", "pid", "url", "trk", "isos", "pipe", "g"],
-            "rows": rows}
-
-
-def build_cables(idx):
-    """One record per submarine cable landing in Africa. The marker sits at
-    the centre of its African landing points, so a cable that also reaches
-    India or Europe is filed where it touches the continent."""
-    rows = []
-    for f in load("telegeography_cables.geojson"):
-        p = f["properties"]
-        if not p.get("dash_status"):
-            continue
-        parts = sorted(f["geometry"]["coordinates"], key=len, reverse=True)
-        geoms = [g for g in (simplify(part, 0.001) for part in parts) if len(g) >= 2]
-        if not geoms:
-            continue
-        lps = [[r(lp["lon"]), r(lp["lat"]), (lp.get("name") or "").split(",")[0][:40], lp.get("iso")]
-               for lp in p.get("landing_points") or []]
-        if lps:
-            lon = sum(x[0] for x in lps) / len(lps)
-            lat = sum(x[1] for x in lps) / len(lps)
-        else:
-            lon, lat = geoms[0][len(geoms[0]) // 2]
-        isos = []
-        for lp in lps:
-            if lp[3] and lp[3] not in isos:
-                isos.append(lp[3])
-        rows.append([
-            (p.get("name") or "").strip()[:100] or None, isos[0] if isos else None,
-            r(lon), r(lat), p["dash_status"], p.get("rfs_year"),
-            1 if p.get("is_planned") else 0,
-            # TeleGeography leaves length blank for a few planned systems
-            # (Umoja, MRSC); fall back to the drawn route so they still rank
-            round(p["length_km"]) if p.get("length_km") else round(_length_km(geoms)),
-            (p.get("owners") or "").strip()[:200] or None,
-            (p.get("suppliers") or "").strip()[:80] or None,
-            p.get("url") or None, p.get("cable_id"),
-            p.get("landing_total") or len(lps), len(p.get("countries") or []),
-            (p.get("notes") or "").strip()[:200] or None,
-            lps or None, isos or None, geoms,
-        ])
-    return {"cols": ["name", "iso", "lon", "lat", "status", "rfs", "planned", "km", "owners",
-                     "suppliers", "url", "cid", "lp_total", "n_cts", "notes", "lps", "isos", "g"],
-            "rows": rows}
-
-
 # ------------------------------------------------------------------- build
 
 def main():
@@ -352,11 +254,11 @@ def main():
     located = sum(1 for g in ground["rows"] if g[1])
     print(f"   {len(ground['rows']):,} works ({located:,} located to a country)")
     print("pipes   …")
-    pipelines = build_pipelines(idx)
+    pipelines = build_pipelines(idx, lambda part: [simplify(part, 0.001)])
     pkm = sum(x[pipelines["cols"].index("km")] or 0 for x in pipelines["rows"])
     print(f"   {len(pipelines['rows']):,} pipeline segments, {pkm:,.0f} km")
     print("cables  …")
-    cables = build_cables(idx)
+    cables = build_cables(idx, lambda part: [simplify(part, 0.001)], rnd=r)
     nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
     print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
 

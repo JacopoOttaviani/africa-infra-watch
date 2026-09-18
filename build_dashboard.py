@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compile the three ingested layers into a single self-contained dashboard.
+Compile the five ingested layers into a single self-contained dashboard.
 
 Reads   data/*.geojson  +  data/africa_basemap.json
 Writes  dashboard.html   (payload injected inline)
@@ -12,10 +12,12 @@ the payload is stored column-wise rather than as an array of objects.
 """
 
 import json
+import math
 import pathlib
 import re
 import sys
 
+from fetch_basemap import dp
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
     DASHBOARD_LAYERS, DOCS, SDR_NOTE, SDR_USD, brand_assets, load_meta, payload_meta,
     site_facts, wrap_document,
@@ -123,6 +125,57 @@ def locate(x, y, idx):
 
 
 # --------------------------------------------------------------- geometry
+
+# The dashboard frame (the template's BOUNDS) plus a margin, in degrees. A
+# pipeline or cable route is clipped to this window at build time: a cable
+# from Europe to India is drawn only where it runs around the continent, so
+# the frame stays readable and the payload small. The margin lets a route run
+# off the canvas rather than stop at its edge.
+LINE_WINDOW = (-32.0, -48.0, 66.0, 50.0)
+
+
+def simplify_line(coords, tol=0.012):
+    """Dashboard simplification for a pipeline or cable route: Douglas-Peucker
+    at about a kilometre, three-decimal rounding, clipped to LINE_WINDOW.
+    Returns a list of parts, because a route that leaves the window and comes
+    back becomes several. The map uses a finer tolerance and no clipping."""
+    pts = dp([tuple(c[:2]) for c in coords], tol)
+    x0, y0, x1, y1 = LINE_WINDOW
+    inside = lambda q: x0 <= q[0] <= x1 and y0 <= q[1] <= y1  # noqa: E731
+    parts, cur = [], []
+    for i, q in enumerate(pts):
+        if inside(q):
+            if not cur and i:
+                cur.append(pts[i - 1])   # the vertex before entering, so the line comes in from off-frame
+            cur.append(q)
+        elif cur:
+            cur.append(q)                # the vertex after leaving
+            parts.append(cur)
+            cur = []
+    if cur:
+        parts.append(cur)
+    out = []
+    for part in parts:
+        q = []
+        for x, y in part:
+            v = [r(x), r(y)]
+            if not q or q[-1] != v:
+                q.append(v)
+        if len(q) >= 2:
+            out.append(q)
+    return out
+
+
+def _length_km(geoms):
+    """Sum of segment lengths of already-simplified [lon, lat] parts."""
+    total = 0.0
+    for g in geoms:
+        for a, b in zip(g, g[1:]):
+            dx = (b[0] - a[0]) * 111.32 * abs(math.cos(math.radians(a[1])))
+            dy = (b[1] - a[1]) * 110.57
+            total += (dx * dx + dy * dy) ** 0.5
+    return total
+
 
 def simplify(coords, tol=0.02, cap=14):
     """Decimate a way to at most `cap` vertices, keeping ends.
@@ -261,6 +314,101 @@ def build_ground(idx):
     return rows
 
 
+# The two line layers. Shared with build_map.py, which passes its own, finer
+# simplifier; the dashboard clips and thins the routes for a continental frame.
+
+def _isos(names):
+    out = []
+    for n in names or []:
+        iso = NAME_TO_ISO.get(n)
+        if iso and iso not in out:
+            out.append(iso)
+    return out
+
+
+def _route_parts(f, simp):
+    parts = sorted(f["geometry"]["coordinates"], key=len, reverse=True)
+    return [g for part in parts for g in simp(part) if len(g) >= 2]
+
+
+def build_pipelines(idx, simp=simplify_line):
+    """One record per GEM pipeline segment that has a route. `simp` maps one
+    raw part to a list of simplified parts."""
+    rows = []
+    for f in load("gem_oil_gas_pipelines.geojson"):
+        p = f["properties"]
+        if not p.get("dash_status"):
+            continue
+        geoms = _route_parts(f, simp)
+        if not geoms:
+            continue
+        mid = geoms[0][len(geoms[0]) // 2]
+        isos = _isos(p.get("countries"))
+        iso = isos[0] if isos else locate(mid[0], mid[1], idx)[0]
+        cap = None
+        if p.get("capacity") is not None and p.get("capacity_units"):
+            cap = f"{p['capacity']:,.0f} {p['capacity_units']}".replace(".0 ", " ")
+        rows.append([
+            (p.get("name") or "").strip()[:110] or None, iso, mid[0], mid[1],
+            p["dash_status"], (p.get("fuel") or "").strip()[:12] or None,
+            round(p["length_km"], 1) if p.get("length_km") else round(_length_km(geoms), 1),
+            cap, p.get("capacity_bcm_y"), p.get("capacity_boed"),
+            (p.get("start_year") or "")[:4] or None,
+            (p.get("owner") or "").strip()[:120] or None,
+            (p.get("start_location") or "").strip()[:50] or None,
+            (p.get("end_location") or "").strip()[:50] or None,
+            p.get("diameter") or None,
+            p.get("project_id") or None, p.get("url") or None, p.get("tracker"),
+            isos or None, (p.get("pipeline") or "").strip()[:90] or None, geoms,
+        ])
+    return {"cols": ["name", "iso", "lon", "lat", "status", "fuel", "km", "cap", "bcm", "boed",
+                     "yr", "owner", "from", "to", "dia", "pid", "url", "trk", "isos", "pipe", "g"],
+            "rows": rows}
+
+
+def build_cables(idx, simp=simplify_line, rnd=r):
+    """One record per submarine cable landing in Africa. The marker sits at
+    the centre of its African landing points, so a cable that also reaches
+    India or Europe is filed where it touches the continent. `rnd` rounds
+    coordinates, so each page keeps its own precision."""
+    rows = []
+    for f in load("telegeography_cables.geojson"):
+        p = f["properties"]
+        if not p.get("dash_status"):
+            continue
+        geoms = _route_parts(f, simp)
+        if not geoms:
+            continue
+        lps = [[rnd(lp["lon"]), rnd(lp["lat"]), (lp.get("name") or "").split(",")[0][:40], lp.get("iso")]
+               for lp in p.get("landing_points") or []]
+        if lps:
+            lon = sum(x[0] for x in lps) / len(lps)
+            lat = sum(x[1] for x in lps) / len(lps)
+        else:
+            lon, lat = geoms[0][len(geoms[0]) // 2]
+        isos = []
+        for lp in lps:
+            if lp[3] and lp[3] not in isos:
+                isos.append(lp[3])
+        rows.append([
+            (p.get("name") or "").strip()[:100] or None, isos[0] if isos else None,
+            rnd(lon), rnd(lat), p["dash_status"], p.get("rfs_year"),
+            1 if p.get("is_planned") else 0,
+            # TeleGeography leaves length blank for a few planned systems
+            # (Umoja, MRSC); fall back to the drawn route so they still rank
+            round(p["length_km"]) if p.get("length_km") else round(_length_km(geoms)),
+            (p.get("owners") or "").strip()[:200] or None,
+            (p.get("suppliers") or "").strip()[:80] or None,
+            p.get("url") or None, p.get("cable_id"),
+            p.get("landing_total") or len(lps), len(p.get("countries") or []),
+            (p.get("notes") or "").strip()[:200] or None,
+            lps or None, isos or None, geoms,
+        ])
+    return {"cols": ["name", "iso", "lon", "lat", "status", "rfs", "planned", "km", "owners",
+                     "suppliers", "url", "cid", "lp_total", "n_cts", "notes", "lps", "isos", "g"],
+            "rows": rows}
+
+
 # ------------------------------------------------------------------- build
 
 def main():
@@ -280,6 +428,16 @@ def main():
     ground = build_ground(idx)
     located = sum(1 for g in ground if g["iso"])
     print(f"   {len(ground):,} works ({located:,} located to a country)")
+
+    print("pipes   …")
+    pipelines = build_pipelines(idx)
+    pkm = sum(x[pipelines["cols"].index("km")] or 0 for x in pipelines["rows"])
+    print(f"   {len(pipelines['rows']):,} pipeline segments, {pkm:,.0f} km")
+
+    print("cables  …")
+    cables = build_cables(idx)
+    nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
+    print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
 
     # Natural Earth's NAME field carries map abbreviations ("Dem. Rep. Congo",
     # "Eq. Guinea"). Those are right for a cramped label on a map and wrong for
@@ -302,6 +460,8 @@ def main():
     names["EH"] = "Western Sahara"
     for i in ISLANDS:
         names[i["iso"]] = i["n"]
+    # islands that only submarine cables reach
+    names.update({"YT": "Mayotte", "RE": "Réunion", "SH": "Saint Helena"})
 
     payload = {
         "meta": payload_meta(load_meta(), DASHBOARD_LAYERS),
@@ -310,16 +470,20 @@ def main():
         "assets": assets,
         "finance": finance,
         "ground": ground,
+        "pipelines": pipelines,
+        "cables": cables,
     }
 
-    blob = json.dumps(payload, separators=(",", ":"))
+    blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
     html = brand_assets(TEMPLATE.read_text())
     if "/*__PAYLOAD__*/" not in html:
         sys.exit("template missing /*__PAYLOAD__*/ marker")
     page = html.replace("/*__PAYLOAD__*/", blob)
     OUT.write_text(page)
     kb = OUT.stat().st_size / 1024
-    print(f"\npayload {len(blob) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
+    print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables"):
+        print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
     if kb > 15000:
         print("  ! approaching the 16 MB artifact ceiling")
 
@@ -327,10 +491,12 @@ def main():
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
         page, title="Africa Infrastructure Monitor", path="dashboard.html", kind="dashboard",
-        facts=site_facts(assets, finance, ground),
+        facts=site_facts(assets, finance, ground, pipelines, cables),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
-                    "power plants, African Development Bank finance and construction works from "
-                    "OpenStreetMap, with charts by country and sector and a sortable project table."))
+                    "power plants and oil and gas pipelines (Global Energy Monitor), African "
+                    "Development Bank finance, construction works from OpenStreetMap and submarine "
+                    "cables (TeleGeography), with charts by country and sector and a sortable "
+                    "project table."))
     print(f"→ docs/dashboard.html")
 
 

@@ -32,13 +32,22 @@ and records; off by default. The provider is one config block in the template
 source's origin, access route, unit of observation, filters, status mapping,
 what it can and cannot answer, the drawing rules and the counting rules; its
 figures are computed from the same payload the map draws, so they cannot drift.
-The dashboard is the page-first view of the same data, with charts and a table.
+The dashboard is the page-first view of the same data, in the same frame: the
+map's left rail (brand, lede, data-as-of line, view tabs, search, Layers, Status,
+Narrow, and a Selection panel in place of the map's lists) beside a scrolling
+column of KPIs, a smaller equirectangular map of all five layers over Natural
+Earth 1:110m, charts by country and sector, and a sortable table. The rail
+becomes a drawer below 880 px on both pages. Pipeline and cable routes are
+thinned harder for the dashboard and clipped to a window around its frame at
+build time (`LINE_WINDOW` in `build_dashboard.py`), so a cable to India is drawn
+only where it runs around the continent; the record builders themselves are
+shared with the map. Both pages use one status palette.
 
 ## Sources
 
 Six open datasets in five layers, deliberately kept apart because they share no
-project identifier. Summing across them double-counts. The dashboard shows the
-first three (AfDB only in finance); the map shows everything.
+project identifier. Summing across them double-counts. Both pages show the five
+layers; the dashboard's finance layer is AfDB only, the map adds the World Bank.
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|
@@ -102,8 +111,8 @@ Two outputs from one template, because they run in different places:
 
 - `map.html` / `dashboard.html` — **artifact builds**, payload inlined. The
   Claude publishing sandbox blocks runtime requests to any host, so there is no
-  tile server and no `fetch()`; everything ships inside the page (4.3 MB and
-  1.5 MB; the ceiling is 16 MB).
+  tile server and no `fetch()`; everything ships inside the page (6.4 MB and
+  1.8 MB; the ceiling is 16 MB).
 - `docs/` — the **site build** for GitHub Pages. `index.html` is a complete
   HTML document (doctype, head, favicon, social tags) that loads
   `data/map.json` at runtime via a module script with a loading state, so the
@@ -295,7 +304,9 @@ These each cost real time to find. They are not in any of the upstream docs.
   readers. The map's palette (ochre, indigo, magenta, green, hollow grey) was
   found by searching OKLCH space against the `dataviz` validator with the hue
   families constrained; magenta for "under construction" is the price of
-  passing. Stalled is hollow so it never competes with live colour.
+  passing. Stalled is hollow so it never competes with live colour. The
+  dashboard adopted the map's palette and hollow-stalled convention in
+  September 2026, when it gained the map's rail and the two line layers.
 - **CSS token names must match the status vocabulary exactly.** Both templates
   originally looked up `--st-under_construction` while the token was
   `--st-construction`; canvas silently ignores an empty `fillStyle`, so

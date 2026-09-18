@@ -62,10 +62,10 @@ SOURCE_INFO = {
     "cables": {"name": "TeleGeography", "lic": "CC BY-SA 4.0",
                "url": "https://www.submarinecablemap.com/"},
 }
-# The layers each page draws. The dashboard predates the two line layers and
-# still shows three; the map shows all five.
+# The layers each page draws. Both pages show the five layers; the dashboard's
+# finance layer is AfDB only, so the World Bank source card is the map's alone.
 MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables")
-DASHBOARD_LAYERS = ("assets", "finance", "ground")
+DASHBOARD_LAYERS = ("assets", "finance", "ground", "pipelines", "cables")
 
 
 # ------------------------------------------------------------------ meta.json
@@ -206,9 +206,9 @@ def _rows(layer):
 
 def site_facts(assets, finance, ground, pipelines=None, cables=None, meta=None):
     """Counts and totals of the snapshot being built, for the crawlable text.
-    A page that does not draw a layer (the dashboard) passes None for it and
-    the count comes from meta.json, so the JSON-LD still describes every file
-    the site publishes."""
+    A page that does not draw a layer passes None for it and the count comes
+    from meta.json, so the JSON-LD still describes every file the site
+    publishes."""
     meta = load_meta() if meta is None else meta
     a, ac = _rows(assets)
     f, fc = _rows(finance)
