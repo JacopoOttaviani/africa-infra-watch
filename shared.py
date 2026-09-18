@@ -115,13 +115,16 @@ LOGO_MARK = re.sub(r"<svg ", '<svg class="mark" aria-hidden="true" focusable="fa
 
 
 def brand_assets(page):
-    """Fill the two brand markers a template carries: the inline favicon link
-    in its head and the header mark next to each <h1>."""
-    for marker in ("<!--__FAVICON__-->", "<!--__LOGO__-->"):
+    """Fill the brand markers a template carries: the inline favicon link in
+    its head, the header mark next to each <h1>, and the mark's home link.
+    The home link is the absolute site URL so it also works from an artifact;
+    wrap_document makes it relative for the Pages build."""
+    for marker in ("<!--__FAVICON__-->", "<!--__LOGO__-->", "__HOME_URL__"):
         if marker not in page:
             raise SystemExit(f"template missing the {marker} marker")
     return (page.replace("<!--__FAVICON__-->", f'<link rel="icon" href="{FAVICON}">')
                 .replace("<!--__LOGO__-->", LOGO_MARK)
+                .replace("__HOME_URL__", SITE_URL)
                 .replace("__COFFEE_URL__", COFFEE_URL)
                 .replace("__AUTHOR_URL__", AUTHOR_URL))
 
@@ -134,6 +137,7 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
     frag = re.sub(r'<meta charset="utf-8">\s*', "", fragment)
     frag = re.sub(r'<meta name="viewport"[^>]*>\s*', "", frag)
     frag = re.sub(r"<title>.*?</title>\s*", "", frag, count=1, flags=re.S)
+    frag = frag.replace(f'class="home" href="{SITE_URL}"', 'class="home" href="index.html"')
     cut = frag.index("</style>") + len("</style>")
     head_part, body_part = frag[:cut], frag[cut:]
     t, d = html.escape(title, quote=True), html.escape(description, quote=True)

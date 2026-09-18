@@ -57,6 +57,9 @@
   h1{font-size:clamp(25px,3.1vw,36px);font-weight:800;letter-spacing:-.026em;line-height:1.05}
   .titlerow{display:flex;align-items:center;gap:14px}
   .titlerow .mark{flex:none;font-size:clamp(40px,4.6vw,54px);color:var(--accent);display:block}
+  .titlerow .home{display:block;line-height:0;color:inherit;border-radius:4px}
+  .titlerow .home:hover .mark{opacity:.75}
+  .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .viewlink{display:none;font-size:12.5px;font-weight:600;color:var(--accent);text-decoration:none;margin-top:4px}
   html[data-host="pages"] .viewlink{display:inline-block}
   .viewlink:hover{text-decoration:underline}
@@ -234,7 +237,7 @@
   <header class="top">
     <div class="brand">
       <span class="kicker">Bird's-eye view · investors, researchers, journalists</span>
-      <div class="titlerow"><!--__LOGO__--><h1>Africa Infrastructure Monitor</h1></div>
+      <div class="titlerow"><a class="home" href="__HOME_URL__" aria-label="Africa Infrastructure Map, home"><!--__LOGO__--></a><h1>Africa Infrastructure Monitor</h1></div>
       <a class="viewlink" href="index.html">Open the interactive map →</a>
     </div>
     <div class="srcs" id="srcs"></div>
@@ -332,7 +335,7 @@
   </div>
 
   <details class="notes">
-    <summary>How to read this — sources, method and the limits that matter <span></span></summary>
+    <summary>How to read this: sources, method and limits <span></span></summary>
     <div class="ncols">
       <section>
         <h4>The three layers</h4>
@@ -353,33 +356,33 @@
         <h4>One status vocabulary</h4>
         <p>Each source's own lifecycle is mapped onto five shared values:</p>
         <ul>
-          <li><strong>Announced</strong> — GEM <code>announced</code>, IATI status 1, OSM <code>proposed</code></li>
-          <li><strong>Approved</strong> — GEM <code>pre-construction</code>; AfDB projects past board approval</li>
-          <li><strong>Under construction</strong> — GEM <code>construction</code>, IATI status 2, OSM <code>construction</code></li>
-          <li><strong>Operating</strong> — GEM <code>operating</code>, IATI status 3–4</li>
-          <li><strong>Stalled</strong> — GEM <code>cancelled</code>/<code>shelved</code>/<code>mothballed</code>, IATI 5–6</li>
+          <li><strong>Announced:</strong> GEM <code>announced</code>, IATI status 1, OSM <code>proposed</code></li>
+          <li><strong>Approved:</strong> GEM <code>pre-construction</code>; AfDB projects past board approval</li>
+          <li><strong>Under construction:</strong> GEM <code>construction</code>, IATI status 2, OSM <code>construction</code></li>
+          <li><strong>Operating:</strong> GEM <code>operating</code>, IATI status 3–4</li>
+          <li><strong>Stalled:</strong> GEM <code>cancelled</code>/<code>shelved</code>/<code>mothballed</code>, IATI 5–6</li>
         </ul>
       </section>
       <section>
-        <h4 class="caveat">Limits you should carry into any conclusion</h4>
+        <h4 class="caveat">Limits of the data</h4>
         <ul>
           <li class="caveat">
             <strong>Money is AfDB only.</strong> Commitments come from AfDB transaction records
             (IATI type 2), converted from SDR at a fixed published rate. Chinese, private,
-            domestic-budget and other-lender finance is <strong>not</strong> here — treat totals as
-            "AfDB exposure", never "investment in Africa".
+            domestic-budget and other-lender finance is <strong>not</strong> here. Read totals as
+            AfDB exposure, not as investment in Africa.
           </li>
           <li class="caveat">
             <strong>Roughly two-thirds of AfDB points are approximate.</strong> Locations flagged
-            <code>exactness=2</code> sit on a country or region centroid, not the works. The map
-            prefers an exact point where one exists; where it doesn't, expect a marker near the
-            country's centre. The table shows which.
+            <code>exactness=2</code> sit on a country or region centroid rather than on the works. The map
+            uses an exact point where one exists and otherwise a marker near the country's centre.
+            The table shows which.
           </li>
           <li class="caveat">
             <strong>OSM presence is mapper-driven.</strong> Absence of a road here is not evidence
-            no road is being built. It is also filtered to significant classes — motorway, trunk,
-            primary, secondary, all rail and airport works — because an unfiltered query is
-            dominated by residential street stubs inside housing estates.
+            no road is being built. It is also filtered to significant classes, motorway to secondary roads
+            plus all rail and airport works, because an unfiltered query is dominated by
+            residential street stubs inside housing estates.
           </li>
           <li class="caveat">
             <strong>Energy is over-represented.</strong> GEM covers power comprehensively;
@@ -392,9 +395,8 @@
         <h4>Provenance</h4>
         <p id="prov"></p>
         <p>
-          Country outlines are Natural Earth 1:110m. Five small island states —
-          Cabo Verde, São Tomé and Príncipe, Comoros, Mauritius and Seychelles — are below that
-          resolution and are drawn as markers, so their projects sit on a marker rather than a
+          Country outlines are Natural Earth 1:110m. Cabo Verde, São Tomé and Príncipe, Comoros,
+          Mauritius and Seychelles are below that resolution and are drawn as markers, so their projects sit on a marker rather than a
           coastline. The projection is plain equirectangular: undistorted near the equator, which
           is where most of this continent sits, and progressively stretched north and south.
         </p>
@@ -645,9 +647,9 @@ function renderSources(){
       <span class="sn">${s.name}</span>
       <span class="sf">${s.fresh}</span>
     </div>`).join("");
-  el("builtnote").textContent = `Built ${DATA.meta.built} · every figure derived from the source files, none quoted from a landing page`;
+  el("builtnote").textContent = `Built ${DATA.meta.built} · every figure computed from the source files`;
   el("prov").innerHTML = DATA.meta.sources.map(s =>
-    `<strong>${s.name}</strong> — ${s.detail}; ${s.lic}.`).join(" ")
+    `<strong>${s.name}</strong>: ${s.detail} (${s.lic}).`).join(" ")
     + ` AfDB commitments converted at ${DATA.meta.sdr_note}.`;
 }
 
@@ -656,7 +658,7 @@ function renderLede(){
   const fin = FINANCE.length;
   const grd = GROUND.length;
   el("lede").innerHTML =
-    `Three open datasets over one country spine: <strong>${fmt(gemPipe)} power assets</strong>
+    `Three open datasets on one map: <strong>${fmt(gemPipe)} power assets</strong>
      announced, approved or under construction, <strong>${fmt(fin)} African Development Bank
      projects</strong> with money attached, and <strong>${fmt(grd)} road, rail and airport works</strong>
      that OpenStreetMap contributors have traced on the ground. Each answers a different question,
@@ -847,7 +849,7 @@ function renderTable(){
   el("tbody").querySelectorAll("tr[data-i]").forEach(tr =>
     tr.onclick = () => { S.picked = show[+tr.dataset.i]; renderSel(); renderTable(); draw(); });
   el("tcount").textContent = `${fmt(VIS.length)} records match · ${fmt(show.length)} listed`;
-  el("tnote").textContent = VIS.length>CAP ? `capped at ${CAP} rows — narrow the filters to see more` : "";
+  el("tnote").textContent = VIS.length>CAP ? `capped at ${CAP} rows · narrow the filters to see more` : "";
   el("thint").textContent = S.country ? (NAMES[S.country]||S.country) : "all countries";
   document.querySelectorAll("thead th.sortable").forEach(th => {
     if(th.dataset.k===k){ th.setAttribute("aria-sort", dir>0?"ascending":"descending");
