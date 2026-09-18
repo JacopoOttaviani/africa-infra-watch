@@ -402,10 +402,9 @@
   .method .callout{margin-top:18px;padding:14px 16px;border-left:3px solid var(--st-construction);background:var(--surface);border-radius:0 4px 4px 0}
   .method .callout p{margin:0}
   .method .logos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
-  .method .logos a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:104px;padding:16px 14px 13px;border:1px solid var(--rule-soft);border-radius:4px;background:var(--surface);color:var(--ink-3);text-decoration:none;transition:color .15s,border-color .15s}
+  .method .logos a{display:flex;align-items:center;justify-content:center;min-height:88px;padding:18px 14px;border:1px solid var(--rule-soft);border-radius:4px;background:var(--surface);color:var(--ink-3);text-decoration:none;transition:color .15s,border-color .15s}
   .method .logos a:hover,.method .logos a:focus-visible{color:var(--ink);border-color:var(--rule)}
   .method .logos svg{display:block;width:100%;max-width:148px;height:44px;fill:currentColor}
-  .method .logos span{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
   .method .logos a:last-child:nth-child(3n+1){grid-column:1/-1}
   .method .lnote{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:10px;max-width:none}
   .method .foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.6}
@@ -1629,10 +1628,10 @@ function statusTable(){
   return rows.map(([s,a,b,c]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
 }
 
-/* a data-source tile: the organisation's mark, monochrome in the current ink, over its role here */
+/* a data-source tile: the organisation's mark, monochrome in the current ink; name and role live in the tooltip */
 function logoTile(key, url, name, role){
   const svg = (SOURCE_LOGOS[key] || "").replace("<svg ", `<svg role="img" aria-label="${esc(name)}" `);
-  return `<a href="${url}" target="_blank" rel="noopener noreferrer" title="${esc(name)} (opens in a new tab)">${svg}<span>${esc(role)}</span></a>`;
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer" title="${esc(name)} · ${esc(role)} (opens in a new tab)">${svg}</a>`;
 }
 let methodBuilt = false;
 function renderMethod(){
