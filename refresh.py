@@ -59,6 +59,10 @@ def main():
     for script in ("build_dashboard.py", "build_map.py"):
         if run(f"Build {script}", script) != 0:
             sys.exit(f"\n{script} failed")
+    # The link-preview image (docs/social.png) redraws the new records. It needs a
+    # Chrome to rasterise; without one the committed PNG stays, which is fine.
+    if run("Build the link-preview image", "build_social.py") != 0:
+        print("\nbuild_social.py failed — the previous docs/social.png stays", flush=True)
 
     print("""
 === Done. Next:

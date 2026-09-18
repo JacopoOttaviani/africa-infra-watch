@@ -1,0 +1,63 @@
+# Africa Infra Watch
+
+> An interactive map and dashboard of announced, approved and ongoing infrastructure in
+> Africa, for investors, researchers and journalists. Compiled from three open datasets:
+> 4,274 power units tracked by Global Energy Monitor, 1,401 projects financed by the African Development Bank and 3,586 construction works traced in OpenStreetMap. Together they describe about 1,090 GW of generating capacity across all statuses; USD 66.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026).
+> Snapshot built 18 Sep 2026; data is refreshed by hand about twice a year.
+
+Made by Jacopo Ottaviani (https://www.linkedin.com/in/jacopo-ottaviani/). Free to use; cite the underlying sources by name.
+Site: https://jacopoottaviani.com/africa-infra-watch/
+
+## Pages
+
+- [Africa Infrastructure Map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the three layers with filters
+  by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
+  cards linking to each source record, optional marker clustering and Sentinel-2 satellite
+  imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
+- [Africa Infrastructure Monitor](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same data as a
+  page with KPIs, a country map, bar charts by country and sector, and a sortable table.
+
+## Data
+
+The compiled payload the map draws, one JSON with column-wise layers:
+https://jacopoottaviani.com/africa-infra-watch/data/map.json. Fetch dates, release names and record counts:
+https://jacopoottaviani.com/africa-infra-watch/data/meta.json. The three raw layers as GeoJSON:
+
+- [Global Energy Monitor](https://globalenergymonitor.org/projects/global-integrated-power-tracker/): Global Integrated Power Tracker, release 2026-08-v2. 4,274 records, data as of 24 Aug 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson
+- [African Development Bank](https://iatiregistry.org/publisher/afdb): IATI 2.03 activity files, 57 country datasets. 1,401 records, data as of 7 Sep 2026, licence Open, per publisher. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson
+- [OpenStreetMap](https://www.openstreetmap.org/copyright): Overpass API, significant road/rail/air classes. 3,586 records, data as of 7 Sep 2026, licence ODbL 1.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson
+
+Country outlines are Natural Earth (1:10m on the map, 1:110m on the dashboard). The
+satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off by default.
+
+## How to read it
+
+- The three sources share no project identifier. They are three layers, never summed:
+  an AfDB-financed power plant can legitimately appear in all three.
+- Five shared statuses. Announced: GEM announced, IATI status 1, OSM proposed. Approved:
+  GEM pre-construction, AfDB projects past board approval. Under construction: GEM
+  construction, IATI status 2, OSM construction. Operating: GEM operating, IATI 3-4.
+  Stalled: GEM cancelled/shelved/mothballed, IATI 5-6.
+- Shape is source, colour is status, size is scale: circles are power units sized by MW,
+  squares are AfDB projects sized by commitment, lines are construction ways as traced.
+- AfDB amounts are commitments (IATI transaction type 2) converted from SDR at a fixed,
+  stated rate: 1 SDR = 1.37 USD (IMF, Sep 2026).
+
+## Limits
+
+- Money is AfDB only. Chinese, private, domestic-budget and other-lender finance is not
+  here. Read totals as AfDB exposure, not as investment in Africa.
+- About two thirds of AfDB locations are approximate (a country or region centroid).
+  Exact points are used where they exist; the pages say which.
+- OpenStreetMap presence is mapper-driven: absence of a road is not evidence that none is
+  being built. The layer is filtered to motorway-to-secondary roads, rail and airports.
+- Energy is over-represented: no comparable open tracker exists for ports, water or ICT.
+- Somaliland and Western Sahara are drawn as Natural Earth draws them, as separate
+  polygons; that is the boundary dataset's choice, not a position taken here.
+
+## Optional
+
+- [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
+- [African Development Bank on the IATI Registry](https://iatiregistry.org/publisher/afdb)
+- [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)
+- [Natural Earth](https://www.naturalearthdata.com/)

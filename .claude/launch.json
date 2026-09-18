@@ -4,8 +4,24 @@
     {
       "name": "dashboard",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8791"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8791"
+      ],
       "port": 8791
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8792",
+        "--directory",
+        "docs"
+      ],
+      "port": 8792
     }
   ]
 }

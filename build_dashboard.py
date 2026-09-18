@@ -17,7 +17,7 @@ import re
 import sys
 
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
-    DOCS, SDR_NOTE, SDR_USD, brand_assets, load_meta, payload_meta, wrap_document,
+    DOCS, SDR_NOTE, SDR_USD, brand_assets, load_meta, payload_meta, site_facts, wrap_document,
 )
 
 ROOT = pathlib.Path(__file__).parent
@@ -325,9 +325,11 @@ def main():
     # GitHub Pages copy: a complete document rather than an artifact fragment.
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
-        page, title="Africa Infrastructure Monitor", path="dashboard.html",
+        page, title="Africa Infrastructure Monitor", path="dashboard.html", kind="dashboard",
+        facts=site_facts(assets, finance, ground),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
-                    "power assets, AfDB finance and construction works traced in OpenStreetMap."))
+                    "power plants, African Development Bank finance and construction works from "
+                    "OpenStreetMap, with charts by country and sector and a sortable project table."))
     print(f"→ docs/dashboard.html")
 
 

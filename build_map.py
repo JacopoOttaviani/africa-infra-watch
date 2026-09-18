@@ -49,7 +49,9 @@ from build_dashboard import (  # noqa: E402
     build_lookup, locate, load,
 )
 from fetch_basemap import dp  # noqa: E402
-from shared import DOCS, brand_assets, load_meta, payload_meta, wrap_document  # noqa: E402
+from shared import (  # noqa: E402
+    DOCS, brand_assets, load_meta, payload_meta, site_facts, wrap_document, write_site_index,
+)
 
 
 def r(v, d=4):
@@ -288,16 +290,21 @@ async function loadPayload(){{
     pages = pages.replace(marker, '<script type="module">\nconst DATA = await loadPayload();', 1)
     DOCS.mkdir(exist_ok=True)
     (DOCS / "data").mkdir(exist_ok=True)
+    facts = site_facts(assets, finance, ground)
     (DOCS / "index.html").write_text(wrap_document(
-        pages, title="Africa Infrastructure Map", path="",
-        description="Interactive map of announced, approved and ongoing infrastructure across Africa: "
-                    "power assets, AfDB-financed projects and construction works traced in OpenStreetMap."))
+        pages, title="Africa Infrastructure Map", path="", kind="map", facts=facts,
+        description="Interactive open-data map of infrastructure across Africa: power plants "
+                    "(Global Energy Monitor), African Development Bank projects and construction "
+                    "works traced in OpenStreetMap. Filter by country, status and sector."))
+    write_site_index(facts)
     (DOCS / "data" / "map.json").write_text(blob)
     for f in sorted(DATA.glob("*.geojson")) + [DATA / "meta.json", DATA / "africa_basemap_10m.json"]:
         shutil.copy(f, DOCS / "data" / f.name)
     (DOCS / ".nojekyll").write_text("")
     total = sum(p.stat().st_size for p in DOCS.rglob("*") if p.is_file()) / 1024 / 1024
-    print(f"→ docs/  index.html + dashboard.html + data/ ({total:.1f} MB for GitHub Pages)")
+    print(f"→ docs/  index.html + dashboard.html + sitemap.xml + llms.txt + data/ ({total:.1f} MB for GitHub Pages)")
+    if not (DOCS / "social.png").exists():
+        print("   ! docs/social.png missing — run build_social.py for the link-preview image")
 
 
 if __name__ == "__main__":
