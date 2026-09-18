@@ -435,7 +435,7 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{t} · {q(SITE_NAME)}</title>
+<title>Geopolitics of Africa: {t} · {q(SITE_NAME)}</title>
 <meta name="description" content="{d}">
 <meta name="keywords" content="{q(", ".join(KEYWORDS))}">
 <meta name="author" content="{q(AUTHOR_NAME)}">
