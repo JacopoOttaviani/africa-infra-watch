@@ -21,8 +21,10 @@ detail cards linking back to the source record, and a shareable URL hash. A
 **Cluster markers** toggle (`cl=1` in the hash) regroups the records that pass
 the filters into donuts, sized by count and sliced by status, using
 Leaflet.markercluster over the same projection (libraries in `vendor/`, inlined
-at build time). A **Satellite** toggle (`sat=1`), site build only, draws Esri
-World Imagery tiles under the borders, labels and records; off by default. A
+at build time). A **Satellite** toggle (`sat=1`), site build only, draws EOX's
+Sentinel-2 cloudless 2025 mosaic (10 m, CC BY-NC-SA) under the borders, labels
+and records; off by default. The provider is one config block in the template
+(`SAT_SRC`). A
 **Methodology** tab (also reachable with `t=m` in the hash) documents each
 source's origin, access route, unit of observation, filters, status mapping,
 what it can and cannot answer, the drawing rules and the counting rules; its

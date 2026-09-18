@@ -400,9 +400,16 @@
   .method .glyphs span{font-size:12px;color:var(--ink-3);line-height:1.4}
   .method .callout{margin-top:18px;padding:14px 16px;border-left:3px solid var(--st-construction);background:var(--surface);border-radius:0 4px 4px 0}
   .method .callout p{margin:0}
+  .method .logos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+  .method .logos a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:104px;padding:16px 14px 13px;border:1px solid var(--rule-soft);border-radius:4px;background:var(--surface);color:var(--ink-3);text-decoration:none;transition:color .15s,border-color .15s}
+  .method .logos a:hover,.method .logos a:focus-visible{color:var(--ink);border-color:var(--rule)}
+  .method .logos svg{display:block;width:100%;max-width:132px;height:44px;fill:currentColor}
+  .method .logos span{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .method .lnote{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:10px;max-width:none}
   .method .foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.6}
   @media (max-width:880px){
     .method{padding:24px 18px 100px}
+    .method .logos{grid-template-columns:repeat(2,1fr)}
     .method .spec{grid-template-columns:1fr}
     .method .spec dt{padding-bottom:2px;border-top:1px solid var(--rule-soft)}
     .method .spec dd{border-top:0;padding-top:4px}
@@ -486,7 +493,7 @@
       <span class="pill scope" id="scope" hidden><span id="scopename"></span><button id="scopeclear" aria-label="Clear country filter">×</button></span>
       <span class="pill"><span class="m" id="vis">0</span> records match</span>
       <button class="pill toggle" id="cluster" aria-pressed="false" title="Group nearby records into donuts sized by count and sliced by status">Cluster markers</button>
-      <button class="pill toggle pages-only" id="sat" aria-pressed="false" title="Show satellite imagery under the records (Esri World Imagery)">
+      <button class="pill toggle pages-only" id="sat" aria-pressed="false">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7 9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4Z"/><path d="m16 8 3-3"/><path d="M9 21a6 6 0 0 0-6-6"/></svg>Satellite
       </button>
       <button class="pill link" id="hudmethod" title="Sources, method and limits">Methodology</button>
@@ -510,7 +517,7 @@
 
     <div class="attrib">
       <div class="scale" id="scale"></div>
-      <div class="credit"><span id="satcredit" hidden>Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">Esri</a>, Maxar, Earthstar Geographics · </span>Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div>
+      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div>
     </div>
 
     <article id="method" aria-label="Methodology">
@@ -537,6 +544,7 @@
 <script>/*__VENDOR__*/</script>
 <script>
 const DATA = /*__PAYLOAD__*/;
+const SOURCE_LOGOS = /*__SOURCE_LOGOS__*/{};
 
 /* ================= vocabulary ================= */
 const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
@@ -674,15 +682,31 @@ const pass = r =>
 let VIS = [], VIS_PTS = [], VIS_LINES = [];
 
 /* ================= satellite (site only) ================= */
-/* Esri World Imagery, drawn straight onto the canvas under the vector layers.
+/* Imagery tiles drawn straight onto the canvas under the vector layers.
    Same Web Mercator world as the projection above: at integer zoom Z the tile
    (tx,ty) covers [tx/2^Z, (tx+1)/2^Z] of the unit square, so it lands at
    sx(tx/2^Z), sy(ty/2^Z) with side S/2^Z pixels. The artifact build cannot
-   reach a tile server, so the toggle only exists in the site build. */
-const SAT_URL = (z,x,y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
-const SAT_MAXZ = 17, SAT_CACHE = 700;
+   reach a tile server, so the toggle only exists in the site build.
+
+   The provider is this one block: the URL pattern, the deepest zoom it
+   serves, and the words shown for it in the tooltip, the corner credit and
+   the Methodology. Change the source here and nowhere else. */
+const SAT_YEAR = "2025";
+const SAT_SRC = {
+  name: `Sentinel-2 cloudless ${SAT_YEAR}`,
+  url: (z,x,y) => `https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-${SAT_YEAR}_3857/default/g/${z}/${y}/${x}.jpg`,
+  maxZ: 14,   /* 10 m imagery; the map itself stops at 12.6 */
+  tip: `Show satellite imagery under the records (Sentinel-2 cloudless ${SAT_YEAR}, 10 m)`,
+  credit: `<a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless ${SAT_YEAR}</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX</a>, CC BY-NC-SA 4.0, modified Copernicus Sentinel data ${SAT_YEAR} · `,
+  method: `a cloud-free mosaic of the whole continent stitched by EOX IT Services from European Space Agency
+      Sentinel-2 scenes taken across ${SAT_YEAR}, at 10 m per pixel, fetched tile by tile from EOX's servers as you pan`,
+  licence: `Sentinel-2 cloudless ${SAT_YEAR} by EOX IT Services GmbH, CC BY-NC-SA 4.0, containing modified Copernicus Sentinel data ${SAT_YEAR}`,
+};
+const SAT_MAXZ = SAT_SRC.maxZ, SAT_CACHE = 700;
 const SAT = { dark:"#0B1418", halo:"rgba(6,12,10,.82)", label:"#DCE5DF", labelCity:"#FFFFFF",
               border:"rgba(255,255,255,.55)", admin:"rgba(255,255,255,.28)", dim:"rgba(4,10,8,.5)" };
+el("sat").title = SAT_SRC.tip;
+el("satcredit").innerHTML = SAT_SRC.credit;
 const tiles = new Map();
 function tile(z,x,y){
   const k = z+"/"+x+"/"+y;
@@ -693,7 +717,7 @@ function tile(z,x,y){
   t = {img, ok:false};
   img.onload = () => { t.ok = true; if(S_.sat) queue(); };
   img.onerror = () => { t.err = true; };
-  img.src = SAT_URL(z,x,y);
+  img.src = SAT_SRC.url(z,x,y);
   tiles.set(k, t);
   if(tiles.size > SAT_CACHE){ for(const [kk,v] of tiles){ if(tiles.size <= SAT_CACHE*0.8) break; if(v.ok || v.err) tiles.delete(kk); } }
   return t;
@@ -1601,6 +1625,11 @@ function statusTable(){
   return rows.map(([s,a,b,c]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
 }
 
+/* a data-source tile: the organisation's mark, monochrome in the current ink, over its role here */
+function logoTile(key, url, name, role){
+  const svg = (SOURCE_LOGOS[key] || "").replace("<svg ", `<svg role="img" aria-label="${esc(name)}" `);
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer" title="${esc(name)} (opens in a new tab)">${svg}<span>${esc(role)}</span></a>`;
+}
 let methodBuilt = false;
 function renderMethod(){
   if(methodBuilt) return;
@@ -1840,11 +1869,11 @@ function renderMethod(){
       exceeds the 54 member states of the African Union.
     </p>${PAGES ? `
     <p>
-      <strong>Satellite</strong>, in the toolbar, swaps the drawn basemap for Esri World Imagery,
-      fetched tile by tile from Esri's servers as you pan. Borders, labels and every record stay
-      on top, so a marker can be checked against what the ground looks like. The imagery is a
-      mosaic of different dates and does not show a site's current state; a dam may be drawn
-      as under construction over a picture taken before work began. It is off by default.
+      <strong>Satellite</strong>, in the toolbar, swaps the drawn basemap for ${SAT_SRC.method}.
+      Borders, labels and every record stay on top, so a marker can be checked against what the
+      ground looked like that year. At 10 m a dam, a plant or a road corridor is visible; a single
+      building is not. The mosaic is older than the data: a site drawn as under construction may
+      sit on a picture taken before work began. It is off by default.
     </p>` : ""}
     <h3>Counting</h3>
     <ul>
@@ -1898,8 +1927,17 @@ function renderMethod(){
     <p>
       Power asset data © Global Energy Monitor, CC BY 4.0. Finance data © African Development Bank
       Group, published via IATI. Map data © OpenStreetMap contributors, ODbL. Basemap by Natural Earth,
-      public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? " Satellite imagery © Esri, Maxar, Earthstar Geographics and the GIS User Community, loaded only when the Satellite view is on." : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
+      public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
+    <div class="logos" aria-label="Data sources">
+      ${logoTile("global-energy-monitor", "https://globalenergymonitor.org/", "Global Energy Monitor", "Power assets")}
+      ${logoTile("african-development-bank", "https://www.afdb.org/", "African Development Bank Group", "Finance")}
+      ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
+      ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
+      ${logoTile("natural-earth", "https://www.naturalearthdata.com/", "Natural Earth", "Basemap")}${PAGES ? `
+      ${logoTile("esri", "https://www.esri.com/", "Esri", "Satellite imagery")}` : ""}
+    </div>
+    <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data.</p>
     <p class="foot">
       Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
       ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works ·
