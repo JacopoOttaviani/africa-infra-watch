@@ -770,7 +770,8 @@ function fit(){
 /* zoom at which box b fills the viewport minus padding P */
 function fitZoom(b, P){
   const dx = b[2]-b[0], dy = b[3]-b[1];
-  return Math.log2(Math.min((W-P.l-P.r)/(dx*256), (H-P.t-P.b)/(dy*256)));
+  /* a stage narrower than its padding (not laid out yet) must not yield NaN */
+  return Math.log2(Math.min(Math.max(1, W-P.l-P.r)/(dx*256), Math.max(1, H-P.t-P.b)/(dy*256)));
 }
 function fitBounds(b, pad=40, zmax=ZMAX){
   const P = typeof pad==="number" ? {t:pad, r:pad, b:pad, l:pad} : pad;
@@ -1351,7 +1352,7 @@ function ensureLeaflet(){
    A pan just slides Leaflet's pane (markercluster keeps a viewport of margin
    around the view); zooms and the settle after a gesture re-cluster in full. */
 function syncLeaflet(force){
-  if(!LM) return;
+  if(!LM || !isFinite(view.cx+view.cy+view.z)) return;
   const same = lview && lview.z===view.z && lview.W===W && lview.H===H;
   if(!force && same && lview.cx===view.cx && lview.cy===view.cy) return;
   if(!force && same && LM._loaded){
@@ -1561,7 +1562,7 @@ function writeHash(){
     if(S_.country) parts.push("c="+S_.country);
     if(S_.sector) parts.push("k="+S_.sector);
     if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
-    if(S_.cluster) parts.push("cl=1");
+    if(S_.cluster !== MOBILE) parts.push("cl="+(S_.cluster?1:0));   /* only when it departs from the device default */
     if(S_.sat) parts.push("sat=1");
     if(document.body.dataset.tab==="method") parts.push("t=m");
     history.replaceState(null, "", "#"+parts.join("&"));
@@ -1586,7 +1587,10 @@ function readHash(){
   }
   return ok;
 }
-let wantTab = "map", wantCluster = false, wantSat = false;
+/* Phones start clustered: 9,000 marks on a small screen read as noise,
+   donuts read as a map. The hash overrides either way (cl=1 / cl=0). */
+const MOBILE = matchMedia("(max-width:880px)").matches;
+let wantTab = "map", wantCluster = MOBILE, wantSat = false;
 
 /* ================= methodology ================= */
 function setTab(t, write=true){
