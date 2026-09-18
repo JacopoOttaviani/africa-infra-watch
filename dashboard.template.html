@@ -60,9 +60,12 @@
   .titlerow .home{display:block;line-height:0;color:inherit;border-radius:4px}
   .titlerow .home:hover .mark{opacity:.75}
   .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-  .viewlink{display:none;font-size:12.5px;font-weight:600;color:var(--accent);text-decoration:none;margin-top:4px}
-  html[data-host="pages"] .viewlink{display:inline-block}
-  .viewlink:hover{text-decoration:underline}
+  .viewlink{display:none}
+  html[data-host="pages"] .viewlink{display:flex}
+  .tabs{gap:2px;padding:3px;background:var(--surface-2);border-radius:4px;margin-top:8px;align-self:flex-start;min-width:260px}
+  .tab{flex:1;display:flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:3px;font-size:12px;font-weight:600;color:var(--ink-3);letter-spacing:.01em;text-decoration:none;white-space:nowrap}
+  .tab[aria-current]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+  .tab:hover:not([aria-current]){color:var(--ink-2)}
   .srcs{display:flex;flex-wrap:wrap;gap:8px}
   .src{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);min-width:132px}
   .src .sk{font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
@@ -209,7 +212,11 @@
   footer.foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
 
   /* ---------- support button (always visible) ---------- */
-  .coffee{position:fixed;right:12px;top:12px;z-index:20;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
+  .topright{position:fixed;right:12px;top:12px;z-index:20;display:flex;gap:6px;align-items:center}
+  .methodbtn{align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);transition:background .15s}
+  .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .methodbtn:hover{background:var(--surface-2)}
+  .coffee{position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
   .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
   .coffee .cup{transform-box:fill-box;transform-origin:50% 100%}
@@ -222,7 +229,7 @@
   @keyframes cshine{to{transform:translateX(130%)}}
   @keyframes cwiggle{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}65%{transform:rotate(9deg)}}
   @keyframes csteam{0%{transform:translateY(1px);opacity:0}35%{opacity:1}100%{transform:translateY(-3px);opacity:0}}
-  @media (max-width:600px){.coffee{padding:0 7px;gap:0}.coffee span{display:none}}
+  @media (max-width:600px){.coffee,.methodbtn{padding:0 7px;gap:0}.coffee span,.methodbtn span{display:none}}
   @media (prefers-reduced-motion:reduce){.coffee,.coffee::before,.coffee .cup,.coffee .steam{animation:none!important;transition:none!important}.coffee:hover{transform:none}}
   .byline{font-size:11.5px;color:var(--ink-3);line-height:1.5}
   .byline a{display:inline-flex;align-items:center;gap:4px;color:var(--ink-2);font-weight:600;text-decoration:none;border-bottom:1px solid var(--rule)}
@@ -238,7 +245,10 @@
     <div class="brand">
       <span class="kicker">Geopolitics of Africa</span>
       <div class="titlerow"><a class="home" href="__HOME_URL__" aria-label="Africa Infrastructure Map, home"><!--__LOGO__--></a><h1>Africa Infrastructure Monitor</h1></div>
-      <a class="viewlink" href="index.html">Open the interactive map →</a>
+      <nav class="tabs viewlink" aria-label="View">
+        <a class="tab" href="index.html">Map view</a>
+        <a class="tab" aria-current="page" href="dashboard.html">Dashboard view</a>
+      </nav>
     </div>
     <div class="srcs" id="srcs"></div>
   </header>
@@ -415,10 +425,16 @@
     <span class="byline">africa-infra-watch · a project by <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
   </footer>
 </div>
+<div class="topright">
+<a class="methodbtn viewlink" href="index.html#t=m" title="Where the data comes from and how it is aligned" aria-label="Methodology">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
+  <span>Methodology</span>
+</a>
 <a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
   <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
   <span>Buy me a coffee</span>
 </a>
+</div>
 
 
 <script>
