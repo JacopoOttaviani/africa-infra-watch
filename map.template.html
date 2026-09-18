@@ -563,6 +563,11 @@ const ALL_LAYER_KEYS = LAYER_ORDER.map(k=>LAYER_KEY[k]).join("");
 const LINE_LAYERS  = ["cables","pipelines","ground"];
 const LINE_RANK    = Object.fromEntries(LINE_LAYERS.map((k,i)=>[k,i]));
 const isLine = r => r.layer in LINE_RANK;
+/* Cluster markers regroups point-like records. Pipelines and submarine cables
+   are routes across countries and seas: a donut at their midpoint would say
+   nothing, so they stay drawn as lines in the cluster view too. */
+const UNCLUSTERED = new Set(["pipelines","cables"]);
+const clustered = r => !UNCLUSTERED.has(r.layer);
 /* the colour each layer's button and stat row wear: its most common status */
 const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved"};
 const allLayersOn  = () => Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
@@ -941,9 +946,10 @@ function draw(){
 
   /* lines: submarine cables, pipeline routes, traced works — in that order,
      so the thin works stay legible over the wider pipelines */
-  if(!S_.cluster && VIS_LINES.length){
+  if(VIS_LINES.length){
     const lw = Math.max(1.3, Math.min(4.5, 1.3 + (view.z-4)*0.55));
     for(const r of VIS_LINES){
+      if(S_.cluster && clustered(r)) continue;   /* the overlay holds these */
       if(!ringVisible(r.b)) continue;
       const col = statusColor(r.status), picked = r===S_.picked;
       /* dashed = not yet built: a proposed alignment, a proposed pipeline, a planned cable */
@@ -1094,9 +1100,9 @@ function updateScale(){
 
 /* ================= hit testing ================= */
 function nearest(px_, py_){
-  if(S_.cluster) return null;   /* the overlay holds the marks; see clusterHit */
   let best=null, bd=100;
-  for(let i=VIS_PTS.length-1;i>=0;i--){
+  /* while clustering, points and traced works live in the overlay (clusterHit) */
+  if(!S_.cluster) for(let i=VIS_PTS.length-1;i>=0;i--){
     const r = VIS_PTS[i];
     const dx = r.x*S+OX-px_, dy = r.y*S+OY-py_, d = dx*dx+dy*dy;
     const tol = markerR(r)+4;
@@ -1106,6 +1112,7 @@ function nearest(px_, py_){
   const tol = 7, mxp = (px_-OX)/S, myp = (py_-OY)/S, tm = tol/S;
   let bl=null, bld=tol*tol;
   for(const r of VIS_LINES){
+    if(S_.cluster && clustered(r)) continue;
     const b = r.b;
     if(mxp<b[0]-tm||mxp>b[2]+tm||myp<b[1]-tm||myp>b[3]+tm) continue;
     for(const p of r.ref.parts){
@@ -1224,7 +1231,7 @@ function renderLegend(){
       <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(COL.ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
       <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = not yet built</span></div>
-      ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
+      ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix · routes stay lines</span></div>` : ""}
     </div>`;
 }
 
@@ -1498,7 +1505,7 @@ function syncMarkers(){
   if(!CG) return;
   const have = new Set(); CG.eachLayer(m => have.add(m.rec));
   const drop = [...have].filter(r => !pass(r)).map(r => r._m);
-  const add = VIS.filter(r => !have.has(r)).map(markerFor);
+  const add = VIS.filter(r => clustered(r) && !have.has(r)).map(markerFor);
   if(drop.length) CG.removeLayers(drop);
   if(add.length) CG.addLayers(add);
 }
@@ -2090,7 +2097,9 @@ function renderMethod(){
       current zoom into donuts. The number is how many records the donut holds; the slices are their
       status mix, in the status colours. Click a donut to zoom into it. Records that share one
       location, such as AfDB projects placed at a country centroid, fan out around the donut at the
-      closest zoom. Grouping is done by Leaflet.markercluster on the same projection as the canvas.
+      closest zoom. Pipelines and submarine cables are not clustered: a route across several countries
+      has no single place to stand, so they stay drawn as lines in this view too. Grouping is done by
+      Leaflet.markercluster on the same projection as the canvas.
     </p>
     <h3>Basemap</h3>
     <p>

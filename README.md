@@ -20,7 +20,8 @@ OpenStreetMap), haloed lines (oil and gas pipeline routes) and lines ending in
 dots (submarine cables, dots at their African landing points). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
 **Cluster markers** toggle (`cl=1` in the hash) regroups the records that pass
-the filters into donuts, sized by count and sliced by status, using
+the filters into donuts, sized by count and sliced by status (pipelines and
+submarine cables stay drawn as lines), using
 Leaflet.markercluster over the same projection (libraries in `vendor/`, inlined
 at build time). A **Satellite** toggle (`sat=1`), site build only, draws EOX's
 Sentinel-2 cloudless 2025 mosaic (10 m, CC BY-NC-SA) under the borders, labels
