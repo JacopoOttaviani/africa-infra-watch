@@ -308,8 +308,6 @@
   body[data-tab="method"] .map-only{display:none}
   body:not([data-tab="method"]) .method-only{display:none}
   body[data-tab="method"] .stage > :not(#method):not(.scrim){display:none}
-  .pill.link{cursor:pointer;color:var(--ink-2)}
-  .pill.link:hover{background:var(--surface-3);color:var(--ink)}
 
   .readmore{display:flex;flex-direction:column;gap:6px;padding:14px 20px 22px;margin-top:auto;border-top:1px solid var(--rule-soft);font-size:12px;color:var(--ink-3);line-height:1.5}
   .readmore button{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink)}
@@ -499,7 +497,6 @@
       <button class="pill toggle pages-only" id="sat" aria-pressed="false">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7 9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4Z"/><path d="m16 8 3-3"/><path d="M9 21a6 6 0 0 0-6-6"/></svg>Satellite
       </button>
-      <button class="pill link" id="hudmethod" title="Sources, method and limits">Methodology</button>
     </div>
 
     <div class="hud hud-tr">
@@ -1603,7 +1600,6 @@ function setTab(t, write=true){
 }
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => setTab(b.dataset.t));
 el("tomethod").onclick = () => setTab("method");
-el("hudmethod").onclick = () => setTab("method");
 el("mback").onclick = () => setTab("map");
 el("mtoc").onclick = () => railToggle(true);
 
