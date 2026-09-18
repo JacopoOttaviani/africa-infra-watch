@@ -107,25 +107,44 @@ def build_assets():
             "rows": rows}
 
 
+# The finance layer's two lenders: file, short lender code as the payload
+# carries it, and how their amounts reach US dollars. AfDB reports in XDR
+# (IMF SDR); the World Bank in USD.
+FINANCE_FILES = [("iati_afdb_finance.geojson", "AfDB"), ("iati_worldbank_finance.geojson", "WB")]
+TO_USD = {"XDR": SDR_USD, "USD": 1.0}
+
+
 def build_finance():
-    """One record per AfDB activity; every exact location kept for the detail
-    view, the best one used as the marker."""
+    """One record per activity per lender; every precise location kept for
+    the detail view, the best one used as the marker.
+
+    Precision rank per location: 0 = exact site (IATI exactness 1, AfDB);
+    1 = a named place or site (World Bank location-class 2 or 4, which the
+    Bank still marks exactness 2); 2 = a country or region centroid."""
     best = {}
-    for f in load("iati_afdb_finance.geojson"):
-        p = f["properties"]
-        pid = p.get("iati_id")
-        if not pid:
+    for fname, ln in FINANCE_FILES:
+        if not (DATA / fname).exists():
+            print(f"   ! {fname} missing, lender {ln} skipped")
             continue
-        lon, lat = f["geometry"]["coordinates"]
-        exact = p.get("geo_precision") == "1"
-        rec = best.setdefault(pid, {"p": p, "pt": None, "rank": 9, "locs": []})
-        rank = 0 if exact else 1
-        if rank < rec["rank"]:
-            rec["rank"], rec["pt"], rec["p"] = rank, (lon, lat), p
-        if exact:
-            rec["locs"].append([r(lon), r(lat), (p.get("location_name") or "")[:40]])
+        for f in load(fname):
+            p = f["properties"]
+            pid = p.get("iati_id")
+            if not pid:
+                continue
+            lon, lat = f["geometry"]["coordinates"]
+            if p.get("geo_precision") == "1":
+                rank = 0
+            elif p.get("location_class") in ("2", "4"):
+                rank = 1
+            else:
+                rank = 2
+            rec = best.setdefault((ln, pid), {"p": p, "pt": None, "rank": 9, "locs": [], "ln": ln})
+            if rank < rec["rank"]:
+                rec["rank"], rec["pt"], rec["p"] = rank, (lon, lat), p
+            if rank <= 1:
+                rec["locs"].append([r(lon), r(lat), (p.get("location_name") or "")[:40]])
     rows = []
-    for pid, rec in best.items():
+    for (ln, pid), rec in best.items():
         p = rec["p"]
         lon, lat = rec["pt"]
         sector = None
@@ -138,6 +157,7 @@ def build_finance():
             if sector:
                 break
         com, dis = p.get("commitment"), p.get("disbursed")
+        rate = TO_USD.get(p.get("currency") or ("XDR" if ln == "AfDB" else "USD"))
         locs = rec["locs"]
         if len(locs) <= 1:
             locs = None
@@ -146,13 +166,13 @@ def build_finance():
         rows.append([
             (p.get("name") or "").strip()[:100], p.get("country") or "",
             r(lon), r(lat), p.get("dash_status"), sector or "other",
-            round(com * SDR_USD / 1e6, 2) if com else None,
-            round(dis * SDR_USD / 1e6, 2) if dis else None,
-            1 if rec["rank"] == 0 else 0, (p.get("location_name") or "")[:40] or None,
-            pid, codes[0] if codes else None, locs,
+            round(com * rate / 1e6, 2) if com and rate else None,
+            round(dis * rate / 1e6, 2) if dis and rate else None,
+            rec["rank"], (p.get("location_name") or "")[:40] or None,
+            pid, codes[0] if codes else None, locs, ln, p.get("project_url") or None,
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m",
-                     "dis_m", "exact", "place", "iid", "dac", "locs"],
+                     "dis_m", "prec", "place", "iid", "dac", "locs", "ln", "purl"],
             "rows": rows}
 
 
@@ -322,8 +342,11 @@ def main():
     print(f"   {len(assets['rows']):,} power units")
     print("finance …")
     finance = build_finance()
-    multi = sum(1 for x in finance["rows"] if x[-1])
-    print(f"   {len(finance['rows']):,} projects ({multi:,} with several exact sites)")
+    fc = finance["cols"]
+    multi = sum(1 for x in finance["rows"] if x[fc.index("locs")])
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in ("AfDB", "WB")}
+    print(f"   {len(finance['rows']):,} projects ({by_ln['AfDB']:,} AfDB, {by_ln['WB']:,} World Bank; "
+          f"{multi:,} with several precise sites)")
     print("ground  …")
     ground = build_ground(idx)
     located = sum(1 for g in ground["rows"] if g[1])
@@ -414,8 +437,8 @@ async function loadPayload(){{
         pages, title="Africa Infrastructure Map", path="", kind="map", facts=facts,
         description="Interactive open-data map of infrastructure across Africa: power plants and "
                     "oil and gas pipelines (Global Energy Monitor), African Development Bank "
-                    "projects, construction works traced in OpenStreetMap and submarine cables "
-                    "(TeleGeography). Filter by country, status and sector."))
+                    "and World Bank projects, construction works traced in OpenStreetMap and "
+                    "submarine cables (TeleGeography). Filter by country, status and sector."))
     write_site_index(facts)
     (DOCS / "data" / "map.json").write_text(blob)
     for f in sorted(DATA.glob("*.geojson")) + [DATA / "meta.json", DATA / "africa_basemap_10m.json"]:

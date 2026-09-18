@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate africa-infra-watch from the five verified sources.
+Populate africa-infra-watch from the six verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
 `dash_status` vocabulary so a single filter works across every layer.
@@ -10,9 +10,10 @@ Every endpoint here was tested live on 2026-09-07 (power, AfDB, OSM) and
 the reasoning and the known gotchas.
 
 Usage:
-    python3 fetch_sources.py                 # all five layers
+    python3 fetch_sources.py                 # all six layers
     python3 fetch_sources.py gem osm         # only the named layers
     python3 fetch_sources.py pipes cables    # the two line layers added Sep 2026
+    python3 fetch_sources.py wb              # World Bank, second lender in the finance layer
 """
 
 import csv
@@ -163,24 +164,47 @@ def fetch_gem():
 # ------------------------------------------------------------- IATI (finance)
 
 REGISTRY = "https://iatiregistry.org/api/3/action/package_search"
-IATI_INFRA_DAC = ("210", "230", "140", "321", "322", "323", "331", "410", "220")
+# DAC purpose-code prefixes that count as infrastructure. Energy is the whole
+# 23x block: the 3-digit "230" only matched the legacy code 23010 and dropped
+# every 5-digit energy code (23110 policy, 23210 solar, 23630 distribution…),
+# which is how the World Bank's energy portfolio first went missing.
+IATI_INFRA_DAC = ("210", "23", "140", "321", "322", "323", "331", "410", "220")
+
+
+# The two lenders in the finance layer. Both publish IATI 2.03 per-country
+# files through the registry; the fetcher is the same, the conventions differ:
+#   AfDB       57 files, XDR (IMF SDR) amounts, exactness 1 on real sites
+#   World Bank 148 files worldwide (50 African countries plus two regional
+#              files, 289 South of Sahara and 298 Africa regional), USD
+#              amounts, every location marked exactness 2 (approximate) with
+#              the precision carried by location-class instead: 4 = site,
+#              2 = populated place, 1 = administrative region
+IATI_PUBLISHERS = {
+    "afdb": {"lender": "AfDB", "meta": "finance", "files": None},
+    "worldbank": {"lender": "World Bank", "meta": "finance_wb",
+                  "files": [c.lower() for c in AFRICA_ISO] + ["289", "298"]},
+}
 
 
 def fetch_iati(publisher="afdb", infra_only=True):
-    """AfDB publishes 57 per-country files; every location carries a <point>.
+    """One GeoJSON point per <location> with a <point>, per activity.
 
     The IATI Datastore API (api.iatistandard.org) needs a subscription key and
     returns 401 without one, so go via the registry to the publisher's XML.
     """
+    conf = IATI_PUBLISHERS[publisher]
     meta = json.loads(get(
-        f"{REGISTRY}?q=organization:{publisher}&rows=200", timeout=90))
-    urls = [r["url"] for p in meta["result"]["results"] for r in p["resources"]]
+        f"{REGISTRY}?q=organization:{publisher}&rows=300", timeout=90))
+    pkgs = meta["result"]["results"]
+    if conf["files"]:
+        pkgs = [pk for pk in pkgs if pk["name"].rsplit("-", 1)[-1].lower() in conf["files"]]
+    urls = [r["url"] for pk in pkgs for r in pk["resources"]]
     print(f"IATI {publisher}: {len(urls)} datasets")
 
     feats = []
     for i, u in enumerate(urls, 1):
         try:
-            xml = get(u, timeout=180)
+            xml = get(u, timeout=300)
         except Exception as e:                                # noqa: BLE001
             print(f"  ! skipped {u.rsplit('/', 1)[-1]}: {e}")
             continue
@@ -191,7 +215,11 @@ def fetch_iati(publisher="afdb", infra_only=True):
             continue
 
         for act in root.iter("iati-activity"):
-            sectors = [s.get("code") for s in act.iter("sector") if s.get("code")]
+            # DAC purpose codes only (vocabulary 1, or unstated). The World
+            # Bank also publishes its own theme and sector codes as
+            # vocabularies 98 and 99; those are kept out of the filter.
+            sectors = [s.get("code") for s in act.iter("sector")
+                       if s.get("code") and s.get("vocabulary") in (None, "1", "2")]
             if infra_only and not any(
                     c.startswith(IATI_INFRA_DAC) for c in sectors):
                 continue
@@ -201,13 +229,16 @@ def fetch_iati(publisher="afdb", infra_only=True):
             title = act.find("title/narrative")
             ident = act.find("iati-identifier")
             country = act.find("recipient-country")
+            region = act.find("recipient-region")
 
             # Money: use transactions, NOT <budget>. AfDB repeats the same
             # value in a <budget> element per quarter, so "first budget"
             # understates and "sum of budgets" is only accidentally right.
-            # transaction-type 2 = outgoing commitment, 3 = disbursement.
+            # transaction-type 2 = outgoing commitment, 3 = disbursement
+            # (5 and 6, interest and loan repayments, are ignored).
             # Values carry no currency attribute — they inherit the
-            # activity's default-currency, which for AfDB is XDR (IMF SDR).
+            # activity's default-currency: XDR (IMF SDR) for AfDB, USD for
+            # the World Bank.
             currency = act.get("default-currency")
             commitment = disbursed = 0.0
             for tx in act.iter("transaction"):
@@ -225,6 +256,12 @@ def fetch_iati(publisher="afdb", infra_only=True):
                     disbursed += amt
                 currency = v.get("currency") or currency
 
+            iid = ident.text.strip() if ident is not None and ident.text else None
+            project_url = None
+            if publisher == "worldbank" and iid and "-P" in iid:
+                project_url = ("https://projects.worldbank.org/en/projects-operations/"
+                               f"project-detail/{iid.rsplit('-', 1)[-1]}")
+
             for loc in act.iter("location"):
                 pos = loc.find("point/pos")
                 if pos is None or not (pos.text or "").strip():
@@ -234,35 +271,41 @@ def fetch_iati(publisher="afdb", infra_only=True):
                 except ValueError:
                     continue
                 ex = loc.find("exactness")
+                lc = loc.find("location-class")
                 nm = loc.find("name/narrative")
                 feats.append({
                     "type": "Feature",
                     "geometry": {"type": "Point", "coordinates": [lon, lat]},
                     "properties": {
                         "source": publisher.upper(),
+                        "lender": conf["lender"],
                         "layer": "finance",
                         "name": title.text if title is not None else None,
                         "location_name": nm.text if nm is not None else None,
                         "country": country.get("code") if country is not None else None,
+                        "region": region.get("code") if region is not None else None,
                         "sector": "infrastructure",
                         "dac_sectors": sectors,
                         "raw_status": code,
                         "dash_status": IATI_STATUS.get(code),
                         # exactness 1 = exact; 2 = approximate (often a country
                         # centroid). Filter to "1" for a map that isn't pinned
-                        # to the middle of each country.
+                        # to the middle of each country. The World Bank marks
+                        # everything 2 and says how close in location-class.
                         "geo_precision": ex.get("code") if ex is not None else None,
+                        "location_class": lc.get("code") if lc is not None else None,
                         "commitment": round(commitment, 2) or None,
                         "disbursed": round(disbursed, 2) or None,
                         "currency": currency,
-                        "iati_id": ident.text if ident is not None else None,
+                        "iati_id": iid,
+                        "project_url": project_url,
                     },
                 })
         if i % 15 == 0:
             print(f"  … {i}/{len(urls)} files, {len(feats):,} located so far")
 
     out = write_layer(f"iati_{publisher}_finance", feats)
-    update_meta("finance", fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
+    update_meta(conf["meta"], fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
                 activities=len({f["properties"]["iati_id"] for f in feats}))
     return out
 
@@ -693,6 +736,7 @@ def fetch_cables(pause=0.1):
 LAYERS = {
     "gem": fetch_gem,
     "iati": fetch_iati,
+    "wb": lambda: fetch_iati("worldbank"),
     "osm": fetch_osm,
     "pipes": fetch_pipelines,
     "cables": fetch_cables,

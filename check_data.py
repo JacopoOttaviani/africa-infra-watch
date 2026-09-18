@@ -22,6 +22,7 @@ DATA = pathlib.Path(__file__).parent / "data"
 LAYERS = {
     "gem_power_assets": ("assets", 1000),
     "iati_afdb_finance": ("finance", 300),
+    "iati_worldbank_finance": ("finance_wb", 500),
     "osm_construction": ("ground", 500),
     "gem_oil_gas_pipelines": ("pipelines", 150),
     "telegeography_cables": ("cables", 40),

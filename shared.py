@@ -53,6 +53,8 @@ SOURCE_INFO = {
                "url": "https://globalenergymonitor.org/projects/global-integrated-power-tracker/"},
     "finance": {"name": "African Development Bank", "lic": "Open, per publisher",
                 "url": "https://iatiregistry.org/publisher/afdb"},
+    "finance_wb": {"name": "World Bank", "lic": "CC BY 4.0",
+                   "url": "https://iatiregistry.org/publisher/worldbank"},
     "ground": {"name": "OpenStreetMap", "lic": "ODbL 1.0",
                "url": "https://www.openstreetmap.org/copyright"},
     "pipelines": {"name": "Global Energy Monitor", "lic": "CC BY 4.0",
@@ -62,7 +64,7 @@ SOURCE_INFO = {
 }
 # The layers each page draws. The dashboard predates the two line layers and
 # still shows three; the map shows all five.
-MAP_LAYERS = ("assets", "finance", "ground", "pipelines", "cables")
+MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables")
 DASHBOARD_LAYERS = ("assets", "finance", "ground")
 
 
@@ -100,7 +102,7 @@ def fmt_date(iso):
 
 def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
-    p, c = meta.get("pipelines", {}), meta.get("cables", {})
+    p, c, w = meta.get("pipelines", {}), meta.get("cables", {}), meta.get("finance_wb", {})
     rows = [
         {"k": "assets", **SOURCE_INFO["assets"],
          "detail": f"Global Integrated Power Tracker, release {a.get('release', 'unknown')}",
@@ -108,6 +110,9 @@ def sources(meta, keys=MAP_LAYERS):
         {"k": "finance", **SOURCE_INFO["finance"],
          "detail": f"IATI 2.03 activity files, {f.get('datasets', '?')} country datasets",
          "fresh": f.get("fresh") or fmt_date(f.get("fetched"))},
+        {"k": "finance_wb", **SOURCE_INFO["finance_wb"],
+         "detail": f"IATI 2.03 activity files, {w.get('datasets', '?')} African country and regional datasets",
+         "fresh": w.get("fresh") or fmt_date(w.get("fetched"))},
         {"k": "ground", **SOURCE_INFO["ground"],
          "detail": "Overpass API, significant road/rail/air classes",
          "fresh": g.get("fresh") or fmt_date(g.get("fetched"))},
@@ -175,7 +180,8 @@ def site_url(path=""):
 # language-model crawlers all read one story, with this snapshot's figures.
 
 KEYWORDS = ["Africa infrastructure", "infrastructure projects Africa", "Africa power plants map",
-            "African Development Bank projects", "AfDB finance", "construction Africa map",
+            "African Development Bank projects", "AfDB finance", "World Bank projects Africa",
+            "construction Africa map",
             "energy Africa", "Global Energy Monitor", "OpenStreetMap construction",
             "oil and gas pipelines Africa", "submarine cables Africa", "TeleGeography",
             "open data Africa", "infrastructure investment Africa", "interactive map"]
@@ -185,6 +191,7 @@ LICENSE_URL = {"CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
                "ODbL 1.0": "https://opendatacommons.org/licenses/odbl/1-0/"}
 
 LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": "iati_afdb_finance.geojson",
+              "finance_wb": "iati_worldbank_finance.geojson",
               "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
               "cables": "telegeography_cables.geojson"}
 
@@ -208,6 +215,13 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, meta=None):
     g, _ = _rows(ground)
     mw = sum((r[ac.index("mw")] or 0) for r in a) if "mw" in ac else 0
     usd = sum((r[fc.index("usd_m")] or 0) for r in f) if "usd_m" in fc else 0
+    # the map's finance rows carry a lender column; the dashboard's are AfDB only
+    if "ln" in fc:
+        n_afdb = sum(1 for r in f if r[fc.index("ln")] == "AfDB")
+        n_wb = sum(1 for r in f if r[fc.index("ln")] == "WB")
+        usd_wb = sum((r[fc.index("usd_m")] or 0) for r in f if r[fc.index("ln")] == "WB")
+    else:
+        n_afdb, n_wb, usd_wb = len(f), (meta.get("finance_wb") or {}).get("activities") or 0, 0
 
     def count(layer, key):
         if layer is None:
@@ -220,17 +234,20 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, meta=None):
         rows, cols = _rows(layer)
         return sum((r[cols.index(col)] or 0) for r in rows) if col in cols else 0
 
-    return {"assets": len(a), "finance": len(f), "ground": len(g),
+    return {"assets": len(a), "finance": n_afdb, "finance_wb": n_wb, "finance_total": len(f),
+            "ground": len(g),
             "pipelines": count(pipelines, "pipelines"), "cables": count(cables, "cables"),
             "pipe_km": total(pipelines, "km"),
-            "gw": mw / 1000, "usd_bn": usd / 1000,
+            "gw": mw / 1000, "usd_bn": usd / 1000, "usd_bn_wb": usd_wb / 1000,
             "sources": sources(meta), "built": today(), "meta": meta}
 
 
 def facts_sentence(facts):
     s = (f"{facts['assets']:,} power units tracked by Global Energy Monitor, "
-         f"{facts['finance']:,} projects financed by the African Development Bank, "
-         f"{facts['ground']:,} construction works traced in OpenStreetMap")
+         f"{facts['finance']:,} projects financed by the African Development Bank")
+    if facts.get("finance_wb"):
+        s += f" and {facts['finance_wb']:,} by the World Bank"
+    s += f", {facts['ground']:,} construction works traced in OpenStreetMap"
     if facts.get("pipelines"):
         s += f", {facts['pipelines']:,} oil and gas pipeline segments from Global Energy Monitor"
     if facts.get("cables"):
@@ -243,7 +260,12 @@ def facts_totals(facts):
     if facts["gw"]:
         parts.append(f"about {facts['gw']:,.0f} GW of generating capacity across all statuses")
     if facts["usd_bn"]:
-        parts.append(f"USD {facts['usd_bn']:,.1f} billion of AfDB commitments, converted at {SDR_NOTE}")
+        if facts.get("usd_bn_wb"):
+            parts.append(f"USD {facts['usd_bn'] - facts['usd_bn_wb']:,.1f} billion of AfDB commitments, "
+                         f"converted at {SDR_NOTE}, and USD {facts['usd_bn_wb']:,.1f} billion of World Bank "
+                         f"commitments as published")
+        else:
+            parts.append(f"USD {facts['usd_bn']:,.1f} billion of AfDB commitments, converted at {SDR_NOTE}")
     return "; ".join(parts)
 
 
@@ -270,6 +292,10 @@ def structured_data(facts, *, path, title, description, kind):
                 "finance": "African Development Bank projects from its IATI 2.03 activity files: "
                            "title, recipient country, status, DAC sector, commitment and "
                            "disbursement, and geocoded locations where published.",
+                "finance_wb": "World Bank infrastructure projects in Africa from its IATI 2.03 "
+                              "activity files: title, recipient country or region, status, DAC "
+                              "sector, commitment and disbursement in USD, and the Bank's geocoded "
+                              "project locations with their location class.",
                 "ground": "Roads (motorway to secondary), railways and airports under "
                           "construction or proposed in Africa, traced by OpenStreetMap mappers, "
                           "as line geometries with status, operator and opening date.",
@@ -296,7 +322,7 @@ def structured_data(facts, *, path, title, description, kind):
         parts.append(d)
     dataset = {"@type": "Dataset", "@id": site_url("#dataset"),
                "name": f"{SITE_NAME}: infrastructure projects across Africa",
-               "description": f"Five open datasets on infrastructure in Africa, kept as separate "
+               "description": f"Six open datasets on infrastructure in Africa, kept as separate "
                               f"layers because they share no project identifier: {facts_sentence(facts)}. "
                               f"Each source's lifecycle is mapped onto five shared statuses (announced, "
                               f"approved, under construction, operating, stalled).",
@@ -343,7 +369,7 @@ def crawl_fallback(facts, *, kind):
     return f"""<noscript>
 <article style="max-width:72ch;margin:0 auto;padding:24px 16px;font:16px/1.5 Georgia,serif">
 <h2>{e(SITE_NAME)}: announced, approved and ongoing infrastructure in Africa</h2>
-<p>{lede} of infrastructure projects across Africa, built from five open datasets:
+<p>{lede} of infrastructure projects across Africa, built from six open datasets:
 {e(facts_sentence(facts))}. Together they describe {e(facts_totals(facts))}.
 The page needs JavaScript to draw; without it, this summary, the data files below
 and {other} are what is here.</p>
@@ -356,8 +382,9 @@ under construction, operating and stalled.</p>
 <thead><tr><th>Source</th><th>Dataset</th><th>Records</th><th>Licence</th><th>Data as of</th><th>Download</th></tr></thead>
 <tbody>{rows}</tbody>
 </table>
-<p>Limits: money is AfDB only, so totals are AfDB exposure, not investment in Africa;
-about two thirds of AfDB locations sit on a country or region centroid; OpenStreetMap
+<p>Limits: money is two multilateral lenders only, AfDB and the World Bank, so totals are
+their exposure, not investment in Africa; about two thirds of AfDB locations sit on a country
+or region centroid and the World Bank marks every location approximate; OpenStreetMap
 presence is mapper-driven, so absence is not evidence; energy and connectivity are
 over-represented because no comparable open tracker exists for ports, water or
 electricity transmission.</p>
@@ -472,7 +499,7 @@ def write_site_index(facts):
     (DOCS / "llms.txt").write_text(f"""# {SITE_NAME}
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
-> Africa, for investors, researchers and journalists. Compiled from five open datasets:
+> Africa, for investors, researchers and journalists. Compiled from six open datasets:
 > {facts_sentence(facts)}. Together they describe {facts_totals(facts)}.
 > Snapshot built {fmt_date(day)}; data is refreshed by hand about twice a year.
 
@@ -481,7 +508,7 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the five layers with filters
+- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the five layers (finance holds two lenders) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
@@ -512,18 +539,20 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   TeleGeography "in service" is operating; "planned" is under construction when the
   ready-for-service year is within a year of the snapshot, otherwise announced.
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
-  squares are AfDB projects sized by commitment, thin lines are construction ways as
+  squares are AfDB projects and diamonds World Bank projects, both sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
   with their African landing points. Dashed lines are not yet built.
-- AfDB amounts are commitments (IATI transaction type 2) converted from SDR at a fixed,
-  stated rate: {SDR_NOTE}.
+- Amounts are commitments (IATI transaction type 2). AfDB publishes in SDR, converted at a
+  fixed, stated rate: {SDR_NOTE}. The World Bank publishes in USD, taken as is.
 
 ## Limits
 
-- Money is AfDB only. Chinese, private, domestic-budget and other-lender finance is not
-  here. Read totals as AfDB exposure, not as investment in Africa.
-- About two thirds of AfDB locations are approximate (a country or region centroid).
-  Exact points are used where they exist; the pages say which.
+- Money is two multilateral lenders only, AfDB and the World Bank. Chinese, private,
+  domestic-budget and other-lender finance is not here. Read totals as their exposure, not
+  as investment in Africa. The two are never summed into one project cost.
+- About two thirds of AfDB locations are approximate (a country or region centroid). The
+  World Bank marks every location approximate and states its class: site, populated place
+  or administrative region. The pages say which for each record.
 - OpenStreetMap presence is mapper-driven: absence of a road is not evidence that none is
   being built. The layer is filtered to motorway-to-secondary roads, rail and airports.
 - Energy and connectivity are over-represented: no comparable open tracker exists for

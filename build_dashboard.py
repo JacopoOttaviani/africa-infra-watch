@@ -64,7 +64,7 @@ ISLANDS = [
 
 # DAC 5-digit purpose codes → the dashboard's sector vocabulary.
 DAC_SECTOR = [
-    ("210", "transport"), ("220", "ict"), ("230", "energy"),
+    ("210", "transport"), ("220", "ict"), ("23", "energy"),
     ("140", "water"), ("321", "industry"), ("322", "industry"),
     ("323", "industry"), ("331", "trade"), ("410", "environment"),
 ]

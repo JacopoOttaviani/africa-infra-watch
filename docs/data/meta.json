@@ -6,10 +6,11 @@
     "records": 4274
   },
   "finance": {
-    "fetched": "2026-09-07",
+    "fetched": "2026-09-18",
     "datasets": 57,
-    "records": 6127,
-    "activities": 1401
+    "records": 8275,
+    "activities": 1767,
+    "fresh": null
   },
   "ground": {
     "fetched": "2026-09-07",
@@ -27,5 +28,12 @@
     "fresh": null,
     "records": 81,
     "landing_points": 282
+  },
+  "finance_wb": {
+    "fetched": "2026-09-18",
+    "fresh": null,
+    "datasets": 52,
+    "records": 10268,
+    "activities": 1123
   }
 }

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Africa Infrastructure Map · Africa Infra Watch</title>
-<meta name="description" content="Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.">
-<meta name="keywords" content="Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, open data Africa, infrastructure investment Africa, interactive map">
+<meta name="description" content="Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank and World Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.">
+<meta name="keywords" content="Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, World Bank projects Africa, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, open data Africa, infrastructure investment Africa, interactive map">
 <meta name="author" content="Jacopo Ottaviani">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="theme-color" content="#1F5F4B">
@@ -16,7 +16,7 @@
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="https://jacopoottaviani.com/africa-infra-watch/">
 <meta property="og:title" content="Africa Infrastructure Map">
-<meta property="og:description" content="Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.">
+<meta property="og:description" content="Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank and World Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.">
 <meta property="og:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png">
 <meta property="og:image:secure_url" content="https://jacopoottaviani.com/africa-infra-watch/social.png">
 <meta property="og:image:type" content="image/png">
@@ -25,7 +25,7 @@
 <meta property="og:image:alt" content="Africa Infrastructure Map: Africa with every tracked power unit, AfDB project and construction work drawn in its status colour, and the site&#x27;s title.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Africa Infrastructure Map">
-<meta name="twitter:description" content="Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.">
+<meta name="twitter:description" content="Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank and World Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.">
 <meta name="twitter:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png">
 <meta name="twitter:image:alt" content="Africa Infrastructure Map: Africa with every tracked power unit, AfDB project and construction work drawn in its status colour, and the site&#x27;s title.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -252,6 +252,7 @@
   .pmw{display:flex;align-items:center;justify-content:center}
   .pm{display:block;width:10px;height:10px;border-radius:50%;background:var(--c,var(--st-stalled));box-shadow:0 0 0 1px var(--surface);opacity:.92}
   .pm.finance{width:9px;height:9px;border-radius:1px}
+  .pm.finance.wb{transform:rotate(45deg) scale(.92)}
   .pm.ground{width:14px;height:3.5px;border-radius:2px;transform:rotate(-32deg)}
   .pm.pipelines{width:14px;height:4px;border-radius:2px;transform:rotate(-32deg);box-shadow:0 0 0 2.5px color-mix(in srgb,var(--c,var(--st-stalled)) 30%,transparent)}
   .pm.cables{width:14px;height:2px;border-radius:2px;transform:rotate(-32deg);box-shadow:-6px 0 0 1px var(--c,var(--st-stalled)),6px 0 0 1px var(--c,var(--st-stalled))}
@@ -454,14 +455,14 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://jacopoottaviani.com/africa-infra-watch/#website","name":"Africa Infra Watch","url":"https://jacopoottaviani.com/africa-infra-watch/","inLanguage":"en","description":"An interactive map and dashboard of announced, approved and ongoing infrastructure in Africa, compiled from open data.","author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"publisher":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"}},{"@type":"Person","@id":"https://jacopoottaviani.com/africa-infra-watch/#author","name":"Jacopo Ottaviani","url":"https://www.linkedin.com/in/jacopo-ottaviani/","sameAs":["https://www.linkedin.com/in/jacopo-ottaviani/","https://ko-fi.com/jacopoottaviani"]},{"@type":["WebPage","WebApplication"],"@id":"https://jacopoottaviani.com/africa-infra-watch/","url":"https://jacopoottaviani.com/africa-infra-watch/","name":"Africa Infrastructure Map","headline":"Africa Infrastructure Map","description":"Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.","inLanguage":"en","isPartOf":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#website"},"about":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"mainEntity":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"dateModified":"2026-09-18","keywords":"Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, open data Africa, infrastructure investment Africa, interactive map","primaryImageOfPage":{"@type":"ImageObject","url":"https://jacopoottaviani.com/africa-infra-watch/social.png","width":1200,"height":630},"applicationCategory":"Map","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset","name":"Africa Infra Watch: infrastructure projects across Africa","description":"Five open datasets on infrastructure in Africa, kept as separate layers because they share no project identifier: 4,274 power units tracked by Global Energy Monitor, 1,401 projects financed by the African Development Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography. Each source's lifecycle is mapped onto five shared statuses (announced, approved, under construction, operating, stalled).","url":"https://jacopoottaviani.com/africa-infra-watch/","keywords":["Africa infrastructure","infrastructure projects Africa","Africa power plants map","African Development Bank projects","AfDB finance","construction Africa map","energy Africa","Global Energy Monitor","OpenStreetMap construction","oil and gas pipelines Africa","submarine cables Africa","TeleGeography","open data Africa","infrastructure investment Africa","interactive map"],"creator":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","hasPart":[{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables"}],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/map.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/meta.json"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets","name":"Africa Infra Watch: Global Energy Monitor layer","description":"Power generation units in Africa (announced, pre-construction, under construction, operating, cancelled or shelved) with technology, capacity in MW, owner and coordinates. 4,274 records in this snapshot. Global Integrated Power Tracker, release 2026-08-v2.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-07","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance","name":"Africa Infra Watch: African Development Bank layer","description":"African Development Bank projects from its IATI 2.03 activity files: title, recipient country, status, DAC sector, commitment and disbursement, and geocoded locations where published. 1,401 records in this snapshot. IATI 2.03 activity files, 57 country datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/afdb","creator":{"@type":"Organization","name":"African Development Bank","url":"https://iatiregistry.org/publisher/afdb"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-07","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground","name":"Africa Infra Watch: OpenStreetMap layer","description":"Roads (motorway to secondary), railways and airports under construction or proposed in Africa, traced by OpenStreetMap mappers, as line geometries with status, operator and opening date. 3,586 records in this snapshot. Overpass API, significant road/rail/air classes.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.openstreetmap.org/copyright","creator":{"@type":"Organization","name":"OpenStreetMap","url":"https://www.openstreetmap.org/copyright"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-07","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson"}],"license":"https://opendatacommons.org/licenses/odbl/1-0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines","name":"Africa Infra Watch: Global Energy Monitor layer","description":"Oil, NGL and gas transmission pipelines with an African country on their route (proposed, under construction, operating, shelved or cancelled), as route geometries with fuel, capacity, length, owner and start year, from Global Energy Monitor's Global Gas and Global Oil Infrastructure Trackers. 324 records in this snapshot. Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables","name":"Africa Infra Watch: TeleGeography layer","description":"Submarine telecommunications cables with at least one landing point in Africa, planned or in service, as route geometries with owners, suppliers, ready-for-service year, length and African landing points, from TeleGeography's Submarine Cable Map. 81 records in this snapshot. Submarine Cable Map, cables with an African landing point.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.submarinecablemap.com/","creator":{"@type":"Organization","name":"TeleGeography","url":"https://www.submarinecablemap.com/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson"}],"license":"https://creativecommons.org/licenses/by-sa/4.0/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://jacopoottaviani.com/africa-infra-watch/#website","name":"Africa Infra Watch","url":"https://jacopoottaviani.com/africa-infra-watch/","inLanguage":"en","description":"An interactive map and dashboard of announced, approved and ongoing infrastructure in Africa, compiled from open data.","author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"publisher":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"}},{"@type":"Person","@id":"https://jacopoottaviani.com/africa-infra-watch/#author","name":"Jacopo Ottaviani","url":"https://www.linkedin.com/in/jacopo-ottaviani/","sameAs":["https://www.linkedin.com/in/jacopo-ottaviani/","https://ko-fi.com/jacopoottaviani"]},{"@type":["WebPage","WebApplication"],"@id":"https://jacopoottaviani.com/africa-infra-watch/","url":"https://jacopoottaviani.com/africa-infra-watch/","name":"Africa Infrastructure Map","headline":"Africa Infrastructure Map","description":"Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank and World Bank projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.","inLanguage":"en","isPartOf":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#website"},"about":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"mainEntity":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"dateModified":"2026-09-18","keywords":"Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, World Bank projects Africa, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, open data Africa, infrastructure investment Africa, interactive map","primaryImageOfPage":{"@type":"ImageObject","url":"https://jacopoottaviani.com/africa-infra-watch/social.png","width":1200,"height":630},"applicationCategory":"Map","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset","name":"Africa Infra Watch: infrastructure projects across Africa","description":"Six open datasets on infrastructure in Africa, kept as separate layers because they share no project identifier: 4,274 power units tracked by Global Energy Monitor, 1,767 projects financed by the African Development Bank and 1,123 by the World Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography. Each source's lifecycle is mapped onto five shared statuses (announced, approved, under construction, operating, stalled).","url":"https://jacopoottaviani.com/africa-infra-watch/","keywords":["Africa infrastructure","infrastructure projects Africa","Africa power plants map","African Development Bank projects","AfDB finance","World Bank projects Africa","construction Africa map","energy Africa","Global Energy Monitor","OpenStreetMap construction","oil and gas pipelines Africa","submarine cables Africa","TeleGeography","open data Africa","infrastructure investment Africa","interactive map"],"creator":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","hasPart":[{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance_wb"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables"}],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/map.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/meta.json"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets","name":"Africa Infra Watch: Global Energy Monitor layer","description":"Power generation units in Africa (announced, pre-construction, under construction, operating, cancelled or shelved) with technology, capacity in MW, owner and coordinates. 4,274 records in this snapshot. Global Integrated Power Tracker, release 2026-08-v2.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-07","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance","name":"Africa Infra Watch: African Development Bank layer","description":"African Development Bank projects from its IATI 2.03 activity files: title, recipient country, status, DAC sector, commitment and disbursement, and geocoded locations where published. 1,767 records in this snapshot. IATI 2.03 activity files, 57 country datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/afdb","creator":{"@type":"Organization","name":"African Development Bank","url":"https://iatiregistry.org/publisher/afdb"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance_wb","name":"Africa Infra Watch: World Bank layer","description":"World Bank infrastructure projects in Africa from its IATI 2.03 activity files: title, recipient country or region, status, DAC sector, commitment and disbursement in USD, and the Bank's geocoded project locations with their location class. 1,123 records in this snapshot. IATI 2.03 activity files, 52 African country and regional datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/worldbank","creator":{"@type":"Organization","name":"World Bank","url":"https://iatiregistry.org/publisher/worldbank"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground","name":"Africa Infra Watch: OpenStreetMap layer","description":"Roads (motorway to secondary), railways and airports under construction or proposed in Africa, traced by OpenStreetMap mappers, as line geometries with status, operator and opening date. 3,586 records in this snapshot. Overpass API, significant road/rail/air classes.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.openstreetmap.org/copyright","creator":{"@type":"Organization","name":"OpenStreetMap","url":"https://www.openstreetmap.org/copyright"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-07","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson"}],"license":"https://opendatacommons.org/licenses/odbl/1-0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines","name":"Africa Infra Watch: Global Energy Monitor layer","description":"Oil, NGL and gas transmission pipelines with an African country on their route (proposed, under construction, operating, shelved or cancelled), as route geometries with fuel, capacity, length, owner and start year, from Global Energy Monitor's Global Gas and Global Oil Infrastructure Trackers. 324 records in this snapshot. Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables","name":"Africa Infra Watch: TeleGeography layer","description":"Submarine telecommunications cables with at least one landing point in Africa, planned or in service, as route geometries with owners, suppliers, ready-for-service year, length and African landing points, from TeleGeography's Submarine Cable Map. 81 records in this snapshot. Submarine Cable Map, cables with an African landing point.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.submarinecablemap.com/","creator":{"@type":"Organization","name":"TeleGeography","url":"https://www.submarinecablemap.com/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-09-18","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson"}],"license":"https://creativecommons.org/licenses/by-sa/4.0/"}]}</script>
 </head>
 <body>
 <noscript>
 <article style="max-width:72ch;margin:0 auto;padding:24px 16px;font:16px/1.5 Georgia,serif">
 <h2>Africa Infra Watch: announced, approved and ongoing infrastructure in Africa</h2>
-<p>This page is an interactive map of infrastructure projects across Africa, built from five open datasets:
-4,274 power units tracked by Global Energy Monitor, 1,401 projects financed by the African Development Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography. Together they describe about 1,090 GW of generating capacity across all statuses; USD 66.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026).
+<p>This page is an interactive map of infrastructure projects across Africa, built from six open datasets:
+4,274 power units tracked by Global Energy Monitor, 1,767 projects financed by the African Development Bank and 1,123 by the World Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography. Together they describe about 1,090 GW of generating capacity across all statuses; USD 101.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026), and USD 181.6 billion of World Bank commitments as published.
 The page needs JavaScript to draw; without it, this summary, the data files below
 and <a href="dashboard.html">the dashboard view</a> are what is here.</p>
 <p>The sources share no project identifier, so they are kept as separate layers
@@ -471,10 +472,11 @@ under construction, operating and stalled.</p>
 <table>
 <caption>The layers in this snapshot</caption>
 <thead><tr><th>Source</th><th>Dataset</th><th>Records</th><th>Licence</th><th>Data as of</th><th>Download</th></tr></thead>
-<tbody><tr><td>Global Energy Monitor</td><td>Global Integrated Power Tracker, release 2026-08-v2</td><td>4,274</td><td>CC BY 4.0</td><td>24 Aug 2026</td><td><a href="data/gem_power_assets.geojson">GeoJSON</a></td></tr><tr><td>African Development Bank</td><td>IATI 2.03 activity files, 57 country datasets</td><td>1,401</td><td>Open, per publisher</td><td>7 Sep 2026</td><td><a href="data/iati_afdb_finance.geojson">GeoJSON</a></td></tr><tr><td>OpenStreetMap</td><td>Overpass API, significant road/rail/air classes</td><td>3,586</td><td>ODbL 1.0</td><td>7 Sep 2026</td><td><a href="data/osm_construction.geojson">GeoJSON</a></td></tr><tr><td>Global Energy Monitor</td><td>Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07</td><td>324</td><td>CC BY 4.0</td><td>18 Sep 2026</td><td><a href="data/gem_oil_gas_pipelines.geojson">GeoJSON</a></td></tr><tr><td>TeleGeography</td><td>Submarine Cable Map, cables with an African landing point</td><td>81</td><td>CC BY-SA 4.0</td><td>18 Sep 2026</td><td><a href="data/telegeography_cables.geojson">GeoJSON</a></td></tr></tbody>
+<tbody><tr><td>Global Energy Monitor</td><td>Global Integrated Power Tracker, release 2026-08-v2</td><td>4,274</td><td>CC BY 4.0</td><td>24 Aug 2026</td><td><a href="data/gem_power_assets.geojson">GeoJSON</a></td></tr><tr><td>African Development Bank</td><td>IATI 2.03 activity files, 57 country datasets</td><td>1,767</td><td>Open, per publisher</td><td>18 Sep 2026</td><td><a href="data/iati_afdb_finance.geojson">GeoJSON</a></td></tr><tr><td>World Bank</td><td>IATI 2.03 activity files, 52 African country and regional datasets</td><td>1,123</td><td>CC BY 4.0</td><td>18 Sep 2026</td><td><a href="data/iati_worldbank_finance.geojson">GeoJSON</a></td></tr><tr><td>OpenStreetMap</td><td>Overpass API, significant road/rail/air classes</td><td>3,586</td><td>ODbL 1.0</td><td>7 Sep 2026</td><td><a href="data/osm_construction.geojson">GeoJSON</a></td></tr><tr><td>Global Energy Monitor</td><td>Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07</td><td>324</td><td>CC BY 4.0</td><td>18 Sep 2026</td><td><a href="data/gem_oil_gas_pipelines.geojson">GeoJSON</a></td></tr><tr><td>TeleGeography</td><td>Submarine Cable Map, cables with an African landing point</td><td>81</td><td>CC BY-SA 4.0</td><td>18 Sep 2026</td><td><a href="data/telegeography_cables.geojson">GeoJSON</a></td></tr></tbody>
 </table>
-<p>Limits: money is AfDB only, so totals are AfDB exposure, not investment in Africa;
-about two thirds of AfDB locations sit on a country or region centroid; OpenStreetMap
+<p>Limits: money is two multilateral lenders only, AfDB and the World Bank, so totals are
+their exposure, not investment in Africa; about two thirds of AfDB locations sit on a country
+or region centroid and the World Bank marks every location approximate; OpenStreetMap
 presence is mapper-driven, so absence is not evidence; energy and connectivity are
 over-represented because no comparable open tracker exists for ports, water or
 electricity transmission.</p>
@@ -487,13 +489,13 @@ Country outlines: Natural Earth. Built 18 Sep 2026 by
 </noscript>
 <div class="loading" id="loading" role="status">
   <div class="lbox"><b>Africa Infrastructure Map</b>
-  <span>Loading the basemap and 9,666 records, about 4 MB…</span><i></i></div>
+  <span>Loading the basemap and 11,155 records, about 5 MB…</span><i></i></div>
 </div>
 <script>
 async function loadPayload(){
   const box = document.getElementById("loading");
   try{
-    const res = await fetch("data/map.json?v=0227d607f9");
+    const res = await fetch("data/map.json?v=2bfdc3d382");
     if(!res.ok) throw new Error(res.status + " " + res.statusText);
     const data = await res.json();
     box.remove();
@@ -552,6 +554,7 @@ async function loadPayload(){
       <div class="narrow">
         <select id="country" aria-label="Country"></select>
         <select id="sector" aria-label="Sector"></select>
+        <select id="lender" aria-label="Lender" style="grid-column:1/-1"></select>
         <button class="reset" id="reset">Clear all filters</button>
       </div>
     </div>
@@ -568,7 +571,7 @@ async function loadPayload(){
     </div>
 
     <div class="readmore map-only">
-      <span>Where the data comes from, how the five sources are aligned, and what it cannot tell you.</span>
+      <span>Where the data comes from, how the six sources are aligned, and what it cannot tell you.</span>
       <button id="tomethod">Read the methodology →</button>
       <a class="pages-only" href="dashboard.html">Open the dashboard view →</a>
       <span class="byline">A project by <a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
@@ -581,7 +584,7 @@ async function loadPayload(){
   </aside>
 
   <main class="stage" id="stage">
-    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB-financed projects, construction works, oil and gas pipelines and submarine cables"></canvas>
+    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB and World Bank projects, construction works, oil and gas pipelines and submarine cables"></canvas>
     <div id="lmap" hidden aria-hidden="true"></div>
 
     <div class="hud hud-tl">
@@ -614,7 +617,7 @@ async function loadPayload(){
 
     <div class="attrib">
       <div class="scale" id="scale"></div>
-      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a></div>
+      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB and World Bank via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a></div>
     </div>
 
     <article id="method" aria-label="Methodology">
@@ -656,8 +659,11 @@ const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_constructi
 const STATUS_KEY   = {announced:"an",approved:"ap",under_construction:"uc",operating:"op",stalled:"st"};
 const KEY_STATUS   = Object.fromEntries(Object.entries(STATUS_KEY).map(([k,v])=>[v,k]));
 const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables"];
-const LAYER_LABEL  = {assets:"Power assets",finance:"AfDB finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"African Development Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography"};
+const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography"};
+/* the finance layer holds two lenders, told apart by shape: square and diamond */
+const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank"};
+const sourceOf     = r => r.layer==="finance" ? (LENDER_NAME[r.lender]||LAYER_SUB.finance) : LAYER_SUB[r.layer];
 const LAYER_KEY    = {assets:"a",finance:"f",ground:"g",pipelines:"p",cables:"c"};
 const ALL_LAYER_KEYS = LAYER_ORDER.map(k=>LAYER_KEY[k]).join("");
 /* the layers drawn as lines, in drawing order: sea first, thin works on top */
@@ -777,11 +783,11 @@ function unify(){
     text:[a.name,a.owner,a.sub,NAMES[a.iso],a.tech].filter(Boolean).join(" ").toLowerCase(),
   });
   for(const f of FINANCE) out.push({
-    ref:f, layer:"finance", name:f.name||"(untitled activity)", iso:f.iso,
+    ref:f, layer:"finance", lender:f.ln||"AfDB", name:f.name||"(untitled activity)", iso:f.iso,
     country:f.iso ? (NAMES[f.iso]||f.iso) : "Multinational",
     status:f.status, kind:SECTOR_LABEL[f.sector]||f.sector||"—", sector:f.sector||"other", size:f.usd_m, unit:"$m",
     x:mx(f.lon), y:my(f.lat), lon:f.lon, lat:f.lat,
-    text:[f.name,f.place,f.iso?NAMES[f.iso]:"multinational",f.iid].filter(Boolean).join(" ").toLowerCase(),
+    text:[f.name,f.place,f.iso?NAMES[f.iso]:"multinational",f.iid,LENDER_NAME[f.ln||"AfDB"],f.ln||"AfDB"].filter(Boolean).join(" ").toLowerCase(),
   });
   for(const g of GROUND){
     g.parts = g.g.map(prepRing);
@@ -833,7 +839,7 @@ for(const L of LAYER_ORDER){
 const S_ = {
   layers:allLayersOn(),
   status:new Set(STATUS_ORDER),
-  country:"", sector:"", q:"",
+  country:"", sector:"", lender:"", q:"",
   picked:null,
   cluster:false,
   sat:false,
@@ -842,6 +848,7 @@ const pass = r =>
   S_.layers[r.layer] && S_.status.has(r.status) &&
   (!S_.country || (r.isos ? r.isos.includes(S_.country) : r.iso===S_.country)) &&
   (!S_.sector || r.sector===S_.sector) &&
+  (!S_.lender || r.lender===S_.lender) &&
   (!S_.q || r.text.includes(S_.q));
 let VIS = [], VIS_PTS = [], VIS_LINES = [];
 
@@ -1098,7 +1105,10 @@ function draw(){
     if(x<-20||x>W+20||y<-20||y>H+20) continue;
     const col = statusColor(r.status), rad = markerR(r), hollow = r.status==="stalled";
     ctx.beginPath();
-    if(r.layer==="finance") ctx.rect(x-rad, y-rad, rad*2, rad*2);
+    if(r.layer==="finance"){
+      if(r.lender==="WB"){ const d = rad*1.38; ctx.moveTo(x, y-d); ctx.lineTo(x+d, y); ctx.lineTo(x, y+d); ctx.lineTo(x-d, y); ctx.closePath(); }
+      else ctx.rect(x-rad, y-rad, rad*2, rad*2);
+    }
     else ctx.arc(x, y, rad, 0, 6.2832);
     if(hollow){
       ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.stroke();
@@ -1252,25 +1262,28 @@ function countryAt(px_, py_){
 const glyph = {
   assets:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${col}"/></svg>`,
   finance: col => `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" fill="${col}"/></svg>`,
+  finance_wb: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.6 14.4 8 8 14.4 1.6 8Z" fill="${col}"/></svg>`,
   ground:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   pipelines: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none" opacity=".3"/><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   cables:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 12 13.5 4" stroke="${col}" stroke-width="1.7" stroke-linecap="round" fill="none"/><circle cx="2.8" cy="11.8" r="2.3" fill="${col}"/><circle cx="13.2" cy="4.2" r="2.3" fill="${col}"/></svg>`,
 };
-const glyphStatus = (layer, status) => {
+const glyphStatus = (layer, status, lender) => {
   const col = statusColor(status);
-  if(status!=="stalled") return glyph[layer](col);
+  const wb = layer==="finance" && lender==="WB";
+  if(status!=="stalled") return (wb ? glyph.finance_wb : glyph[layer])(col);
   if(layer==="assets") return `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.3" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
+  if(wb) return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2.4 13.6 8 8 13.6 2.4 8Z" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(layer==="finance") return `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3.8" y="3.8" width="8.4" height="8.4" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   return (glyph[layer] || glyph.ground)(col);
 };
 
-const SHORT = {assets:"GEM", finance:"AfDB", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography"};
+const SHORT = {assets:"GEM", finance:"AfDB", finance_wb:"World Bank", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography"};
 function renderLede(){
   el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   const pipe = ASSETS.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction").length;
-  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB projects</strong> with money attached, <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, <strong>${fmt(PIPES.length)} oil and gas pipeline segments</strong> and <strong>${fmt(CABLES.length)} submarine cables</strong>, from five sources that are kept apart because they share no project identifier.`;
+  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB and World Bank projects</strong> with money attached, <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, <strong>${fmt(PIPES.length)} oil and gas pipeline segments</strong> and <strong>${fmt(CABLES.length)} submarine cables</strong>, from five sources that are kept apart because they share no project identifier.`;
 }
 
 function counts(skip){
@@ -1279,6 +1292,7 @@ function counts(skip){
     const okL = S_.layers[r.layer], okS = S_.status.has(r.status);
     if(S_.country && r.iso!==S_.country) continue;
     if(S_.sector && r.sector!==S_.sector) continue;
+    if(S_.lender && r.lender!==S_.lender) continue;
     if(S_.q && !r.text.includes(S_.q)) continue;
     if(okS) c.layer[r.layer]++;
     if(okL) c.status[r.status] = (c.status[r.status]||0)+1;
@@ -1317,6 +1331,8 @@ function renderSelects(){
   const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort((a,b)=>(SECTOR_LABEL[a]||a).localeCompare(SECTOR_LABEL[b]||b));
   el("sector").innerHTML = `<option value="">All sectors</option>` +
     secs.map(s=>`<option value="${s}"${S_.sector===s?" selected":""}>${SECTOR_LABEL[s]||s}</option>`).join("");
+  el("lender").innerHTML = `<option value="">Both lenders</option>` +
+    Object.entries(LENDER_NAME).map(([k,n])=>`<option value="${k}"${S_.lender===k?" selected":""}>${n} only</option>`).join("");
 }
 function renderLegend(){
   el("legend").innerHTML = `
@@ -1328,6 +1344,7 @@ function renderLegend(){
       <div class="lh">Shape · source</div>
       <div class="lg">${glyph.assets(COL.ink)}<span><b>Power unit</b> · size = MW</span></div>
       <div class="lg">${glyph.finance(COL.ink)}<span><b>AfDB project</b> · size = commitment</span></div>
+      <div class="lg">${glyph.finance_wb(COL.ink)}<span><b>World Bank project</b> · size = commitment</span></div>
       <div class="lg">${glyph.ground(COL.ink)}<span><b>Works traced</b> in OpenStreetMap</span></div>
       <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(COL.ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
@@ -1352,6 +1369,7 @@ function renderView(){
   const gw = A.reduce((a,r)=>a+(r.size||0),0)/1000;
   const pipeGw = A.filter(r=>r.status!=="operating"&&r.status!=="stalled").reduce((a,r)=>a+(r.size||0),0)/1000;
   const usd = F.reduce((a,r)=>a+(r.size||0),0)/1000;
+  const usdW = F.filter(r=>r.lender==="WB").reduce((a,r)=>a+(r.size||0),0)/1000;
   const km = G.reduce((a,r)=>a+(r.size||0),0);
   const cts = new Set(v.map(r=>r.iso).filter(Boolean));
   el("viewhint").textContent = `${fmt(v.length)} records · ${cts.size} ${cts.size===1?"country":"countries"}`;
@@ -1359,7 +1377,7 @@ function renderView(){
     <div class="stat"><span class="glyph">${glyph.assets(COL.operating)}</span>
       <span><span class="k">Power</span><br><span class="v">${fmt(A.length)} units · ${fmt1(gw)} GW <span>· ${fmt1(pipeGw)} GW in pipeline</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.finance(COL.approved)}</span>
-      <span><span class="k">AfDB finance</span><br><span class="v">${fmt(F.length)} projects · $${fmt1(usd)}bn <span>committed</span></span></span></div>
+      <span><span class="k">Development finance</span><br><span class="v">${fmt(F.length)} projects · $${fmt1(usd)}bn <span>committed · AfDB $${fmt1(usd-usdW)}bn · WB $${fmt1(usdW)}bn</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.ground(COL.under_construction)}</span>
       <span><span class="k">Ground works</span><br><span class="v">${fmt(G.length)} works · ${fmt(km)} km <span>traced</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.pipelines(COL.operating)}</span>
@@ -1373,7 +1391,7 @@ function renderView(){
   el("listhint").textContent = show.length ? `${fmt(show.length)} of ${fmt(v.length)}` : "";
   el("list").innerHTML = show.map((r,i) => `
     <button class="rec${S_.picked===r?" picked":""}" data-i="${i}" title="${esc(r.name)}">
-      <span class="g">${glyphStatus(r.layer,r.status)}</span>
+      <span class="g">${glyphStatus(r.layer,r.status,r.lender)}</span>
       <span class="t"><b>${esc(r.name)}</b><span>${esc(r.country)} · ${esc(r.kind)}</span></span>
       <span class="s">${r.unit==="$m"?"$":""}${fmt1(r.size)}<i>${r.unit==="$m"?"m":" "+r.unit}</i></span>
     </button>`).join("") || `<p class="empty">Nothing in this view matches the filters. Zoom out or clear a filter.</p>`;
@@ -1408,15 +1426,20 @@ function renderDetail(){
     if(f.url) link = [f.url, "GEM wiki record"];
     note = "Capacity and status as published by Global Energy Monitor's power tracker. Units of one project share a project id.";
   } else if(r.layer==="finance"){
+    const wb = r.lender==="WB";
+    rows.push(["Lender", LENDER_NAME[r.lender]||r.lender]);
     rows.push(["Country", esc(r.country)]);
-    if(f.place) rows.push(["Reported place", esc(f.place) + (f.locs?` <span>+${f.locs.length-1} other exact sites, ringed on the map</span>`:"")]);
+    if(f.place) rows.push(["Reported place", esc(f.place) + (f.locs?` <span>+${f.locs.length-1} other ${f.prec===0?"exact sites":"named places"}, ringed on the map</span>`:"")]);
     rows.push(["Sector", `${esc(r.kind)}${f.dac?` <span>· DAC ${esc(f.dac)}</span>`:""}`]);
     rows.push(["Committed", f.usd_m!=null ? `<span class="num">$${fmt2(f.usd_m)}m</span>` : "—"]);
     if(f.dis_m!=null) rows.push(["Disbursed", `<span class="num">$${fmt2(f.dis_m)}m</span>` + (f.usd_m?` <span>· ${Math.round(100*f.dis_m/f.usd_m)}%</span>`:"")]);
-    rows.push(["Location", f.exact ? "exact site" : "country or region centroid"]);
+    rows.push(["Location", f.prec===0 ? "exact site" : f.prec===1 ? "named place or district <span>· the Bank marks it approximate</span>" : "country or region centroid"]);
     rows.push(["IATI identifier", `<span class="m">${esc(f.iid)}</span>`]);
-    link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
-    note = `AfDB commitment from IATI type-2 transactions, converted at ${DATA.meta.sdr_note}. AfDB money only; co-financiers are not counted.`;
+    if(wb && f.purl){ link = [f.purl, "World Bank project page"]; link2 = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"]; }
+    else link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
+    note = wb
+      ? "World Bank commitment from IATI type-2 transactions, in US dollars as published. World Bank money only; co-financiers, including AfDB, are not counted."
+      : `AfDB commitment from IATI type-2 transactions, converted at ${DATA.meta.sdr_note}. AfDB money only; co-financiers, including the World Bank, are not counted.`;
   } else if(r.layer==="pipelines"){
     rows.push(["Fuel", esc(f.fuel||"—")]);
     rows.push(["Status", `${STATUS_LABEL[r.status]} <span>· GEM "${esc(f.status==="announced"?"proposed":f.status==="under_construction"?"construction":f.status)}"</span>`]);
@@ -1457,7 +1480,7 @@ function renderDetail(){
   box.innerHTML = `
     <header>
       <div>
-        <div class="eyebrow"><span>${LAYER_SUB[r.layer]}</span>
+        <div class="eyebrow"><span>${sourceOf(r)}</span>
           <span class="badge ${r.status}"><span class="sw" style="background:${statusColor(r.status)}"></span>${STATUS_LABEL[r.status]||"—"}</span></div>
         <h2>${esc(r.name)}</h2>
       </div>
@@ -1556,8 +1579,8 @@ function donutGlyph(){
 }
 const ICONS = {};
 function iconFor(r){
-  const k = r.layer+"|"+r.status;
-  return ICONS[k] || (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html:`<i class="pm ${r.layer} ${r.status}"></i>`}));
+  const k = r.layer+"|"+r.status+"|"+(r.lender||"");
+  return ICONS[k] || (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html:`<i class="pm ${r.layer} ${r.status}${r.lender==="WB"?" wb":""}"></i>`}));
 }
 function markerFor(r){
   if(!r._m){ r._m = L.marker([r.lat, r.lon], {icon:iconFor(r), interactive:false, keyboard:false}); r._m.rec = r; }
@@ -1657,7 +1680,7 @@ function clusterTip(c){
 function recTip(hit){
   const bits = [["Status", STATUS_LABEL[hit.status]||"—"], ["Country", hit.country]];
   if(hit.size!=null) bits.push([hit.unit==="$m"?"Committed":hit.unit==="km"?(hit.layer==="ground"?"Traced":"Length"):"Capacity", (hit.unit==="$m"?"$":"")+fmt1(hit.size)+(hit.unit==="$m"?"m":" "+hit.unit)]);
-  bits.push(["Source", LAYER_SUB[hit.layer]]);
+  bits.push(["Source", sourceOf(hit)]);
   return `<div class="tn">${esc(hit.name)}</div>` + bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${esc(b)}</b></div>`).join("");
 }
 el("cluster").insertAdjacentHTML("afterbegin", donutGlyph());
@@ -1779,11 +1802,12 @@ el("country").onchange = e => {
   const c = AFRICA.find(x=>x.iso===S_.country); if(c) flyTo(fitBounds(c.b, 60, 8));
 };
 el("sector").onchange = e => { S_.sector = e.target.value; apply(); };
+el("lender").onchange = e => { S_.lender = e.target.value; apply(); };
 let qt=null;
 el("q").oninput = e => { clearTimeout(qt); qt = setTimeout(()=>{ S_.q = e.target.value.trim().toLowerCase(); apply(); }, 150); };
 el("reset").onclick = () => {
   S_.layers=allLayersOn(); S_.status=new Set(STATUS_ORDER);
-  S_.country=""; S_.sector=""; S_.q=""; el("q").value="";
+  S_.country=""; S_.sector=""; S_.lender=""; S_.q=""; el("q").value="";
   S_.picked=null; renderDetail(); apply(); flyTo(homeView());
 };
 
@@ -1798,6 +1822,7 @@ function writeHash(){
     if(S_.status.size<STATUS_ORDER.length) parts.push("s="+STATUS_ORDER.filter(s=>S_.status.has(s)).map(s=>STATUS_KEY[s]).join(","));
     if(S_.country) parts.push("c="+S_.country);
     if(S_.sector) parts.push("k="+S_.sector);
+    if(S_.lender) parts.push("ln="+S_.lender);
     if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
     if(S_.cluster !== MOBILE) parts.push("cl="+(S_.cluster?1:0));   /* only when it departs from the device default */
     if(S_.sat) parts.push("sat=1");
@@ -1817,6 +1842,7 @@ function readHash(){
     else if(k==="s"){ const set = new Set(v.split(",").map(x=>KEY_STATUS[x]).filter(Boolean)); if(set.size) S_.status=set; }
     else if(k==="c" && NAMES[v]) S_.country=v;
     else if(k==="k") S_.sector=v;
+    else if(k==="ln" && LENDER_NAME[v]) S_.lender=v;
     else if(k==="q"){ S_.q=decodeURIComponent(v); el("q").value=S_.q; }
     else if(k==="t" && v==="m") wantTab = "method";
     else if(k==="cl") wantCluster = v==="1";
@@ -1889,7 +1915,10 @@ function renderMethod(){
   const aCts = new Set(A.map(a=>a.iso)).size;
 
   const fUsd = F.reduce((t,f)=>t+(f.usd_m||0),0)/1000, fDis = F.reduce((t,f)=>t+(f.dis_m||0),0)/1000;
-  const fExact = F.filter(f=>f.exact).length, fMulti = F.filter(f=>!f.iso).length;
+  const FA = F.filter(f=>f.ln!=="WB"), FW = F.filter(f=>f.ln==="WB");
+  const sumUsd = rows => rows.reduce((t,f)=>t+(f.usd_m||0),0)/1000, sumDis = rows => rows.reduce((t,f)=>t+(f.dis_m||0),0)/1000;
+  const fExact = FA.filter(f=>f.prec===0).length, fMulti = F.filter(f=>!f.iso).length;
+  const wPlace = FW.filter(f=>f.prec<=1).length, wMulti = FW.filter(f=>!f.iso).length;
   const fSec = {}; for(const f of F) fSec[f.sector||"other"] = (fSec[f.sector||"other"]||0)+1;
   const fCts = new Set(F.map(f=>f.iso).filter(Boolean)).size;
 
@@ -1917,7 +1946,7 @@ function renderMethod(){
   const SECTIONS = [
     ["m-what","What this map shows"],
     ["m-gem","Power assets","sub"],
-    ["m-afdb","AfDB finance","sub"],
+    ["m-afdb","Development finance","sub"],
     ["m-osm","Ground truth","sub"],
     ["m-pipes","Oil & gas pipelines","sub"],
     ["m-cables","Submarine cables","sub"],
@@ -1941,7 +1970,7 @@ function renderMethod(){
   <span class="kicker">Methodology · africa-infra-watch</span>
   <h1>Where the data comes from, and what it can and cannot say</h1>
   <p class="standfirst">
-    This map brings together five open datasets. Each answers a different question:
+    This map brings together six open datasets in five layers. Each answers a different question:
     <strong>what is being built</strong>, <strong>who is paying for it</strong>,
     <strong>what has broken ground</strong>, <strong>where oil and gas move</strong> and
     <strong>where the continent connects to the internet</strong>. They share no common
@@ -1952,14 +1981,16 @@ function renderMethod(){
     <div class="eyebrow"><span>01</span><span>What this map shows</span></div>
     <h2>What each source answers</h2>
     <p class="lead">
-      No single dataset covers infrastructure in Africa. This map uses five open sources that
-      complement each other, and keeps them apart rather than merging them.
+      No single dataset covers infrastructure in Africa. This map uses six open sources that
+      complement each other, and keeps them apart rather than merging them. Two lenders share the
+      finance layer, told apart by shape, and are never summed into one project cost.
     </p>
     <div class="twrap"><table>
       <thead><tr><th>Layer</th><th>Source</th><th>Records</th><th>Answers</th><th>Data as of</th></tr></thead>
       <tbody>
         <tr><td>${glyph.assets(COL.operating)} Power assets</td><td>${esc(src.assets.name)}<br><span class="dim">${esc(src.assets.detail)}</span></td><td class="m">${fmt(A.length)} units</td><td>What generating capacity is planned, being built, running or shelved</td><td class="dim">${esc(src.assets.fresh)}</td></tr>
-        <tr><td>${glyph.finance(COL.approved)} AfDB finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(F.length)} projects</td><td>What the Bank has committed and paid out, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
+        <tr><td>${glyph.finance(COL.approved)} Development finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(FA.length)} projects</td><td>What the Bank has committed and paid out, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
+        <tr><td>${glyph.finance_wb(COL.approved)} Development finance</td><td>${esc(src.finance_wb.name)}<br><span class="dim">${esc(src.finance_wb.detail)}</span></td><td class="m">${fmt(FW.length)} projects</td><td>The same question for the World Bank, on the Bank's own geocoded project sites</td><td class="dim">${esc(src.finance_wb.fresh)}</td></tr>
         <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
         <tr><td>${glyph.pipelines(COL.operating)} Oil &amp; gas pipelines</td><td>${esc(src.pipelines.name)}<br><span class="dim">${esc(src.pipelines.detail)}</span></td><td class="m">${fmt(P.length)} segments</td><td>Which oil, NGL and gas pipelines run, are being laid or are proposed, and where they go</td><td class="dim">${esc(src.pipelines.fresh)}</td></tr>
         <tr><td>${glyph.cables(COL.approved)} Submarine cables</td><td>${esc(src.cables.name)}<br><span class="dim">${esc(src.cables.detail)}</span></td><td class="m">${fmt(C.length)} cables</td><td>Which submarine cables reach the continent, where they land, who owns them and when</td><td class="dim">${esc(src.cables.fresh)}</td></tr>
@@ -2011,37 +2042,40 @@ function renderMethod(){
   </section>
 
   <section id="m-afdb">
-    <div class="eyebrow"><span class="sk finance">Layer · AfDB finance</span><span class="m">squares</span></div>
-    <h2>African Development Bank</h2>
-    <p class="lead">The Bank's project portfolio, as it publishes it to the open IATI standard: one record per loan or grant, with money committed and paid out, sector and location.</p>
+    <div class="eyebrow"><span class="sk finance">Layer · Development finance</span><span class="m">squares and diamonds</span></div>
+    <h2>African Development Bank and World Bank</h2>
+    <p class="lead">Two lenders' project portfolios, as each publishes them to the open IATI standard: one record per loan or grant, with money committed and paid out, sector and location. AfDB is drawn as squares, the World Bank as diamonds.</p>
     <dl class="spec">
-      <dt>Source</dt><dd><strong>African Development Bank Group</strong>, publishing through the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development banks disclose their activities. Licence: ${esc(src.finance.lic)}. <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">Publisher page ↗</a></dd>
-      <dt>One record is</dt><dd>An <strong>activity</strong>: a project, loan or grant with one identifier. Each gets one marker, placed on an exact site when the Bank gives one.</dd>
-      <dt>What is included</dt><dd>Infrastructure sectors only: transport, energy, communications, water, industry, trade and environment. Health, education, agriculture and budget support are left out.</dd>
-      <dt>Money</dt><dd>Commitments and disbursements as reported by the Bank, converted from its accounting currency (SDR) to US dollars at <strong>${esc(DATA.meta.sdr_note)}</strong>. Change the rate and every dollar figure moves with it.</dd>
-      <dt>Location</dt><dd><strong>${pct(fExact, F.length)}</strong> of markers sit on an exact site. The rest sit at the centre of a country or region, and the detail card says which. <strong>${fmt(fMulti)} activities</strong> are multinational (regional corridors, power pools); they are labelled so and drawn where the Bank places them.</dd>
+      <dt>Sources</dt><dd><strong>African Development Bank Group</strong> and <strong>the World Bank</strong>, both publishing through the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development banks disclose their activities. AfDB: ${esc(src.finance.detail)}, licence ${esc(src.finance.lic)}, <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">publisher page ↗</a>. World Bank: ${esc(src.finance_wb.detail)}, licence ${esc(src.finance_wb.lic)}, <a href="${src.finance_wb.url}" target="_blank" rel="noopener noreferrer">publisher page ↗</a>.</dd>
+      <dt>One record is</dt><dd>An <strong>activity</strong>: a project, loan or grant with one identifier at one lender. Each gets one marker, placed on the most precise site the lender gives. A project co-financed by both banks is two records, one square and one diamond, and their amounts are never added.</dd>
+      <dt>What is included</dt><dd>Infrastructure sectors only, by DAC purpose code: transport, energy, communications, water, industry, trade and environment. Health, education, agriculture and budget support are left out. The World Bank also publishes its own theme codes; those are ignored for the filter.</dd>
+      <dt>Money</dt><dd>Commitments and disbursements from IATI transactions. AfDB reports in its accounting currency (SDR), converted to US dollars at <strong>${esc(DATA.meta.sdr_note)}</strong>; change the rate and every AfDB figure moves with it. The World Bank reports in US dollars, taken as published.</dd>
+      <dt>Location</dt><dd>AfDB: <strong>${pct(fExact, FA.length)}</strong> of markers sit on an exact site; the rest at the centre of a country or region, and the detail card says which. World Bank: the Bank marks every location approximate but states its class, and <strong>${pct(wPlace, FW.length)}</strong> of its markers sit on a named place, district or site rather than a region centroid. <strong>${fmt(fMulti)} activities</strong> are multinational (${fmt(fMulti - wMulti)} AfDB, ${fmt(wMulti)} World Bank regional programmes); they are labelled so and drawn where the lender places them.</dd>
+      <dt>Not covered</dt><dd>The World Bank publishes no IATI file for Algeria, Equatorial Guinea, Eritrea or Libya, and its files carry no activity before board approval, so it has no "announced" records.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
       <div class="fig">
-        <div><b>${fmt(F.length)}</b><span>activities in ${fCts} countries, plus multinational</span></div>
-        <div><b>$${fmt1(fUsd)}bn</b><span>committed by AfDB</span></div>
-        <div><b>$${fmt1(fDis)}bn</b><span>disbursed so far · ${pct(fDis, fUsd)} of commitments</span></div>
-        <div><b>${pct(fExact, F.length)}</b><span>of markers on an exact site</span></div>
+        <div><b>${fmt(F.length)}</b><span>activities in ${fCts} countries, plus multinational · ${fmt(FA.length)} AfDB, ${fmt(FW.length)} World Bank</span></div>
+        <div><b>$${fmt1(fUsd)}bn</b><span>committed · AfDB $${fmt1(sumUsd(FA))}bn, World Bank $${fmt1(sumUsd(FW))}bn</span></div>
+        <div><b>$${fmt1(fDis)}bn</b><span>disbursed so far · ${pct(sumDis(FA), sumUsd(FA))} of AfDB and ${pct(sumDis(FW), sumUsd(FW))} of World Bank commitments</span></div>
+        <div><b>${pct(fExact + wPlace, F.length)}</b><span>of markers on a site or named place</span></div>
       </div>
-      ${sbar(byStatus(F), F.length, "AfDB activities by status")}
+      ${sbar(byStatus(F), F.length, "Finance activities by status")}
       <p style="margin-top:12px;font-size:13px">By sector: ${topList(fSec, 8, k=>SECTOR_LABEL[k]||k)}.</p>
     </div>
     <div class="split">
       <div class="yes"><h4>What it tells you</h4><ul>
-        <li>What the Bank has committed and paid out to each project, where and in which sector.</li>
-        <li>How far along the Bank's own project cycle each activity is.</li>
+        <li>What each bank has committed and paid out to each project, where and in which sector.</li>
+        <li>How far along each lender's own project cycle an activity is.</li>
         <li>The gap between committed and disbursed, a rough sign of implementation pace.</li>
+        <li>Where the two banks fund the same corridor or plant: a square and a diamond at one site.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
-        <li><strong>Total project cost.</strong> Only the AfDB share is here. Co-financiers such as the World Bank, China Exim or national budgets are not counted.</li>
-        <li>Anything not financed by AfDB. Read totals as "AfDB exposure", never as "investment in Africa".</li>
-        <li>Physical progress. "Implementation" is the Bank's stage, which may mean procurement or studies rather than earthworks.</li>
+        <li><strong>Total project cost.</strong> Only each bank's own share is here, and the two shares are not summed. China Exim, private lenders and national budgets are not counted.</li>
+        <li>Anything not financed by these two banks. Read totals as "AfDB and World Bank exposure", never as "investment in Africa".</li>
+        <li>Physical progress. "Implementation" is a bank's stage, which may mean procurement or studies rather than earthworks.</li>
+        <li>A precise World Bank site. The Bank's own flag says every location is approximate; the class says how close.</li>
       </ul></div>
     </div>
   </section>
@@ -2156,11 +2190,11 @@ function renderMethod(){
     <h2>Five statuses across five sources</h2>
     <p class="lead">Each source describes progress in its own words. They are mapped onto five shared statuses so one filter works everywhere. The mapping is a judgement call, shown here so you can disagree with it.</p>
     <div class="twrap"><table>
-      <thead><tr><th>Shared status</th><th>GEM power</th><th>AfDB</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th></tr></thead>
+      <thead><tr><th>Shared status</th><th>GEM power</th><th>AfDB · World Bank (IATI)</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th></tr></thead>
       <tbody>${statusTable()}</tbody>
     </table></div>
     <ul>
-      <li><strong>Approved exists only for power.</strong> The other sources have no such stage.</li>
+      <li><strong>Approved exists only for power.</strong> The other sources have no such stage. The World Bank publishes nothing before board approval, so it has no announced activities either.</li>
       <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit or a pipeline segment, the Bank's implementation stage for an AfDB project, a mapper's tag for OpenStreetMap, and for a cable an inference from its ready-for-service year.</li>
       <li><strong>Operating includes the past.</strong> Retired units and closed projects stay visible rather than vanishing from every filter.</li>
       <li><strong>Stalled is drawn hollow</strong>, so abandoned projects stay on the map without competing with live ones.</li>
@@ -2173,6 +2207,7 @@ function renderMethod(){
     <div class="glyphs">
       <div>${glyph.assets(COL.ink)}<div><b>Circle · power unit</b><span>Area scales with capacity in MW, capped so one giant announcement does not blanket a country.</span></div></div>
       <div>${glyph.finance(COL.ink)}<div><b>Square · AfDB project</b><span>Area scales with the AfDB commitment in US dollars.</span></div></div>
+      <div>${glyph.finance_wb(COL.ink)}<div><b>Diamond · World Bank project</b><span>Same layer, same scale, the other lender.</span></div></div>
       <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn along the traced route. Solid for construction, dashed for proposed.</span></div></div>
       <div>${glyph.pipelines(COL.ink)}<div><b>Haloed line · pipeline</b><span>Drawn along the route with a translucent halo of its own colour, so it reads as a pipe. Dashed while proposed.</span></div></div>
       <div>${glyph.cables(COL.ink)}<div><b>Line with dots · submarine cable</b><span>Drawn along the whole route; a dot at each African landing point. Dashed until in service.</span></div></div>
@@ -2188,7 +2223,8 @@ function renderMethod(){
     <p>
       Power units sit at their reported coordinates. AfDB markers sit on an exact site when the Bank
       gives one, otherwise at the centre of the country or region: a square in the middle of a
-      country means a project somewhere in that country, not a project in the desert.
+      country means a project somewhere in that country, not a project in the desert. World Bank
+      diamonds sit on the Bank's own geocoded project sites, usually a town or district.
       OpenStreetMap works follow their traced route. Pipelines and cables follow their published
       route, which for a cable may run to Europe or Asia; "zoom to" fits the African part.
     </p>
@@ -2221,7 +2257,7 @@ function renderMethod(){
       <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres, pipeline kilometres and cable landings apart.</li>
       <li><strong>"In view" means what is on screen</strong> and matches the filters. Zoom into a province and you get that province's figures.</li>
       <li><strong>"Largest in view" ranks each record against its own layer</strong>, so a power plant, a loan and a railway can share one list.</li>
-      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every status, since a closed project's money was still spent.</li>
+      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every status, since a closed project's money was still spent, and are shown per lender.</li>
       <li><strong>Every number is computed from the source files.</strong></li>
     </ul>
   </section>
@@ -2229,9 +2265,9 @@ function renderMethod(){
   <section id="m-limits">
     <div class="eyebrow"><span>04</span><span>What to keep in mind</span></div>
     <h2>Limits of the data</h2>
-    <div class="callout"><p><strong>Money is AfDB only.</strong> The dollar figures are one lender's exposure. Chinese policy banks, private finance, domestic budgets and other multilaterals are absent, and for many corridors they are the larger share.</p></div>
+    <div class="callout"><p><strong>Money is two lenders only.</strong> The dollar figures are AfDB's and the World Bank's exposure, kept apart. Chinese policy banks, private finance, domestic budgets and other multilaterals are absent, and for many corridors they are the larger share.</p></div>
     <ul>
-      <li><strong>About ${pct(F.length - fExact, F.length)} of AfDB markers are approximate.</strong> Filter to exact locations before drawing any conclusion finer than a country.</li>
+      <li><strong>About ${pct(FA.length - fExact, FA.length)} of AfDB markers are approximate</strong>, and the World Bank marks all of its approximate. Check the location line on a card before drawing any conclusion finer than a district.</li>
       <li><strong>OpenStreetMap coverage follows mappers.</strong> The layer can confirm works; it can never prove their absence.</li>
       <li><strong>Energy and connectivity are over-represented.</strong> No comparable open tracker exists for ports, water or electricity transmission.</li>
       <li><strong>Pipeline routes are indicative and incomplete.</strong> About a third of GEM's African segments carry no route and are not drawn; length and capacity are GEM's figures, not measurements.</li>
@@ -2247,8 +2283,8 @@ function renderMethod(){
     <h2>Every figure can be traced back</h2>
     <p>
       Each record's detail card links to the source record it came from: the GEM wiki page for a
-      power unit or a pipeline, the IATI activity for an AfDB project, the OpenStreetMap way for
-      traced works, the TeleGeography page for a cable. If a figure here looks wrong, check it
+      power unit or a pipeline, the IATI activity for an AfDB project, the Bank's project page for
+      a World Bank one, the OpenStreetMap way for traced works, the TeleGeography page for a cable. If a figure here looks wrong, check it
       against the source.
     </p>
     <p>
@@ -2264,6 +2300,7 @@ function renderMethod(){
       (${fmt(A.length + F.length + G.length + P.length + C.length)} records plus the basemap). The raw layers as GeoJSON:
       <a href="data/gem_power_assets.geojson">power assets</a>,
       <a href="data/iati_afdb_finance.geojson">AfDB finance</a>,
+      <a href="data/iati_worldbank_finance.geojson">World Bank finance</a>,
       <a href="data/osm_construction.geojson">OpenStreetMap construction ways</a>,
       <a href="data/gem_oil_gas_pipelines.geojson">oil and gas pipelines</a> and
       <a href="data/telegeography_cables.geojson">submarine cables</a>;
@@ -2272,13 +2309,14 @@ function renderMethod(){
     <h3>Attribution</h3>
     <p>
       Power asset and pipeline data © Global Energy Monitor, CC BY 4.0. Finance data © African
-      Development Bank Group, published via IATI. Map data © OpenStreetMap contributors, ODbL.
+      Development Bank Group, published via IATI, and © The World Bank, CC BY 4.0, via IATI. Map data © OpenStreetMap contributors, ODbL.
       Submarine cable data © TeleGeography, Submarine Cable Map, CC BY-SA 4.0. Basemap by Natural
       Earth, public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
     <div class="logos" aria-label="Data sources and publisher">
       ${logoTile("global-energy-monitor", "https://globalenergymonitor.org/", "Global Energy Monitor", "Power assets, oil and gas pipelines")}
       ${logoTile("african-development-bank", "https://www.afdb.org/", "African Development Bank Group", "Finance")}
+      ${SOURCE_LOGOS["world-bank"] ? logoTile("world-bank", "https://www.worldbank.org/", "The World Bank", "Finance") : ""}
       ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
       ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
       ${SOURCE_LOGOS["telegeography"] ? logoTile("telegeography", "https://www.submarinecablemap.com/", "TeleGeography", "Submarine cables") : ""}
@@ -2288,8 +2326,8 @@ function renderMethod(){
     </div>
     <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data and its publisher.</p>
     <p class="foot">
-      Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
-      ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables ·
+      Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)}, World Bank in USD as published ·
+      ${fmt(A.length)} power units · ${fmt(FA.length)} AfDB and ${fmt(FW.length)} World Bank activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables ·
       ${allCts} countries and territories · africa-infra-watch · a project by
       <a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">Jacopo Ottaviani</a>
     </p>

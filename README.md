@@ -14,8 +14,8 @@ hand about twice a year; the header of each page says when.
 
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (coastlines, borders, provinces, rivers, lakes, cities), with
-the five data layers drawn as circles (power units, sized by MW), squares
-(AfDB projects, sized by commitment), thin lines (construction ways traced in
+the five data layers drawn as circles (power units, sized by MW), squares and
+diamonds (AfDB and World Bank projects, sized by commitment), thin lines (construction ways traced in
 OpenStreetMap), haloed lines (oil and gas pipeline routes) and lines ending in
 dots (submarine cables, dots at their African landing points). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
@@ -35,19 +35,23 @@ The dashboard is the page-first view of the same data, with charts and a table.
 
 ## Sources
 
-Five open datasets, deliberately kept as separate layers because they share no
+Six open datasets in five layers, deliberately kept apart because they share no
 project identifier. Summing across them double-counts. The dashboard shows the
-first three; the map shows all five.
+first three (AfDB only in finance); the map shows everything.
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|
 | Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,274 power units | what asset is being built |
-| Finance | African Development Bank, IATI 2.03 activity files | 1,401 projects | who is paying, and how much |
+| Finance | African Development Bank, IATI 2.03 activity files | 1,767 projects | who is paying, and how much |
+| Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 1,123 projects | the same, for the other big multilateral lender |
 | Ground truth | OpenStreetMap via Overpass | 3,586 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 324 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
 
-The two line layers were added in September 2026 (`fetch_sources.py pipes cables`).
+The two line layers and the World Bank lender were added in September 2026
+(`fetch_sources.py pipes cables wb`). The finance layer carries a `ln` column
+(`AfDB` / `WB`) and a lender filter (`ln=` in the hash); World Bank markers are
+diamonds, AfDB squares, and the two are never summed.
 Status vocabulary for them: GEM `proposed` is *announced*, `construction`, `operating`
 and `shelved`/`cancelled`/`idle` as *stalled*; TeleGeography's *in service* is
 *operating*, and a *planned* cable is *under construction* when its ready-for-service
@@ -63,7 +67,7 @@ python3 refresh.py                # fetch → gate → build, in one go (see "Up
 or step by step:
 
 ```bash
-python3 fetch_sources.py          # all five layers -> data/*.geojson + data/meta.json
+python3 fetch_sources.py          # all six sources -> data/*.geojson + data/meta.json
 python3 fetch_basemap.py          # Natural Earth 1:10m -> data/africa_basemap_10m.json
 python3 check_data.py             # refuse a snapshot that shrank or moved
 python3 build_dashboard.py        # -> dashboard.html  and  docs/dashboard.html
@@ -76,7 +80,7 @@ logo sheet: the continent traced from the basemap with a compass rose cut out).
 `python3 brand/trace.py && python3 brand/logos.py` regenerates them; see
 `brand/README.md`.
 
-`fetch_sources.py gem` / `iati` / `osm` / `pipes` / `cables` runs a single layer.
+`fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` runs a single source.
 The OSM pass takes ~10 minutes: it walks latitude bands and sleeps between them
 to stay inside Overpass's slot budget. The cables pass reads one small JSON per
 cable system in the world (~700, a few minutes); the pipelines pass downloads two
@@ -193,7 +197,7 @@ none, so nothing is blocked. If one is ever added there, include
 python3 refresh.py
 ```
 
-This fetches the five sources (about 20 minutes, most of it the
+This fetches the six sources (about 20 minutes, most of it the
 OpenStreetMap pass), records the dates in `data/meta.json`, runs
 `check_data.py`, and rebuilds `docs/` and the artifact files, including the
 link-preview image and `llms.txt` with the new counts. Then look at it:
@@ -305,8 +309,23 @@ These each cost real time to find. They are not in any of the upstream docs.
   `regionname_exact=Africa` returns 245 rows and MENA returns 0. Filter by
   country. (The WB Projects API also has no coordinates at all — its geodata
   is only in its IATI files.)
+- **DAC energy codes are the whole 23x block.** The infrastructure filter once
+  matched the prefix `230`, which is only the legacy code 23010; every 5-digit
+  energy code (23110 policy, 23210 solar, 23630 distribution…) fell through
+  and the World Bank's energy portfolio went missing. Match `23`.
 - **The IATI Datastore needs a subscription key** (401 without). Use the CKAN
   registry at `iatiregistry.org/api/3` or `d-portal.org/q.json`.
+- **The World Bank marks every IATI location `exactness=2`** (approximate), even
+  a named substation. The precision is in `location-class`: 4 site, 2 populated
+  place, 1 administrative region. Rank on that, not on exactness, or every
+  World Bank marker reads as a centroid. Its sector elements mix DAC codes
+  (vocabulary 1) with the Bank's own theme and sector codes (98, 99: `000071`,
+  `BC`); filter on vocabulary 1 only. Amounts are USD, not SDR. Its
+  `activity-status` never says 1 (pipeline), so it has no "announced" records.
+  No files exist for Algeria, Equatorial Guinea, Eritrea or Libya; regional
+  programmes live in the `289` (South of Sahara) and `298` (Africa) files with
+  no recipient country. The registry lists 148 files worldwide, so filter by the
+  ISO suffix of the dataset name.
 - **GEM's own map config points at a deleted file.** Resolve releases from the
   listable bucket under `Current_maps/`, never from their front-end source.
 - **GEM's pipeline routes are not under `Current_maps/`.** The gas and oil
@@ -351,11 +370,8 @@ These each cost real time to find. They are not in any of the upstream docs.
 - **Microsoft's Global Renewables Watch** — quarterly satellite detections of
   solar and wind, MIT licence, but coverage stops in mid-2024 and it shows
   only what already exists, so it cannot answer "announced" or "ongoing".
-- **World Bank IATI files** — the strongest candidate not yet added: one file
-  per country from a public CloudFront bucket, every activity with point
-  coordinates, commitments in USD. Sector codes use the Bank's own vocabulary
-  rather than DAC, and many points are just the capital, so it needs its own
-  exactness filter. Evaluated 2026-09-18; a natural second finance layer.
+- **World Bank IATI files** were evaluated on 2026-09-18 and added the same
+  day as the second lender in the finance layer (see above).
 - **AfDB Open Data Platform** — country indicator series, not project records.
 - **Raster tiles of any kind** — blocked by the artifact sandbox's content
   security policy, which is why the basemap is vector and inline. The site
