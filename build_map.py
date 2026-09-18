@@ -16,6 +16,7 @@ traced construction way, pipeline route and submarine cable — is one
 column-wise JSON payload either way.
 """
 
+import hashlib
 import json
 import math
 import pathlib
@@ -378,6 +379,11 @@ def main():
     # 2. GitHub Pages build: complete document, payload fetched at runtime by a
     #    module script (top-level await), with a loading state until it lands.
     n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables))
+    # The data URL carries a digest of the payload. Pages and CDN caches keep
+    # index.html and map.json for ten minutes each, independently; without
+    # this a freshly deployed page can load the previous deploy's data and
+    # draw a layer with zero records.
+    digest = hashlib.sha1(blob.encode()).hexdigest()[:10]
     loader = f'''<div class="loading" id="loading" role="status">
   <div class="lbox"><b>Africa Infrastructure Map</b>
   <span>Loading the basemap and {n_records:,} records, about {len(blob.encode()) / 1024 / 1024:.0f} MB…</span><i></i></div>
@@ -386,7 +392,7 @@ def main():
 async function loadPayload(){{
   const box = document.getElementById("loading");
   try{{
-    const res = await fetch("data/map.json");
+    const res = await fetch("data/map.json?v={digest}");
     if(!res.ok) throw new Error(res.status + " " + res.statusText);
     const data = await res.json();
     box.remove();

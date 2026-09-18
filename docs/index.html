@@ -493,7 +493,7 @@ Country outlines: Natural Earth. Built 18 Sep 2026 by
 async function loadPayload(){
   const box = document.getElementById("loading");
   try{
-    const res = await fetch("data/map.json");
+    const res = await fetch("data/map.json?v=0227d607f9");
     if(!res.ok) throw new Error(res.status + " " + res.statusText);
     const data = await res.json();
     box.remove();
