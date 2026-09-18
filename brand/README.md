@@ -20,5 +20,6 @@ map/dashboard palette (`--accent #1F5F4B`, `--ink #16211C`, `--paper #F8FAF6`,
 | `mark.svg` | Chosen mark (A) in `currentColor`, inlined next to each page `<h1>`; colour follows `--accent`. |
 | `favicon-check.html` | The favicon at 16 to 128 px on light and dark, for a quick legibility check. |
 | `logo-options.html` | Preview sheet: light/dark, wordmark lockup, 64/32/16 px check. |
+| `sources/` | Monochrome marks of the data sources, inlined into the Methodology's attribution grid. See its README. |
 
 Regenerate with `python3 brand/trace.py && python3 brand/logos.py` from the project root.

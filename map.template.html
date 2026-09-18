@@ -74,8 +74,9 @@
   h1{font-size:23px;font-weight:800;letter-spacing:-.024em;line-height:1.08}
   .titlerow{display:flex;align-items:center;gap:11px}
   .titlerow .mark{flex:none;font-size:38px;color:var(--accent);display:block}
-  .titlerow .home{display:block;line-height:0;color:inherit;border-radius:4px}
+  .titlerow .home{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none;border-radius:4px}
   .titlerow .home:hover .mark{opacity:.75}
+  .titlerow .home:hover h1{color:var(--accent)}
   .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .lede{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:4px 0 0}
   .lede strong{color:var(--ink);font-weight:600}
@@ -403,7 +404,7 @@
   .method .logos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
   .method .logos a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:104px;padding:16px 14px 13px;border:1px solid var(--rule-soft);border-radius:4px;background:var(--surface);color:var(--ink-3);text-decoration:none;transition:color .15s,border-color .15s}
   .method .logos a:hover,.method .logos a:focus-visible{color:var(--ink);border-color:var(--rule)}
-  .method .logos svg{display:block;width:100%;max-width:132px;height:44px;fill:currentColor}
+  .method .logos svg{display:block;width:100%;max-width:148px;height:44px;fill:currentColor}
   .method .logos span{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
   .method .lnote{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:10px;max-width:none}
   .method .foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.6}
@@ -424,7 +425,7 @@
   <aside class="rail" id="rail" aria-label="Filters and records">
     <div class="brand">
       <div class="row">
-        <div class="titlerow"><a class="home" href="__HOME_URL__" aria-label="Africa Infrastructure Map, home"><!--__LOGO__--></a><h1>Africa Infrastructure Map</h1></div>
+        <div class="titlerow"><a class="home" href="__HOME_URL__"><!--__LOGO__--><h1>Africa Infrastructure Map</h1></a></div>
         <button class="close" id="railclose" aria-label="Close filters">×</button>
       </div>
       <p class="lede" id="lede"></p>
@@ -1935,7 +1936,7 @@ function renderMethod(){
       ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
       ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
       ${logoTile("natural-earth", "https://www.naturalearthdata.com/", "Natural Earth", "Basemap")}${PAGES ? `
-      ${logoTile("esri", "https://www.esri.com/", "Esri", "Satellite imagery")}` : ""}
+      ${logoTile("eox", "https://s2maps.eu/", "EOX IT Services, Sentinel-2 cloudless", "Satellite imagery")}` : ""}
     </div>
     <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data.</p>
     <p class="foot">

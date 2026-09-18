@@ -114,9 +114,16 @@ LOGO_MARK = re.sub(r"<svg ", '<svg class="mark" aria-hidden="true" focusable="fa
                    (BRAND / "mark.svg").read_text().strip(), count=1)
 
 
+# Monochrome marks of the data sources (brand/sources/*.svg, see the README
+# there): every fill is currentColor, so they take the page's ink colour in
+# both themes. Inlined as a JS object where a template carries the marker.
+SOURCE_LOGOS = {p.stem: p.read_text().strip() for p in sorted((BRAND / "sources").glob("*.svg"))}
+
+
 def brand_assets(page):
     """Fill the brand markers a template carries: the inline favicon link in
-    its head, the header mark next to each <h1>, and the mark's home link.
+    its head, the header mark next to each <h1>, the mark's home link and,
+    where the template asks for them, the data-source logos.
     The home link is the absolute site URL so it also works from an artifact;
     wrap_document makes it relative for the Pages build."""
     for marker in ("<!--__FAVICON__-->", "<!--__LOGO__-->", "__HOME_URL__"):
@@ -124,6 +131,7 @@ def brand_assets(page):
             raise SystemExit(f"template missing the {marker} marker")
     return (page.replace("<!--__FAVICON__-->", f'<link rel="icon" href="{FAVICON}">')
                 .replace("<!--__LOGO__-->", LOGO_MARK)
+                .replace("/*__SOURCE_LOGOS__*/{}", json.dumps(SOURCE_LOGOS, ensure_ascii=False))
                 .replace("__HOME_URL__", SITE_URL)
                 .replace("__COFFEE_URL__", COFFEE_URL)
                 .replace("__AUTHOR_URL__", AUTHOR_URL))
