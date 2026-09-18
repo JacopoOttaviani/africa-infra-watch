@@ -1,0 +1,18 @@
+{
+  "assets": {
+    "fetched": "2026-09-07",
+    "fresh": "24 Aug 2026",
+    "release": "2026-08-v2",
+    "records": 4274
+  },
+  "finance": {
+    "fetched": "2026-09-07",
+    "datasets": 57,
+    "records": 6127,
+    "activities": 1401
+  },
+  "ground": {
+    "fetched": "2026-09-07",
+    "records": 5111
+  }
+}

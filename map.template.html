@@ -1,0 +1,1669 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Africa Infrastructure Map</title>
+<!--__FAVICON__-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#EDF0EC; --surface:#FFFFFF; --surface-2:#E4E9E4; --surface-3:#F5F7F4;
+    --ink:#16211C; --ink-2:#495A50; --ink-3:#71827A;
+    --rule:#C6D0C8; --rule-soft:#DBE2DC;
+    --accent:#1F5F4B; --accent-soft:#DDEBE3; --accent-ink:#154236;
+    --sea:#D3DDDC; --land:#F8FAF6; --land-dim:#ECEFEA; --land-ctx:#E2E7E3;
+    --border:#AEB9B1; --admin:#D2DAD4; --lake:#BFCFCE; --river:#AFC3C2;
+    --label:#586760; --label-city:#3E4B44; --halo:#F8FAF6;
+    --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
+    --st-operating:#2B7A4C; --st-stalled:#7F8B86;
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --serif:"Source Serif 4",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --shadow:0 1px 2px rgba(22,33,28,.06),0 10px 26px -14px rgba(22,33,28,.22);
+    --shadow-lg:0 2px 4px rgba(22,33,28,.06),0 18px 40px -18px rgba(22,33,28,.3);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0F1512; --surface:#161D19; --surface-2:#1E2620; --surface-3:#131A16;
+      --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
+      --rule:#2B3630; --rule-soft:#212A24;
+      --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
+      --sea:#090E0C; --land:#1B231E; --land-dim:#151C18; --land-ctx:#121816;
+      --border:#3D4A43; --admin:#26302A; --lake:#0C1412; --river:#22302B;
+      --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
+      --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
+      --st-operating:#67C98B; --st-stalled:#6E7A75;
+      --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
+      --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1512; --surface:#161D19; --surface-2:#1E2620; --surface-3:#131A16;
+    --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
+    --rule:#2B3630; --rule-soft:#212A24;
+    --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
+    --sea:#090E0C; --land:#1B231E; --land-dim:#151C18; --land-ctx:#121816;
+    --border:#3D4A43; --admin:#26302A; --lake:#0C1412; --river:#22302B;
+    --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
+    --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
+    --st-operating:#67C98B; --st-stalled:#6E7A75;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
+    --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--display);font-size:13.5px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden}
+  h1,h2,h3,h4{margin:0;text-wrap:balance}
+  button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+  select,input{font-family:inherit;font-size:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  a{color:var(--accent)}
+  .m{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+
+  /* ---------- shell ---------- */
+  .app{display:grid;grid-template-columns:356px 1fr;height:100vh;height:100dvh;width:100vw}
+  .rail{position:relative;z-index:6;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:var(--paper);border-right:1px solid var(--rule);scrollbar-width:thin}
+  .stage{position:relative;min-width:0;background:var(--sea);overflow:hidden}
+  canvas#map{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+  canvas#map.dragging{cursor:grabbing}
+  canvas#map.pick{cursor:pointer}
+
+  /* ---------- rail ---------- */
+  .brand{padding:22px 20px 16px;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
+  .brand .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  h1{font-size:23px;font-weight:800;letter-spacing:-.024em;line-height:1.08}
+  .titlerow{display:flex;align-items:center;gap:11px}
+  .titlerow .mark{flex:none;font-size:38px;color:var(--accent);display:block}
+  .lede{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:4px 0 0}
+  .lede strong{color:var(--ink);font-weight:600}
+  .asof{margin:6px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3)}
+  .asof b{font-weight:500;color:var(--ink-2)}
+  .asof em{font-style:normal;color:var(--ink-3)}
+  .close{display:none;width:30px;height:30px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:16px;line-height:1}
+
+  .panel{padding:14px 20px 16px;border-bottom:1px solid var(--rule-soft)}
+  .panel h3{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .panel h3 .hint{font-weight:500;letter-spacing:.02em;text-transform:none;font-size:11px;color:var(--ink-3)}
+
+  input[type=search]{width:100%;padding:8px 10px 8px 30px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371827A' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");background-repeat:no-repeat;background-position:9px 50%}
+  input[type=search]::placeholder{color:var(--ink-3)}
+
+  .lyr{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid var(--rule-soft);border-radius:3px;background:var(--surface);text-align:left;margin-top:5px}
+  .lyr:first-child{margin-top:0}
+  .lyr[aria-pressed="false"]{background:transparent;color:var(--ink-3)}
+  .lyr[aria-pressed="false"] .glyph{opacity:.35}
+  .lyr[aria-pressed="false"] b{color:var(--ink-3)}
+  .lyr .glyph{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+  .lyr .lt{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+  .lyr .lt b{font-weight:600;font-size:13px}
+  .lyr .lt span{font-size:11px;color:var(--ink-3)}
+  .lyr .lc{font-family:var(--mono);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{display:inline-flex;gap:6px;align-items:center;padding:4px 8px 4px 6px;border:1px solid var(--rule);border-radius:2px;background:var(--surface);font-size:12px;font-weight:500}
+  .chip .sw{width:9px;height:9px;border-radius:50%;flex:none}
+  .chip.stalled .sw{background:transparent!important;border:2px solid var(--st-stalled)}
+  .chip .cn{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .chip[aria-pressed="false"]{background:transparent;color:var(--ink-3);border-style:dashed}
+  .chip[aria-pressed="false"] .sw{opacity:.3}
+
+  .narrow{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  select{width:100%;padding:7px 8px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);min-width:0}
+  .reset{grid-column:1/-1;padding:7px;border:1px solid var(--rule);border-radius:3px;background:transparent;font-size:12px;color:var(--ink-2)}
+  .reset:hover{background:var(--surface)}
+
+  .stats{display:flex;flex-direction:column;gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);border-radius:3px;overflow:hidden}
+  .stat{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:center;padding:8px 10px;background:var(--surface)}
+  .stat .glyph{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+  .stat .k{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .stat .v{font-family:var(--mono);font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.35}
+  .stat .v span{color:var(--ink-3)}
+
+  .list{display:flex;flex-direction:column}
+  .rec{display:grid;grid-template-columns:16px 1fr auto;gap:9px;align-items:center;width:100%;padding:7px 4px;border-top:1px solid var(--rule-soft);text-align:left}
+  .rec:first-child{border-top:0}
+  .rec:hover{background:var(--surface)}
+  .rec.picked{background:var(--accent-soft)}
+  .rec .g{width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+  .rec .t{min-width:0;display:flex;flex-direction:column;line-height:1.25}
+  .rec .t b{font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rec .t span{font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rec .s{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .rec .s i{font-style:normal;color:var(--ink-3)}
+  .empty{color:var(--ink-3);font-size:12.5px;padding:8px 0}
+  .more{margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+
+  .notes{padding:14px 20px 22px;font-size:12px;color:var(--ink-2);line-height:1.5;margin-top:auto}
+  .notes summary{cursor:pointer;font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .notes summary::-webkit-details-marker{display:none}
+  .notes summary::after{content:"+";font-family:var(--mono);color:var(--ink-3)}
+  .notes[open] summary::after{content:"−"}
+  .notes p{margin:8px 0 0}
+  .notes ul{margin:8px 0 0;padding-left:16px}
+  .notes li{margin-top:4px}
+  .notes .src{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--rule-soft);padding:6px 0}
+  .notes .src:first-of-type{border-top:0}
+  .notes .src .sk{font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;min-width:88px;padding-top:2px}
+  .sk.assets{color:var(--st-operating)} .sk.finance{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
+  .notes .src .sd{flex:1;color:var(--ink-2)}
+  .notes .src .sd b{color:var(--ink);font-weight:600}
+  .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+
+  /* ---------- HUD ---------- */
+  .hud{position:absolute;z-index:3;display:flex;gap:6px;align-items:flex-start;pointer-events:none}
+  .hud > *{pointer-events:auto}
+  .hud-tl{left:12px;top:12px;flex-wrap:wrap;max-width:calc(100% - 120px)}
+  .hud-tr{right:12px;top:12px;flex-direction:column}
+  .pill{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:5px 9px;font-size:11.5px;font-weight:600;box-shadow:var(--shadow);display:flex;gap:7px;align-items:center;white-space:nowrap}
+  .pill .m{font-size:11.5px;color:var(--ink)}
+  .pill.scope{color:var(--accent-ink)}
+  .pill.scope[hidden]{display:none}
+  .pill.scope button{margin-left:2px;color:var(--ink-3);font-size:13px;line-height:1}
+  .ib{width:32px;height:32px;background:var(--surface);border:1px solid var(--rule);border-radius:3px;font-size:16px;font-weight:600;line-height:1;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+  .ib:hover{background:var(--surface-3)}
+  .ib svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ib.menu{display:none}
+  .ib.share{margin-top:6px}
+
+  .legend{position:absolute;left:12px;bottom:12px;z-index:3;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:9px 11px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto auto;gap:4px 18px;font-size:11px}
+  .legend .col{display:flex;flex-direction:column;gap:4px}
+  .legend .lg{display:flex;align-items:center;gap:7px;color:var(--ink-2);white-space:nowrap}
+  .legend .lg svg{width:16px;height:12px;flex:none}
+  .legend .lg b{font-weight:600;color:var(--ink)}
+  .legend .lh{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
+
+  .attrib{position:absolute;right:12px;bottom:12px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:5px;pointer-events:none}
+  .attrib > *{pointer-events:auto}
+  .scale{display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-family:var(--mono);font-size:10.5px;color:var(--ink-2)}
+  .scale i{display:block;height:5px;border:1.5px solid var(--ink-2);border-top:0}
+  .credit{font-size:10px;color:var(--ink-3);background:color-mix(in srgb,var(--surface) 78%,transparent);padding:2px 6px;border-radius:2px;text-align:right;line-height:1.35}
+  .credit a{color:inherit}
+
+  #tip{position:absolute;z-index:4;pointer-events:none;opacity:0;transition:opacity .08s;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:7px 10px;box-shadow:var(--shadow);max-width:260px;font-size:12px}
+  #tip .tn{font-weight:600;line-height:1.3;margin-bottom:3px}
+  #tip .tr{display:flex;justify-content:space-between;gap:12px;color:var(--ink-3);font-size:11px}
+  #tip .tr b{color:var(--ink-2);font-weight:500;font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  .detail{position:absolute;right:12px;bottom:58px;z-index:5;width:min(352px,calc(100% - 24px));background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:calc(100% - 130px);overflow:hidden}
+  .detail[hidden]{display:none}
+  .detail header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:12px 14px 10px;border-bottom:1px solid var(--rule-soft)}
+  .detail .eyebrow{display:flex;gap:8px;align-items:center;margin-bottom:5px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .detail .eyebrow .badge{display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;text-transform:none;font-size:11px;font-weight:600;color:var(--ink)}
+  .detail .eyebrow .badge .sw{width:8px;height:8px;border-radius:50%}
+  .detail .eyebrow .badge.stalled .sw{background:transparent!important;border:2px solid var(--st-stalled)}
+  .detail h2{font-family:var(--serif);font-size:16.5px;font-weight:600;line-height:1.3;letter-spacing:-.005em}
+  .detail .x{width:26px;height:26px;border:1px solid var(--rule);border-radius:3px;flex:none;font-size:14px;line-height:1;color:var(--ink-2)}
+  .detail .body{padding:8px 14px 12px;overflow-y:auto}
+  .kv{display:grid;grid-template-columns:96px 1fr;gap:4px 12px;font-size:12.5px}
+  .kv span{color:var(--ink-3)}
+  .kv b{font-weight:500;color:var(--ink);overflow-wrap:anywhere}
+  .kv .num{font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+  .detail .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .detail .actions a,.detail .actions button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;font-size:12px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--surface-3)}
+  .detail .actions a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .detail .note{margin:10px 0 0;font-size:11.5px;color:var(--ink-3);line-height:1.45}
+
+  #toast{position:absolute;left:50%;bottom:22px;transform:translate(-50%,8px);z-index:7;background:var(--ink);color:var(--paper);padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;opacity:0;transition:opacity .15s,transform .15s;pointer-events:none}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  .scrim{display:none}
+
+  @media (max-width:880px){
+    .app{grid-template-columns:1fr}
+    .rail{position:absolute;top:0;left:0;bottom:0;width:min(352px,88vw);transform:translateX(-102%);transition:transform .22s ease;box-shadow:var(--shadow-lg)}
+    .rail.open{transform:none}
+    .close{display:flex;align-items:center;justify-content:center}
+    .ib.menu{display:flex}
+    .scrim{display:block;position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
+    .scrim.show{opacity:1;pointer-events:auto}
+    .legend{grid-template-columns:1fr;gap:4px;left:12px;bottom:12px;max-width:180px}
+    .legend .col.sizes{display:none}
+    .detail{right:12px;left:12px;width:auto;bottom:12px;max-height:60%}
+    .credit{max-width:230px;text-align:right}
+    .hud-tl{max-width:calc(100% - 60px)}
+  }
+  /* ---------- site-only chrome (GitHub Pages build) ---------- */
+  .pages-only{display:none}
+  html[data-host="pages"] .pages-only{display:inline-flex}
+  .loading{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:var(--paper);padding:20px}
+  .lbox{display:flex;flex-direction:column;gap:8px;width:min(340px,100%);padding:20px 22px;border:1px solid var(--rule);border-radius:4px;background:var(--surface);box-shadow:var(--shadow-lg)}
+  .lbox b{font-size:15px;font-weight:700;letter-spacing:-.01em}
+  .lbox span{font-size:12.5px;color:var(--ink-2);line-height:1.45}
+  .lbox i{display:block;height:3px;margin-top:6px;background:var(--surface-2);border-radius:2px;overflow:hidden;position:relative}
+  .lbox i::after{content:"";position:absolute;left:-40%;width:40%;height:100%;background:var(--accent);border-radius:2px;animation:lslide 1.1s ease-in-out infinite}
+  @keyframes lslide{to{left:100%}}
+  .loading.err .lbox i{display:none}
+  .loading.err .lbox span{color:var(--st-construction)}
+  .readmore a.pages-only{align-self:flex-start;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none}
+  .readmore a.pages-only:hover{text-decoration:underline}
+
+  /* ---------- tabs ---------- */
+  .tabs{display:flex;gap:2px;padding:3px;background:var(--surface-2);border-radius:4px;margin-top:10px}
+  .tab{flex:1;padding:6px 8px;border-radius:3px;font-size:12px;font-weight:600;color:var(--ink-3);text-align:center;letter-spacing:.01em}
+  .tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+  .tab:hover:not([aria-selected="true"]){color:var(--ink-2)}
+  body[data-tab="method"] .map-only{display:none}
+  body:not([data-tab="method"]) .method-only{display:none}
+  body[data-tab="method"] .stage > :not(#method):not(.scrim){display:none}
+  .pill.link{cursor:pointer;color:var(--ink-2)}
+  .pill.link:hover{background:var(--surface-3);color:var(--ink)}
+
+  .readmore{display:flex;flex-direction:column;gap:6px;padding:14px 20px 22px;margin-top:auto;border-top:1px solid var(--rule-soft);font-size:12px;color:var(--ink-3);line-height:1.5}
+  .readmore button{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink)}
+  .readmore button:hover{background:var(--surface-3)}
+
+  .toc{display:flex;flex-direction:column}
+  .toc a{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:baseline;padding:7px 8px;border-radius:3px;text-decoration:none;color:var(--ink-2);font-size:12.5px;font-weight:500;line-height:1.3}
+  .toc a .n{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .toc a:hover{background:var(--surface)}
+  .toc a[aria-current="true"]{background:var(--accent-soft);color:var(--accent-ink)}
+  .toc a[aria-current="true"] .n{color:var(--accent-ink)}
+  .toc a.sub{padding-left:18px}
+
+  /* ---------- methodology ---------- */
+  #method{position:absolute;inset:0;overflow-y:auto;background:var(--paper);display:none;scroll-behavior:smooth;scrollbar-width:thin}
+  body[data-tab="method"] #method{display:block}
+  @media (prefers-reduced-motion:reduce){#method{scroll-behavior:auto}}
+  .mtop{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 24px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule-soft)}
+  .mtop .back{display:inline-flex;gap:6px;align-items:center;white-space:nowrap;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink);box-shadow:var(--shadow)}
+  .mtop .back svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .mtop .where{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mtop .contents{display:none}
+  @media (max-width:880px){.mtop .contents{display:inline-flex}}
+  .method{max-width:780px;margin:0 auto;padding:36px 36px 120px}
+  .method .kicker{display:block;margin-bottom:10px}
+  .method h1{font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-.026em;line-height:1.08}
+  .method .standfirst{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink-2);margin:14px 0 0;max-width:62ch}
+  .method .standfirst strong{color:var(--ink);font-weight:600}
+  .method section{margin-top:52px;padding-top:28px;border-top:1px solid var(--rule)}
+  .method section:first-of-type{margin-top:36px}
+  .method .eyebrow{display:flex;gap:10px;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .method .eyebrow .sk{letter-spacing:.16em}
+  .method .eyebrow .m{font-weight:500;letter-spacing:0;text-transform:none;font-size:11px}
+  .method h2{font-size:23px;font-weight:800;letter-spacing:-.022em;line-height:1.15;margin:0}
+  .method h3{font-size:15px;font-weight:700;letter-spacing:-.008em;margin:28px 0 8px}
+  .method h4{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 8px}
+  .method .lead{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink-2);margin:10px 0 0;max-width:64ch}
+  .method p{font-family:var(--serif);font-size:15px;line-height:1.62;color:var(--ink-2);margin:12px 0 0;max-width:68ch}
+  .method p strong,.method li strong{color:var(--ink);font-weight:600}
+  .method ul{margin:10px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:7px;max-width:68ch}
+  .method ul li{font-family:var(--serif);font-size:15px;line-height:1.55;color:var(--ink-2);padding-left:16px;position:relative}
+  .method ul li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--rule)}
+  .method code,.method .m{font-family:var(--mono);font-size:.88em;background:var(--surface-2);padding:1px 5px;border-radius:2px;color:var(--ink)}
+  .method a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+  .method .spec{display:grid;grid-template-columns:132px 1fr;gap:0;margin:20px 0 0;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--surface)}
+  .method .spec dt,.method .spec dd{margin:0;padding:10px 14px;border-top:1px solid var(--rule-soft);font-size:13.5px;line-height:1.5}
+  .method .spec dt:first-of-type,.method .spec dd:first-of-type{border-top:0}
+  .method .spec dt{font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding-top:12px;background:var(--surface-3)}
+  .method .spec dd{font-family:var(--serif);color:var(--ink-2)}
+  .method .spec dd strong{color:var(--ink);font-weight:600}
+  .method .facts{margin-top:18px;padding:14px 16px 16px;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+  .method .facts .fh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+  .method .facts .fh h4{margin:0}
+  .method .facts .fh span{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .method .fig{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px 18px;margin-bottom:14px}
+  .method .fig div{display:flex;flex-direction:column;gap:2px}
+  .method .fig b{font-family:var(--mono);font-size:20px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1}
+  .method .fig span{font-size:11px;color:var(--ink-3);line-height:1.3}
+  .sbar{display:flex;height:10px;border-radius:2px;overflow:hidden;gap:2px;background:transparent}
+  .sbar i{display:block;height:100%;min-width:2px}
+  .sbar i.stalled{background:transparent!important;box-shadow:inset 0 0 0 1.5px var(--st-stalled)}
+  .skey{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px}
+  .skey span{display:inline-flex;gap:6px;align-items:center;font-size:11.5px;color:var(--ink-2)}
+  .skey span i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .skey span.stalled i{background:transparent!important;border:1.5px solid var(--st-stalled)}
+  .skey span b{font-family:var(--mono);font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+  .method .split{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+  .method .split > div{padding:14px 16px;border-radius:4px;border:1px solid var(--rule-soft);background:var(--surface-3)}
+  .method .split .no{border-color:color-mix(in srgb,var(--st-construction) 35%,var(--rule))}
+  .method .split .no h4{color:var(--st-construction)}
+  .method .split .yes h4{color:var(--accent)}
+  .method .split ul{gap:6px}
+  .method .split li{font-size:14px}
+  .method table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+  .method .twrap{overflow-x:auto;margin-top:16px}
+  .method .twrap table{margin-top:0;min-width:560px}
+  .method th{font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:10px 12px;background:var(--surface-3);border-bottom:1px solid var(--rule)}
+  .method td{padding:9px 12px;border-top:1px solid var(--rule-soft);vertical-align:top;color:var(--ink-2);line-height:1.45;font-family:var(--serif)}
+  .method td:first-child{font-family:var(--display);font-weight:600;color:var(--ink);white-space:nowrap}
+  .method td .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+  .method td .sw.stalled{background:transparent!important;border:2px solid var(--st-stalled);width:6px;height:6px}
+  .method td.dim,.method td .dim{color:var(--ink-3)}
+  .method td.m{background:none;padding:9px 12px;font-family:var(--mono);font-size:12.5px;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .method .glyphs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 18px;margin-top:16px}
+  .method .glyphs > div{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--rule-soft);border-radius:4px;background:var(--surface)}
+  .method .glyphs > div > div{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .method .glyphs svg{margin-top:1px}
+  .method .glyphs b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+  .method .glyphs span{font-size:12px;color:var(--ink-3);line-height:1.4}
+  .method .callout{margin-top:18px;padding:14px 16px;border-left:3px solid var(--st-construction);background:var(--surface);border-radius:0 4px 4px 0}
+  .method .callout p{margin:0}
+  .method .foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.6}
+  @media (max-width:880px){
+    .method{padding:24px 18px 100px}
+    .method .spec{grid-template-columns:1fr}
+    .method .spec dt{padding-bottom:2px;border-top:1px solid var(--rule-soft)}
+    .method .spec dd{border-top:0;padding-top:4px}
+    .method .spec dt:first-of-type{border-top:0}
+    .method .split{grid-template-columns:1fr}
+    .mtop{padding:8px 14px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <aside class="rail" id="rail" aria-label="Filters and records">
+    <div class="brand">
+      <div class="row">
+        <span class="kicker">africa-infra-watch · three sources, one map</span>
+        <button class="close" id="railclose" aria-label="Close filters">×</button>
+      </div>
+      <div class="titlerow"><!--__LOGO__--><h1>Africa Infrastructure Map</h1></div>
+      <p class="lede" id="lede"></p>
+      <p class="asof" id="asof"></p>
+      <div class="tabs" role="tablist" aria-label="View">
+        <button class="tab" role="tab" data-t="map" aria-selected="true">Map</button>
+        <button class="tab" role="tab" data-t="method" aria-selected="false">Methodology</button>
+      </div>
+    </div>
+
+    <div class="panel map-only">
+      <input type="search" id="q" placeholder="Search projects, owners, places…" aria-label="Search project names">
+    </div>
+
+    <div class="panel map-only">
+      <h3>Layers <span class="hint">shape = source</span></h3>
+      <div id="layers"></div>
+    </div>
+
+    <div class="panel map-only">
+      <h3>Status <span class="hint">colour = status</span></h3>
+      <div class="chips" id="statuses"></div>
+    </div>
+
+    <div class="panel map-only">
+      <h3>Narrow</h3>
+      <div class="narrow">
+        <select id="country" aria-label="Country"></select>
+        <select id="sector" aria-label="Sector"></select>
+        <button class="reset" id="reset">Clear all filters</button>
+      </div>
+    </div>
+
+    <div class="panel map-only">
+      <h3>In view <span class="hint" id="viewhint"></span></h3>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <div class="panel map-only">
+      <h3>Largest in view <span class="hint" id="listhint"></span></h3>
+      <div class="list" id="list"></div>
+      <div class="more" id="listmore"></div>
+    </div>
+
+    <div class="readmore map-only">
+      <span>Three sources that share no identifier, one status vocabulary, and limits worth carrying into any conclusion.</span>
+      <button id="tomethod">Read the methodology →</button>
+      <a class="pages-only" href="dashboard.html">Open the dashboard view →</a>
+    </div>
+
+    <div class="panel method-only" style="border-bottom:0">
+      <h3>Contents</h3>
+      <nav class="toc" id="toc" aria-label="Methodology sections"></nav>
+    </div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB-financed projects and construction works"></canvas>
+
+    <div class="hud hud-tl">
+      <button class="ib menu" id="railopen" aria-label="Open filters" title="Filters and records">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="pill scope" id="scope" hidden><span id="scopename"></span><button id="scopeclear" aria-label="Clear country filter">×</button></span>
+      <span class="pill"><span class="m" id="vis">0</span> records match</span>
+      <button class="pill link" id="hudmethod" title="Sources, method and limits">Methodology</button>
+    </div>
+
+    <div class="hud hud-tr">
+      <button class="ib" id="zin" title="Zoom in" aria-label="Zoom in">+</button>
+      <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
+      <button class="ib" id="zrst" title="Whole continent" aria-label="Reset view">
+        <svg viewBox="0 0 24 24"><path d="M3 12 12 4l9 8M6 10v10h12V10"/></svg>
+      </button>
+      <button class="ib share" id="share" title="Copy a link to this view" aria-label="Copy link to this view">
+        <svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg>
+      </button>
+      <button class="ib pages-only" id="theme" title="Switch light / dark" aria-label="Switch between light and dark theme">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg>
+      </button>
+    </div>
+
+    <div class="legend" id="legend" aria-label="Legend"></div>
+
+    <div class="attrib">
+      <div class="scale" id="scale"></div>
+      <div class="credit">Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div>
+    </div>
+
+    <article id="method" aria-label="Methodology">
+      <div class="mtop">
+        <div style="display:flex;gap:6px">
+          <button class="back" id="mback"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back to the map</button>
+          <button class="back contents" id="mtoc"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Contents</button>
+        </div>
+        <span class="where" id="mwhere"></span>
+      </div>
+      <div class="method" id="mbody"></div>
+    </article>
+    <div id="tip" role="status" aria-live="polite"></div>
+    <section class="detail" id="detail" hidden aria-live="polite"></section>
+    <div id="toast" role="status"></div>
+    <div class="scrim" id="scrim"></div>
+  </main>
+</div>
+
+<script>
+const DATA = /*__PAYLOAD__*/;
+
+/* ================= vocabulary ================= */
+const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
+const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
+const STATUS_KEY   = {announced:"an",approved:"ap",under_construction:"uc",operating:"op",stalled:"st"};
+const KEY_STATUS   = Object.fromEntries(Object.entries(STATUS_KEY).map(([k,v])=>[v,k]));
+const LAYER_ORDER  = ["assets","finance","ground"];
+const LAYER_LABEL  = {assets:"Power assets",finance:"AfDB finance",ground:"Ground truth"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"African Development Bank",ground:"OpenStreetMap"};
+const LAYER_KEY    = {assets:"a",finance:"f",ground:"g"};
+const NAMES = DATA.names;
+const PAGES = document.documentElement.dataset.host === "pages";
+const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",other:"Other / multi-sector",road:"Road",rail:"Rail",air:"Airport"};
+
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+let COL = {};
+function readColors(){
+  COL = {sea:css("--sea"),land:css("--land"),landDim:css("--land-dim"),landCtx:css("--land-ctx"),border:css("--border"),
+    admin:css("--admin"),lake:css("--lake"),river:css("--river"),label:css("--label"),labelCity:css("--label-city"),
+    halo:css("--halo"),accent:css("--accent"),accentSoft:css("--accent-soft"),surface:css("--surface"),ink:css("--ink")};
+  for(const s of STATUS_ORDER) COL[s] = css("--st-"+(s==="under_construction"?"construction":s));
+}
+const statusColor = s => COL[s] || COL.stalled;
+const el = id => document.getElementById(id);
+const fmt  = n => n==null ? "—" : n.toLocaleString("en-US",{maximumFractionDigits:0});
+const fmt1 = n => n==null ? "—" : n.toLocaleString("en-US",{maximumFractionDigits:1});
+const fmt2 = n => n==null ? "—" : n.toLocaleString("en-US",{maximumFractionDigits:2});
+const esc  = s => String(s==null?"":s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ================= projection ================= */
+const D2R = Math.PI/180;
+const mx = lon => (lon+180)/360;
+const my = lat => { const s = Math.sin(lat*D2R); return 0.5 - Math.log((1+s)/(1-s))/(4*Math.PI); };
+const invLon = x => x*360-180;
+const invLat = y => Math.atan(Math.sinh(Math.PI*(1-2*y)))/D2R;
+
+const ZMIN = 2.2, ZMAX = 12.6;
+const view = {cx:mx(17), cy:my(2), z:3.6};
+let W=0, H=0, S=256, OX=0, OY=0;
+function setScale(){ S = 256*Math.pow(2,view.z); OX = W/2 - view.cx*S; OY = H/2 - view.cy*S; }
+const sx = x => x*S+OX, sy = y => y*S+OY;
+
+/* ================= geometry prep ================= */
+function prepRing(ring){
+  const n = ring.length, a = new Float32Array(n*2);
+  let x0=2,y0=2,x1=-1,y1=-1;
+  for(let i=0;i<n;i++){
+    const x = mx(ring[i][0]), y = my(ring[i][1]);
+    a[2*i]=x; a[2*i+1]=y;
+    if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
+  }
+  return {a, b:[x0,y0,x1,y1]};
+}
+function unionBox(rings){
+  const b=[2,2,-1,-1];
+  for(const r of rings){ if(r.b[0]<b[0])b[0]=r.b[0]; if(r.b[1]<b[1])b[1]=r.b[1]; if(r.b[2]>b[2])b[2]=r.b[2]; if(r.b[3]>b[3])b[3]=r.b[3]; }
+  return b;
+}
+const BM = DATA.basemap;
+const COUNTRIES = BM.countries.map(c => {
+  const polys = c.p.map(poly => poly.map(prepRing));
+  const rings = polys.flat();
+  return {iso:c.iso, af:c.af, n:c.n, polys, b:unionBox(rings)};
+});
+const AFRICA = COUNTRIES.filter(c => c.af && c.iso);
+const LAKES  = BM.lakes.map(l => ({z:l.z, n:l.n, rings:l.r.map(prepRing)}));
+const RIVERS = BM.rivers.map(r => ({z:r.z, s:r.s, n:r.n, ...prepRing(r.c)}));
+const ADMIN1 = BM.admin1.map(a => ({a3:a.a3, rings:a.r.map(prepRing)}));
+const LABELS = BM.labels.map(l => ({...l, X:mx(l.x), Y:my(l.y)}));
+const PLACES = BM.places.map(p => ({...p, X:mx(p.x), Y:my(p.y)}))
+  .sort((a,b) => (b.cap-a.cap) || (a.z-b.z) || (b.pop-a.pop));
+const AFRICA_BOX = unionBox(AFRICA.filter(c=>c.iso!=="CV").map(c=>({b:c.b})));
+
+/* ================= records ================= */
+function inflate(layer, block){
+  const {cols, rows} = block;
+  return rows.map(r => { const o={_layer:layer}; cols.forEach((c,i)=>o[c]=r[i]); return o; });
+}
+const ASSETS  = inflate("assets",  DATA.assets);
+const FINANCE = inflate("finance", DATA.finance);
+const GROUND  = inflate("ground",  DATA.ground);
+
+function unify(){
+  const out = [];
+  for(const a of ASSETS) out.push({
+    ref:a, layer:"assets", name:a.name||"(unnamed unit)", iso:a.iso, country:NAMES[a.iso]||a.iso,
+    status:a.status, kind:a.tech||"—", sector:"energy", size:a.mw, unit:"MW",
+    x:mx(a.lon), y:my(a.lat), lon:a.lon, lat:a.lat,
+    text:[a.name,a.owner,a.sub,NAMES[a.iso],a.tech].filter(Boolean).join(" ").toLowerCase(),
+  });
+  for(const f of FINANCE) out.push({
+    ref:f, layer:"finance", name:f.name||"(untitled activity)", iso:f.iso,
+    country:f.iso ? (NAMES[f.iso]||f.iso) : "Multinational",
+    status:f.status, kind:SECTOR_LABEL[f.sector]||f.sector||"—", sector:f.sector||"other", size:f.usd_m, unit:"$m",
+    x:mx(f.lon), y:my(f.lat), lon:f.lon, lat:f.lat,
+    text:[f.name,f.place,f.iso?NAMES[f.iso]:"multinational",f.iid].filter(Boolean).join(" ").toLowerCase(),
+  });
+  for(const g of GROUND){
+    g.parts = g.g.map(prepRing);
+    g.b = unionBox(g.parts);
+    delete g.g;
+    out.push({
+      ref:g, layer:"ground", name:g.name||"(unnamed works)", iso:g.iso, country:g.iso?(NAMES[g.iso]||g.iso):"—",
+      status:g.status, kind:(g.cls?g.cls.replace(/_/g," "):"") || SECTOR_LABEL[g.sector] || "—", sector:g.sector, size:g.km, unit:"km",
+      x:mx(g.lon), y:my(g.lat), lon:g.lon, lat:g.lat, b:g.b,
+      text:[g.name,g.operator,g.cls,NAMES[g.iso]].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  return out;
+}
+const ALL = unify();
+/* size normaliser per layer, so a mixed "largest in view" list ranks fairly */
+const P95 = {};
+for(const L of LAYER_ORDER){
+  const v = ALL.filter(r=>r.layer===L && r.size!=null).map(r=>r.size).sort((a,b)=>a-b);
+  P95[L] = v.length ? v[Math.floor(v.length*0.95)] || 1 : 1;
+}
+
+/* ================= state ================= */
+const S_ = {
+  layers:{assets:true,finance:true,ground:true},
+  status:new Set(STATUS_ORDER),
+  country:"", sector:"", q:"",
+  picked:null,
+};
+const pass = r =>
+  S_.layers[r.layer] && S_.status.has(r.status) &&
+  (!S_.country || r.iso===S_.country) && (!S_.sector || r.sector===S_.sector) &&
+  (!S_.q || r.text.includes(S_.q));
+let VIS = [], VIS_PTS = [], VIS_LINES = [];
+
+/* ================= canvas ================= */
+const stage = el("stage"), cv = el("map"), ctx = cv.getContext("2d");
+function fit(){
+  const rect = stage.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  W = Math.max(1, Math.round(rect.width)); H = Math.max(1, Math.round(rect.height));
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  setScale();
+}
+function fitBounds(b, pad=40, zmax=ZMAX){
+  const dx = b[2]-b[0], dy = b[3]-b[1];
+  const z = Math.log2(Math.min((W-2*pad)/(dx*256), (H-2*pad)/(dy*256)));
+  return {cx:(b[0]+b[2])/2, cy:(b[1]+b[3])/2, z:Math.max(ZMIN, Math.min(zmax, z))};
+}
+function homeView(){ return fitBounds(AFRICA_BOX, W<600?12:36, 6); }
+
+function ringVisible(b){
+  return !(b[2]*S+OX < -30 || b[0]*S+OX > W+30 || b[3]*S+OY < -30 || b[1]*S+OY > H+30);
+}
+function trace(a){
+  const n = a.length; let lx=-1e9, ly=-1e9;
+  for(let i=0;i<n;i+=2){
+    const x = a[i]*S+OX, y = a[i+1]*S+OY;
+    if(i && i<n-2 && Math.abs(x-lx)+Math.abs(y-ly) < 0.6) continue;
+    if(i) ctx.lineTo(x,y); else ctx.moveTo(x,y);
+    lx=x; ly=y;
+  }
+}
+function pathRings(rings){
+  let any=false;
+  for(const r of rings){ if(!ringVisible(r.b)) continue; trace(r.a); ctx.closePath(); any=true; }
+  return any;
+}
+
+let placed = [];
+function free(x,y,w,h){
+  for(const p of placed){ if(x<p[0]+p[2] && x+w>p[0] && y<p[1]+p[3] && y+h>p[1]) return false; }
+  placed.push([x,y,w,h]); return true;
+}
+
+function markerR(r){
+  const zf = Math.max(0.85, Math.min(1.9, 1 + (view.z-4)*0.13));
+  if(r.layer==="assets") return Math.max(2.2, Math.min(11, 2.2 + Math.sqrt(r.size||0)/9)) * zf;
+  return Math.max(2.4, Math.min(7.5, 2.4 + Math.sqrt(r.size||0)/6)) * zf;   /* half-side of the square */
+}
+
+function draw(){
+  setScale();
+  if(css("--sea") !== COL.sea){ readColors(); renderLegend(); const c = counts(); renderLayers(c); renderStatuses(c); }
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = COL.sea; ctx.fillRect(0,0,W,H);
+  ctx.lineJoin = "round"; ctx.lineCap = "round";
+
+  /* context land */
+  ctx.beginPath();
+  for(const c of COUNTRIES){ if(c.af) continue; if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
+  ctx.fillStyle = COL.landCtx; ctx.fill("evenodd");
+
+  /* African land */
+  const focus = S_.country;
+  ctx.beginPath();
+  for(const c of COUNTRIES){ if(!c.af || (focus && c.iso===focus)) continue; if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
+  ctx.fillStyle = focus ? COL.landDim : COL.land; ctx.fill("evenodd");
+  if(focus){
+    ctx.beginPath();
+    for(const c of COUNTRIES){ if(c.iso!==focus || !c.af) continue; for(const poly of c.polys) pathRings(poly); }
+    ctx.fillStyle = COL.land; ctx.fill("evenodd");
+  }
+
+  /* lakes */
+  ctx.beginPath();
+  for(const l of LAKES){ if(view.z < l.z-2.2) continue; pathRings(l.rings); }
+  ctx.fillStyle = COL.lake; ctx.fill("evenodd");
+
+  /* rivers */
+  ctx.strokeStyle = COL.river;
+  for(const r of RIVERS){
+    if(view.z < r.z-0.4 || !ringVisible(r.b)) continue;
+    ctx.lineWidth = r.s<=3 ? Math.min(2.2, 0.9+(view.z-3)*0.18) : 0.7;
+    ctx.beginPath(); trace(r.a); ctx.stroke();
+  }
+
+  /* admin-1 */
+  if(view.z >= 5.1){
+    ctx.beginPath();
+    for(const a of ADMIN1){ for(const r of a.rings){ if(!ringVisible(r.b)) continue; trace(r.a); ctx.closePath(); } }
+    ctx.strokeStyle = COL.admin; ctx.lineWidth = 0.6; ctx.stroke();
+  }
+
+  /* borders */
+  ctx.beginPath();
+  for(const c of COUNTRIES){ if(!ringVisible(c.b)) continue; for(const poly of c.polys) pathRings(poly); }
+  ctx.strokeStyle = COL.border; ctx.lineWidth = view.z>6 ? 1 : 0.75; ctx.stroke();
+  if(focus){
+    ctx.beginPath();
+    for(const c of COUNTRIES){ if(c.iso!==focus || !c.af) continue; for(const poly of c.polys) pathRings(poly); }
+    ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.6; ctx.stroke();
+  }
+
+  /* ground works */
+  if(S_.layers.ground){
+    const lw = Math.max(1.3, Math.min(4.5, 1.3 + (view.z-4)*0.55));
+    ctx.globalAlpha = 0.88;
+    for(const r of VIS_LINES){
+      if(!ringVisible(r.b)) continue;
+      ctx.strokeStyle = statusColor(r.status);
+      ctx.lineWidth = r===S_.picked ? lw+2 : lw;
+      ctx.setLineDash(r.status==="announced" ? [lw*3, lw*2.2] : []);
+      ctx.beginPath();
+      for(const p of r.ref.parts){ if(ringVisible(p.b)) trace(p.a); }
+      ctx.stroke();
+    }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+  }
+
+  /* points: big first so small ones stay on top */
+  for(const r of VIS_PTS){
+    const x = r.x*S+OX, y = r.y*S+OY;
+    if(x<-20||x>W+20||y<-20||y>H+20) continue;
+    const col = statusColor(r.status), rad = markerR(r), hollow = r.status==="stalled";
+    ctx.beginPath();
+    if(r.layer==="finance") ctx.rect(x-rad, y-rad, rad*2, rad*2);
+    else ctx.arc(x, y, rad, 0, 6.2832);
+    if(hollow){
+      ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.stroke();
+    } else {
+      ctx.fillStyle = col; ctx.globalAlpha = 0.86; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = COL.surface; ctx.lineWidth = 0.75; ctx.stroke();
+    }
+  }
+
+  /* selection */
+  if(S_.picked){
+    const p = S_.picked;
+    if(p.layer==="finance" && p.ref.locs){
+      for(const [lon,lat] of p.ref.locs){
+        const x = sx(mx(lon)), y = sy(my(lat));
+        ctx.beginPath(); ctx.arc(x,y,5,0,6.2832);
+        ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+    }
+    const x = p.x*S+OX, y = p.y*S+OY;
+    ctx.beginPath(); ctx.arc(x,y,15,0,6.2832);
+    ctx.strokeStyle = COL.surface; ctx.lineWidth = 4; ctx.stroke();
+    ctx.strokeStyle = COL.accent; ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  drawLabels();
+  updateScale();
+}
+
+function drawPlace(p){
+  const x = sx(p.X), y = sy(p.Y);
+  if(x<-10||x>W+10||y<-10||y>H+10) return false;
+  ctx.font = (p.cap ? "600 " : "500 ") + "10.5px Archivo, Arial, sans-serif";
+  const w = ctx.measureText(p.n).width;
+  if(!free(x-4, y-7, w+13, 14)) return false;
+  ctx.beginPath(); ctx.arc(x,y,p.cap?2.8:2,0,6.2832);
+  ctx.fillStyle = COL.halo; ctx.fill();
+  ctx.beginPath(); ctx.arc(x,y,p.cap?1.8:1.3,0,6.2832);
+  ctx.fillStyle = COL.labelCity; ctx.fill();
+  if(p.cap){ ctx.beginPath(); ctx.arc(x,y,3.6,0,6.2832); ctx.strokeStyle = COL.labelCity; ctx.lineWidth = 0.8; ctx.stroke(); }
+  ctx.lineWidth = 3; ctx.strokeStyle = COL.halo; ctx.strokeText(p.n, x+6, y);
+  ctx.fillStyle = COL.labelCity; ctx.fillText(p.n, x+6, y);
+  return true;
+}
+function drawLabels(){
+  placed = [];
+  ctx.textBaseline = "middle";
+  ctx.lineJoin = "round";
+  /* the handful of megacities first: they outrank a country name for orientation */
+  ctx.textAlign = "left";
+  if(view.z >= 3.2) for(const p of PLACES){ if(p.z <= 2.5 && view.z >= p.z-0.9) drawPlace(p); }
+  /* countries */
+  if(view.z < 8.2){
+    ctx.font = "600 10.5px Archivo, Arial, sans-serif";
+    if("letterSpacing" in ctx) ctx.letterSpacing = "0.12em";
+    ctx.textAlign = "center";
+    for(const l of LABELS){
+      if(view.z < l.z-1.7) continue;
+      const x = sx(l.X), y = sy(l.Y);
+      if(x<-60||x>W+60||y<-20||y>H+20) continue;
+      const t = l.n.toUpperCase(), w = ctx.measureText(t).width;
+      if(!free(x-w/2-3, y-7, w+6, 14)) continue;
+      ctx.lineWidth = 3; ctx.strokeStyle = COL.halo; ctx.strokeText(t,x,y);
+      ctx.fillStyle = COL.label; ctx.fillText(t,x,y);
+    }
+    if("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+  }
+  /* places */
+  if(view.z >= 3.2){
+    ctx.textAlign = "left";
+    let n = 0;
+    for(const p of PLACES){
+      if(p.z <= 2.5 || view.z < p.z-0.9) continue;
+      if(drawPlace(p) && ++n > 160) break;
+    }
+  }
+}
+
+function updateScale(){
+  const lat = invLat(view.cy);
+  const mpp = 40075016.686*Math.cos(lat*D2R)/S;
+  const nice = [5000,2000,1000,500,200,100,50,20,10,5,2,1];
+  let km = nice.find(k => k*1000/mpp <= 130) || 1;
+  const px = km*1000/mpp;
+  el("scale").innerHTML = `<span>${km>=1000?fmt(km):km} km</span><i style="width:${px.toFixed(0)}px"></i>`;
+}
+
+/* ================= hit testing ================= */
+function nearest(px_, py_){
+  let best=null, bd=100;
+  for(let i=VIS_PTS.length-1;i>=0;i--){
+    const r = VIS_PTS[i];
+    const dx = r.x*S+OX-px_, dy = r.y*S+OY-py_, d = dx*dx+dy*dy;
+    const tol = markerR(r)+4;
+    if(d < tol*tol && d < bd){ bd=d; best=r; }
+  }
+  if(best) return best;
+  const tol = 7, mxp = (px_-OX)/S, myp = (py_-OY)/S, tm = tol/S;
+  let bl=null, bld=tol*tol;
+  for(const r of VIS_LINES){
+    const b = r.b;
+    if(mxp<b[0]-tm||mxp>b[2]+tm||myp<b[1]-tm||myp>b[3]+tm) continue;
+    for(const p of r.ref.parts){
+      const a = p.a;
+      for(let i=2;i<a.length;i+=2){
+        const x1=a[i-2]*S+OX, y1=a[i-1]*S+OY, x2=a[i]*S+OX, y2=a[i+1]*S+OY;
+        const dx=x2-x1, dy=y2-y1, L=dx*dx+dy*dy;
+        let t = L ? ((px_-x1)*dx+(py_-y1)*dy)/L : 0; t = t<0?0:t>1?1:t;
+        const ex = x1+t*dx-px_, ey = y1+t*dy-py_, d = ex*ex+ey*ey;
+        if(d<bld){ bld=d; bl=r; }
+      }
+    }
+  }
+  return bl;
+}
+function inRing(a, x, y){
+  let inside=false;
+  for(let i=0,j=a.length-2;i<a.length;j=i,i+=2){
+    const xi=a[i], yi=a[i+1], xj=a[j], yj=a[j+1];
+    if((yi>y)!==(yj>y) && x < (xj-xi)*(y-yi)/(yj-yi)+xi) inside=!inside;
+  }
+  return inside;
+}
+function countryAt(px_, py_){
+  const x = (px_-OX)/S, y = (py_-OY)/S;
+  for(const c of AFRICA){
+    const b=c.b; if(x<b[0]||x>b[2]||y<b[1]||y>b[3]) continue;
+    for(const poly of c.polys){
+      if(inRing(poly[0].a,x,y) && !poly.slice(1).some(h=>inRing(h.a,x,y))) return c;
+    }
+  }
+  return null;
+}
+
+/* ================= rendering: rail ================= */
+const glyph = {
+  assets:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${col}"/></svg>`,
+  finance: col => `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" fill="${col}"/></svg>`,
+  ground:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
+};
+const glyphStatus = (layer, status) => {
+  const col = statusColor(status);
+  if(status!=="stalled") return glyph[layer](col);
+  if(layer==="assets") return `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.3" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
+  if(layer==="finance") return `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3.8" y="3.8" width="8.4" height="8.4" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
+  return glyph.ground(col);
+};
+
+const SHORT = {assets:"GEM", finance:"AfDB", ground:"OSM"};
+function renderLede(){
+  el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
+    `<span title="${esc(s.name)} — ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
+    + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
+  const pipe = ASSETS.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction").length;
+  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB projects</strong> with money attached and <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground — three sources that share no identifier, kept as three layers.`;
+}
+
+function counts(skip){
+  const c = {layer:{assets:0,finance:0,ground:0}, status:{}};
+  for(const r of ALL){
+    const okL = S_.layers[r.layer], okS = S_.status.has(r.status);
+    if(S_.country && r.iso!==S_.country) continue;
+    if(S_.sector && r.sector!==S_.sector) continue;
+    if(S_.q && !r.text.includes(S_.q)) continue;
+    if(okS) c.layer[r.layer]++;
+    if(okL) c.status[r.status] = (c.status[r.status]||0)+1;
+  }
+  return c;
+}
+
+function renderLayers(c){
+  el("layers").innerHTML = LAYER_ORDER.map(k => `
+    <button class="lyr" data-l="${k}" aria-pressed="${S_.layers[k]}">
+      <span class="glyph">${glyph[k](k==="assets"?COL.operating:k==="finance"?COL.approved:COL.under_construction)}</span>
+      <span class="lt"><b>${LAYER_LABEL[k]}</b><span>${LAYER_SUB[k]}</span></span>
+      <span class="lc">${fmt(c.layer[k])}</span>
+    </button>`).join("");
+  el("layers").querySelectorAll("[data-l]").forEach(b =>
+    b.onclick = () => { S_.layers[b.dataset.l] = !S_.layers[b.dataset.l]; apply(); });
+}
+function renderStatuses(c){
+  el("statuses").innerHTML = STATUS_ORDER.map(s => `
+    <button class="chip ${s}" data-s="${s}" aria-pressed="${S_.status.has(s)}">
+      <span class="sw" style="background:${statusColor(s)}"></span>
+      <span class="cl">${STATUS_LABEL[s]}</span>
+      <span class="cn">${fmt(c.status[s]||0)}</span>
+    </button>`).join("");
+  el("statuses").querySelectorAll("[data-s]").forEach(b =>
+    b.onclick = () => {
+      const s = b.dataset.s;
+      if(S_.status.has(s)){ if(S_.status.size>1) S_.status.delete(s); } else S_.status.add(s);
+      apply();
+    });
+}
+function renderSelects(){
+  const isos = [...new Set(ALL.map(r=>r.iso).filter(Boolean))].sort((a,b)=>(NAMES[a]||a).localeCompare(NAMES[b]||b));
+  el("country").innerHTML = `<option value="">All countries</option>` +
+    isos.map(i=>`<option value="${i}"${S_.country===i?" selected":""}>${esc(NAMES[i]||i)}</option>`).join("");
+  const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort((a,b)=>(SECTOR_LABEL[a]||a).localeCompare(SECTOR_LABEL[b]||b));
+  el("sector").innerHTML = `<option value="">All sectors</option>` +
+    secs.map(s=>`<option value="${s}"${S_.sector===s?" selected":""}>${SECTOR_LABEL[s]||s}</option>`).join("");
+}
+function renderLegend(){
+  el("legend").innerHTML = `
+    <div class="col">
+      <div class="lh">Status</div>
+      ${STATUS_ORDER.map(s => `<div class="lg">${glyphStatus("assets",s)}<span>${STATUS_LABEL[s]}</span></div>`).join("")}
+    </div>
+    <div class="col sizes">
+      <div class="lh">Shape · source</div>
+      <div class="lg">${glyph.assets(COL.ink)}<span><b>Power unit</b> · size = MW</span></div>
+      <div class="lg">${glyph.finance(COL.ink)}<span><b>AfDB project</b> · size = commitment</span></div>
+      <div class="lg">${glyph.ground(COL.ink)}<span><b>Works traced</b> in OpenStreetMap</span></div>
+      <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = proposed alignment</span></div>
+    </div>`;
+}
+
+/* what the viewport currently holds */
+function inView(){
+  const x0 = -OX/S, x1 = (W-OX)/S, y0 = -OY/S, y1 = (H-OY)/S;
+  const out = [];
+  for(const r of VIS_PTS) if(r.x>=x0&&r.x<=x1&&r.y>=y0&&r.y<=y1) out.push(r);
+  for(const r of VIS_LINES){ const b=r.b; if(!(b[2]<x0||b[0]>x1||b[3]<y0||b[1]>y1)) out.push(r); }
+  return out;
+}
+function renderView(){
+  const v = inView();
+  const A = v.filter(r=>r.layer==="assets"), F = v.filter(r=>r.layer==="finance"), G = v.filter(r=>r.layer==="ground");
+  const gw = A.reduce((a,r)=>a+(r.size||0),0)/1000;
+  const pipeGw = A.filter(r=>r.status!=="operating"&&r.status!=="stalled").reduce((a,r)=>a+(r.size||0),0)/1000;
+  const usd = F.reduce((a,r)=>a+(r.size||0),0)/1000;
+  const km = G.reduce((a,r)=>a+(r.size||0),0);
+  const cts = new Set(v.map(r=>r.iso).filter(Boolean));
+  el("viewhint").textContent = `${fmt(v.length)} records · ${cts.size} ${cts.size===1?"country":"countries"}`;
+  el("stats").innerHTML = `
+    <div class="stat"><span class="glyph">${glyph.assets(COL.operating)}</span>
+      <span><span class="k">Power</span><br><span class="v">${fmt(A.length)} units · ${fmt1(gw)} GW <span>· ${fmt1(pipeGw)} GW in pipeline</span></span></span></div>
+    <div class="stat"><span class="glyph">${glyph.finance(COL.approved)}</span>
+      <span><span class="k">AfDB finance</span><br><span class="v">${fmt(F.length)} projects · $${fmt1(usd)}bn <span>committed</span></span></span></div>
+    <div class="stat"><span class="glyph">${glyph.ground(COL.under_construction)}</span>
+      <span><span class="k">Ground works</span><br><span class="v">${fmt(G.length)} works · ${fmt(km)} km <span>traced</span></span></span></div>`;
+
+  const CAP = 60;
+  const ranked = v.filter(r=>r.size!=null).sort((a,b)=>(b.size/P95[b.layer])-(a.size/P95[a.layer]));
+  const show = ranked.slice(0,CAP);
+  el("listhint").textContent = show.length ? `${fmt(show.length)} of ${fmt(v.length)}` : "";
+  el("list").innerHTML = show.map((r,i) => `
+    <button class="rec${S_.picked===r?" picked":""}" data-i="${i}" title="${esc(r.name)}">
+      <span class="g">${glyphStatus(r.layer,r.status)}</span>
+      <span class="t"><b>${esc(r.name)}</b><span>${esc(r.country)} · ${esc(r.kind)}</span></span>
+      <span class="s">${r.unit==="$m"?"$":""}${fmt1(r.size)}<i>${r.unit==="$m"?"m":" "+r.unit}</i></span>
+    </button>`).join("") || `<p class="empty">Nothing in this view matches the filters. Zoom out or clear a filter.</p>`;
+  el("list").querySelectorAll("[data-i]").forEach(b =>
+    b.onclick = () => { pick(show[+b.dataset.i], true); });
+  el("listmore").textContent = ranked.length>CAP ? `${fmt(ranked.length-CAP)} more in view — zoom in to see them ranked` : "";
+}
+
+/* ================= detail card ================= */
+function pick(r, fly){
+  S_.picked = r;
+  renderDetail();
+  if(fly && r){
+    const target = r.layer==="ground" ? fitBounds(r.b, 80, 11) : {cx:r.x, cy:r.y, z:Math.max(view.z, 7.2)};
+    flyTo(target);
+  } else draw();
+  renderView();
+}
+function renderDetail(){
+  const box = el("detail"), r = S_.picked;
+  if(!r){ box.hidden = true; return; }
+  const f = r.ref, rows = [];
+  let link=null, link2=null, note="";
+  if(r.layer==="assets"){
+    if(f.unit) rows.push(["Unit", f.unit]);
+    rows.push(["Technology", f.tech||"—"]);
+    rows.push(["Capacity", f.mw!=null ? `<span class="num">${fmt1(f.mw)} MW</span>` : "—"]);
+    if(f.yr) rows.push(["Start year", f.yr]);
+    if(f.owner) rows.push(["Owner", esc(f.owner)]);
+    rows.push(["Country", esc(r.country) + (f.sub?`, ${esc(f.sub)}`:"")]);
+    rows.push(["Location", f.exact ? "exact" : "approximate"]);
+    if(f.url) link = [f.url, "GEM wiki record"];
+    note = "Capacity and status as published by Global Energy Monitor's power tracker. Units of one project share a project id.";
+  } else if(r.layer==="finance"){
+    rows.push(["Country", esc(r.country)]);
+    if(f.place) rows.push(["Reported place", esc(f.place) + (f.locs?` <span>+${f.locs.length-1} other exact sites, ringed on the map</span>`:"")]);
+    rows.push(["Sector", `${esc(r.kind)}${f.dac?` <span>· DAC ${esc(f.dac)}</span>`:""}`]);
+    rows.push(["Committed", f.usd_m!=null ? `<span class="num">$${fmt2(f.usd_m)}m</span>` : "—"]);
+    if(f.dis_m!=null) rows.push(["Disbursed", `<span class="num">$${fmt2(f.dis_m)}m</span>` + (f.usd_m?` <span>· ${Math.round(100*f.dis_m/f.usd_m)}%</span>`:"")]);
+    rows.push(["Location", f.exact ? "exact site" : "country or region centroid"]);
+    rows.push(["IATI identifier", `<span class="m">${esc(f.iid)}</span>`]);
+    link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
+    note = `AfDB commitment from IATI type-2 transactions, converted at ${DATA.meta.sdr_note}. AfDB money only; co-financiers are not counted.`;
+  } else {
+    rows.push(["Becomes", esc(r.kind)]);
+    rows.push(["Status", r.status==="announced" ? "proposed alignment (OSM <i>proposed</i>)" : "under construction (OSM <i>construction</i>)"]);
+    if(f.operator) rows.push(["Operator", esc(f.operator)]);
+    if(f.opening) rows.push(["Opening date", esc(f.opening)]);
+    rows.push(["Traced length", `<span class="num">${fmt(f.km)} km</span> <span>· ${f.ways} way${f.ways===1?"":"s"}</span>`]);
+    rows.push(["Country", esc(r.country)]);
+    if(f.oid) link = ["https://www.openstreetmap.org/way/"+f.oid, "OSM way"];
+    if(f.wd) link2 = ["https://www.wikidata.org/wiki/"+encodeURIComponent(f.wd), "Wikidata"];
+    note = "Geometry as traced by OpenStreetMap contributors; length is the sum of traced ways carrying this name, not the project's design length.";
+  }
+  box.innerHTML = `
+    <header>
+      <div>
+        <div class="eyebrow"><span>${LAYER_SUB[r.layer]}</span>
+          <span class="badge ${r.status}"><span class="sw" style="background:${statusColor(r.status)}"></span>${STATUS_LABEL[r.status]||"—"}</span></div>
+        <h2>${esc(r.name)}</h2>
+      </div>
+      <button class="x" id="dclose" aria-label="Close">×</button>
+    </header>
+    <div class="body">
+      <div class="kv">${rows.map(([k,v])=>`<span>${k}</span><b>${v}</b>`).join("")}</div>
+      <div class="actions">
+        <button id="dfly">Zoom to</button>
+        ${link ? `<a class="primary" href="${link[0]}" target="_blank" rel="noopener noreferrer">Open ${link[1]} ↗</a>` : ""}
+        ${link2 ? `<a href="${link2[0]}" target="_blank" rel="noopener noreferrer">${link2[1]} ↗</a>` : ""}
+      </div>
+      <p class="note">${note}</p>
+    </div>`;
+  box.hidden = false;
+  el("dclose").onclick = () => { S_.picked = null; renderDetail(); draw(); renderView(); };
+  el("dfly").onclick = () => pick(r, true);
+}
+
+/* ================= apply ================= */
+function apply(){
+  VIS = ALL.filter(pass);
+  VIS_PTS = VIS.filter(r=>r.layer!=="ground").sort((a,b)=>(b.size||0)-(a.size||0));
+  VIS_LINES = VIS.filter(r=>r.layer==="ground");
+  if(S_.picked && !VIS.includes(S_.picked)){ S_.picked = null; renderDetail(); }
+  el("vis").textContent = fmt(VIS.length);
+  el("scope").hidden = !S_.country;
+  el("scopename").textContent = S_.country ? (NAMES[S_.country]||S_.country) : "";
+  const c = counts();
+  renderLayers(c); renderStatuses(c); renderSelects();
+  draw(); renderView(); writeHash();
+}
+
+/* ================= navigation ================= */
+let anim=null;
+function flyTo(t, ms=650){
+  if(anim) cancelAnimationFrame(anim);
+  const reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  const from = {cx:view.cx, cy:view.cy, z:view.z}, t0 = performance.now();
+  t.z = Math.max(ZMIN, Math.min(ZMAX, t.z));
+  if(reduce){ Object.assign(view, t); draw(); moved(); return; }
+  const step = now => {
+    const u = Math.min(1, (now-t0)/ms), e = u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2;
+    view.cx = from.cx+(t.cx-from.cx)*e; view.cy = from.cy+(t.cy-from.cy)*e; view.z = from.z+(t.z-from.z)*e;
+    draw();
+    if(u<1) anim = requestAnimationFrame(step); else { anim=null; moved(); }
+  };
+  anim = requestAnimationFrame(step);
+}
+function zoomAt(px_, py_, dz){
+  const nz = Math.max(ZMIN, Math.min(ZMAX, view.z+dz));
+  const k = Math.pow(2, nz-view.z);
+  /* keep the point under the cursor fixed */
+  const wx = (px_-OX)/S, wy = (py_-OY)/S;
+  view.z = nz; setScale();
+  view.cx = wx - (px_-W/2)/S; view.cy = wy - (py_-H/2)/S;
+  queue();
+}
+let raf=null;
+function queue(){ if(!raf) raf = requestAnimationFrame(()=>{ raf=null; draw(); }); }
+let mt=null;
+function moved(){ clearTimeout(mt); mt = setTimeout(()=>{ renderView(); writeHash(); }, 90); }
+
+const tip = el("tip");
+let drag=null, movedPx=0, pointers=new Map(), pinch=null;
+cv.addEventListener("pointerdown", e => {
+  pointers.set(e.pointerId, {x:e.offsetX, y:e.offsetY});
+  cv.setPointerCapture(e.pointerId);
+  if(pointers.size===1){ drag={x:e.offsetX,y:e.offsetY}; movedPx=0; cv.classList.add("dragging"); }
+  else if(pointers.size===2){
+    const [a,b] = [...pointers.values()];
+    pinch = {d:Math.hypot(a.x-b.x,a.y-b.y), z:view.z, mx:(a.x+b.x)/2, my:(a.y+b.y)/2, cx:view.cx, cy:view.cy};
+    drag=null;
+  }
+  tip.style.opacity=0;
+});
+cv.addEventListener("pointermove", e => {
+  if(pointers.has(e.pointerId)) pointers.set(e.pointerId, {x:e.offsetX, y:e.offsetY});
+  if(pinch && pointers.size===2){
+    const [a,b] = [...pointers.values()];
+    const d = Math.hypot(a.x-b.x,a.y-b.y), cx=(a.x+b.x)/2, cy=(a.y+b.y)/2;
+    const nz = Math.max(ZMIN, Math.min(ZMAX, pinch.z + Math.log2(d/pinch.d)));
+    view.z = nz; setScale();
+    /* anchor the pinch midpoint */
+    const wx = pinch.cx + (pinch.mx-W/2)/(256*Math.pow(2,pinch.z)), wy = pinch.cy + (pinch.my-H/2)/(256*Math.pow(2,pinch.z));
+    view.cx = wx - (cx-W/2)/S; view.cy = wy - (cy-H/2)/S;
+    queue(); return;
+  }
+  if(drag){
+    const dx=e.offsetX-drag.x, dy=e.offsetY-drag.y;
+    movedPx += Math.abs(dx)+Math.abs(dy);
+    view.cx -= dx/S; view.cy -= dy/S; drag={x:e.offsetX,y:e.offsetY};
+    queue(); return;
+  }
+  if(e.pointerType==="touch") return;
+  const hit = nearest(e.offsetX, e.offsetY);
+  if(hit){
+    const bits = [["Status", STATUS_LABEL[hit.status]||"—"], ["Country", hit.country]];
+    if(hit.size!=null) bits.push([hit.unit==="$m"?"Committed":hit.unit==="km"?"Traced":"Capacity", (hit.unit==="$m"?"$":"")+fmt1(hit.size)+(hit.unit==="$m"?"m":" "+hit.unit)]);
+    bits.push(["Source", LAYER_SUB[hit.layer]]);
+    tip.innerHTML = `<div class="tn">${esc(hit.name)}</div>` + bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${esc(b)}</b></div>`).join("");
+    tip.style.opacity=1;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    tip.style.left = Math.min(Math.max(4, e.offsetX+16), W-tw-4)+"px";
+    tip.style.top  = Math.min(Math.max(4, e.offsetY-th/2), H-th-4)+"px";
+    cv.classList.add("pick");
+  } else { tip.style.opacity=0; cv.classList.remove("pick"); }
+});
+function endPointer(e){
+  const wasDrag = drag, wasPinch = pinch;
+  pointers.delete(e.pointerId);
+  if(pointers.size<2) pinch=null;
+  if(pointers.size===0){
+    cv.classList.remove("dragging");
+    if(wasDrag && movedPx<4 && !wasPinch && e.type==="pointerup"){
+      const hit = nearest(e.offsetX, e.offsetY);
+      if(hit){ pick(hit,false); }
+      else {
+        const c = countryAt(e.offsetX, e.offsetY);
+        if(c){
+          if(S_.country===c.iso){ S_.country=""; apply(); }
+          else { S_.country=c.iso; apply(); flyTo(fitBounds(c.b, 60, 8)); }
+        } else if(S_.picked){ S_.picked=null; renderDetail(); draw(); renderView(); }
+      }
+    }
+    drag=null;
+    if(wasDrag) moved();
+  }
+}
+cv.addEventListener("pointerup", endPointer);
+cv.addEventListener("pointercancel", endPointer);
+cv.addEventListener("pointerleave", ()=>{ tip.style.opacity=0; });
+cv.addEventListener("wheel", e => {
+  e.preventDefault();
+  const dz = -e.deltaY * (e.deltaMode===1 ? 0.05 : 0.0022);
+  zoomAt(e.offsetX, e.offsetY, Math.max(-0.6, Math.min(0.6, dz)));
+  moved();
+}, {passive:false});
+cv.addEventListener("dblclick", e => { e.preventDefault(); zoomAt(e.offsetX, e.offsetY, 1); moved(); });
+
+el("zin").onclick  = () => { flyTo({cx:view.cx, cy:view.cy, z:view.z+1}, 260); };
+el("zout").onclick = () => { flyTo({cx:view.cx, cy:view.cy, z:view.z-1}, 260); };
+el("zrst").onclick = () => { flyTo(homeView()); };
+el("scopeclear").onclick = () => { S_.country=""; apply(); };
+document.addEventListener("keydown", e => {
+  if(e.target.matches("input,select,textarea")) return;
+  if(e.key==="+"||e.key==="=") el("zin").click();
+  else if(e.key==="-") el("zout").click();
+  else if(e.key==="Escape"){ if(S_.picked){ S_.picked=null; renderDetail(); draw(); renderView(); } railToggle(false); }
+  else if(e.key.startsWith("Arrow")){
+    const d = 80/S;
+    if(e.key==="ArrowLeft") view.cx-=d; if(e.key==="ArrowRight") view.cx+=d;
+    if(e.key==="ArrowUp") view.cy-=d; if(e.key==="ArrowDown") view.cy+=d;
+    queue(); moved(); e.preventDefault();
+  }
+});
+
+/* share */
+function showToast(t){ const x=el("toast"); x.textContent=t; x.classList.add("show"); clearTimeout(x._t); x._t=setTimeout(()=>x.classList.remove("show"),1800); }
+el("share").onclick = async () => {
+  writeHash();
+  try{ await navigator.clipboard.writeText(location.href); showToast("Link to this view copied"); }
+  catch{ showToast("Copy the address bar to share this view"); }
+};
+
+/* rail on small screens */
+function railToggle(open){ el("rail").classList.toggle("open", open); el("scrim").classList.toggle("show", open); }
+el("railopen").onclick = () => railToggle(true);
+el("railclose").onclick = () => railToggle(false);
+el("scrim").onclick = () => railToggle(false);
+
+/* filters */
+el("country").onchange = e => {
+  S_.country = e.target.value; apply();
+  const c = AFRICA.find(x=>x.iso===S_.country); if(c) flyTo(fitBounds(c.b, 60, 8));
+};
+el("sector").onchange = e => { S_.sector = e.target.value; apply(); };
+let qt=null;
+el("q").oninput = e => { clearTimeout(qt); qt = setTimeout(()=>{ S_.q = e.target.value.trim().toLowerCase(); apply(); }, 150); };
+el("reset").onclick = () => {
+  S_.layers={assets:true,finance:true,ground:true}; S_.status=new Set(STATUS_ORDER);
+  S_.country=""; S_.sector=""; S_.q=""; el("q").value="";
+  S_.picked=null; renderDetail(); apply(); flyTo(homeView());
+};
+
+/* ================= URL state ================= */
+let hashT=null;
+function writeHash(){
+  clearTimeout(hashT);
+  hashT = setTimeout(()=>{
+    const parts = [`${view.z.toFixed(2)}/${invLat(view.cy).toFixed(3)}/${invLon(view.cx).toFixed(3)}`];
+    const L = LAYER_ORDER.filter(k=>S_.layers[k]).map(k=>LAYER_KEY[k]).join("");
+    if(L!=="afg") parts.push("l="+L);
+    if(S_.status.size<STATUS_ORDER.length) parts.push("s="+STATUS_ORDER.filter(s=>S_.status.has(s)).map(s=>STATUS_KEY[s]).join(","));
+    if(S_.country) parts.push("c="+S_.country);
+    if(S_.sector) parts.push("k="+S_.sector);
+    if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
+    if(document.body.dataset.tab==="method") parts.push("t=m");
+    history.replaceState(null, "", "#"+parts.join("&"));
+  }, 120);
+}
+function readHash(){
+  const h = location.hash.slice(1);
+  if(!h) return false;
+  let ok=false;
+  for(const part of h.split("&")){
+    const m = part.match(/^([\d.]+)\/(-?[\d.]+)\/(-?[\d.]+)$/);
+    if(m){ view.z=Math.max(ZMIN,Math.min(ZMAX,+m[1])); view.cy=my(+m[2]); view.cx=mx(+m[3]); ok=true; continue; }
+    const [k,v] = part.split("=");
+    if(k==="l"){ for(const L of LAYER_ORDER) S_.layers[L] = v.includes(LAYER_KEY[L]); }
+    else if(k==="s"){ const set = new Set(v.split(",").map(x=>KEY_STATUS[x]).filter(Boolean)); if(set.size) S_.status=set; }
+    else if(k==="c" && NAMES[v]) S_.country=v;
+    else if(k==="k") S_.sector=v;
+    else if(k==="q"){ S_.q=decodeURIComponent(v); el("q").value=S_.q; }
+    else if(k==="t" && v==="m") wantTab = "method";
+  }
+  return ok;
+}
+let wantTab = "map";
+
+/* ================= methodology ================= */
+function setTab(t, write=true){
+  document.body.dataset.tab = t;
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.t===t)));
+  if(t==="method"){ renderMethod(); }
+  else { fit(); draw(); }
+  railToggle(false);
+  if(write) writeHash();
+}
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => setTab(b.dataset.t));
+el("tomethod").onclick = () => setTab("method");
+el("hudmethod").onclick = () => setTab("method");
+el("mback").onclick = () => setTab("map");
+el("mtoc").onclick = () => railToggle(true);
+
+const pct = (a,b) => b ? Math.round(100*a/b) + "%" : "—";
+function byStatus(rows){ const c={}; for(const r of rows) c[r.status]=(c[r.status]||0)+1; return c; }
+function sbar(c, total, label){
+  const segs = STATUS_ORDER.filter(s=>c[s]).map(s =>
+    `<i class="${s}" style="width:${(100*c[s]/total).toFixed(2)}%;background:${statusColor(s)}" title="${STATUS_LABEL[s]}: ${fmt(c[s])}"></i>`).join("");
+  const key = STATUS_ORDER.filter(s=>c[s]).map(s =>
+    `<span class="${s}"><i style="background:${statusColor(s)}"></i>${STATUS_LABEL[s]} <b>${fmt(c[s])}</b></span>`).join("");
+  return `<div class="sbar" role="img" aria-label="${esc(label)}">${segs}</div><div class="skey">${key}</div>`;
+}
+function topList(counter, n, labeler = x=>x){
+  return Object.entries(counter).sort((a,b)=>b[1]-a[1]).slice(0,n)
+    .map(([k,v]) => `${esc(labeler(k))} <b class="m">${fmt(v)}</b>`).join(" · ");
+}
+function statusTable(){
+  const rows = [
+    ["announced", "<code>announced</code>", "<code>1</code> Pipeline / identification", "<code>proposed</code> — drawn dashed"],
+    ["approved", "<code>pre-construction</code>, <code>permitted</code>", "<span class='dim'>never produced</span>", "<span class='dim'>—</span>"],
+    ["under_construction", "<code>construction</code>", "<code>2</code> Implementation", "<code>construction</code>"],
+    ["operating", "<code>operating</code>, <code>retired</code>", "<code>3</code> Finalisation, <code>4</code> Closed", "<span class='dim'>—</span>"],
+    ["stalled", "<code>cancelled</code>, <code>shelved</code>, <code>mothballed</code>", "<code>5</code> Cancelled, <code>6</code> Suspended", "<span class='dim'>—</span>"],
+  ];
+  return rows.map(([s,a,b,c]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
+}
+
+let methodBuilt = false;
+function renderMethod(){
+  if(methodBuilt) return;
+  methodBuilt = true;
+  const src = Object.fromEntries(DATA.meta.sources.map(s=>[s.k,s]));
+
+  /* live figures, derived from the payload so they cannot drift from the map */
+  const A = ASSETS, F = FINANCE, G = GROUND;
+  const aPipe = A.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction");
+  const aGW = A.reduce((t,a)=>t+(a.mw||0),0)/1000, aPipeGW = aPipe.reduce((t,a)=>t+(a.mw||0),0)/1000;
+  const aPids = new Set(A.map(a=>a.pid).filter(Boolean)).size;
+  const aExact = A.filter(a=>a.exact).length;
+  const aTech = {}; for(const a of A) aTech[a.tech||"unknown"] = (aTech[a.tech||"unknown"]||0)+1;
+  const aCts = new Set(A.map(a=>a.iso)).size;
+
+  const fUsd = F.reduce((t,f)=>t+(f.usd_m||0),0)/1000, fDis = F.reduce((t,f)=>t+(f.dis_m||0),0)/1000;
+  const fExact = F.filter(f=>f.exact).length, fMulti = F.filter(f=>!f.iso).length, fMultiSite = F.filter(f=>f.locs).length;
+  const fSec = {}; for(const f of F) fSec[f.sector||"other"] = (fSec[f.sector||"other"]||0)+1;
+  const fCts = new Set(F.map(f=>f.iso).filter(Boolean)).size;
+
+  const gWays = G.reduce((t,g)=>t+(g.ways||0),0), gKm = G.reduce((t,g)=>t+(g.km||0),0);
+  const gNamed = G.filter(g=>g.name).length, gOpen = G.filter(g=>g.opening).length;
+  const gSec = {}; for(const g of G) gSec[g.sector||"other"] = (gSec[g.sector||"other"]||0)+1;
+  const gCts = new Set(G.map(g=>g.iso).filter(Boolean)).size;
+  const allCts = new Set(ALL.map(r=>r.iso).filter(Boolean)).size;
+
+  const SECTIONS = [
+    ["m-what","What this map is"],
+    ["m-gem","Power assets","sub"],
+    ["m-afdb","AfDB finance","sub"],
+    ["m-osm","Ground truth","sub"],
+    ["m-status","One status vocabulary"],
+    ["m-draw","How the map draws it"],
+    ["m-count","Counting rules"],
+    ["m-limits","Limits to carry with you"],
+    ["m-notused","Considered and not used"],
+    ["m-repro","Reproduce, cite, correct"],
+  ];
+  let n = 0;
+  el("toc").innerHTML = SECTIONS.map(([id,t,sub]) => {
+    if(!sub) n++;
+    return `<a href="#" data-id="${id}" class="${sub?"sub":""}"><span class="n">${sub?"":String(n).padStart(2,"0")}</span><span>${t}</span></a>`;
+  }).join("");
+  el("toc").querySelectorAll("a").forEach(a => a.onclick = e => {
+    e.preventDefault(); const t = document.getElementById(a.dataset.id);
+    if(t) el("method").scrollTo({top: t.offsetTop - 56, behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth"});
+    railToggle(false);
+  });
+
+  el("mbody").innerHTML = `
+  <span class="kicker">Methodology · africa-infra-watch</span>
+  <h1>Where the data comes from, and what it can and cannot say</h1>
+  <p class="standfirst">
+    This map consolidates three open datasets that each answer a different question about
+    infrastructure in Africa: <strong>what asset is being built</strong>, <strong>who is paying
+    for it</strong>, and <strong>what has physically broken ground</strong>. They share no project
+    identifier, so they are shown as three layers over one basemap and never added together.
+  </p>
+
+  <section id="m-what">
+    <div class="eyebrow"><span>01</span><span>What this map is</span></div>
+    <h2>Three questions, three sources, one basemap</h2>
+    <p class="lead">
+      No single dataset covers African infrastructure. The continent's own pipeline (PIDA) is
+      published only as PDF reports; lenders publish what they finance; asset trackers cover one
+      sector deeply. This map takes the three open sources that complement each other best and
+      keeps them honest by keeping them apart.
+    </p>
+    <div class="twrap"><table>
+      <thead><tr><th>Layer</th><th>Source</th><th>Records</th><th>Answers</th><th>Data as of</th></tr></thead>
+      <tbody>
+        <tr><td>${glyph.assets(COL.operating)} Power assets</td><td>${esc(src.assets.name)}<br><span class="dim">${esc(src.assets.detail)}</span></td><td class="m">${fmt(A.length)} units</td><td>What generating capacity is planned, being built, running or shelved</td><td class="dim">${esc(src.assets.fresh)}</td></tr>
+        <tr><td>${glyph.finance(COL.approved)} AfDB finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(F.length)} projects</td><td>What the Bank has committed and disbursed, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
+        <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
+      </tbody>
+    </table></div>
+    <p>
+      An AfDB-financed power plant that OpenStreetMap contributors have also traced legitimately
+      appears in all three layers. That is a feature: the layers corroborate each other. But it means a
+      count across layers double-counts, so every figure on the map is attributed to its source, and
+      the "records match" figure is a count of records, not of projects. Together the layers touch
+      <strong>${allCts} countries and territories</strong>.
+    </p>
+  </section>
+
+  <section id="m-gem">
+    <div class="eyebrow"><span class="sk assets">Layer · Power assets</span><span class="m">circles</span></div>
+    <h2>Global Energy Monitor — Global Integrated Power Tracker</h2>
+    <p class="lead">Unit-level records of power generation, from first announcement to retirement, compiled from public filings, company disclosures, regulators and press.</p>
+    <dl class="spec">
+      <dt>Publisher</dt><dd><strong>Global Energy Monitor</strong>, a non-profit research organisation that maintains open trackers of energy infrastructure worldwide. <a href="${src.assets.url}" target="_blank" rel="noopener noreferrer">Project page ↗</a></dd>
+      <dt>Product</dt><dd>${esc(src.assets.detail)}. The Integrated Power Tracker merges GEM's technology-specific trackers (coal, oil and gas, nuclear, hydro, wind, solar, bioenergy, geothermal) into one table, one row per generating unit or project phase.</dd>
+      <dt>Licence</dt><dd>${esc(src.assets.lic)} — free to reuse with attribution to Global Energy Monitor.</dd>
+      <dt>How it was obtained</dt><dd>The current release CSV is discovered by listing GEM's public data bucket under <code>Current_maps/integrated-power/</code> and taking the newest file. The release path moves, and GEM's own map configuration has pointed at a deleted file, so nothing is hard-coded.</dd>
+      <dt>Unit of observation</dt><dd>A <strong>generating unit or phase</strong>, not a plant. A plant with four turbines is four records sharing one project id: <strong>${fmt(A.length)} units</strong> here belong to <strong>${fmt(aPids)} projects</strong>. The detail card names the unit; the shared id lets you group them.</dd>
+      <dt>What was kept</dt><dd>Rows whose country is one of the 54 African states or Western Sahara, and that carry coordinates. Every GEM status is kept, including cancelled and retired units, so the pipeline can be read against what was abandoned.</dd>
+      <dt>Location</dt><dd>GEM flags each unit's coordinates as exact or approximate. <strong>${pct(aExact, A.length)}</strong> of the units here are exact; the rest sit near the reported town or district.</dd>
+    </dl>
+    <div class="facts">
+      <div class="fh"><h4>In this release</h4><span>derived from the payload</span></div>
+      <div class="fig">
+        <div><b>${fmt(A.length)}</b><span>generating units in ${aCts} countries</span></div>
+        <div><b>${fmt1(aGW)} GW</b><span>total capacity on record</span></div>
+        <div><b>${fmt1(aPipeGW)} GW</b><span>announced, approved or under construction</span></div>
+        <div><b>${fmt(aPipe.length)}</b><span>units in that pipeline</span></div>
+      </div>
+      ${sbar(byStatus(A), A.length, "Power units by status")}
+      <p style="margin-top:12px;font-size:13px">Most common technologies: ${topList(aTech, 6)}.</p>
+    </div>
+    <div class="split">
+      <div class="yes"><h4>What it tells you</h4><ul>
+        <li>Which generating capacity is planned, permitted, being built, running or shelved, by technology, owner and expected start year.</li>
+        <li>Where the power pipeline concentrates, and how much of it is solar and wind versus gas and coal.</li>
+        <li>How much announced capacity a country carries relative to what it has actually built — a rough measure of pipeline realism.</li>
+      </ul></div>
+      <div class="no"><h4>What it cannot tell you</h4><ul>
+        <li>Cost or financing. GEM records owners, not lenders or budgets.</li>
+        <li>Anything beyond generation: transmission lines, substations and distribution are not in this tracker.</li>
+        <li>Small and distributed generation. GEM applies minimum-capacity thresholds that differ by technology, so rooftop and mini-grid solar are absent by design.</li>
+        <li>Whether an announced project will happen. Announced capacity in Africa historically far exceeds what gets built.</li>
+        <li>Energy produced. Capacity in MW is not generation in MWh; a 100 MW solar farm and a 100 MW gas plant deliver very different output.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="m-afdb">
+    <div class="eyebrow"><span class="sk finance">Layer · AfDB finance</span><span class="m">squares</span></div>
+    <h2>African Development Bank, via the International Aid Transparency Initiative</h2>
+    <p class="lead">The Bank's project portfolio as it publishes it to the IATI open-data standard: one activity per loan or grant, with commitments, disbursements, sector codes and geocoded locations.</p>
+    <dl class="spec">
+      <dt>Publisher</dt><dd><strong>African Development Bank Group</strong>, publishing to the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development finance institutions disclose their activities. <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">Publisher page on the IATI Registry ↗</a></dd>
+      <dt>Product</dt><dd>${esc(src.finance.detail)}: IATI version 2.03 XML, one file per recipient country plus regional and multinational files.</dd>
+      <dt>Licence</dt><dd>${esc(src.finance.lic)}. IATI publishers release their data under open licences of their choosing; AfDB's is stated on the registry.</dd>
+      <dt>How it was obtained</dt><dd>The IATI Datastore API requires a subscription key, so the files were fetched directly from the IATI Registry's public CKAN catalogue. Each activity's <code>&lt;location&gt;</code> elements carry a <code>&lt;point&gt;</code>; only located activities are mapped.</dd>
+      <dt>Filter</dt><dd>Activities carrying at least one OECD-DAC purpose code in an infrastructure family: <code>210</code> transport and storage, <code>220</code> communications, <code>230</code> energy, <code>140</code> water supply and sanitation, <code>321</code>–<code>323</code> industry, mining and construction, <code>331</code> trade, <code>410</code> environmental protection. Health, education, agriculture and budget-support lending is excluded.</dd>
+      <dt>Unit of observation</dt><dd>An <strong>IATI activity</strong> — a project, loan or grant with one identifier. Activities carry several locations; the map keeps <strong>one marker per activity</strong>, preferring an exact site over a centroid, and rings the other exact sites when you select it (${fmt(fMultiSite)} activities have several).</dd>
+      <dt>Money</dt><dd>Commitments are the sum of IATI <strong>transaction type 2</strong> (outgoing commitment); disbursements are type 3. The Bank's <code>&lt;budget&gt;</code> elements are not used: AfDB repeats the same figure in a budget element every quarter, so taking one understates and summing them is only accidentally right. Values are in <strong>XDR</strong> (IMF special drawing rights), the Bank's default currency, converted at <strong>${esc(DATA.meta.sdr_note)}</strong>. Change the rate and every dollar figure moves with it.</dd>
+      <dt>Location</dt><dd>IATI's <code>exactness</code> flag marks a site as exact (1) or approximate (2). Approximate points usually sit on a country or region centroid. <strong>${pct(fExact, F.length)} of the markers</strong> here sit on an exact site; the rest on a centroid, and the detail card says which.</dd>
+      <dt>Multinational</dt><dd><strong>${fmt(fMulti)} activities</strong> have no recipient country: regional corridors, power pools, continental facilities. They are labelled "Multinational", drawn where the Bank locates them, and excluded from the country filter rather than dropped.</dd>
+    </dl>
+    <div class="facts">
+      <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
+      <div class="fig">
+        <div><b>${fmt(F.length)}</b><span>activities in ${fCts} countries, plus multinational</span></div>
+        <div><b>$${fmt1(fUsd)}bn</b><span>committed by AfDB</span></div>
+        <div><b>$${fmt1(fDis)}bn</b><span>disbursed so far · ${pct(fDis, fUsd)} of commitments</span></div>
+        <div><b>${pct(fExact, F.length)}</b><span>of markers on an exact site</span></div>
+      </div>
+      ${sbar(byStatus(F), F.length, "AfDB activities by status")}
+      <p style="margin-top:12px;font-size:13px">By sector: ${topList(fSec, 8, k=>SECTOR_LABEL[k]||k)}.</p>
+    </div>
+    <div class="split">
+      <div class="yes"><h4>What it tells you</h4><ul>
+        <li>What the Bank has committed and disbursed to each project, in which sector and country, and how far along its own project cycle the activity is.</li>
+        <li>Where the Bank says the works are — when the location is exact, precisely; when approximate, only the country.</li>
+        <li>The gap between commitment and disbursement, which is a rough proxy for implementation pace.</li>
+      </ul></div>
+      <div class="no"><h4>What it cannot tell you</h4><ul>
+        <li><strong>Total project cost.</strong> Only the AfDB share is here. Co-financiers — the World Bank, the European Investment Bank, China Exim, commercial banks, national budgets — are not counted.</li>
+        <li>Anything not financed by AfDB. Read totals as "AfDB exposure", never as "investment in Africa".</li>
+        <li>Physical progress. "Implementation" is the Bank's stage, which may mean procurement or studies rather than earthworks.</li>
+        <li>Exact dollar amounts. Every figure passes through a fixed SDR rate stated on the page.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="m-osm">
+    <div class="eyebrow"><span class="sk ground">Layer · Ground truth</span><span class="m">lines</span></div>
+    <h2>OpenStreetMap, via the Overpass API</h2>
+    <p class="lead">Roads, railways and airport works that volunteer contributors have traced as under construction or proposed, with the class each will become when finished.</p>
+    <dl class="spec">
+      <dt>Publisher</dt><dd><strong>OpenStreetMap contributors</strong>: a volunteer-built map of the world, edited from satellite imagery, GPS traces and local knowledge. <a href="${src.ground.url}" target="_blank" rel="noopener noreferrer">Copyright and licence ↗</a></dd>
+      <dt>Licence</dt><dd>${esc(src.ground.lic)} (Open Database Licence). Reuse requires the attribution "© OpenStreetMap contributors", which the map carries.</dd>
+      <dt>How it was obtained</dt><dd>Overpass API queries for ways tagged <code>highway=construction</code> or <code>highway=proposed</code> whose eventual class is motorway, trunk, primary or secondary (or their link roads); <code>railway=construction</code> or <code>proposed</code>; and <code>aeroway=construction</code>. Queried by latitude band over a continental bounding box, then clipped to African land locally, which removes the Turkey, Spain and Arabian Peninsula overspill a bounding box brings in.</dd>
+      <dt>Unit of observation</dt><dd>An OSM <strong>way</strong>: one segment of line geometry. Ways that share a name and sector are dissolved into one record, so a named highway traced in twenty pieces is one work; unnamed ways stand alone. <strong>${fmt(G.length)} works</strong> here come from <strong>${fmt(gWays)} ways</strong>.</dd>
+      <dt>What was excluded</dt><dd>Residential, tertiary, unclassified and service roads under construction. In an unfiltered run 15,291 of 21,470 African construction ways were <code>construction=residential</code>: street stubs inside housing estates. Without this filter any "works under construction" headline is about six times too high. Power lines, pipelines, ports and buildings are outside the query.</dd>
+      <dt>Length</dt><dd>The sum of the traced ways carrying a name, after light geometric simplification. It is the mapped length, not the project's design length, and a project traced in part will read short.</dd>
+    </dl>
+    <div class="facts">
+      <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
+      <div class="fig">
+        <div><b>${fmt(G.length)}</b><span>works in ${gCts} countries</span></div>
+        <div><b>${fmt(gKm)} km</b><span>of traced alignment</span></div>
+        <div><b>${pct(gNamed, G.length)}</b><span>of works carry a name</span></div>
+        <div><b>${fmt(gOpen)}</b><span>carry a tagged opening date</span></div>
+      </div>
+      ${sbar(byStatus(G), G.length, "Ground works by status")}
+      <p style="margin-top:12px;font-size:13px">By sector: ${topList(gSec, 3, k=>SECTOR_LABEL[k]||k)}.</p>
+    </div>
+    <div class="split">
+      <div class="yes"><h4>What it tells you</h4><ul>
+        <li>Where someone has observed or traced works underway on the ground — the closest thing in open data to physical confirmation that a project exists.</li>
+        <li>The alignment and the eventual class: a motorway, a secondary road, a railway, a metro.</li>
+        <li>Sometimes the operator and a planned opening date, where a contributor tagged them.</li>
+      </ul></div>
+      <div class="no"><h4>What it cannot tell you</h4><ul>
+        <li><strong>That nothing is being built.</strong> Absence of a line is absence of a mapper, not of a project. Coverage is dense where contributor communities are active and thin elsewhere.</li>
+        <li>Whether work is active. Tagging lags in both directions: finished roads stay tagged construction, and paused sites are not distinguished from busy ones.</li>
+        <li>Cost, lender or owner, unless a contributor added them.</li>
+        <li>Anything about "proposed" beyond that someone drew it. A proposed alignment can be a government plan or a hopeful sketch.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="m-status">
+    <div class="eyebrow"><span>02</span><span>One status vocabulary</span></div>
+    <h2>How three lifecycles become five colours</h2>
+    <p class="lead">Each source describes progress in its own terms. They are mapped onto five shared values so a single filter works across layers. The mapping is a judgement; here it is, so you can disagree with it.</p>
+    <div class="twrap"><table>
+      <thead><tr><th>Shared status</th><th>Global Energy Monitor</th><th>AfDB · IATI activity status</th><th>OpenStreetMap</th></tr></thead>
+      <tbody>${statusTable()}</tbody>
+    </table></div>
+    <ul>
+      <li><strong>Approved exists only for power.</strong> IATI has no stage between pipeline and implementation, and OSM has no such tag, so an AfDB project approved by the Board but not yet disbursing shows as Announced (status 1) or Under construction (status 2).</li>
+      <li><strong>Under construction means different things per layer.</strong> For a power unit it is physical construction; for an AfDB activity it is the Bank's implementation stage, which can include procurement and studies; for OSM it is a contributor's tag.</li>
+      <li><strong>Operating folds in the past.</strong> GEM's few retired units and AfDB's closed activities stay under Operating so their capacity and money remain visible, rather than vanishing from every filter.</li>
+      <li><strong>Stalled is drawn hollow</strong> so cancelled and shelved projects never compete visually with live ones, but remain on the map as a record of what was abandoned.</li>
+    </ul>
+  </section>
+
+  <section id="m-draw">
+    <div class="eyebrow"><span>03</span><span>How the map draws it</span></div>
+    <h2>Shape is source, colour is status, size is scale</h2>
+    <div class="glyphs">
+      <div>${glyph.assets(COL.ink)}<div><b>Circle · power unit</b><span>Area scales with capacity in MW, capped so a 25 GW announcement does not blanket a country.</span></div></div>
+      <div>${glyph.finance(COL.ink)}<div><b>Square · AfDB activity</b><span>Area scales with the AfDB commitment in US dollars.</span></div></div>
+      <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn at the traced alignment. Solid for construction, dashed for proposed.</span></div></div>
+      <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved, mothballed or suspended. Present, but quiet.</span></div></div>
+    </div>
+    <h3>Colour</h3>
+    <p>
+      The five status colours were chosen by searching for hues in their semantic families — an ochre
+      for announced, an indigo for approved, a magenta for under construction, a green for operating —
+      that stay distinguishable for readers with red–green colour-vision deficiency: every pair is at
+      least ΔE 8 apart under simulated deutan and protan vision, and at least ΔE 15 apart in normal vision,
+      in both the light and the dark theme. Magenta rather than the conventional orange for
+      "under construction" is the price of that guarantee. Status is also encoded in words everywhere
+      it appears, so colour is never the only carrier.
+    </p>
+    <h3>Position</h3>
+    <p>
+      Power units sit at GEM's coordinates. AfDB markers sit on an exact site where the Bank provides
+      one, otherwise on the Bank's approximate point, which is usually a country or region centroid: a
+      square in the middle of a country is a project somewhere in that country, not a project in the
+      desert. OSM works are drawn along their traced geometry.
+    </p>
+    <h3>Basemap</h3>
+    <p>
+      Coastlines, borders, first-level subdivisions, rivers, lakes and city positions are
+      <strong>Natural Earth</strong> at 1:10 million scale, a public-domain cartographic dataset. City and
+      country labels appear at the zoom levels Natural Earth itself recommends. The projection is
+      Web Mercator, chosen because most readers know how it distorts: areas inflate towards the poles,
+      which matters little for a continent that straddles the equator.
+    </p>
+    <p>
+      Natural Earth draws <strong>Somaliland</strong> and <strong>Western Sahara</strong> as polygons separate
+      from Somalia and Morocco, and keeps <strong>Bir Tawil</strong>, the unclaimed strip between Egypt
+      and Sudan, as its own shape. Those are the boundary dataset's cartographic choices, not a position
+      taken here; records falling inside those outlines are attributed to them, which is why the
+      territory count exceeds the 54 member states of the African Union.
+    </p>
+  </section>
+
+  <section id="m-count">
+    <div class="eyebrow"><span>04</span><span>Counting rules</span></div>
+    <h2>What the numbers on the page count</h2>
+    <ul>
+      <li><strong>Never across layers.</strong> "Records match" is units plus activities plus works. The "In view" panel keeps the three apart: units and gigawatts, projects and dollars, works and kilometres.</li>
+      <li><strong>In view means in the viewport.</strong> Every figure in the rail is recomputed from the records currently visible and matching the filters, so zooming into a province gives that province's figures.</li>
+      <li><strong>"Largest in view" compares across layers by rank, not by unit.</strong> Each record's size is divided by its own layer's 95th-percentile size, so a 1 GW plant, a $900m loan and a 400 km railway can share one list without megawatts being compared to dollars.</li>
+      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every AfDB status, since a closed project's money was still spent.</li>
+      <li><strong>One record per project where the source allows it.</strong> AfDB activities are deduplicated by IATI identifier; OSM ways are dissolved by name and sector. GEM units are deliberately not merged into plants, because status and technology differ unit by unit.</li>
+      <li><strong>Every number is derived from the source files</strong> at build time or from the payload in your browser. Nothing is quoted from a landing page or a press release.</li>
+    </ul>
+  </section>
+
+  <section id="m-limits">
+    <div class="eyebrow"><span>05</span><span>Limits</span></div>
+    <h2>Limits to carry into any conclusion</h2>
+    <div class="callout"><p><strong>Money is AfDB only.</strong> The dollar figures are one lender's exposure. Chinese policy-bank lending, private finance, domestic budgets and every other multilateral are absent, and for many corridors they are the larger share.</p></div>
+    <ul>
+      <li><strong>Roughly ${pct(F.length - fExact, F.length)} of AfDB markers are approximate.</strong> They sit on a centroid, not on the works. Filter the table to exact locations before drawing any geographic conclusion finer than a country.</li>
+      <li><strong>OSM presence is mapper-driven.</strong> A country with few lines may have few works or few mappers. The layer confirms; it never refutes.</li>
+      <li><strong>Energy is over-represented.</strong> GEM covers power comprehensively; no comparable open tracker exists for ports, water, ICT or transmission, so those sectors appear only where AfDB finances them or OSM contributors trace them.</li>
+      <li><strong>Status is as of the source's own freshness</strong>, listed in the summary table above. A unit can be commissioned or a loan cancelled between a release and the next.</li>
+      <li><strong>Announced is not planned.</strong> A large share of announced capacity in GEM's history was never built. Treat the announced layer as a record of intent, and read it against what is operating.</li>
+      <li><strong>Geometry is simplified for the page.</strong> Basemap and OSM lines are decimated to what a screen can resolve. Do not measure from this map; follow the source link on each record.</li>
+    </ul>
+  </section>
+
+  <section id="m-notused">
+    <div class="eyebrow"><span>06</span><span>Considered and not used</span></div>
+    <h2>Sources evaluated and left out, and why</h2>
+    <ul>
+      <li><strong>PIDA / VPIC</strong>, the African Union's Programme for Infrastructure Development in Africa and its Virtual PIDA Information Centre — conceptually the ideal continental pipeline, but the public site exposes no project data as CSV, GeoJSON or API. Projects reach the public only as PDF progress reports.</li>
+      <li><strong>AidData Global Chinese Development Finance, version 3.0</strong> — excellent geocoding of Chinese-financed projects, and the natural complement to AfDB, but coverage ends in 2021 so it cannot answer "ongoing". A strong historical baseline for a future version.</li>
+      <li><strong>World Bank Projects API</strong> — the "Africa" region no longer exists in it (split into Eastern & Southern and Western & Central Africa) and the API carries no coordinates; the Bank's geodata lives only in its IATI files, which are a candidate for a fourth layer.</li>
+      <li><strong>AfDB Open Data Platform</strong> — country indicator series, not project records.</li>
+      <li><strong>Raster map tiles from any provider</strong> — the page is published in a sandbox that blocks requests to other hosts, so the basemap had to be vector and shipped inside the page.</li>
+    </ul>
+  </section>
+
+  <section id="m-repro">
+    <div class="eyebrow"><span>07</span><span>Reproduce, cite, correct</span></div>
+    <h2>Every figure can be traced back</h2>
+    <p>
+      Each record's detail card links to the source record it was derived from: the GEM wiki page for
+      a power unit, the IATI activity on d-portal for an AfDB project, the OpenStreetMap way (and
+      Wikidata item, where tagged) for traced works. If a figure here looks wrong, the source record is
+      one click away and is the place to check it.
+    </p>
+    <p>
+      The pipeline is three scripts: one fetches the three layers into GeoJSON, one builds the
+      Natural Earth basemap, one compiles both into this page with the data inlined. Re-running them
+      refreshes every number, including the ones on this page, which are computed from the same payload
+      the map draws.
+    </p>
+    ${PAGES ? `
+    <h3>Download the data</h3>
+    <p>
+      The site publishes what it draws. <a href="data/map.json">map.json</a> is the compiled payload
+      (${fmt(A.length + F.length + G.length)} records plus the basemap, column-wise). The raw layers as
+      normalised GeoJSON: <a href="data/gem_power_assets.geojson">power assets</a>,
+      <a href="data/iati_afdb_finance.geojson">AfDB finance</a> (one feature per location) and
+      <a href="data/osm_construction.geojson">OSM construction ways</a>; <a href="data/meta.json">meta.json</a>
+      records when each was fetched. Each carries its source's licence, listed below.
+      ${DATA.meta.repo ? `Code and pipeline: <a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">source repository ↗</a>.` : ""}
+    </p>` : ""}
+    <h3>Attribution</h3>
+    <p>
+      Power asset data © Global Energy Monitor, CC BY 4.0. Finance data © African Development Bank
+      Group, published via IATI. Map data © OpenStreetMap contributors, ODbL. Basemap by Natural Earth,
+      public domain. When you reuse a figure from this map, attribute the layer it came from, not the map.
+    </p>
+    <p class="foot">
+      Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
+      ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works ·
+      ${allCts} countries and territories · africa-infra-watch
+    </p>
+  </section>`;
+
+  /* scroll spy for the table of contents and the sticky header */
+  const secs = SECTIONS.map(([id,t]) => [document.getElementById(id), t, id]);
+  const links = [...el("toc").querySelectorAll("a")];
+  const spy = () => {
+    const top = el("method").scrollTop + 120;
+    let cur = secs[0];
+    for(const s of secs){ if(s[0] && s[0].offsetTop <= top) cur = s; }
+    links.forEach(a => a.setAttribute("aria-current", String(a.dataset.id===cur[2])));
+    el("mwhere").textContent = cur[1];
+  };
+  el("method").addEventListener("scroll", spy, {passive:true});
+  spy();
+}
+
+/* ================= theme (site only) ================= */
+if(PAGES){
+  let stored = null;
+  try{ stored = localStorage.getItem("aiw-theme"); }catch{ /* storage unavailable */ }
+  if(stored==="dark" || stored==="light") document.documentElement.dataset.theme = stored;
+  el("theme").onclick = () => {
+    const cur = document.documentElement.dataset.theme;
+    const dark = cur ? cur==="dark" : matchMedia("(prefers-color-scheme:dark)").matches;
+    const next = dark ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try{ localStorage.setItem("aiw-theme", next); }catch{ /* fine */ }
+  };
+}
+
+/* ================= boot ================= */
+let rt=null;
+new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{ fit(); draw(); moved(); }, 60); }).observe(stage);
+matchMedia("(prefers-color-scheme:dark)").addEventListener("change", ()=>{ readColors(); renderLegend(); apply(); });
+new MutationObserver(()=>{ readColors(); renderLegend(); apply(); }).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+
+readColors(); renderLede(); renderLegend(); fit();
+if(!readHash()) Object.assign(view, homeView());
+apply();
+if(wantTab==="method") setTab("method", false);
+document.fonts && document.fonts.ready.then(()=>draw());
+</script>
