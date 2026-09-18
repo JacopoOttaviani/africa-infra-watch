@@ -23,6 +23,8 @@ LAYERS = {
     "gem_power_assets": ("assets", 1000),
     "iati_afdb_finance": ("finance", 300),
     "osm_construction": ("ground", 500),
+    "gem_oil_gas_pipelines": ("pipelines", 150),
+    "telegeography_cables": ("cables", 40),
 }
 MAX_DROP = 0.20          # refuse if a layer lost more than a fifth of its records
 WINDOW = (-30, -45, 70, 45)   # lon0, lat0, lon1, lat1
@@ -37,16 +39,33 @@ def committed_meta():
         return {}
 
 
-def first_point(geom):
+def points(geom):
+    """Every vertex of a geometry, whatever its nesting."""
     c = geom.get("coordinates")
-    while isinstance(c, list) and c and isinstance(c[0], list):
-        c = c[0]
-    return c if isinstance(c, list) and len(c) >= 2 else None
+    if not isinstance(c, list):
+        return
+    stack = [c]
+    while stack:
+        x = stack.pop()
+        if x and isinstance(x[0], list):
+            stack.extend(x)
+        elif isinstance(x, list) and len(x) >= 2:
+            yield x
+
+
+def in_window(p):
+    return WINDOW[0] <= p[0] <= WINDOW[2] and WINDOW[1] <= p[1] <= WINDOW[3]
 
 
 def inside(geom):
-    p = first_point(geom or {})
-    return bool(p) and WINDOW[0] <= p[0] <= WINDOW[2] and WINDOW[1] <= p[1] <= WINDOW[3]
+    """A point must sit in the Africa window. A line must touch it: a cable
+    that lands in Mombasa and Mumbai, or a pipeline into Spain, is African
+    without every vertex being so."""
+    geom = geom or {}
+    if geom.get("type") == "Point":
+        p = geom.get("coordinates")
+        return isinstance(p, list) and len(p) >= 2 and in_window(p)
+    return any(in_window(p) for p in points(geom))
 
 
 def main():

@@ -55,7 +55,15 @@ SOURCE_INFO = {
                 "url": "https://iatiregistry.org/publisher/afdb"},
     "ground": {"name": "OpenStreetMap", "lic": "ODbL 1.0",
                "url": "https://www.openstreetmap.org/copyright"},
+    "pipelines": {"name": "Global Energy Monitor", "lic": "CC BY 4.0",
+                  "url": "https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/"},
+    "cables": {"name": "TeleGeography", "lic": "CC BY-SA 4.0",
+               "url": "https://www.submarinecablemap.com/"},
 }
+# The layers each page draws. The dashboard predates the two line layers and
+# still shows three; the map shows all five.
+MAP_LAYERS = ("assets", "finance", "ground", "pipelines", "cables")
+DASHBOARD_LAYERS = ("assets", "finance", "ground")
 
 
 # ------------------------------------------------------------------ meta.json
@@ -90,9 +98,10 @@ def fmt_date(iso):
     return f"{d.day} {d.strftime('%b %Y')}"
 
 
-def sources(meta):
+def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
-    return [
+    p, c = meta.get("pipelines", {}), meta.get("cables", {})
+    rows = [
         {"k": "assets", **SOURCE_INFO["assets"],
          "detail": f"Global Integrated Power Tracker, release {a.get('release', 'unknown')}",
          "fresh": a.get("fresh") or fmt_date(a.get("fetched"))},
@@ -102,12 +111,22 @@ def sources(meta):
         {"k": "ground", **SOURCE_INFO["ground"],
          "detail": "Overpass API, significant road/rail/air classes",
          "fresh": g.get("fresh") or fmt_date(g.get("fetched"))},
+        {"k": "pipelines", **SOURCE_INFO["pipelines"],
+         "detail": f"Global Gas and Global Oil Infrastructure Trackers, releases {p.get('release', 'unknown')}",
+         "fresh": p.get("fresh") or fmt_date(p.get("fetched"))},
+        {"k": "cables", **SOURCE_INFO["cables"],
+         "detail": "Submarine Cable Map, cables with an African landing point",
+         "fresh": c.get("fresh") or fmt_date(c.get("fetched"))},
     ]
+    return [r for r in rows if r["k"] in keys]
 
 
-def payload_meta(meta):
+def payload_meta(meta, keys=MAP_LAYERS):
     return {"built": fmt_date(today()), "sdr_note": SDR_NOTE,
-            "sources": sources(meta), "repo": REPO_URL or None}
+            "sources": sources(meta, keys), "repo": REPO_URL or None,
+            # GEM segments that exist in the tracker but carry no route, so the
+            # Methodology can say how much of the layer is not drawn
+            "unrouted_pipelines": (meta.get("pipelines") or {}).get("unrouted")}
 
 
 # ------------------------------------------------------------ HTML document
@@ -158,13 +177,16 @@ def site_url(path=""):
 KEYWORDS = ["Africa infrastructure", "infrastructure projects Africa", "Africa power plants map",
             "African Development Bank projects", "AfDB finance", "construction Africa map",
             "energy Africa", "Global Energy Monitor", "OpenStreetMap construction",
+            "oil and gas pipelines Africa", "submarine cables Africa", "TeleGeography",
             "open data Africa", "infrastructure investment Africa", "interactive map"]
 
 LICENSE_URL = {"CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+               "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
                "ODbL 1.0": "https://opendatacommons.org/licenses/odbl/1-0/"}
 
 LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": "iati_afdb_finance.geojson",
-              "ground": "osm_construction.geojson"}
+              "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
+              "cables": "telegeography_cables.geojson"}
 
 
 def _rows(layer):
@@ -175,23 +197,45 @@ def _rows(layer):
     return list(layer), []
 
 
-def site_facts(assets, finance, ground, meta=None):
-    """Counts and totals of the snapshot being built, for the crawlable text."""
+def site_facts(assets, finance, ground, pipelines=None, cables=None, meta=None):
+    """Counts and totals of the snapshot being built, for the crawlable text.
+    A page that does not draw a layer (the dashboard) passes None for it and
+    the count comes from meta.json, so the JSON-LD still describes every file
+    the site publishes."""
     meta = load_meta() if meta is None else meta
     a, ac = _rows(assets)
     f, fc = _rows(finance)
     g, _ = _rows(ground)
     mw = sum((r[ac.index("mw")] or 0) for r in a) if "mw" in ac else 0
     usd = sum((r[fc.index("usd_m")] or 0) for r in f) if "usd_m" in fc else 0
+
+    def count(layer, key):
+        if layer is None:
+            return (meta.get(key) or {}).get("records") or 0
+        return len(_rows(layer)[0])
+
+    def total(layer, col):
+        if layer is None:
+            return 0
+        rows, cols = _rows(layer)
+        return sum((r[cols.index(col)] or 0) for r in rows) if col in cols else 0
+
     return {"assets": len(a), "finance": len(f), "ground": len(g),
+            "pipelines": count(pipelines, "pipelines"), "cables": count(cables, "cables"),
+            "pipe_km": total(pipelines, "km"),
             "gw": mw / 1000, "usd_bn": usd / 1000,
             "sources": sources(meta), "built": today(), "meta": meta}
 
 
 def facts_sentence(facts):
-    return (f"{facts['assets']:,} power units tracked by Global Energy Monitor, "
-            f"{facts['finance']:,} projects financed by the African Development Bank "
-            f"and {facts['ground']:,} construction works traced in OpenStreetMap")
+    s = (f"{facts['assets']:,} power units tracked by Global Energy Monitor, "
+         f"{facts['finance']:,} projects financed by the African Development Bank, "
+         f"{facts['ground']:,} construction works traced in OpenStreetMap")
+    if facts.get("pipelines"):
+        s += f", {facts['pipelines']:,} oil and gas pipeline segments from Global Energy Monitor"
+    if facts.get("cables"):
+        s += f" and {facts['cables']:,} submarine cables landing in Africa from TeleGeography"
+    return s
 
 
 def facts_totals(facts):
@@ -219,7 +263,7 @@ def structured_data(facts, *, path, title, description, kind):
     parts = []
     for src in facts["sources"]:
         k = src["k"]
-        n = {"assets": facts["assets"], "finance": facts["finance"], "ground": facts["ground"]}[k]
+        n = facts.get(k) or 0
         what = {"assets": "Power generation units in Africa (announced, pre-construction, "
                           "under construction, operating, cancelled or shelved) with technology, "
                           "capacity in MW, owner and coordinates.",
@@ -228,7 +272,16 @@ def structured_data(facts, *, path, title, description, kind):
                            "disbursement, and geocoded locations where published.",
                 "ground": "Roads (motorway to secondary), railways and airports under "
                           "construction or proposed in Africa, traced by OpenStreetMap mappers, "
-                          "as line geometries with status, operator and opening date."}[k]
+                          "as line geometries with status, operator and opening date.",
+                "pipelines": "Oil, NGL and gas transmission pipelines with an African country on "
+                             "their route (proposed, under construction, operating, shelved or "
+                             "cancelled), as route geometries with fuel, capacity, length, owner "
+                             "and start year, from Global Energy Monitor's Global Gas and Global "
+                             "Oil Infrastructure Trackers.",
+                "cables": "Submarine telecommunications cables with at least one landing point "
+                          "in Africa, planned or in service, as route geometries with owners, "
+                          "suppliers, ready-for-service year, length and African landing points, "
+                          "from TeleGeography's Submarine Cable Map."}[k]
         d = {"@type": "Dataset", "@id": site_url(f"#dataset-{k}"),
              "name": f"{SITE_NAME}: {src['name']} layer",
              "description": f"{what} {n:,} records in this snapshot. {src['detail']}.",
@@ -243,7 +296,7 @@ def structured_data(facts, *, path, title, description, kind):
         parts.append(d)
     dataset = {"@type": "Dataset", "@id": site_url("#dataset"),
                "name": f"{SITE_NAME}: infrastructure projects across Africa",
-               "description": f"Three open datasets on infrastructure in Africa, kept as separate "
+               "description": f"Five open datasets on infrastructure in Africa, kept as separate "
                               f"layers because they share no project identifier: {facts_sentence(facts)}. "
                               f"Each source's lifecycle is mapped onto five shared statuses (announced, "
                               f"approved, under construction, operating, stalled).",
@@ -290,23 +343,24 @@ def crawl_fallback(facts, *, kind):
     return f"""<noscript>
 <article style="max-width:72ch;margin:0 auto;padding:24px 16px;font:16px/1.5 Georgia,serif">
 <h2>{e(SITE_NAME)}: announced, approved and ongoing infrastructure in Africa</h2>
-<p>{lede} of infrastructure projects across Africa, built from three open datasets:
+<p>{lede} of infrastructure projects across Africa, built from five open datasets:
 {e(facts_sentence(facts))}. Together they describe {e(facts_totals(facts))}.
 The page needs JavaScript to draw; without it, this summary, the data files below
 and {other} are what is here.</p>
-<p>The three sources share no project identifier, so they are kept as separate layers
-and are never added up: an AfDB-financed power plant can legitimately appear in all three.
+<p>The sources share no project identifier, so they are kept as separate layers
+and are never added up: an AfDB-financed power plant can legitimately appear in several.
 Each source's own lifecycle is mapped onto five shared statuses: announced, approved,
 under construction, operating and stalled.</p>
 <table>
-<caption>The three layers in this snapshot</caption>
+<caption>The layers in this snapshot</caption>
 <thead><tr><th>Source</th><th>Dataset</th><th>Records</th><th>Licence</th><th>Data as of</th><th>Download</th></tr></thead>
 <tbody>{rows}</tbody>
 </table>
 <p>Limits: money is AfDB only, so totals are AfDB exposure, not investment in Africa;
 about two thirds of AfDB locations sit on a country or region centroid; OpenStreetMap
-presence is mapper-driven, so absence is not evidence; energy is over-represented
-because no comparable open tracker exists for ports, water or ICT.</p>
+presence is mapper-driven, so absence is not evidence; energy and connectivity are
+over-represented because no comparable open tracker exists for ports, water or
+electricity transmission.</p>
 <p>The compiled payload is <a href="data/map.json">data/map.json</a>; fetch dates and
 release names are in <a href="data/meta.json">data/meta.json</a>. A plain-text summary
 for language models is at <a href="llms.txt">llms.txt</a>.
@@ -418,7 +472,7 @@ def write_site_index(facts):
     (DOCS / "llms.txt").write_text(f"""# {SITE_NAME}
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
-> Africa, for investors, researchers and journalists. Compiled from three open datasets:
+> Africa, for investors, researchers and journalists. Compiled from five open datasets:
 > {facts_sentence(facts)}. Together they describe {facts_totals(facts)}.
 > Snapshot built {fmt_date(day)}; data is refreshed by hand about twice a year.
 
@@ -427,18 +481,19 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the three layers with filters
+- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the five layers with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the same data as a
-  page with KPIs, a country map, bar charts by country and sector, and a sortable table.
+- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the power, AfDB and
+  OpenStreetMap layers as a page with KPIs, a country map, bar charts by country and
+  sector, and a sortable table.
 
 ## Data
 
 The compiled payload the map draws, one JSON with column-wise layers:
 {site_url('data/map.json')}. Fetch dates, release names and record counts:
-{site_url('data/meta.json')}. The three raw layers as GeoJSON:
+{site_url('data/meta.json')}. The raw layers as GeoJSON:
 
 {src_lines}
 
@@ -447,14 +502,19 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 
 ## How to read it
 
-- The three sources share no project identifier. They are three layers, never summed:
-  an AfDB-financed power plant can legitimately appear in all three.
+- The sources share no project identifier. They are separate layers, never summed:
+  an AfDB-financed power plant can legitimately appear in several.
 - Five shared statuses. Announced: GEM announced, IATI status 1, OSM proposed. Approved:
   GEM pre-construction, AfDB projects past board approval. Under construction: GEM
   construction, IATI status 2, OSM construction. Operating: GEM operating, IATI 3-4.
-  Stalled: GEM cancelled/shelved/mothballed, IATI 5-6.
+  Stalled: GEM cancelled/shelved/mothballed, IATI 5-6. Pipelines: GEM proposed is
+  announced, construction, operating, shelved/cancelled as stalled. Submarine cables:
+  TeleGeography "in service" is operating; "planned" is under construction when the
+  ready-for-service year is within a year of the snapshot, otherwise announced.
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
-  squares are AfDB projects sized by commitment, lines are construction ways as traced.
+  squares are AfDB projects sized by commitment, thin lines are construction ways as
+  traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
+  with their African landing points. Dashed lines are not yet built.
 - AfDB amounts are commitments (IATI transaction type 2) converted from SDR at a fixed,
   stated rate: {SDR_NOTE}.
 
@@ -466,7 +526,9 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   Exact points are used where they exist; the pages say which.
 - OpenStreetMap presence is mapper-driven: absence of a road is not evidence that none is
   being built. The layer is filtered to motorway-to-secondary roads, rail and airports.
-- Energy is over-represented: no comparable open tracker exists for ports, water or ICT.
+- Energy and connectivity are over-represented: no comparable open tracker exists for
+  ports, water or electricity transmission. Pipeline segments without a published route
+  (about a third of GEM's African segments) are not drawn.
 - Somaliland and Western Sahara are drawn as Natural Earth draws them, as separate
   polygons; that is the boundary dataset's choice, not a position taken here.
 

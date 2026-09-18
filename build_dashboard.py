@@ -17,7 +17,8 @@ import re
 import sys
 
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
-    DOCS, SDR_NOTE, SDR_USD, brand_assets, load_meta, payload_meta, site_facts, wrap_document,
+    DASHBOARD_LAYERS, DOCS, SDR_NOTE, SDR_USD, brand_assets, load_meta, payload_meta,
+    site_facts, wrap_document,
 )
 
 ROOT = pathlib.Path(__file__).parent
@@ -45,7 +46,7 @@ NAME_TO_ISO = {
     "Somalia": "SO", "South Africa": "ZA", "South Sudan": "SS",
     "Sudan": "SD", "Tanzania": "TZ", "Togo": "TG", "Tunisia": "TN",
     "Uganda": "UG", "Zambia": "ZM", "Zimbabwe": "ZW",
-    "Western Sahara": "EH",
+    "Western Sahara": "EH", "The Gambia": "GM", "Democratic Republic of the Congo": "CD",
 }
 ISO_TO_NAME = {}
 for _n, _i in NAME_TO_ISO.items():
@@ -303,7 +304,7 @@ def main():
         names[i["iso"]] = i["n"]
 
     payload = {
-        "meta": payload_meta(load_meta()),
+        "meta": payload_meta(load_meta(), DASHBOARD_LAYERS),
         "names": names,
         "basemap": {"countries": countries, "islands": ISLANDS},
         "assets": assets,

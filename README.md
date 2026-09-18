@@ -14,9 +14,10 @@ hand about twice a year; the header of each page says when.
 
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (coastlines, borders, provinces, rivers, lakes, cities), with
-the three data layers drawn as circles (power units, sized by MW), squares
-(AfDB projects, sized by commitment) and lines (construction ways traced in
-OpenStreetMap). Filters, a viewport summary, a "largest in view" list, per-record
+the five data layers drawn as circles (power units, sized by MW), squares
+(AfDB projects, sized by commitment), thin lines (construction ways traced in
+OpenStreetMap), haloed lines (oil and gas pipeline routes) and lines ending in
+dots (submarine cables, dots at their African landing points). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
 **Cluster markers** toggle (`cl=1` in the hash) regroups the records that pass
 the filters into donuts, sized by count and sliced by status, using
@@ -33,14 +34,24 @@ The dashboard is the page-first view of the same data, with charts and a table.
 
 ## Sources
 
-Three open datasets, deliberately kept as separate layers because they share no
-project identifier. Summing across them double-counts.
+Five open datasets, deliberately kept as separate layers because they share no
+project identifier. Summing across them double-counts. The dashboard shows the
+first three; the map shows all five.
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|
 | Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,274 power units | what asset is being built |
 | Finance | African Development Bank, IATI 2.03 activity files | 1,401 projects | who is paying, and how much |
 | Ground truth | OpenStreetMap via Overpass | 3,586 works | what has physically broken ground |
+| Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 324 routed segments | where oil, NGL and gas move, or are meant to |
+| Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
+
+The two line layers were added in September 2026 (`fetch_sources.py pipes cables`).
+Status vocabulary for them: GEM `proposed` is *announced*, `construction`, `operating`
+and `shelved`/`cancelled`/`idle` as *stalled*; TeleGeography's *in service* is
+*operating*, and a *planned* cable is *under construction* when its ready-for-service
+year is within a year of the snapshot, *announced* otherwise. The Methodology tab
+states the inference.
 
 ## Rebuild
 
@@ -51,7 +62,7 @@ python3 refresh.py                # fetch → gate → build, in one go (see "Up
 or step by step:
 
 ```bash
-python3 fetch_sources.py          # all three layers -> data/*.geojson + data/meta.json
+python3 fetch_sources.py          # all five layers -> data/*.geojson + data/meta.json
 python3 fetch_basemap.py          # Natural Earth 1:10m -> data/africa_basemap_10m.json
 python3 check_data.py             # refuse a snapshot that shrank or moved
 python3 build_dashboard.py        # -> dashboard.html  and  docs/dashboard.html
@@ -64,9 +75,11 @@ logo sheet: the continent traced from the basemap with a compass rose cut out).
 `python3 brand/trace.py && python3 brand/logos.py` regenerates them; see
 `brand/README.md`.
 
-`fetch_sources.py gem` / `iati` / `osm` runs a single layer. The OSM pass takes
-~10 minutes: it walks latitude bands and sleeps between them to stay inside
-Overpass's slot budget. Each run records the fetch date, release and record
+`fetch_sources.py gem` / `iati` / `osm` / `pipes` / `cables` runs a single layer.
+The OSM pass takes ~10 minutes: it walks latitude bands and sleeps between them
+to stay inside Overpass's slot budget. The cables pass reads one small JSON per
+cable system in the world (~700, a few minutes); the pipelines pass downloads two
+GeoJSON files of ~70 MB each from GEM's bucket. Each run records the fetch date, release and record
 count in `data/meta.json`; the pages read their "data as of" dates from there.
 
 `fetch_basemap.py` downloads the Natural Earth GeoJSON mirrors from
@@ -179,7 +192,7 @@ none, so nothing is blocked. If one is ever added there, include
 python3 refresh.py
 ```
 
-This fetches the three sources (about 15 minutes, most of it the
+This fetches the five sources (about 20 minutes, most of it the
 OpenStreetMap pass), records the dates in `data/meta.json`, runs
 `check_data.py`, and rebuilds `docs/` and the artifact files, including the
 link-preview image and `llms.txt` with the new counts. Then look at it:
@@ -208,8 +221,10 @@ have looked and the drop is real.
 
 When to run it: Global Energy Monitor releases the Integrated Power Tracker
 roughly every six months (the fetch prints the release name it found), which
-sets the natural cadence. AfDB's IATI files and OpenStreetMap change
-continuously, so whatever a run picks up is the snapshot. `refresh.py --build`
+sets the natural cadence; its pipeline trackers refresh on their own schedule
+(gas pipelines about yearly, oil pipelines twice a year; the fetch prints the
+release folder it found). AfDB's IATI files, OpenStreetMap and TeleGeography's
+map change continuously, so whatever a run picks up is the snapshot. `refresh.py --build`
 alone rebuilds the pages after a template change without touching the data;
 `--basemap` also regenerates the Natural Earth basemap, which rarely needs it.
 
@@ -293,6 +308,35 @@ These each cost real time to find. They are not in any of the upstream docs.
   registry at `iatiregistry.org/api/3` or `d-portal.org/q.json`.
 - **GEM's own map config points at a deleted file.** Resolve releases from the
   listable bucket under `Current_maps/`, never from their front-end source.
+- **GEM's pipeline routes are not under `Current_maps/`.** The gas and oil
+  trackers' GeoJSON lives under `Input_geojson_files/ggit/<release>/` and
+  `Input_geojson_files/goit/<release>/` in the same public bucket (the official
+  download is a form). `ggit/` and `goit/` under `Current_maps/` are empty
+  folder markers. Sort by the release folder, not the file name: `2026-06.1`
+  and `2026-06` sit beside `2026-07`.
+- **712 GGIT features are an empty `GeometryCollection`.** Segments GEM knows
+  about but has not routed; 176 of the 500 African segments. They are dropped
+  from the layer and counted in `meta.json` as `unrouted`, not placed at a
+  centroid.
+- **A pipeline's country list is a comma-separated string** (`CountriesOrAreas`:
+  "Nigeria, Benin, …, Spain") with GEM's own spellings: "The Gambia",
+  "Republic of the Congo". Keep a segment if *any* country is African, so the
+  Mediterranean crossings stay.
+- **TeleGeography's API is undocumented.** `api/v3/cable/cable-geo.json`,
+  `landing-point/landing-point-geo.json`, `cable/all.json`, `cable/<id>.json`
+  and `landing-point/<id>.json` worked on 2026-09-18. A landing point marked
+  "to be determined" has no detail record and answers with the HTML shell,
+  so go cable by cable, never landing point by landing point, or you lose
+  cables like Umoja whose only African landing is TBD.
+- **TeleGeography has two statuses, planned and in service.** The
+  under-construction reading here is inferred from the ready-for-service year
+  (due within a year of the snapshot). Landing-point names read
+  "City, Country" and the country can hold a comma ("Muanda, Congo, Dem. Rep."):
+  use the `country` field of the cable detail, or match by suffix.
+- **A cable's route is its whole route.** 2Africa runs from Europe to India.
+  `check_data.py` tests that a line *touches* the Africa window rather than
+  that it starts in it, and the map's "zoom to" fits the part of the route
+  inside that window, not the whole thing.
 
 ## Not used, and why
 
@@ -301,6 +345,16 @@ These each cost real time to find. They are not in any of the upstream docs.
   no CSV or GeoJSON. Project data reaches the public only as PDF reports.
 - **AidData Chinese development finance 3.0** — excellent geocoding, but
   coverage ends 2021, so it cannot answer "ongoing". Good historical baseline.
+- **Boston University's Chinese Loans to Africa database** — updated through
+  2024 and loan-level, but no coordinates; country-level only.
+- **Microsoft's Global Renewables Watch** — quarterly satellite detections of
+  solar and wind, MIT licence, but coverage stops in mid-2024 and it shows
+  only what already exists, so it cannot answer "announced" or "ongoing".
+- **World Bank IATI files** — the strongest candidate not yet added: one file
+  per country from a public CloudFront bucket, every activity with point
+  coordinates, commitments in USD. Sector codes use the Bank's own vocabulary
+  rather than DAC, and many points are just the capital, so it needs its own
+  exactness filter. Evaluated 2026-09-18; a natural second finance layer.
 - **AfDB Open Data Platform** — country indicator series, not project records.
 - **Raster tiles of any kind** — blocked by the artifact sandbox's content
   security policy, which is why the basemap is vector and inline. The site

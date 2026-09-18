@@ -19,12 +19,13 @@ themes. Nothing else was redrawn.
 | `natural-earth.svg` | Natural Earth | `naturalearthdata.com`, site header (`nev_logo.png`, raster) | Public domain project |
 | `eox.svg` | EOX IT Services (Sentinel-2 cloudless) | `eox.at`, site header (`EOX_Logo.svg`) | © EOX IT Services GmbH, trademark. Shown only in the site build, with the Satellite view |
 | `code-for-africa.svg` | Code for Africa (publisher of this project) | Supplied by the author as a PNG with transparent background; wrapped like the Natural Earth mark | © Code for Africa, trademark |
+| `telegeography.svg` | TeleGeography (Submarine Cable Map) | `submarinecablemap.com/images/telegeography-logo.svg`, the map's header wordmark; the globe's gradient fills and the white text set to `currentColor` | © TeleGeography, trademark. Data CC BY-SA 4.0 |
 
 The Natural Earth and Code for Africa marks exist only as PNGs, so their SVGs
 wrap them: the raster's alpha channel (white on transparent, base64 inside the file) is
 an SVG `<mask>` over a `currentColor` rectangle. Replace them with vectors when
 available.
 
-Fetched 18 Sep 2026. The logos are used solely to credit the data sources and
+Fetched 18 Sep 2026 (TeleGeography added the same day). The logos are used solely to credit the data sources and
 imply no endorsement; if an owner objects, delete the file and the tile
 disappears at the next build.

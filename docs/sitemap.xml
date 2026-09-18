@@ -8,4 +8,6 @@
   <url><loc>https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
 </urlset>

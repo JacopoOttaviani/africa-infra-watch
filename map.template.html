@@ -150,6 +150,7 @@
   .notes .src:first-of-type{border-top:0}
   .notes .src .sk{font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;min-width:88px;padding-top:2px}
   .sk.assets{color:var(--st-operating)} .sk.finance{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
+  .sk.pipelines{color:var(--st-operating)} .sk.cables{color:var(--st-approved)}
   .notes .src .sd{flex:1;color:var(--ink-2)}
   .notes .src .sd b{color:var(--ink);font-weight:600}
   .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
@@ -221,6 +222,8 @@
   .pm{display:block;width:10px;height:10px;border-radius:50%;background:var(--c,var(--st-stalled));box-shadow:0 0 0 1px var(--surface);opacity:.92}
   .pm.finance{width:9px;height:9px;border-radius:1px}
   .pm.ground{width:14px;height:3.5px;border-radius:2px;transform:rotate(-32deg)}
+  .pm.pipelines{width:14px;height:4px;border-radius:2px;transform:rotate(-32deg);box-shadow:0 0 0 2.5px color-mix(in srgb,var(--c,var(--st-stalled)) 30%,transparent)}
+  .pm.cables{width:14px;height:2px;border-radius:2px;transform:rotate(-32deg);box-shadow:-6px 0 0 1px var(--c,var(--st-stalled)),6px 0 0 1px var(--c,var(--st-stalled))}
   .pm.stalled{background:transparent;border:1.6px solid var(--st-stalled);box-shadow:none}
   .pm.announced{--c:var(--st-announced)} .pm.approved{--c:var(--st-approved)}
   .pm.under_construction{--c:var(--st-construction)} .pm.operating{--c:var(--st-operating)}
@@ -234,7 +237,7 @@
   .legend .lg b{font-weight:600;color:var(--ink)}
   .legend .lh{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
 
-  .attrib{position:absolute;right:12px;bottom:12px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:5px;pointer-events:none}
+  .attrib{position:absolute;right:12px;bottom:12px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:5px;pointer-events:none;max-width:calc(100% - 330px)}
   .attrib > *{pointer-events:auto}
   .scale{display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-family:var(--mono);font-size:10.5px;color:var(--ink-2)}
   .scale i{display:block;height:5px;border:1.5px solid var(--ink-2);border-top:0}
@@ -471,7 +474,7 @@
     </div>
 
     <div class="readmore map-only">
-      <span>Where the data comes from, how the three sources are aligned, and what it cannot tell you.</span>
+      <span>Where the data comes from, how the five sources are aligned, and what it cannot tell you.</span>
       <button id="tomethod">Read the methodology →</button>
       <a class="pages-only" href="dashboard.html">Open the dashboard view →</a>
       <span class="byline">A project by <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
@@ -484,7 +487,7 @@
   </aside>
 
   <main class="stage" id="stage">
-    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB-financed projects and construction works"></canvas>
+    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB-financed projects, construction works, oil and gas pipelines and submarine cables"></canvas>
     <div id="lmap" hidden aria-hidden="true"></div>
 
     <div class="hud hud-tl">
@@ -517,7 +520,7 @@
 
     <div class="attrib">
       <div class="scale" id="scale"></div>
-      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div>
+      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a></div>
     </div>
 
     <article id="method" aria-label="Methodology">
@@ -551,10 +554,18 @@ const STATUS_ORDER = ["announced","approved","under_construction","operating","s
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
 const STATUS_KEY   = {announced:"an",approved:"ap",under_construction:"uc",operating:"op",stalled:"st"};
 const KEY_STATUS   = Object.fromEntries(Object.entries(STATUS_KEY).map(([k,v])=>[v,k]));
-const LAYER_ORDER  = ["assets","finance","ground"];
-const LAYER_LABEL  = {assets:"Power assets",finance:"AfDB finance",ground:"Ground truth"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"African Development Bank",ground:"OpenStreetMap"};
-const LAYER_KEY    = {assets:"a",finance:"f",ground:"g"};
+const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables"];
+const LAYER_LABEL  = {assets:"Power assets",finance:"AfDB finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"African Development Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography"};
+const LAYER_KEY    = {assets:"a",finance:"f",ground:"g",pipelines:"p",cables:"c"};
+const ALL_LAYER_KEYS = LAYER_ORDER.map(k=>LAYER_KEY[k]).join("");
+/* the layers drawn as lines, in drawing order: sea first, thin works on top */
+const LINE_LAYERS  = ["cables","pipelines","ground"];
+const LINE_RANK    = Object.fromEntries(LINE_LAYERS.map((k,i)=>[k,i]));
+const isLine = r => r.layer in LINE_RANK;
+/* the colour each layer's button and stat row wear: its most common status */
+const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved"};
+const allLayersOn  = () => Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
 const NAMES = DATA.names;
 const PAGES = document.documentElement.dataset.host === "pages";
 const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",other:"Other / multi-sector",road:"Road",rail:"Rail",air:"Airport"};
@@ -629,6 +640,27 @@ function inflate(layer, block){
 const ASSETS  = inflate("assets",  DATA.assets);
 const FINANCE = inflate("finance", DATA.finance);
 const GROUND  = inflate("ground",  DATA.ground);
+const PIPES   = inflate("pipelines", DATA.pipelines || {cols:[], rows:[]});
+const CABLES  = inflate("cables",    DATA.cables    || {cols:[], rows:[]});
+
+/* A pipeline into Spain or a cable on to India is African without all of it
+   being so: "zoom to" fits the part inside this window, not the whole route. */
+const ZOOM_WIN = [mx(-30), my(45), mx(70), my(-45)];
+function zoomBox(parts, fallback){
+  const b=[2,2,-1,-1]; let any=false;
+  for(const p of parts){ const a=p.a; for(let i=0;i<a.length;i+=2){
+    const x=a[i], y=a[i+1];
+    if(x<ZOOM_WIN[0]||x>ZOOM_WIN[2]||y<ZOOM_WIN[1]||y>ZOOM_WIN[3]) continue;
+    any=true; if(x<b[0])b[0]=x; if(x>b[2])b[2]=x; if(y<b[1])b[1]=y; if(y>b[3])b[3]=y;
+  } }
+  return any ? b : fallback;
+}
+/* "Nigeria · Benin · Togo +11" for a record that touches several countries */
+function countryList(isos, iso){
+  const l = (isos && isos.length ? isos : (iso ? [iso] : [])).map(i => NAMES[i]||i);
+  if(!l.length) return "—";
+  return l.length<=3 ? l.join(" · ") : l.slice(0,3).join(" · ") + ` +${l.length-3}`;
+}
 
 function unify(){
   const out = [];
@@ -656,6 +688,31 @@ function unify(){
       text:[g.name,g.operator,g.cls,NAMES[g.iso]].filter(Boolean).join(" ").toLowerCase(),
     });
   }
+  for(const p of PIPES){
+    p.parts = p.g.map(prepRing);
+    p.b = unionBox(p.parts); p.bz = zoomBox(p.parts, p.b);
+    delete p.g;
+    out.push({
+      ref:p, layer:"pipelines", name:p.name||"(unnamed pipeline)", iso:p.iso, isos:p.isos||null,
+      country:countryList(p.isos, p.iso),
+      status:p.status, kind:(p.fuel ? p.fuel+" pipeline" : "Pipeline"), sector:"energy", size:p.km, unit:"km",
+      x:mx(p.lon), y:my(p.lat), lon:p.lon, lat:p.lat, b:p.b, bz:p.bz,
+      text:[p.name,p.owner,p.from,p.to,p.fuel,...(p.isos||[]).map(i=>NAMES[i])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  for(const c of CABLES){
+    c.parts = c.g.map(prepRing);
+    c.b = unionBox(c.parts); c.bz = zoomBox(c.parts, c.b);
+    delete c.g;
+    c.lpx = (c.lps||[]).map(lp => [mx(lp[0]), my(lp[1])]);
+    out.push({
+      ref:c, layer:"cables", name:c.name||"(unnamed cable)", iso:c.iso, isos:c.isos||null,
+      country:countryList(c.isos, c.iso),
+      status:c.status, kind:"Submarine cable" + (c.rfs ? ` · RFS ${c.rfs}` : ""), sector:"ict", size:c.km, unit:"km",
+      x:mx(c.lon), y:my(c.lat), lon:c.lon, lat:c.lat, b:c.b, bz:c.bz,
+      text:[c.name,c.owners,c.suppliers,...(c.lps||[]).map(l=>l[2]),...(c.isos||[]).map(i=>NAMES[i])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
   return out;
 }
 const ALL = unify();
@@ -668,7 +725,7 @@ for(const L of LAYER_ORDER){
 
 /* ================= state ================= */
 const S_ = {
-  layers:{assets:true,finance:true,ground:true},
+  layers:allLayersOn(),
   status:new Set(STATUS_ORDER),
   country:"", sector:"", q:"",
   picked:null,
@@ -677,7 +734,8 @@ const S_ = {
 };
 const pass = r =>
   S_.layers[r.layer] && S_.status.has(r.status) &&
-  (!S_.country || r.iso===S_.country) && (!S_.sector || r.sector===S_.sector) &&
+  (!S_.country || (r.isos ? r.isos.includes(S_.country) : r.iso===S_.country)) &&
+  (!S_.sector || r.sector===S_.sector) &&
   (!S_.q || r.text.includes(S_.q));
 let VIS = [], VIS_PTS = [], VIS_LINES = [];
 
@@ -881,20 +939,50 @@ function draw(){
     ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.6; ctx.stroke();
   }
 
-  /* ground works */
-  if(S_.layers.ground && !S_.cluster){
+  /* lines: submarine cables, pipeline routes, traced works — in that order,
+     so the thin works stay legible over the wider pipelines */
+  if(!S_.cluster && VIS_LINES.length){
     const lw = Math.max(1.3, Math.min(4.5, 1.3 + (view.z-4)*0.55));
-    ctx.globalAlpha = 0.88;
     for(const r of VIS_LINES){
       if(!ringVisible(r.b)) continue;
-      ctx.strokeStyle = statusColor(r.status);
-      ctx.lineWidth = r===S_.picked ? lw+2 : lw;
-      ctx.setLineDash(r.status==="announced" ? [lw*3, lw*2.2] : []);
+      const col = statusColor(r.status), picked = r===S_.picked;
+      /* dashed = not yet built: a proposed alignment, a proposed pipeline, a planned cable */
+      const unbuilt = r.status==="announced" || r.status==="approved";
       ctx.beginPath();
       for(const p of r.ref.parts){ if(ringVisible(p.b)) trace(p.a); }
-      ctx.stroke();
+      if(r.layer==="pipelines"){
+        const w = lw*1.1 + (picked ? 2 : 0);
+        ctx.setLineDash(unbuilt ? [w*3, w*2.2] : []);
+        ctx.strokeStyle = col;
+        ctx.globalAlpha = 0.3; ctx.lineWidth = w+3.4; ctx.stroke();     /* halo: reads as a pipe */
+        ctx.globalAlpha = 0.95; ctx.lineWidth = w; ctx.stroke();
+      } else if(r.layer==="cables"){
+        /* faint at continental zoom, where 80 routes would otherwise wall off the coast */
+        const zf = Math.max(0, Math.min(1, (view.z-3.6)/2.4));
+        const w = (0.75 + 0.55*zf) * Math.max(1, lw*0.72) + (picked ? 2 : 0);
+        ctx.setLineDash(unbuilt ? [w*3.5, w*2.6] : []);
+        ctx.strokeStyle = col; ctx.globalAlpha = picked ? 0.95 : 0.42 + 0.4*zf; ctx.lineWidth = w; ctx.stroke();
+      } else {
+        ctx.setLineDash(unbuilt ? [lw*3, lw*2.2] : []);
+        ctx.strokeStyle = col; ctx.globalAlpha = 0.88; ctx.lineWidth = picked ? lw+2 : lw; ctx.stroke();
+      }
     }
     ctx.setLineDash([]); ctx.globalAlpha = 1;
+    /* where each cable comes ashore in Africa */
+    if(view.z >= 3.4){
+      const dr = Math.max(1.8, Math.min(4, 1.2 + (view.z-3)*0.42));
+      for(const r of VIS_LINES){
+        if(r.layer!=="cables" || !r.ref.lpx) continue;
+        const col = statusColor(r.status);
+        for(const [ux,uy] of r.ref.lpx){
+          const x = ux*S+OX, y = uy*S+OY;
+          if(x<-10||x>W+10||y<-10||y>H+10) continue;
+          ctx.beginPath(); ctx.arc(x, y, dr, 0, 6.2832);
+          if(r.status==="stalled"){ ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke(); }
+          else { ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = COL.surface; ctx.lineWidth = 0.8; ctx.stroke(); }
+        }
+      }
+    }
   }
 
   /* points: big first so small ones stay on top */
@@ -920,6 +1008,14 @@ function draw(){
       for(const [lon,lat] of p.ref.locs){
         const x = sx(mx(lon)), y = sy(my(lat));
         ctx.beginPath(); ctx.arc(x,y,5,0,6.2832);
+        ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+    }
+    if(p.layer==="cables" && p.ref.lpx){
+      for(const [ux,uy] of p.ref.lpx){
+        const x = ux*S+OX, y = uy*S+OY;
+        ctx.beginPath(); ctx.arc(x,y,6.5,0,6.2832);
+        ctx.strokeStyle = COL.surface; ctx.lineWidth = 3; ctx.stroke();
         ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.5; ctx.stroke();
       }
     }
@@ -1049,26 +1145,28 @@ const glyph = {
   assets:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${col}"/></svg>`,
   finance: col => `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" fill="${col}"/></svg>`,
   ground:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
+  pipelines: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none" opacity=".3"/><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
+  cables:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 12 13.5 4" stroke="${col}" stroke-width="1.7" stroke-linecap="round" fill="none"/><circle cx="2.8" cy="11.8" r="2.3" fill="${col}"/><circle cx="13.2" cy="4.2" r="2.3" fill="${col}"/></svg>`,
 };
 const glyphStatus = (layer, status) => {
   const col = statusColor(status);
   if(status!=="stalled") return glyph[layer](col);
   if(layer==="assets") return `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.3" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(layer==="finance") return `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3.8" y="3.8" width="8.4" height="8.4" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
-  return glyph.ground(col);
+  return (glyph[layer] || glyph.ground)(col);
 };
 
-const SHORT = {assets:"GEM", finance:"AfDB", ground:"OSM"};
+const SHORT = {assets:"GEM", finance:"AfDB", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography"};
 function renderLede(){
   el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   const pipe = ASSETS.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction").length;
-  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB projects</strong> with money attached and <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, from three sources that are kept apart because they share no project identifier.`;
+  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB projects</strong> with money attached, <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, <strong>${fmt(PIPES.length)} oil and gas pipeline segments</strong> and <strong>${fmt(CABLES.length)} submarine cables</strong>, from five sources that are kept apart because they share no project identifier.`;
 }
 
 function counts(skip){
-  const c = {layer:{assets:0,finance:0,ground:0}, status:{}};
+  const c = {layer:Object.fromEntries(LAYER_ORDER.map(k=>[k,0])), status:{}};
   for(const r of ALL){
     const okL = S_.layers[r.layer], okS = S_.status.has(r.status);
     if(S_.country && r.iso!==S_.country) continue;
@@ -1083,7 +1181,7 @@ function counts(skip){
 function renderLayers(c){
   el("layers").innerHTML = LAYER_ORDER.map(k => `
     <button class="lyr" data-l="${k}" aria-pressed="${S_.layers[k]}">
-      <span class="glyph">${glyph[k](k==="assets"?COL.operating:k==="finance"?COL.approved:COL.under_construction)}</span>
+      <span class="glyph">${glyph[k](COL[LAYER_TONE[k]])}</span>
       <span class="lt"><b>${LAYER_LABEL[k]}</b><span>${LAYER_SUB[k]}</span></span>
       <span class="lc">${fmt(c.layer[k])}</span>
     </button>`).join("");
@@ -1123,7 +1221,9 @@ function renderLegend(){
       <div class="lg">${glyph.assets(COL.ink)}<span><b>Power unit</b> · size = MW</span></div>
       <div class="lg">${glyph.finance(COL.ink)}<span><b>AfDB project</b> · size = commitment</span></div>
       <div class="lg">${glyph.ground(COL.ink)}<span><b>Works traced</b> in OpenStreetMap</span></div>
-      <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = proposed alignment</span></div>
+      <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
+      <div class="lg">${glyph.cables(COL.ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
+      <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = not yet built</span></div>
       ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
     </div>`;
 }
@@ -1139,6 +1239,8 @@ function inView(){
 function renderView(){
   const v = inView();
   const A = v.filter(r=>r.layer==="assets"), F = v.filter(r=>r.layer==="finance"), G = v.filter(r=>r.layer==="ground");
+  const P = v.filter(r=>r.layer==="pipelines"), C = v.filter(r=>r.layer==="cables");
+  const pkm = P.reduce((a,r)=>a+(r.size||0),0), landings = C.reduce((a,r)=>a+((r.ref.lps||[]).length),0);
   const gw = A.reduce((a,r)=>a+(r.size||0),0)/1000;
   const pipeGw = A.filter(r=>r.status!=="operating"&&r.status!=="stalled").reduce((a,r)=>a+(r.size||0),0)/1000;
   const usd = F.reduce((a,r)=>a+(r.size||0),0)/1000;
@@ -1151,7 +1253,11 @@ function renderView(){
     <div class="stat"><span class="glyph">${glyph.finance(COL.approved)}</span>
       <span><span class="k">AfDB finance</span><br><span class="v">${fmt(F.length)} projects · $${fmt1(usd)}bn <span>committed</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.ground(COL.under_construction)}</span>
-      <span><span class="k">Ground works</span><br><span class="v">${fmt(G.length)} works · ${fmt(km)} km <span>traced</span></span></span></div>`;
+      <span><span class="k">Ground works</span><br><span class="v">${fmt(G.length)} works · ${fmt(km)} km <span>traced</span></span></span></div>
+    <div class="stat"><span class="glyph">${glyph.pipelines(COL.operating)}</span>
+      <span><span class="k">Oil & gas pipelines</span><br><span class="v">${fmt(P.length)} segments · ${fmt(pkm)} km <span>of route</span></span></span></div>
+    <div class="stat"><span class="glyph">${glyph.cables(COL.approved)}</span>
+      <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>African landings</span></span></span></div>`;
 
   const CAP = 60;
   const ranked = v.filter(r=>r.size!=null).sort((a,b)=>(b.size/P95[b.layer])-(a.size/P95[a.layer]));
@@ -1173,7 +1279,7 @@ function pick(r, fly){
   S_.picked = r;
   renderDetail();
   if(fly && r){
-    const target = r.layer==="ground" ? fitBounds(r.b, 80, 11) : {cx:r.x, cy:r.y, z:Math.max(view.z, 7.2)};
+    const target = isLine(r) ? fitBounds(r.bz || r.b, 80, r.layer==="ground" ? 11 : 9) : {cx:r.x, cy:r.y, z:Math.max(view.z, 7.2)};
     flyTo(target);
   } else draw();
   renderView();
@@ -1203,6 +1309,32 @@ function renderDetail(){
     rows.push(["IATI identifier", `<span class="m">${esc(f.iid)}</span>`]);
     link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
     note = `AfDB commitment from IATI type-2 transactions, converted at ${DATA.meta.sdr_note}. AfDB money only; co-financiers are not counted.`;
+  } else if(r.layer==="pipelines"){
+    rows.push(["Fuel", esc(f.fuel||"—")]);
+    rows.push(["Status", `${STATUS_LABEL[r.status]} <span>· GEM "${esc(f.status==="announced"?"proposed":f.status==="under_construction"?"construction":f.status)}"</span>`]);
+    if(f.from || f.to) rows.push(["Route", `${esc(f.from||"?")} → ${esc(f.to||"?")}`]);
+    rows.push(["Countries", esc((f.isos||[f.iso]).filter(Boolean).map(i=>NAMES[i]||i).join(", ") || "—")]);
+    rows.push(["Length", f.km!=null ? `<span class="num">${fmt(f.km)} km</span>` : "—"]);
+    if(f.cap) rows.push(["Capacity", `<span class="num">${esc(f.cap)}</span>` + (f.bcm && !/bcm/.test(f.cap) ? ` <span>· ${fmt1(f.bcm)} bcm/y</span>` : f.boed && !/bcm/.test(f.cap) ? ` <span>· ${fmt(f.boed)} boe/d</span>` : "")]);
+    if(f.dia) rows.push(["Diameter", esc(f.dia)]);
+    if(f.yr) rows.push([r.status==="operating" ? "Start year" : "Expected start", esc(f.yr)]);
+    if(f.owner) rows.push(["Owner", esc(f.owner)]);
+    rows.push(["Tracker", f.trk==="GOIT" ? "Global Oil Infrastructure Tracker" : "Global Gas Infrastructure Tracker"]);
+    if(f.url) link = [f.url, "GEM wiki record"];
+    note = "Route, status and capacity as published by Global Energy Monitor's pipeline trackers. Routes are indicative; one pipeline can be several segments, each its own record.";
+  } else if(r.layer==="cables"){
+    rows.push(["Status", f.planned ? `planned <span>· TeleGeography lists it as not yet in service</span>` : "in service"]);
+    if(f.rfs) rows.push([f.planned ? "Ready for service" : "In service since", esc(f.rfs)]);
+    rows.push(["Length", f.km!=null ? `<span class="num">${fmt(f.km)} km</span> <span>· whole system</span>` : "—"]);
+    const lps = f.lps || [];
+    rows.push(["African landings", lps.length ? esc(lps.map(l=>l[2]).join(", ")) + ` <span>· ${lps.length} of ${fmt(f.lp_total)} landing points, ringed on the map</span>` : "—"]);
+    rows.push(["Countries connected", `${fmt(f.n_cts)} <span>· ${esc(countryList(f.isos, f.iso))} in Africa</span>`]);
+    if(f.owners) rows.push(["Owners", esc(f.owners)]);
+    if(f.suppliers) rows.push(["Supplier", esc(f.suppliers)]);
+    if(f.notes) rows.push(["Note", esc(f.notes)]);
+    link = ["https://www.submarinecablemap.com/submarine-cable/"+encodeURIComponent(f.cid), "TeleGeography record"];
+    if(f.url) link2 = [f.url, "Cable website"];
+    note = "Route, owners and ready-for-service year as published by TeleGeography's Submarine Cable Map. A planned cable due within a year is shown as under construction; one due later, as announced.";
   } else {
     rows.push(["Becomes", esc(r.kind)]);
     rows.push(["Status", r.status==="announced" ? "proposed alignment (OSM <i>proposed</i>)" : "under construction (OSM <i>construction</i>)"]);
@@ -1240,8 +1372,8 @@ function renderDetail(){
 /* ================= apply ================= */
 function apply(){
   VIS = ALL.filter(pass);
-  VIS_PTS = VIS.filter(r=>r.layer!=="ground").sort((a,b)=>(b.size||0)-(a.size||0));
-  VIS_LINES = VIS.filter(r=>r.layer==="ground");
+  VIS_PTS = VIS.filter(r=>!isLine(r)).sort((a,b)=>(b.size||0)-(a.size||0));
+  VIS_LINES = VIS.filter(isLine).sort((a,b)=>LINE_RANK[a.layer]-LINE_RANK[b.layer]);
   if(S_.picked && !VIS.includes(S_.picked)){ S_.picked = null; renderDetail(); }
   el("vis").textContent = fmt(VIS.length);
   el("scope").hidden = !S_.country;
@@ -1407,7 +1539,7 @@ function clusterClick(m){
   flyTo(t);
 }
 function clusterTip(c){
-  const kids = c.getAllChildMarkers(), by = {}, byL = {assets:0, finance:0, ground:0};
+  const kids = c.getAllChildMarkers(), by = {}, byL = Object.fromEntries(LAYER_ORDER.map(k=>[k,0]));
   for(const m of kids){ by[m.rec.status] = (by[m.rec.status]||0)+1; byL[m.rec.layer]++; }
   const rows = STATUS_ORDER.filter(s=>by[s]).map(s =>
     `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${STATUS_LABEL[s]}</span><b>${fmt(by[s])}</b></div>`).join("");
@@ -1416,7 +1548,7 @@ function clusterTip(c){
 }
 function recTip(hit){
   const bits = [["Status", STATUS_LABEL[hit.status]||"—"], ["Country", hit.country]];
-  if(hit.size!=null) bits.push([hit.unit==="$m"?"Committed":hit.unit==="km"?"Traced":"Capacity", (hit.unit==="$m"?"$":"")+fmt1(hit.size)+(hit.unit==="$m"?"m":" "+hit.unit)]);
+  if(hit.size!=null) bits.push([hit.unit==="$m"?"Committed":hit.unit==="km"?(hit.layer==="ground"?"Traced":"Length"):"Capacity", (hit.unit==="$m"?"$":"")+fmt1(hit.size)+(hit.unit==="$m"?"m":" "+hit.unit)]);
   bits.push(["Source", LAYER_SUB[hit.layer]]);
   return `<div class="tn">${esc(hit.name)}</div>` + bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${esc(b)}</b></div>`).join("");
 }
@@ -1542,7 +1674,7 @@ el("sector").onchange = e => { S_.sector = e.target.value; apply(); };
 let qt=null;
 el("q").oninput = e => { clearTimeout(qt); qt = setTimeout(()=>{ S_.q = e.target.value.trim().toLowerCase(); apply(); }, 150); };
 el("reset").onclick = () => {
-  S_.layers={assets:true,finance:true,ground:true}; S_.status=new Set(STATUS_ORDER);
+  S_.layers=allLayersOn(); S_.status=new Set(STATUS_ORDER);
   S_.country=""; S_.sector=""; S_.q=""; el("q").value="";
   S_.picked=null; renderDetail(); apply(); flyTo(homeView());
 };
@@ -1554,7 +1686,7 @@ function writeHash(){
   hashT = setTimeout(()=>{
     const parts = [`${view.z.toFixed(2)}/${invLat(view.cy).toFixed(3)}/${invLon(view.cx).toFixed(3)}`];
     const L = LAYER_ORDER.filter(k=>S_.layers[k]).map(k=>LAYER_KEY[k]).join("");
-    if(L!=="afg") parts.push("l="+L);
+    if(L!==ALL_LAYER_KEYS) parts.push("l="+L);
     if(S_.status.size<STATUS_ORDER.length) parts.push("s="+STATUS_ORDER.filter(s=>S_.status.has(s)).map(s=>STATUS_KEY[s]).join(","));
     if(S_.country) parts.push("c="+S_.country);
     if(S_.sector) parts.push("k="+S_.sector);
@@ -1619,13 +1751,13 @@ function topList(counter, n, labeler = x=>x){
 function statusTable(){
   const dash = "<span class='dim'>—</span>";
   const rows = [
-    ["announced", "Announced", "Pipeline", "Proposed (dashed line)"],
-    ["approved", "Pre-construction, permitted", dash, dash],
-    ["under_construction", "Construction", "Implementation", "Construction"],
-    ["operating", "Operating, retired", "Completed, closed", dash],
-    ["stalled", "Cancelled, shelved, mothballed", "Cancelled, suspended", dash],
+    ["announced", "Announced", "Pipeline", "Proposed (dashed line)", "Proposed (dashed)", "Planned, RFS later than next year (dashed)"],
+    ["approved", "Pre-construction, permitted", dash, dash, dash, dash],
+    ["under_construction", "Construction", "Implementation", "Construction", "Construction", "Planned, RFS by next year"],
+    ["operating", "Operating, retired", "Completed, closed", dash, "Operating", "In service"],
+    ["stalled", "Cancelled, shelved, mothballed", "Cancelled, suspended", dash, "Cancelled, shelved, idle", dash],
   ];
-  return rows.map(([s,a,b,c]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
+  return rows.map(([s,...cells]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
 }
 
 /* a data-source tile: the organisation's mark, monochrome in the current ink; name and role live in the tooltip */
@@ -1657,13 +1789,30 @@ function renderMethod(){
   const gNamed = G.filter(g=>g.name).length;
   const gSec = {}; for(const g of G) gSec[g.sector||"other"] = (gSec[g.sector||"other"]||0)+1;
   const gCts = new Set(G.map(g=>g.iso).filter(Boolean)).size;
-  const allCts = new Set(ALL.map(r=>r.iso).filter(Boolean)).size;
+
+  const P = PIPES, C = CABLES;
+  const pKm = P.reduce((t,p)=>t+(p.km||0),0);
+  const pBuild = P.filter(p=>p.status==="under_construction"), pProp = P.filter(p=>p.status==="announced");
+  const pBuildKm = pBuild.reduce((t,p)=>t+(p.km||0),0), pPropKm = pProp.reduce((t,p)=>t+(p.km||0),0);
+  const pFuel = {}; for(const x of P) pFuel[x.fuel||"unknown"] = (pFuel[x.fuel||"unknown"]||0)+1;
+  const pSystems = new Set(P.map(x=>x.pipe||x.name).filter(Boolean)).size;
+  const pCts = new Set(P.flatMap(x=>x.isos||[])).size;
+  const pUnrouted = (DATA.meta.unrouted_pipelines != null) ? DATA.meta.unrouted_pipelines : null;
+  const cLand = C.reduce((t,c)=>t+((c.lps||[]).length),0);
+  const cPlanned = C.filter(c=>c.planned).length;
+  const cCts = new Set(C.flatMap(c=>c.isos||[])).size;
+  const cKm = C.reduce((t,c)=>t+(c.km||0),0);
+  const cOwners = {}; for(const c of C) for(const o of (c.owners||"").split(",").map(x=>x.trim()).filter(Boolean)) cOwners[o]=(cOwners[o]||0)+1;
+  const cYear = new Date().getFullYear();
+  const allCts = new Set(ALL.flatMap(r=>r.isos||[r.iso]).filter(Boolean)).size;
 
   const SECTIONS = [
     ["m-what","What this map shows"],
     ["m-gem","Power assets","sub"],
     ["m-afdb","AfDB finance","sub"],
     ["m-osm","Ground truth","sub"],
+    ["m-pipes","Oil & gas pipelines","sub"],
+    ["m-cables","Submarine cables","sub"],
     ["m-status","One status scale"],
     ["m-draw","How to read the map"],
     ["m-limits","What to keep in mind"],
@@ -1684,17 +1833,18 @@ function renderMethod(){
   <span class="kicker">Methodology · africa-infra-watch</span>
   <h1>Where the data comes from, and what it can and cannot say</h1>
   <p class="standfirst">
-    This map brings together three open datasets. Each answers a different question:
-    <strong>what is being built</strong>, <strong>who is paying for it</strong>, and
-    <strong>what has broken ground</strong>. They share no common project ID, so they
-    are shown as three separate layers and are never added up.
+    This map brings together five open datasets. Each answers a different question:
+    <strong>what is being built</strong>, <strong>who is paying for it</strong>,
+    <strong>what has broken ground</strong>, <strong>where oil and gas move</strong> and
+    <strong>where the continent connects to the internet</strong>. They share no common
+    project ID, so they are shown as separate layers and are never added up.
   </p>
 
   <section id="m-what">
     <div class="eyebrow"><span>01</span><span>What this map shows</span></div>
     <h2>What each source answers</h2>
     <p class="lead">
-      No single dataset covers infrastructure in Africa. This map uses three open sources that
+      No single dataset covers infrastructure in Africa. This map uses five open sources that
       complement each other, and keeps them apart rather than merging them.
     </p>
     <div class="twrap"><table>
@@ -1703,13 +1853,16 @@ function renderMethod(){
         <tr><td>${glyph.assets(COL.operating)} Power assets</td><td>${esc(src.assets.name)}<br><span class="dim">${esc(src.assets.detail)}</span></td><td class="m">${fmt(A.length)} units</td><td>What generating capacity is planned, being built, running or shelved</td><td class="dim">${esc(src.assets.fresh)}</td></tr>
         <tr><td>${glyph.finance(COL.approved)} AfDB finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(F.length)} projects</td><td>What the Bank has committed and paid out, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
         <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
+        <tr><td>${glyph.pipelines(COL.operating)} Oil &amp; gas pipelines</td><td>${esc(src.pipelines.name)}<br><span class="dim">${esc(src.pipelines.detail)}</span></td><td class="m">${fmt(P.length)} segments</td><td>Which oil, NGL and gas pipelines run, are being laid or are proposed, and where they go</td><td class="dim">${esc(src.pipelines.fresh)}</td></tr>
+        <tr><td>${glyph.cables(COL.approved)} Submarine cables</td><td>${esc(src.cables.name)}<br><span class="dim">${esc(src.cables.detail)}</span></td><td class="m">${fmt(C.length)} cables</td><td>Which submarine cables reach the continent, where they land, who owns them and when</td><td class="dim">${esc(src.cables.fresh)}</td></tr>
       </tbody>
     </table></div>
     <p>
       The same project can appear in more than one layer. A power plant financed by AfDB and
-      traced by OpenStreetMap mappers shows up three times. That is useful, because the layers
-      confirm each other, but it also means counts should never be added across layers. Together
-      the layers touch <strong>${allCts} countries and territories</strong>.
+      traced by OpenStreetMap mappers shows up three times; a gas pipeline feeding it may be a
+      fourth record. That is useful, because the layers confirm each other, but it also means
+      counts should never be added across layers. Together the layers touch
+      <strong>${allCts} countries and territories</strong>.
     </p>
   </section>
 
@@ -1818,17 +1971,89 @@ function renderMethod(){
     </div>
   </section>
 
+  <section id="m-pipes">
+    <div class="eyebrow"><span class="sk pipelines">Layer · Oil &amp; gas pipelines</span><span class="m">haloed lines</span></div>
+    <h2>Global Energy Monitor, pipeline trackers</h2>
+    <p class="lead">Two more of Global Energy Monitor's trackers: the Global Gas Infrastructure Tracker (gas transmission pipelines) and the Global Oil Infrastructure Tracker (crude and natural-gas-liquids pipelines), with routes, from proposal to operation.</p>
+    <dl class="spec">
+      <dt>Source</dt><dd><strong>Global Energy Monitor</strong>, ${esc(src.pipelines.detail)}, released under ${esc(src.pipelines.lic)}. The official download is a form on GEM's site; the route geometry drawn here is the GeoJSON that GEM's own tracker maps load from its public data bucket. <a href="${src.pipelines.url}" target="_blank" rel="noopener noreferrer">Gas tracker ↗</a> · <a href="https://globalenergymonitor.org/projects/global-oil-infrastructure-tracker/" target="_blank" rel="noopener noreferrer">Oil tracker ↗</a></dd>
+      <dt>One record is</dt><dd>A <strong>pipeline segment</strong> with a published route. GEM splits long systems into segments with their own status and start year, so one pipeline can be several records; the <strong>${fmt(P.length)} segments</strong> here belong to <strong>${fmt(pSystems)} pipeline systems</strong>. Segments without a route in the data are not drawn${pUnrouted!=null ? ` (<strong>${fmt(pUnrouted)}</strong> in this release)` : ""}.</dd>
+      <dt>What is included</dt><dd>Every segment with at least one African country on its route, in every status. Pipelines to Europe (Medgaz, Transmed, Greenstream) and the proposed Nigeria–Morocco line to Spain are therefore in, drawn along their whole route.</dd>
+      <dt>Length and capacity</dt><dd>GEM's own figures per segment: length in km (measured where known, estimated otherwise) and capacity in the source's units, with a conversion to bcm/y or barrels of oil equivalent per day where GEM gives one.</dd>
+      <dt>Location</dt><dd>Routes are indicative, digitised from public maps and filings; a segment's country is the first on its route list. Filtering by country keeps every segment that crosses it.</dd>
+    </dl>
+    <div class="facts">
+      <div class="fh"><h4>In this release</h4><span>derived from the payload</span></div>
+      <div class="fig">
+        <div><b>${fmt(P.length)}</b><span>routed segments in ${pCts} countries</span></div>
+        <div><b>${fmt(pKm)} km</b><span>of pipeline route on record</span></div>
+        <div><b>${fmt(pBuildKm)} km</b><span>under construction, in ${fmt(pBuild.length)} segments</span></div>
+        <div><b>${fmt(pPropKm)} km</b><span>proposed, in ${fmt(pProp.length)} segments</span></div>
+      </div>
+      ${sbar(byStatus(P), P.length, "Pipeline segments by status")}
+      <p style="margin-top:12px;font-size:13px">By fuel: ${topList(pFuel, 4)}.</p>
+    </div>
+    <div class="split">
+      <div class="yes"><h4>What it tells you</h4><ul>
+        <li>Which corridors carry, or are meant to carry, oil and gas: across the Sahara, out of the Niger Delta, along the East African coast, under the Mediterranean.</li>
+        <li>Ownership and scale, segment by segment, and how much proposed route exists against what actually operates.</li>
+      </ul></div>
+      <div class="no"><h4>What it cannot tell you</h4><ul>
+        <li>Flows. Capacity is design capacity, not throughput; an operating pipeline may run empty.</li>
+        <li>Distribution networks, gathering lines inside fields, refineries and LNG terminals. GEM tracks those elsewhere; only transmission pipelines are here.</li>
+        <li>Exact alignment. Routes are drawn from public sources, not surveyed.</li>
+        <li>Segments GEM knows about but has not routed, which are left out of the map rather than dropped at a country centroid.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="m-cables">
+    <div class="eyebrow"><span class="sk cables">Layer · Submarine cables</span><span class="m">lines with landing dots</span></div>
+    <h2>TeleGeography</h2>
+    <p class="lead">The Submarine Cable Map, the reference public map of the world's fibre-optic submarine cables, maintained continuously by the research firm TeleGeography: every cable system with an African landing point, in service or planned.</p>
+    <dl class="spec">
+      <dt>Source</dt><dd><strong>TeleGeography</strong>, Submarine Cable Map, read from the map's own JSON feeds (routes, landing points, one record per cable). Licence: ${esc(src.cables.lic)}, attribution "TeleGeography". <a href="${src.cables.url}" target="_blank" rel="noopener noreferrer">Submarine Cable Map ↗</a></dd>
+      <dt>One record is</dt><dd>A <strong>cable system</strong>, drawn along its whole route, with its African landing points marked. A cable landing in Mombasa and Mumbai is one record, filed under Kenya.</dd>
+      <dt>What is included</dt><dd>Every cable with at least one landing point in an African country or island, including Réunion, Mayotte and Saint Helena. Cables that only pass offshore, and the Canary Islands (Spain), are left out.</dd>
+      <dt>Status</dt><dd>TeleGeography knows two states, <em>in service</em> and <em>planned</em>, plus the ready-for-service (RFS) year. In service is <strong>operating</strong>. A planned cable due by ${cYear+1} is shown as <strong>under construction</strong>, since it is being manufactured or laid; one due later is <strong>announced</strong>. This is an inference from the RFS year, stated on every card.</dd>
+      <dt>Length</dt><dd>The whole system's length as published, not the African portion. It sizes the "largest in view" list; it is not a measure of investment in Africa.</dd>
+    </dl>
+    <div class="facts">
+      <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
+      <div class="fig">
+        <div><b>${fmt(C.length)}</b><span>cables landing in ${cCts} countries and territories</span></div>
+        <div><b>${fmt(cLand)}</b><span>African landing points</span></div>
+        <div><b>${fmt(cPlanned)}</b><span>planned, not yet in service</span></div>
+        <div><b>${fmt(cKm)} km</b><span>of cable system, whole routes</span></div>
+      </div>
+      ${sbar(byStatus(C), C.length, "Submarine cables by status")}
+      <p style="margin-top:12px;font-size:13px">Most frequent owners: ${topList(cOwners, 6)}.</p>
+    </div>
+    <div class="split">
+      <div class="yes"><h4>What it tells you</h4><ul>
+        <li>Where the continent's international bandwidth comes ashore, and which coasts and islands depend on a single cable.</li>
+        <li>Who owns the systems, who built them, and when the next ones are due.</li>
+      </ul></div>
+      <div class="no"><h4>What it cannot tell you</h4><ul>
+        <li>Capacity or traffic. TeleGeography publishes those commercially; the open map has neither.</li>
+        <li>Terrestrial fibre, data centres and mobile networks, which carry the signal onward.</li>
+        <li>Whether a planned cable is actually being laid. The under-construction reading is an inference from the RFS year.</li>
+        <li>Precise routes. Cables are drawn schematically at sea, and landing points sit at the town, not the beach manhole.</li>
+      </ul></div>
+    </div>
+  </section>
+
   <section id="m-status">
     <div class="eyebrow"><span>02</span><span>One status scale</span></div>
-    <h2>Five statuses across three sources</h2>
+    <h2>Five statuses across five sources</h2>
     <p class="lead">Each source describes progress in its own words. They are mapped onto five shared statuses so one filter works everywhere. The mapping is a judgement call, shown here so you can disagree with it.</p>
     <div class="twrap"><table>
-      <thead><tr><th>Shared status</th><th>Global Energy Monitor</th><th>AfDB</th><th>OpenStreetMap</th></tr></thead>
+      <thead><tr><th>Shared status</th><th>GEM power</th><th>AfDB</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th></tr></thead>
       <tbody>${statusTable()}</tbody>
     </table></div>
     <ul>
-      <li><strong>Approved exists only for power.</strong> AfDB and OpenStreetMap have no such stage.</li>
-      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit, the Bank's implementation stage for an AfDB project, a mapper's tag for OpenStreetMap.</li>
+      <li><strong>Approved exists only for power.</strong> The other sources have no such stage.</li>
+      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit or a pipeline segment, the Bank's implementation stage for an AfDB project, a mapper's tag for OpenStreetMap, and for a cable an inference from its ready-for-service year.</li>
       <li><strong>Operating includes the past.</strong> Retired units and closed projects stay visible rather than vanishing from every filter.</li>
       <li><strong>Stalled is drawn hollow</strong>, so abandoned projects stay on the map without competing with live ones.</li>
     </ul>
@@ -1841,6 +2066,8 @@ function renderMethod(){
       <div>${glyph.assets(COL.ink)}<div><b>Circle · power unit</b><span>Area scales with capacity in MW, capped so one giant announcement does not blanket a country.</span></div></div>
       <div>${glyph.finance(COL.ink)}<div><b>Square · AfDB project</b><span>Area scales with the AfDB commitment in US dollars.</span></div></div>
       <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn along the traced route. Solid for construction, dashed for proposed.</span></div></div>
+      <div>${glyph.pipelines(COL.ink)}<div><b>Haloed line · pipeline</b><span>Drawn along the route with a translucent halo of its own colour, so it reads as a pipe. Dashed while proposed.</span></div></div>
+      <div>${glyph.cables(COL.ink)}<div><b>Line with dots · submarine cable</b><span>Drawn along the whole route; a dot at each African landing point. Dashed until in service.</span></div></div>
       <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved or suspended.</span></div></div>
     </div>
     <h3>Colour</h3>
@@ -1854,7 +2081,8 @@ function renderMethod(){
       Power units sit at their reported coordinates. AfDB markers sit on an exact site when the Bank
       gives one, otherwise at the centre of the country or region: a square in the middle of a
       country means a project somewhere in that country, not a project in the desert.
-      OpenStreetMap works follow their traced route.
+      OpenStreetMap works follow their traced route. Pipelines and cables follow their published
+      route, which for a cable may run to Europe or Asia; "zoom to" fits the African part.
     </p>
     <h3>Clusters</h3>
     <p>
@@ -1880,7 +2108,7 @@ function renderMethod(){
     </p>` : ""}
     <h3>Counting</h3>
     <ul>
-      <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres apart.</li>
+      <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres, pipeline kilometres and cable landings apart.</li>
       <li><strong>"In view" means what is on screen</strong> and matches the filters. Zoom into a province and you get that province's figures.</li>
       <li><strong>"Largest in view" ranks each record against its own layer</strong>, so a power plant, a loan and a railway can share one list.</li>
       <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every status, since a closed project's money was still spent.</li>
@@ -1895,7 +2123,9 @@ function renderMethod(){
     <ul>
       <li><strong>About ${pct(F.length - fExact, F.length)} of AfDB markers are approximate.</strong> Filter to exact locations before drawing any conclusion finer than a country.</li>
       <li><strong>OpenStreetMap coverage follows mappers.</strong> The layer can confirm works; it can never prove their absence.</li>
-      <li><strong>Energy is over-represented.</strong> No comparable open tracker exists for ports, water, ICT or transmission.</li>
+      <li><strong>Energy and connectivity are over-represented.</strong> No comparable open tracker exists for ports, water or electricity transmission.</li>
+      <li><strong>Pipeline routes are indicative and incomplete.</strong> About a third of GEM's African segments carry no route and are not drawn; length and capacity are GEM's figures, not measurements.</li>
+      <li><strong>A cable's status is partly inferred.</strong> TeleGeography says planned or in service; the under-construction reading comes from the ready-for-service year.</li>
       <li><strong>Data is as fresh as each source</strong>, dated in the table above. A plant can be commissioned or a loan cancelled between two releases.</li>
       <li><strong>Announced is not planned.</strong> Much announced capacity is never built. Read it as a record of intent, and compare it with what is operating.</li>
       <li><strong>Geometry is simplified for the screen.</strong> Do not measure from this map; follow the source link on each record.</li>
@@ -1907,11 +2137,12 @@ function renderMethod(){
     <h2>Every figure can be traced back</h2>
     <p>
       Each record's detail card links to the source record it came from: the GEM wiki page for a
-      power unit, the IATI activity for an AfDB project, the OpenStreetMap way for traced works.
-      If a figure here looks wrong, check it against the source.
+      power unit or a pipeline, the IATI activity for an AfDB project, the OpenStreetMap way for
+      traced works, the TeleGeography page for a cable. If a figure here looks wrong, check it
+      against the source.
     </p>
     <p>
-      The pipeline is three scripts that fetch the layers, build the basemap and compile this page.
+      The pipeline is a handful of scripts that fetch the layers, build the basemap and compile this page.
       Re-running them refreshes every number, including the ones on this page. Other sources, such
       as the African Union's PIDA pipeline, AidData and the World Bank, were evaluated and left out;
       the ${DATA.meta.repo ? `<a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">repository README ↗</a>` : "repository README"} explains why.
@@ -1920,23 +2151,27 @@ function renderMethod(){
     <h3>Download the data</h3>
     <p>
       The site publishes what it draws. <a href="data/map.json">map.json</a> is the compiled payload
-      (${fmt(A.length + F.length + G.length)} records plus the basemap). The raw layers as GeoJSON:
+      (${fmt(A.length + F.length + G.length + P.length + C.length)} records plus the basemap). The raw layers as GeoJSON:
       <a href="data/gem_power_assets.geojson">power assets</a>,
-      <a href="data/iati_afdb_finance.geojson">AfDB finance</a> and
-      <a href="data/osm_construction.geojson">OpenStreetMap construction ways</a>;
+      <a href="data/iati_afdb_finance.geojson">AfDB finance</a>,
+      <a href="data/osm_construction.geojson">OpenStreetMap construction ways</a>,
+      <a href="data/gem_oil_gas_pipelines.geojson">oil and gas pipelines</a> and
+      <a href="data/telegeography_cables.geojson">submarine cables</a>;
       <a href="data/meta.json">meta.json</a> records when each was fetched.
     </p>` : ""}
     <h3>Attribution</h3>
     <p>
-      Power asset data © Global Energy Monitor, CC BY 4.0. Finance data © African Development Bank
-      Group, published via IATI. Map data © OpenStreetMap contributors, ODbL. Basemap by Natural Earth,
-      public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
+      Power asset and pipeline data © Global Energy Monitor, CC BY 4.0. Finance data © African
+      Development Bank Group, published via IATI. Map data © OpenStreetMap contributors, ODbL.
+      Submarine cable data © TeleGeography, Submarine Cable Map, CC BY-SA 4.0. Basemap by Natural
+      Earth, public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
     <div class="logos" aria-label="Data sources and publisher">
-      ${logoTile("global-energy-monitor", "https://globalenergymonitor.org/", "Global Energy Monitor", "Power assets")}
+      ${logoTile("global-energy-monitor", "https://globalenergymonitor.org/", "Global Energy Monitor", "Power assets, oil and gas pipelines")}
       ${logoTile("african-development-bank", "https://www.afdb.org/", "African Development Bank Group", "Finance")}
       ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
       ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
+      ${SOURCE_LOGOS["telegeography"] ? logoTile("telegeography", "https://www.submarinecablemap.com/", "TeleGeography", "Submarine cables") : ""}
       ${logoTile("natural-earth", "https://www.naturalearthdata.com/", "Natural Earth", "Basemap")}${PAGES ? `
       ${logoTile("eox", "https://s2maps.eu/", "EOX IT Services, Sentinel-2 cloudless", "Satellite imagery")}` : ""}
       ${logoTile("code-for-africa", "https://codeforafrica.org/", "Code for Africa", "Publisher")}
@@ -1944,7 +2179,7 @@ function renderMethod(){
     <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data and its publisher.</p>
     <p class="foot">
       Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)} ·
-      ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works ·
+      ${fmt(A.length)} power units · ${fmt(F.length)} AfDB activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables ·
       ${allCts} countries and territories · africa-infra-watch · a project by
       <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">Jacopo Ottaviani</a>
     </p>

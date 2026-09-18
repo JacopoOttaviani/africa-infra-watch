@@ -14,5 +14,18 @@
   "ground": {
     "fetched": "2026-09-07",
     "records": 5111
+  },
+  "pipelines": {
+    "fetched": "2026-09-18",
+    "fresh": null,
+    "release": "GGIT 2025-11 · GOIT 2026-07",
+    "records": 324,
+    "unrouted": 176
+  },
+  "cables": {
+    "fetched": "2026-09-18",
+    "fresh": null,
+    "records": 81,
+    "landing_points": 282
   }
 }

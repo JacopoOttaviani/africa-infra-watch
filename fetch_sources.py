@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
-Populate africa-infra-watch from the three verified sources.
+Populate africa-infra-watch from the five verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
-`dash_status` vocabulary so a single dashboard filter works across all three.
+`dash_status` vocabulary so a single filter works across every layer.
 
-Every endpoint here was tested live on 2026-09-07. See the dataset evaluation
-for the reasoning and the known gotchas.
+Every endpoint here was tested live on 2026-09-07 (power, AfDB, OSM) and
+2026-09-18 (pipelines, cables). See the dataset evaluation and the README for
+the reasoning and the known gotchas.
 
 Usage:
-    python3 fetch_sources.py            # all three layers
-    python3 fetch_sources.py gem osm    # only the named layers
+    python3 fetch_sources.py                 # all five layers
+    python3 fetch_sources.py gem osm         # only the named layers
+    python3 fetch_sources.py pipes cables    # the two line layers added Sep 2026
 """
 
 import csv
@@ -427,12 +429,273 @@ def _ring(x, y, ring):
     return inside
 
 
+# ------------------------------------------------- GEM (oil & gas pipelines)
+
+# GEM's pipeline trackers are two datasets: the Global Gas Infrastructure
+# Tracker (GGIT, gas transmission pipelines) and the Global Oil Infrastructure
+# Tracker (GOIT, crude and NGL pipelines). Their official download is a form on
+# globalenergymonitor.org; the route geometry that the same site's maps draw
+# sits in the public bucket, but NOT under Current_maps/ like the power
+# tracker: under Input_geojson_files/<tracker>/<release>/. Same licence
+# (CC BY 4.0), same status vocabulary, plus "proposed".
+PIPE_TRACKERS = {"ggit": "gas", "goit": "oil"}
+PIPE_STATUS = {**GEM_STATUS, "proposed": ANNOUNCED, "idle": STALLED}
+
+
+def gem_latest_pipeline_geojson(tracker):
+    """Newest release folder, newest GeoJSON inside it. Folder names carry the
+    release month (2026-07), so a plain sort finds the latest."""
+    listing = get(
+        f"{GEM_BUCKET}/?list-type=2&prefix=Input_geojson_files/{tracker}/"
+        "&max-keys=1000", timeout=90).decode("utf-8", "replace")
+    keys = [k for k in re.findall(r"<Key>([^<]+)</Key>", listing)
+            if k.lower().endswith(".geojson")]
+    if not keys:
+        raise RuntimeError(f"no {tracker} GeoJSON found in GEM bucket")
+    # sort by the release folder, then by file name, so 2026-07 beats 2026-06.1
+    keys.sort(key=lambda k: (k.split("/")[2], k))
+    key = keys[-1]
+    return f"{GEM_BUCKET}/{urllib.parse.quote(key)}", key.split("/")[2]
+
+
+def _line_parts(geom):
+    """Flatten any GeoJSON geometry into a list of coordinate lists (lines).
+    GGIT ships 712 features whose geometry is an EMPTY GeometryCollection —
+    segments with no published route — which come back as []."""
+    if not geom:
+        return []
+    t = geom.get("type")
+    if t == "LineString":
+        return [geom["coordinates"]] if len(geom.get("coordinates") or []) >= 2 else []
+    if t == "MultiLineString":
+        return [c for c in geom.get("coordinates") or [] if len(c) >= 2]
+    if t == "GeometryCollection":
+        return [p for g in geom.get("geometries") or [] for p in _line_parts(g)]
+    return []
+
+
+def _num(s):
+    try:
+        return float(str(s).replace(",", "")) if s not in (None, "") else None
+    except ValueError:
+        return None
+
+
+def fetch_pipelines():
+    feats, unrouted, releases = [], 0, []
+    for tracker, fuel_group in PIPE_TRACKERS.items():
+        url, release = gem_latest_pipeline_geojson(tracker)
+        releases.append(f"{tracker.upper()} {release}")
+        print(f"GEM  {tracker.upper()} release {release}: "
+              f"{urllib.parse.unquote(url.rsplit('/', 1)[-1])}")
+        raw = json.loads(get(url, timeout=900))
+        n_af = 0
+        for f in raw.get("features", []):
+            p = f.get("properties") or {}
+            countries = [c.strip() for c in (p.get("CountriesOrAreas") or "").split(",")
+                         if c.strip()]
+            # a pipeline counts if ANY country on its route is African, so
+            # Medgaz (Algeria–Spain) and Transmed (Tunisia–Italy) stay in
+            if not any(c in AFRICA_NAMES or c == "The Gambia" for c in countries):
+                continue
+            n_af += 1
+            parts = _line_parts(f.get("geometry"))
+            if not parts:
+                unrouted += 1
+                continue
+            status = (p.get("Status") or "").strip().lower()
+            name = (p.get("PipelineName") or "").strip()
+            seg = (p.get("SegmentName") or "").strip()
+            feats.append({
+                "type": "Feature",
+                "geometry": {"type": "MultiLineString", "coordinates": parts},
+                "properties": {
+                    "source": "GEM",
+                    "layer": "pipelines",
+                    "tracker": tracker.upper(),
+                    "name": f"{name} · {seg}" if seg and seg != name else name,
+                    "pipeline": name,
+                    "segment": seg or None,
+                    "fuel": (p.get("Fuel") or fuel_group).strip(),
+                    "countries": countries,
+                    "sector": "energy",
+                    "owner": (p.get("Owner") or "").strip() or None,
+                    "parent": (p.get("Parent") or "").strip() or None,
+                    "start_year": (p.get("StartYear1") or "").strip() or None,
+                    "capacity": _num(p.get("Capacity")),
+                    "capacity_units": (p.get("CapacityUnits") or "").strip() or None,
+                    "capacity_bcm_y": _num(p.get("CapacityBcm/y")),
+                    "capacity_boed": _num(p.get("CapacityBOEd")),
+                    "length_km": _num(p.get("LengthMergedKm")) or _num(p.get("LengthKnownKm"))
+                                 or _num(p.get("LengthEstimateKm")),
+                    "diameter": (f"{p.get('Diameter')} {p.get('DiameterUnits') or ''}".strip()
+                                 if p.get("Diameter") else None),
+                    "start_location": (p.get("StartLocation") or "").strip() or None,
+                    "end_location": (p.get("EndLocation") or "").strip() or None,
+                    "raw_status": status,
+                    "dash_status": PIPE_STATUS.get(status),
+                    "project_id": p.get("ProjectID") or None,
+                    "url": (p.get("Wiki") or "").strip() or None,
+                    "last_updated": p.get("LastUpdated") or None,
+                    "release": release,
+                },
+            })
+        print(f"     {n_af:,} African segments in {tracker.upper()}")
+    print(f"  {unrouted:,} African segments have no published route and are not drawn")
+    out = write_layer("gem_oil_gas_pipelines", feats)
+    update_meta("pipelines", fetched=today(), fresh=None, release=" · ".join(releases),
+                records=len(feats), unrouted=unrouted)
+    return out
+
+
+# ------------------------------------------------ TeleGeography (submarine cables)
+
+# The Submarine Cable Map's own JSON API. Undocumented but stable for years;
+# every endpoint here was tested live on 2026-09-18. Cable routes come as one
+# GeoJSON, landing points as another, and the per-cable detail (owners,
+# suppliers, ready-for-service year, planned flag, landing points with
+# country) as one small JSON per cable. Licence: CC BY-SA 4.0 (TeleGeography's
+# FAQ), attribution "TeleGeography".
+TG_API = "https://www.submarinecablemap.com/api/v3"
+# TeleGeography's own spellings for Africa and its islands -> ISO 3166-1. The
+# cable detail carries a country per landing point; landing-point names read
+# "City, Country" with commas inside some countries ("Congo, Dem. Rep."), so
+# the fallback matches by suffix.
+TG_ISO = {
+    "Algeria": "DZ", "Angola": "AO", "Benin": "BJ", "Cameroon": "CM", "Cape Verde": "CV",
+    "Comoros": "KM", "Congo, Dem. Rep.": "CD", "Congo, Rep.": "CG", "Côte d'Ivoire": "CI",
+    "Djibouti": "DJ", "Egypt": "EG", "Equatorial Guinea": "GQ", "Eritrea": "ER", "Gabon": "GA",
+    "Gambia": "GM", "Ghana": "GH", "Guinea": "GN", "Guinea-Bissau": "GW", "Kenya": "KE",
+    "Liberia": "LR", "Libya": "LY", "Madagascar": "MG", "Mauritania": "MR", "Mauritius": "MU",
+    "Mayotte": "YT", "Morocco": "MA", "Mozambique": "MZ", "Namibia": "NA", "Nigeria": "NG",
+    "Réunion": "RE", "Saint Helena, Ascension and Tristan da Cunha": "SH",
+    "Sao Tome and Principe": "ST", "Senegal": "SN", "Seychelles": "SC", "Sierra Leone": "SL",
+    "Somalia": "SO", "South Africa": "ZA", "Sudan": "SD", "Tanzania": "TZ", "Togo": "TG",
+    "Tunisia": "TN", "Uganda": "UG", "Western Sahara": "EH",
+}
+
+
+def _tg_country(name):
+    for c in sorted(TG_ISO, key=len, reverse=True):
+        if name.endswith(", " + c):
+            return c
+    return None
+
+
+def fetch_cables(pause=0.1):
+    """Every cable with at least one African landing point.
+
+    Walks every cable's detail record (about 700 small requests, a few
+    minutes) rather than going through landing points: a landing point that
+    TeleGeography marks "to be determined" (Cape Town for Umoja, say) has no
+    detail record of its own, so the shorter route misses whole cables."""
+    lp_geo = json.loads(get(f"{TG_API}/landing-point/landing-point-geo.json", timeout=120))
+    lp_xy = {}
+    for f in lp_geo.get("features", []):
+        p = f.get("properties") or {}
+        if p.get("id") and f.get("geometry"):
+            lp_xy[p["id"]] = f["geometry"]["coordinates"][:2]
+    print(f"TG   {len(lp_xy):,} landing points with coordinates")
+
+    geo = json.loads(get(f"{TG_API}/cable/cable-geo.json", timeout=120))
+    routes = {}
+    for f in geo.get("features", []):
+        cid = (f.get("properties") or {}).get("id")
+        if cid:
+            routes.setdefault(cid, []).extend(_line_parts(f.get("geometry")))
+
+    ids = [c["id"] for c in json.loads(get(f"{TG_API}/cable/all.json", timeout=120)) if c.get("id")]
+    print(f"TG   {len(ids):,} cable systems worldwide; reading each one")
+    year = int(today()[:4])
+    feats, missing, failed = [], 0, 0
+    for i, cid in enumerate(ids, 1):
+        d = None
+        for attempt in range(3):
+            try:
+                d = json.loads(get(f"{TG_API}/cable/{cid}.json", timeout=60))
+                break
+            except Exception as e:                            # noqa: BLE001
+                if attempt == 2:
+                    print(f"  ! cable {cid}: {e}")
+                    failed += 1
+                else:
+                    time.sleep(2 + 3 * attempt)
+        if i % 100 == 0:
+            print(f"  … {i}/{len(ids)} cables, {len(feats)} African so far")
+        time.sleep(pause)
+        if not d:
+            continue
+        landings = [lp for lp in d.get("landing_points", []) if lp.get("id")]
+        african = []
+        for lp in landings:
+            c = lp.get("country") or _tg_country(lp.get("name") or "")
+            if c in TG_ISO and lp["id"] in lp_xy:
+                lon, lat = lp_xy[lp["id"]]
+                african.append({"id": lp["id"], "name": lp.get("name"), "country": c,
+                                "iso": TG_ISO[c], "lon": lon, "lat": lat,
+                                "tbd": bool(lp.get("is_tbd"))})
+        if not african:
+            continue
+        parts = routes.get(cid) or []
+        if not parts:
+            missing += 1
+            print(f"  ! {cid}: African landing but no route geometry; skipped")
+            continue
+        planned = bool(d.get("is_planned"))
+        rfs = d.get("rfs_year")
+        # TeleGeography has two states, planned and in service. A planned
+        # cable due within about a year is being manufactured or laid; one
+        # further out is a record of intent. Documented in the Methodology.
+        if not planned:
+            status = OPERATING
+        elif isinstance(rfs, int) and rfs <= year + 1:
+            status = BUILDING
+        else:
+            status = ANNOUNCED
+        countries = sorted({lp.get("country") for lp in landings if lp.get("country")})
+        feats.append({
+            "type": "Feature",
+            "geometry": {"type": "MultiLineString", "coordinates": parts},
+            "properties": {
+                "source": "TeleGeography",
+                "layer": "cables",
+                "cable_id": cid,
+                "name": d.get("name") or cid,
+                "sector": "ict",
+                "rfs_year": rfs,
+                "rfs": d.get("rfs") or None,
+                "is_planned": planned,
+                "length_km": _num((d.get("length") or "").replace("km", "")),
+                "owners": d.get("owners") or None,
+                "suppliers": d.get("suppliers") or None,
+                "url": d.get("url") or None,
+                "notes": d.get("notes") or None,
+                "countries": countries,
+                "landing_total": len(landings),
+                "landing_points": african,
+                "raw_status": "planned" if planned else "in service",
+                "dash_status": status,
+                "map_url": f"https://www.submarinecablemap.com/submarine-cable/{cid}",
+            },
+        })
+    if failed:
+        print(f"  ! {failed} cable record(s) could not be read")
+    if missing:
+        print(f"  ! {missing} cable(s) had no route geometry and were skipped")
+    out = write_layer("telegeography_cables", feats)
+    update_meta("cables", fetched=today(), fresh=None, records=len(feats),
+                landing_points=sum(len(f["properties"]["landing_points"]) for f in feats))
+    return out
+
+
 # ------------------------------------------------------------------ entrypoint
 
 LAYERS = {
     "gem": fetch_gem,
     "iati": fetch_iati,
     "osm": fetch_osm,
+    "pipes": fetch_pipelines,
+    "cables": fetch_cables,
 }
 
 if __name__ == "__main__":
