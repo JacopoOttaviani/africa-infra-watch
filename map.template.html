@@ -70,10 +70,13 @@
 
   /* ---------- rail ---------- */
   .brand{padding:22px 20px 16px;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
-  .brand .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .brand .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
   h1{font-size:23px;font-weight:800;letter-spacing:-.024em;line-height:1.08}
   .titlerow{display:flex;align-items:center;gap:11px}
   .titlerow .mark{flex:none;font-size:38px;color:var(--accent);display:block}
+  .titlerow .home{display:block;line-height:0;color:inherit;border-radius:4px}
+  .titlerow .home:hover .mark{opacity:.75}
+  .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .lede{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:4px 0 0}
   .lede strong{color:var(--ink);font-weight:600}
   .asof{margin:6px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3)}
@@ -378,10 +381,9 @@
   <aside class="rail" id="rail" aria-label="Filters and records">
     <div class="brand">
       <div class="row">
-        <span class="kicker">africa-infra-watch · three sources, one map</span>
+        <div class="titlerow"><a class="home" href="__HOME_URL__" aria-label="Africa Infrastructure Map, home"><!--__LOGO__--></a><h1>Africa Infrastructure Map</h1></div>
         <button class="close" id="railclose" aria-label="Close filters">×</button>
       </div>
-      <div class="titlerow"><!--__LOGO__--><h1>Africa Infrastructure Map</h1></div>
       <p class="lede" id="lede"></p>
       <p class="asof" id="asof"></p>
       <div class="tabs" role="tablist" aria-label="View">
@@ -425,7 +427,7 @@
     </div>
 
     <div class="readmore map-only">
-      <span>Three sources that share no identifier, one status vocabulary, and limits worth carrying into any conclusion.</span>
+      <span>Where the data comes from, how the three sources are aligned, and what it cannot tell you.</span>
       <button id="tomethod">Read the methodology →</button>
       <a class="pages-only" href="dashboard.html">Open the dashboard view →</a>
       <span class="byline">A project by <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
@@ -916,10 +918,10 @@ const glyphStatus = (layer, status) => {
 const SHORT = {assets:"GEM", finance:"AfDB", ground:"OSM"};
 function renderLede(){
   el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
-    `<span title="${esc(s.name)} — ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
+    `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   const pipe = ASSETS.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction").length;
-  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB projects</strong> with money attached and <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground — three sources that share no identifier, kept as three layers.`;
+  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB projects</strong> with money attached and <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, from three sources that are kept apart because they share no project identifier.`;
 }
 
 function counts(skip){
@@ -1019,7 +1021,7 @@ function renderView(){
     </button>`).join("") || `<p class="empty">Nothing in this view matches the filters. Zoom out or clear a filter.</p>`;
   el("list").querySelectorAll("[data-i]").forEach(b =>
     b.onclick = () => { pick(show[+b.dataset.i], true); });
-  el("listmore").textContent = ranked.length>CAP ? `${fmt(ranked.length-CAP)} more in view — zoom in to see them ranked` : "";
+  el("listmore").textContent = ranked.length>CAP ? `${fmt(ranked.length-CAP)} more in view · zoom in to see them ranked` : "";
 }
 
 /* ================= detail card ================= */
@@ -1321,12 +1323,13 @@ function topList(counter, n, labeler = x=>x){
     .map(([k,v]) => `${esc(labeler(k))} <b class="m">${fmt(v)}</b>`).join(" · ");
 }
 function statusTable(){
+  const dash = "<span class='dim'>—</span>";
   const rows = [
-    ["announced", "<code>announced</code>", "<code>1</code> Pipeline / identification", "<code>proposed</code> — drawn dashed"],
-    ["approved", "<code>pre-construction</code>, <code>permitted</code>", "<span class='dim'>never produced</span>", "<span class='dim'>—</span>"],
-    ["under_construction", "<code>construction</code>", "<code>2</code> Implementation", "<code>construction</code>"],
-    ["operating", "<code>operating</code>, <code>retired</code>", "<code>3</code> Finalisation, <code>4</code> Closed", "<span class='dim'>—</span>"],
-    ["stalled", "<code>cancelled</code>, <code>shelved</code>, <code>mothballed</code>", "<code>5</code> Cancelled, <code>6</code> Suspended", "<span class='dim'>—</span>"],
+    ["announced", "Announced", "Pipeline", "Proposed (dashed line)"],
+    ["approved", "Pre-construction, permitted", dash, dash],
+    ["under_construction", "Construction", "Implementation", "Construction"],
+    ["operating", "Operating, retired", "Completed, closed", dash],
+    ["stalled", "Cancelled, shelved, mothballed", "Cancelled, suspended", dash],
   ];
   return rows.map(([s,a,b,c]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
 }
@@ -1347,27 +1350,25 @@ function renderMethod(){
   const aCts = new Set(A.map(a=>a.iso)).size;
 
   const fUsd = F.reduce((t,f)=>t+(f.usd_m||0),0)/1000, fDis = F.reduce((t,f)=>t+(f.dis_m||0),0)/1000;
-  const fExact = F.filter(f=>f.exact).length, fMulti = F.filter(f=>!f.iso).length, fMultiSite = F.filter(f=>f.locs).length;
+  const fExact = F.filter(f=>f.exact).length, fMulti = F.filter(f=>!f.iso).length;
   const fSec = {}; for(const f of F) fSec[f.sector||"other"] = (fSec[f.sector||"other"]||0)+1;
   const fCts = new Set(F.map(f=>f.iso).filter(Boolean)).size;
 
   const gWays = G.reduce((t,g)=>t+(g.ways||0),0), gKm = G.reduce((t,g)=>t+(g.km||0),0);
-  const gNamed = G.filter(g=>g.name).length, gOpen = G.filter(g=>g.opening).length;
+  const gNamed = G.filter(g=>g.name).length;
   const gSec = {}; for(const g of G) gSec[g.sector||"other"] = (gSec[g.sector||"other"]||0)+1;
   const gCts = new Set(G.map(g=>g.iso).filter(Boolean)).size;
   const allCts = new Set(ALL.map(r=>r.iso).filter(Boolean)).size;
 
   const SECTIONS = [
-    ["m-what","What this map is"],
+    ["m-what","What this map shows"],
     ["m-gem","Power assets","sub"],
     ["m-afdb","AfDB finance","sub"],
     ["m-osm","Ground truth","sub"],
-    ["m-status","One status vocabulary"],
-    ["m-draw","How the map draws it"],
-    ["m-count","Counting rules"],
-    ["m-limits","Limits to carry with you"],
-    ["m-notused","Considered and not used"],
-    ["m-repro","Reproduce, cite, correct"],
+    ["m-status","One status scale"],
+    ["m-draw","How to read the map"],
+    ["m-limits","What to keep in mind"],
+    ["m-repro","Sources and reuse"],
   ];
   let n = 0;
   el("toc").innerHTML = SECTIONS.map(([id,t,sub]) => {
@@ -1384,50 +1385,44 @@ function renderMethod(){
   <span class="kicker">Methodology · africa-infra-watch</span>
   <h1>Where the data comes from, and what it can and cannot say</h1>
   <p class="standfirst">
-    This map consolidates three open datasets that each answer a different question about
-    infrastructure in Africa: <strong>what asset is being built</strong>, <strong>who is paying
-    for it</strong>, and <strong>what has physically broken ground</strong>. They share no project
-    identifier, so they are shown as three layers over one basemap and never added together.
+    This map brings together three open datasets. Each answers a different question:
+    <strong>what is being built</strong>, <strong>who is paying for it</strong>, and
+    <strong>what has broken ground</strong>. They share no common project ID, so they
+    are shown as three separate layers and are never added up.
   </p>
 
   <section id="m-what">
-    <div class="eyebrow"><span>01</span><span>What this map is</span></div>
-    <h2>Three questions, three sources, one basemap</h2>
+    <div class="eyebrow"><span>01</span><span>What this map shows</span></div>
+    <h2>What each source answers</h2>
     <p class="lead">
-      No single dataset covers African infrastructure. The continent's own pipeline (PIDA) is
-      published only as PDF reports; lenders publish what they finance; asset trackers cover one
-      sector deeply. This map takes the three open sources that complement each other best and
-      keeps them honest by keeping them apart.
+      No single dataset covers infrastructure in Africa. This map uses three open sources that
+      complement each other, and keeps them apart rather than merging them.
     </p>
     <div class="twrap"><table>
       <thead><tr><th>Layer</th><th>Source</th><th>Records</th><th>Answers</th><th>Data as of</th></tr></thead>
       <tbody>
         <tr><td>${glyph.assets(COL.operating)} Power assets</td><td>${esc(src.assets.name)}<br><span class="dim">${esc(src.assets.detail)}</span></td><td class="m">${fmt(A.length)} units</td><td>What generating capacity is planned, being built, running or shelved</td><td class="dim">${esc(src.assets.fresh)}</td></tr>
-        <tr><td>${glyph.finance(COL.approved)} AfDB finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(F.length)} projects</td><td>What the Bank has committed and disbursed, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
+        <tr><td>${glyph.finance(COL.approved)} AfDB finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(F.length)} projects</td><td>What the Bank has committed and paid out, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
         <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
       </tbody>
     </table></div>
     <p>
-      An AfDB-financed power plant that OpenStreetMap contributors have also traced legitimately
-      appears in all three layers. That is a feature: the layers corroborate each other. But it means a
-      count across layers double-counts, so every figure on the map is attributed to its source, and
-      the "records match" figure is a count of records, not of projects. Together the layers touch
-      <strong>${allCts} countries and territories</strong>.
+      The same project can appear in more than one layer. A power plant financed by AfDB and
+      traced by OpenStreetMap mappers shows up three times. That is useful, because the layers
+      confirm each other, but it also means counts should never be added across layers. Together
+      the layers touch <strong>${allCts} countries and territories</strong>.
     </p>
   </section>
 
   <section id="m-gem">
     <div class="eyebrow"><span class="sk assets">Layer · Power assets</span><span class="m">circles</span></div>
-    <h2>Global Energy Monitor — Global Integrated Power Tracker</h2>
-    <p class="lead">Unit-level records of power generation, from first announcement to retirement, compiled from public filings, company disclosures, regulators and press.</p>
+    <h2>Global Energy Monitor</h2>
+    <p class="lead">A worldwide tracker of power plants, from first announcement to retirement, compiled from public filings, company disclosures and press.</p>
     <dl class="spec">
-      <dt>Publisher</dt><dd><strong>Global Energy Monitor</strong>, a non-profit research organisation that maintains open trackers of energy infrastructure worldwide. <a href="${src.assets.url}" target="_blank" rel="noopener noreferrer">Project page ↗</a></dd>
-      <dt>Product</dt><dd>${esc(src.assets.detail)}. The Integrated Power Tracker merges GEM's technology-specific trackers (coal, oil and gas, nuclear, hydro, wind, solar, bioenergy, geothermal) into one table, one row per generating unit or project phase.</dd>
-      <dt>Licence</dt><dd>${esc(src.assets.lic)} — free to reuse with attribution to Global Energy Monitor.</dd>
-      <dt>How it was obtained</dt><dd>The current release CSV is discovered by listing GEM's public data bucket under <code>Current_maps/integrated-power/</code> and taking the newest file. The release path moves, and GEM's own map configuration has pointed at a deleted file, so nothing is hard-coded.</dd>
-      <dt>Unit of observation</dt><dd>A <strong>generating unit or phase</strong>, not a plant. A plant with four turbines is four records sharing one project id: <strong>${fmt(A.length)} units</strong> here belong to <strong>${fmt(aPids)} projects</strong>. The detail card names the unit; the shared id lets you group them.</dd>
-      <dt>What was kept</dt><dd>Rows whose country is one of the 54 African states or Western Sahara, and that carry coordinates. Every GEM status is kept, including cancelled and retired units, so the pipeline can be read against what was abandoned.</dd>
-      <dt>Location</dt><dd>GEM flags each unit's coordinates as exact or approximate. <strong>${pct(aExact, A.length)}</strong> of the units here are exact; the rest sit near the reported town or district.</dd>
+      <dt>Source</dt><dd><strong>Global Energy Monitor</strong>, a non-profit research organisation. ${esc(src.assets.detail)}, released under ${esc(src.assets.lic)}. <a href="${src.assets.url}" target="_blank" rel="noopener noreferrer">Project page ↗</a></dd>
+      <dt>One record is</dt><dd>A <strong>generating unit</strong>, not a whole plant. A plant with four turbines is four records. The <strong>${fmt(A.length)} units</strong> here belong to <strong>${fmt(aPids)} projects</strong>.</dd>
+      <dt>What is included</dt><dd>Every unit located in Africa, in every status, including cancelled and retired ones, so the pipeline can be read against what was abandoned.</dd>
+      <dt>Location</dt><dd><strong>${pct(aExact, A.length)}</strong> of units have exact coordinates. The rest sit near the reported town or district.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this release</h4><span>derived from the payload</span></div>
@@ -1442,34 +1437,29 @@ function renderMethod(){
     </div>
     <div class="split">
       <div class="yes"><h4>What it tells you</h4><ul>
-        <li>Which generating capacity is planned, permitted, being built, running or shelved, by technology, owner and expected start year.</li>
+        <li>Which capacity is planned, being built, running or shelved, by technology and owner.</li>
         <li>Where the power pipeline concentrates, and how much of it is solar and wind versus gas and coal.</li>
-        <li>How much announced capacity a country carries relative to what it has actually built — a rough measure of pipeline realism.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
-        <li>Cost or financing. GEM records owners, not lenders or budgets.</li>
-        <li>Anything beyond generation: transmission lines, substations and distribution are not in this tracker.</li>
-        <li>Small and distributed generation. GEM applies minimum-capacity thresholds that differ by technology, so rooftop and mini-grid solar are absent by design.</li>
-        <li>Whether an announced project will happen. Announced capacity in Africa historically far exceeds what gets built.</li>
-        <li>Energy produced. Capacity in MW is not generation in MWh; a 100 MW solar farm and a 100 MW gas plant deliver very different output.</li>
+        <li>Cost or financing. It records owners, not lenders or budgets.</li>
+        <li>Transmission and distribution lines. Only generation is covered.</li>
+        <li>Small rooftop or mini-grid solar, which falls below its size thresholds.</li>
+        <li>Whether an announced plant will actually be built. Historically, much of it is not.</li>
+        <li>Energy produced. Capacity in MW is not electricity in MWh.</li>
       </ul></div>
     </div>
   </section>
 
   <section id="m-afdb">
     <div class="eyebrow"><span class="sk finance">Layer · AfDB finance</span><span class="m">squares</span></div>
-    <h2>African Development Bank, via the International Aid Transparency Initiative</h2>
-    <p class="lead">The Bank's project portfolio as it publishes it to the IATI open-data standard: one activity per loan or grant, with commitments, disbursements, sector codes and geocoded locations.</p>
+    <h2>African Development Bank</h2>
+    <p class="lead">The Bank's project portfolio, as it publishes it to the open IATI standard: one record per loan or grant, with money committed and paid out, sector and location.</p>
     <dl class="spec">
-      <dt>Publisher</dt><dd><strong>African Development Bank Group</strong>, publishing to the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development finance institutions disclose their activities. <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">Publisher page on the IATI Registry ↗</a></dd>
-      <dt>Product</dt><dd>${esc(src.finance.detail)}: IATI version 2.03 XML, one file per recipient country plus regional and multinational files.</dd>
-      <dt>Licence</dt><dd>${esc(src.finance.lic)}. IATI publishers release their data under open licences of their choosing; AfDB's is stated on the registry.</dd>
-      <dt>How it was obtained</dt><dd>The IATI Datastore API requires a subscription key, so the files were fetched directly from the IATI Registry's public CKAN catalogue. Each activity's <code>&lt;location&gt;</code> elements carry a <code>&lt;point&gt;</code>; only located activities are mapped.</dd>
-      <dt>Filter</dt><dd>Activities carrying at least one OECD-DAC purpose code in an infrastructure family: <code>210</code> transport and storage, <code>220</code> communications, <code>230</code> energy, <code>140</code> water supply and sanitation, <code>321</code>–<code>323</code> industry, mining and construction, <code>331</code> trade, <code>410</code> environmental protection. Health, education, agriculture and budget-support lending is excluded.</dd>
-      <dt>Unit of observation</dt><dd>An <strong>IATI activity</strong> — a project, loan or grant with one identifier. Activities carry several locations; the map keeps <strong>one marker per activity</strong>, preferring an exact site over a centroid, and rings the other exact sites when you select it (${fmt(fMultiSite)} activities have several).</dd>
-      <dt>Money</dt><dd>Commitments are the sum of IATI <strong>transaction type 2</strong> (outgoing commitment); disbursements are type 3. The Bank's <code>&lt;budget&gt;</code> elements are not used: AfDB repeats the same figure in a budget element every quarter, so taking one understates and summing them is only accidentally right. Values are in <strong>XDR</strong> (IMF special drawing rights), the Bank's default currency, converted at <strong>${esc(DATA.meta.sdr_note)}</strong>. Change the rate and every dollar figure moves with it.</dd>
-      <dt>Location</dt><dd>IATI's <code>exactness</code> flag marks a site as exact (1) or approximate (2). Approximate points usually sit on a country or region centroid. <strong>${pct(fExact, F.length)} of the markers</strong> here sit on an exact site; the rest on a centroid, and the detail card says which.</dd>
-      <dt>Multinational</dt><dd><strong>${fmt(fMulti)} activities</strong> have no recipient country: regional corridors, power pools, continental facilities. They are labelled "Multinational", drawn where the Bank locates them, and excluded from the country filter rather than dropped.</dd>
+      <dt>Source</dt><dd><strong>African Development Bank Group</strong>, publishing through the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development banks disclose their activities. Licence: ${esc(src.finance.lic)}. <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">Publisher page ↗</a></dd>
+      <dt>One record is</dt><dd>An <strong>activity</strong>: a project, loan or grant with one identifier. Each gets one marker, placed on an exact site when the Bank gives one.</dd>
+      <dt>What is included</dt><dd>Infrastructure sectors only: transport, energy, communications, water, industry, trade and environment. Health, education, agriculture and budget support are left out.</dd>
+      <dt>Money</dt><dd>Commitments and disbursements as reported by the Bank, converted from its accounting currency (SDR) to US dollars at <strong>${esc(DATA.meta.sdr_note)}</strong>. Change the rate and every dollar figure moves with it.</dd>
+      <dt>Location</dt><dd><strong>${pct(fExact, F.length)}</strong> of markers sit on an exact site. The rest sit at the centre of a country or region, and the detail card says which. <strong>${fmt(fMulti)} activities</strong> are multinational (regional corridors, power pools); they are labelled so and drawn where the Bank places them.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
@@ -1484,30 +1474,27 @@ function renderMethod(){
     </div>
     <div class="split">
       <div class="yes"><h4>What it tells you</h4><ul>
-        <li>What the Bank has committed and disbursed to each project, in which sector and country, and how far along its own project cycle the activity is.</li>
-        <li>Where the Bank says the works are — when the location is exact, precisely; when approximate, only the country.</li>
-        <li>The gap between commitment and disbursement, which is a rough proxy for implementation pace.</li>
+        <li>What the Bank has committed and paid out to each project, where and in which sector.</li>
+        <li>How far along the Bank's own project cycle each activity is.</li>
+        <li>The gap between committed and disbursed, a rough sign of implementation pace.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
-        <li><strong>Total project cost.</strong> Only the AfDB share is here. Co-financiers — the World Bank, the European Investment Bank, China Exim, commercial banks, national budgets — are not counted.</li>
+        <li><strong>Total project cost.</strong> Only the AfDB share is here. Co-financiers such as the World Bank, China Exim or national budgets are not counted.</li>
         <li>Anything not financed by AfDB. Read totals as "AfDB exposure", never as "investment in Africa".</li>
         <li>Physical progress. "Implementation" is the Bank's stage, which may mean procurement or studies rather than earthworks.</li>
-        <li>Exact dollar amounts. Every figure passes through a fixed SDR rate stated on the page.</li>
       </ul></div>
     </div>
   </section>
 
   <section id="m-osm">
     <div class="eyebrow"><span class="sk ground">Layer · Ground truth</span><span class="m">lines</span></div>
-    <h2>OpenStreetMap, via the Overpass API</h2>
-    <p class="lead">Roads, railways and airport works that volunteer contributors have traced as under construction or proposed, with the class each will become when finished.</p>
+    <h2>OpenStreetMap</h2>
+    <p class="lead">Roads, railways and airports that volunteer mappers have traced as under construction or proposed, from satellite imagery, GPS traces and local knowledge.</p>
     <dl class="spec">
-      <dt>Publisher</dt><dd><strong>OpenStreetMap contributors</strong>: a volunteer-built map of the world, edited from satellite imagery, GPS traces and local knowledge. <a href="${src.ground.url}" target="_blank" rel="noopener noreferrer">Copyright and licence ↗</a></dd>
-      <dt>Licence</dt><dd>${esc(src.ground.lic)} (Open Database Licence). Reuse requires the attribution "© OpenStreetMap contributors", which the map carries.</dd>
-      <dt>How it was obtained</dt><dd>Overpass API queries for ways tagged <code>highway=construction</code> or <code>highway=proposed</code> whose eventual class is motorway, trunk, primary or secondary (or their link roads); <code>railway=construction</code> or <code>proposed</code>; and <code>aeroway=construction</code>. Queried by latitude band over a continental bounding box, then clipped to African land locally, which removes the Turkey, Spain and Arabian Peninsula overspill a bounding box brings in.</dd>
-      <dt>Unit of observation</dt><dd>An OSM <strong>way</strong>: one segment of line geometry. Ways that share a name and sector are dissolved into one record, so a named highway traced in twenty pieces is one work; unnamed ways stand alone. <strong>${fmt(G.length)} works</strong> here come from <strong>${fmt(gWays)} ways</strong>.</dd>
-      <dt>What was excluded</dt><dd>Residential, tertiary, unclassified and service roads under construction. In an unfiltered run 15,291 of 21,470 African construction ways were <code>construction=residential</code>: street stubs inside housing estates. Without this filter any "works under construction" headline is about six times too high. Power lines, pipelines, ports and buildings are outside the query.</dd>
-      <dt>Length</dt><dd>The sum of the traced ways carrying a name, after light geometric simplification. It is the mapped length, not the project's design length, and a project traced in part will read short.</dd>
+      <dt>Source</dt><dd><strong>OpenStreetMap contributors</strong>, a volunteer-built map of the world. Licence: ${esc(src.ground.lic)}, which requires the attribution "© OpenStreetMap contributors". <a href="${src.ground.url}" target="_blank" rel="noopener noreferrer">Copyright and licence ↗</a></dd>
+      <dt>One record is</dt><dd>A set of traced line segments that share a name and sector. A highway drawn in twenty pieces is one work; unnamed pieces stand alone. The <strong>${fmt(G.length)} works</strong> here come from <strong>${fmt(gWays)} segments</strong>.</dd>
+      <dt>What is included</dt><dd>Major roads (motorway to secondary), railways and airports. Small residential and service streets are excluded: without that filter the count would be about six times higher, mostly street stubs inside housing estates.</dd>
+      <dt>Length</dt><dd>The length actually traced, not the project's design length. A project traced only in part will read short.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
@@ -1515,149 +1502,115 @@ function renderMethod(){
         <div><b>${fmt(G.length)}</b><span>works in ${gCts} countries</span></div>
         <div><b>${fmt(gKm)} km</b><span>of traced alignment</span></div>
         <div><b>${pct(gNamed, G.length)}</b><span>of works carry a name</span></div>
-        <div><b>${fmt(gOpen)}</b><span>carry a tagged opening date</span></div>
       </div>
       ${sbar(byStatus(G), G.length, "Ground works by status")}
       <p style="margin-top:12px;font-size:13px">By sector: ${topList(gSec, 3, k=>SECTOR_LABEL[k]||k)}.</p>
     </div>
     <div class="split">
       <div class="yes"><h4>What it tells you</h4><ul>
-        <li>Where someone has observed or traced works underway on the ground — the closest thing in open data to physical confirmation that a project exists.</li>
-        <li>The alignment and the eventual class: a motorway, a secondary road, a railway, a metro.</li>
-        <li>Sometimes the operator and a planned opening date, where a contributor tagged them.</li>
+        <li>Where someone has observed works on the ground. This is the closest open data gets to physical confirmation that a project exists.</li>
+        <li>The route, and what it will become: a motorway, a secondary road, a railway, a metro.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
-        <li><strong>That nothing is being built.</strong> Absence of a line is absence of a mapper, not of a project. Coverage is dense where contributor communities are active and thin elsewhere.</li>
-        <li>Whether work is active. Tagging lags in both directions: finished roads stay tagged construction, and paused sites are not distinguished from busy ones.</li>
-        <li>Cost, lender or owner, unless a contributor added them.</li>
-        <li>Anything about "proposed" beyond that someone drew it. A proposed alignment can be a government plan or a hopeful sketch.</li>
+        <li><strong>That nothing is being built.</strong> An empty stretch may mean no mappers rather than no project.</li>
+        <li>Whether work is active. Tags lag: finished roads stay tagged as construction, and paused sites look like busy ones.</li>
+        <li>Cost, lender or owner, unless a mapper added them.</li>
       </ul></div>
     </div>
   </section>
 
   <section id="m-status">
-    <div class="eyebrow"><span>02</span><span>One status vocabulary</span></div>
-    <h2>How three lifecycles become five colours</h2>
-    <p class="lead">Each source describes progress in its own terms. They are mapped onto five shared values so a single filter works across layers. The mapping is a judgement; here it is, so you can disagree with it.</p>
+    <div class="eyebrow"><span>02</span><span>One status scale</span></div>
+    <h2>Five statuses across three sources</h2>
+    <p class="lead">Each source describes progress in its own words. They are mapped onto five shared statuses so one filter works everywhere. The mapping is a judgement call, shown here so you can disagree with it.</p>
     <div class="twrap"><table>
-      <thead><tr><th>Shared status</th><th>Global Energy Monitor</th><th>AfDB · IATI activity status</th><th>OpenStreetMap</th></tr></thead>
+      <thead><tr><th>Shared status</th><th>Global Energy Monitor</th><th>AfDB</th><th>OpenStreetMap</th></tr></thead>
       <tbody>${statusTable()}</tbody>
     </table></div>
     <ul>
-      <li><strong>Approved exists only for power.</strong> IATI has no stage between pipeline and implementation, and OSM has no such tag, so an AfDB project approved by the Board but not yet disbursing shows as Announced (status 1) or Under construction (status 2).</li>
-      <li><strong>Under construction means different things per layer.</strong> For a power unit it is physical construction; for an AfDB activity it is the Bank's implementation stage, which can include procurement and studies; for OSM it is a contributor's tag.</li>
-      <li><strong>Operating folds in the past.</strong> GEM's few retired units and AfDB's closed activities stay under Operating so their capacity and money remain visible, rather than vanishing from every filter.</li>
-      <li><strong>Stalled is drawn hollow</strong> so cancelled and shelved projects never compete visually with live ones, but remain on the map as a record of what was abandoned.</li>
+      <li><strong>Approved exists only for power.</strong> AfDB and OpenStreetMap have no such stage.</li>
+      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit, the Bank's implementation stage for an AfDB project, a mapper's tag for OpenStreetMap.</li>
+      <li><strong>Operating includes the past.</strong> Retired units and closed projects stay visible rather than vanishing from every filter.</li>
+      <li><strong>Stalled is drawn hollow</strong>, so abandoned projects stay on the map without competing with live ones.</li>
     </ul>
   </section>
 
   <section id="m-draw">
-    <div class="eyebrow"><span>03</span><span>How the map draws it</span></div>
+    <div class="eyebrow"><span>03</span><span>How to read the map</span></div>
     <h2>Shape is source, colour is status, size is scale</h2>
     <div class="glyphs">
-      <div>${glyph.assets(COL.ink)}<div><b>Circle · power unit</b><span>Area scales with capacity in MW, capped so a 25 GW announcement does not blanket a country.</span></div></div>
-      <div>${glyph.finance(COL.ink)}<div><b>Square · AfDB activity</b><span>Area scales with the AfDB commitment in US dollars.</span></div></div>
-      <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn at the traced alignment. Solid for construction, dashed for proposed.</span></div></div>
-      <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved, mothballed or suspended. Present, but quiet.</span></div></div>
+      <div>${glyph.assets(COL.ink)}<div><b>Circle · power unit</b><span>Area scales with capacity in MW, capped so one giant announcement does not blanket a country.</span></div></div>
+      <div>${glyph.finance(COL.ink)}<div><b>Square · AfDB project</b><span>Area scales with the AfDB commitment in US dollars.</span></div></div>
+      <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn along the traced route. Solid for construction, dashed for proposed.</span></div></div>
+      <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved or suspended.</span></div></div>
     </div>
     <h3>Colour</h3>
     <p>
-      The five status colours were chosen by searching for hues in their semantic families — an ochre
-      for announced, an indigo for approved, a magenta for under construction, a green for operating —
-      that stay distinguishable for readers with red–green colour-vision deficiency: every pair is at
-      least ΔE 8 apart under simulated deutan and protan vision, and at least ΔE 15 apart in normal vision,
-      in both the light and the dark theme. Magenta rather than the conventional orange for
-      "under construction" is the price of that guarantee. Status is also encoded in words everywhere
-      it appears, so colour is never the only carrier.
+      The five status colours were chosen to stay distinguishable for readers with colour-vision
+      deficiency, in both the light and the dark theme. Status is always also written in words,
+      so colour is never the only clue.
     </p>
     <h3>Position</h3>
     <p>
-      Power units sit at GEM's coordinates. AfDB markers sit on an exact site where the Bank provides
-      one, otherwise on the Bank's approximate point, which is usually a country or region centroid: a
-      square in the middle of a country is a project somewhere in that country, not a project in the
-      desert. OSM works are drawn along their traced geometry.
+      Power units sit at their reported coordinates. AfDB markers sit on an exact site when the Bank
+      gives one, otherwise at the centre of the country or region: a square in the middle of a
+      country means a project somewhere in that country, not a project in the desert.
+      OpenStreetMap works follow their traced route.
     </p>
     <h3>Basemap</h3>
     <p>
-      Coastlines, borders, first-level subdivisions, rivers, lakes and city positions are
-      <strong>Natural Earth</strong> at 1:10 million scale, a public-domain cartographic dataset. City and
-      country labels appear at the zoom levels Natural Earth itself recommends. The projection is
-      Web Mercator, chosen because most readers know how it distorts: areas inflate towards the poles,
-      which matters little for a continent that straddles the equator.
+      Borders, provinces, rivers, lakes and cities come from <strong>Natural Earth</strong>, a
+      public-domain dataset. It draws Somaliland, Western Sahara and Bir Tawil as separate shapes.
+      That is the dataset's choice, not a position taken here, and it is why the territory count
+      exceeds the 54 member states of the African Union.
     </p>
-    <p>
-      Natural Earth draws <strong>Somaliland</strong> and <strong>Western Sahara</strong> as polygons separate
-      from Somalia and Morocco, and keeps <strong>Bir Tawil</strong>, the unclaimed strip between Egypt
-      and Sudan, as its own shape. Those are the boundary dataset's cartographic choices, not a position
-      taken here; records falling inside those outlines are attributed to them, which is why the
-      territory count exceeds the 54 member states of the African Union.
-    </p>
-  </section>
-
-  <section id="m-count">
-    <div class="eyebrow"><span>04</span><span>Counting rules</span></div>
-    <h2>What the numbers on the page count</h2>
+    <h3>Counting</h3>
     <ul>
-      <li><strong>Never across layers.</strong> "Records match" is units plus activities plus works. The "In view" panel keeps the three apart: units and gigawatts, projects and dollars, works and kilometres.</li>
-      <li><strong>In view means in the viewport.</strong> Every figure in the rail is recomputed from the records currently visible and matching the filters, so zooming into a province gives that province's figures.</li>
-      <li><strong>"Largest in view" compares across layers by rank, not by unit.</strong> Each record's size is divided by its own layer's 95th-percentile size, so a 1 GW plant, a $900m loan and a 400 km railway can share one list without megawatts being compared to dollars.</li>
-      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every AfDB status, since a closed project's money was still spent.</li>
-      <li><strong>One record per project where the source allows it.</strong> AfDB activities are deduplicated by IATI identifier; OSM ways are dissolved by name and sector. GEM units are deliberately not merged into plants, because status and technology differ unit by unit.</li>
-      <li><strong>Every number is derived from the source files</strong> at build time or from the payload in your browser. Nothing is quoted from a landing page or a press release.</li>
+      <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres apart.</li>
+      <li><strong>"In view" means what is on screen</strong> and matches the filters. Zoom into a province and you get that province's figures.</li>
+      <li><strong>"Largest in view" ranks each record against its own layer</strong>, so a power plant, a loan and a railway can share one list.</li>
+      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every status, since a closed project's money was still spent.</li>
+      <li><strong>Every number is computed from the source files.</strong></li>
     </ul>
   </section>
 
   <section id="m-limits">
-    <div class="eyebrow"><span>05</span><span>Limits</span></div>
-    <h2>Limits to carry into any conclusion</h2>
-    <div class="callout"><p><strong>Money is AfDB only.</strong> The dollar figures are one lender's exposure. Chinese policy-bank lending, private finance, domestic budgets and every other multilateral are absent, and for many corridors they are the larger share.</p></div>
+    <div class="eyebrow"><span>04</span><span>What to keep in mind</span></div>
+    <h2>Limits of the data</h2>
+    <div class="callout"><p><strong>Money is AfDB only.</strong> The dollar figures are one lender's exposure. Chinese policy banks, private finance, domestic budgets and other multilaterals are absent, and for many corridors they are the larger share.</p></div>
     <ul>
-      <li><strong>Roughly ${pct(F.length - fExact, F.length)} of AfDB markers are approximate.</strong> They sit on a centroid, not on the works. Filter the table to exact locations before drawing any geographic conclusion finer than a country.</li>
-      <li><strong>OSM presence is mapper-driven.</strong> A country with few lines may have few works or few mappers. The layer confirms; it never refutes.</li>
-      <li><strong>Energy is over-represented.</strong> GEM covers power comprehensively; no comparable open tracker exists for ports, water, ICT or transmission, so those sectors appear only where AfDB finances them or OSM contributors trace them.</li>
-      <li><strong>Status is as of the source's own freshness</strong>, listed in the summary table above. A unit can be commissioned or a loan cancelled between a release and the next.</li>
-      <li><strong>Announced is not planned.</strong> A large share of announced capacity in GEM's history was never built. Treat the announced layer as a record of intent, and read it against what is operating.</li>
-      <li><strong>Geometry is simplified for the page.</strong> Basemap and OSM lines are decimated to what a screen can resolve. Do not measure from this map; follow the source link on each record.</li>
-    </ul>
-  </section>
-
-  <section id="m-notused">
-    <div class="eyebrow"><span>06</span><span>Considered and not used</span></div>
-    <h2>Sources evaluated and left out, and why</h2>
-    <ul>
-      <li><strong>PIDA / VPIC</strong>, the African Union's Programme for Infrastructure Development in Africa and its Virtual PIDA Information Centre — conceptually the ideal continental pipeline, but the public site exposes no project data as CSV, GeoJSON or API. Projects reach the public only as PDF progress reports.</li>
-      <li><strong>AidData Global Chinese Development Finance, version 3.0</strong> — excellent geocoding of Chinese-financed projects, and the natural complement to AfDB, but coverage ends in 2021 so it cannot answer "ongoing". A strong historical baseline for a future version.</li>
-      <li><strong>World Bank Projects API</strong> — the "Africa" region no longer exists in it (split into Eastern & Southern and Western & Central Africa) and the API carries no coordinates; the Bank's geodata lives only in its IATI files, which are a candidate for a fourth layer.</li>
-      <li><strong>AfDB Open Data Platform</strong> — country indicator series, not project records.</li>
-      <li><strong>Raster map tiles from any provider</strong> — the page is published in a sandbox that blocks requests to other hosts, so the basemap had to be vector and shipped inside the page.</li>
+      <li><strong>About ${pct(F.length - fExact, F.length)} of AfDB markers are approximate.</strong> Filter to exact locations before drawing any conclusion finer than a country.</li>
+      <li><strong>OpenStreetMap coverage follows mappers.</strong> The layer can confirm works; it can never prove their absence.</li>
+      <li><strong>Energy is over-represented.</strong> No comparable open tracker exists for ports, water, ICT or transmission.</li>
+      <li><strong>Data is as fresh as each source</strong>, dated in the table above. A plant can be commissioned or a loan cancelled between two releases.</li>
+      <li><strong>Announced is not planned.</strong> Much announced capacity is never built. Read it as a record of intent, and compare it with what is operating.</li>
+      <li><strong>Geometry is simplified for the screen.</strong> Do not measure from this map; follow the source link on each record.</li>
     </ul>
   </section>
 
   <section id="m-repro">
-    <div class="eyebrow"><span>07</span><span>Reproduce, cite, correct</span></div>
+    <div class="eyebrow"><span>05</span><span>Sources and reuse</span></div>
     <h2>Every figure can be traced back</h2>
     <p>
-      Each record's detail card links to the source record it was derived from: the GEM wiki page for
-      a power unit, the IATI activity on d-portal for an AfDB project, the OpenStreetMap way (and
-      Wikidata item, where tagged) for traced works. If a figure here looks wrong, the source record is
-      one click away and is the place to check it.
+      Each record's detail card links to the source record it came from: the GEM wiki page for a
+      power unit, the IATI activity for an AfDB project, the OpenStreetMap way for traced works.
+      If a figure here looks wrong, check it against the source.
     </p>
     <p>
-      The pipeline is three scripts: one fetches the three layers into GeoJSON, one builds the
-      Natural Earth basemap, one compiles both into this page with the data inlined. Re-running them
-      refreshes every number, including the ones on this page, which are computed from the same payload
-      the map draws.
+      The pipeline is three scripts that fetch the layers, build the basemap and compile this page.
+      Re-running them refreshes every number, including the ones on this page. Other sources, such
+      as the African Union's PIDA pipeline, AidData and the World Bank, were evaluated and left out;
+      the ${DATA.meta.repo ? `<a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">repository README ↗</a>` : "repository README"} explains why.
     </p>
     ${PAGES ? `
     <h3>Download the data</h3>
     <p>
       The site publishes what it draws. <a href="data/map.json">map.json</a> is the compiled payload
-      (${fmt(A.length + F.length + G.length)} records plus the basemap, column-wise). The raw layers as
-      normalised GeoJSON: <a href="data/gem_power_assets.geojson">power assets</a>,
-      <a href="data/iati_afdb_finance.geojson">AfDB finance</a> (one feature per location) and
-      <a href="data/osm_construction.geojson">OSM construction ways</a>; <a href="data/meta.json">meta.json</a>
-      records when each was fetched. Each carries its source's licence, listed below.
-      ${DATA.meta.repo ? `Code and pipeline: <a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">source repository ↗</a>.` : ""}
+      (${fmt(A.length + F.length + G.length)} records plus the basemap). The raw layers as GeoJSON:
+      <a href="data/gem_power_assets.geojson">power assets</a>,
+      <a href="data/iati_afdb_finance.geojson">AfDB finance</a> and
+      <a href="data/osm_construction.geojson">OpenStreetMap construction ways</a>;
+      <a href="data/meta.json">meta.json</a> records when each was fetched.
     </p>` : ""}
     <h3>Attribution</h3>
     <p>
