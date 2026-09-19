@@ -12,7 +12,6 @@
     /* the map's status palette: passes colour-vision checks in both themes */
     --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
     --st-operating:#2B7A4C; --st-stalled:#7F8B86;
-    --copper:#B0642A; --tint:14%;
     --display:"Archivo","Helvetica Neue",Arial,sans-serif;
     --serif:"Source Serif 4",Georgia,serif;
     --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -28,7 +27,6 @@
       --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-ctx:#121816; --coast:#3D4A43; --label:#8E9C94; --halo:#1B231E;
       --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
       --st-operating:#67C98B; --st-stalled:#6E7A75;
-      --copper:#D9935C; --tint:22%;
       --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
       --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
     }
@@ -41,7 +39,6 @@
     --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-ctx:#121816; --coast:#3D4A43; --label:#8E9C94; --halo:#1B231E;
     --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
     --st-operating:#67C98B; --st-stalled:#6E7A75;
-      --copper:#D9935C; --tint:22%;
     --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
     --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
   }
@@ -98,11 +95,9 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371827A' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");background-repeat:no-repeat;background-position:9px 50%}
   input[type=search]::placeholder{color:var(--ink-3)}
 
-  .lyr{--tone:var(--st-stalled);display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid color-mix(in srgb,var(--tone) 30%,var(--rule-soft));border-radius:3px;background:color-mix(in srgb,var(--tone) var(--tint),var(--surface));text-align:left;margin-top:5px}
-  .lyr[data-l="assets"],.lyr[data-l="china"]{--tone:var(--st-operating)} .lyr[data-l="finance"],.lyr[data-l="cables"]{--tone:var(--st-approved)}
-  .lyr[data-l="ground"]{--tone:var(--st-construction)} .lyr[data-l="pipelines"]{--tone:var(--copper)}
+  .lyr{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid var(--rule-soft);border-radius:3px;background:var(--surface);text-align:left;margin-top:5px}
   .lyr:first-child{margin-top:0}
-  .lyr[aria-pressed="false"]{background:transparent;border-color:var(--rule-soft);color:var(--ink-3)}
+  .lyr[aria-pressed="false"]{background:transparent;color:var(--ink-3)}
   .lyr[aria-pressed="false"] .glyph{opacity:.35}
   .lyr[aria-pressed="false"] b{color:var(--ink-3)}
   .lyr .glyph{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
@@ -326,7 +321,7 @@
   .src .sk{font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
   .src .sn{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:-.008em}
   .src .sf{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
-  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.cables{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
+  .sk.assets,.sk.pipelines,.sk.china{color:var(--st-operating)} .sk.finance,.sk.cables{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
   footer.foot{margin-top:16px;padding-top:16px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
   footer.foot .byline{font-family:var(--mono);font-size:11px}
 
@@ -662,7 +657,7 @@ const OECD_SECTOR  = {110:"Education",120:"Health",130:"Population and reproduct
 /* the footprint outlines appear from about three times the continent frame */
 const FOOTPRINT_K  = 3;
 /* the colour each layer's glyph takes in the rail and the table: a status tone, so the legend stays one palette */
-const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"copper",cables:"approved",china:"operating"};
+const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved",china:"operating"};
 const LINE_LAYERS  = ["cables","pipelines","ground"];   /* drawing order: thin works last, on top */
 /* Cluster markers regroups point-like records. Pipelines and submarine cables
    are routes across countries and seas: a donut at their midpoint would say
@@ -683,7 +678,7 @@ const S = {
 };
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const statusColor = s => css("--st-" + (s==="under_construction" ? "construction" : (s||"stalled")));
-const toneColor = layer => LAYER_TONE[layer]==="copper" ? css("--copper") : statusColor(LAYER_TONE[layer]);
+const toneColor = layer => statusColor(LAYER_TONE[layer]);
 const esc = s => String(s??"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const NAMES = DATA.names;
 const el = id => document.getElementById(id);
