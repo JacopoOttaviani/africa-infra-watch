@@ -202,6 +202,7 @@
 
   /* ---------- map ---------- */
   .mapwrap{position:relative;margin-top:16px;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--sea);box-shadow:var(--shadow-lg)}
+  .mapbox{position:relative}   /* the canvas and its overlays (zoom buttons, clusters, tooltip); the title card and legend float over it on wide screens and flank it on narrow ones */
   canvas#map{display:block;width:100%;height:560px;cursor:grab;touch-action:none}
   canvas#map.dragging{cursor:grabbing}
   @media (max-width:1020px){canvas#map{height:440px}}
@@ -211,7 +212,9 @@
   /* The title card in the map's top-left corner names what the frame shows.
      A screenshot of the map alone should read as "Kenya · Africa
      Infrastructure Monitor" without the rail or the top bar. It lets pointer
-     events through so the map still pans underneath; only the × is live. */
+     events through so the map still pans underneath; only the × is live.
+     Below 600 px it leaves the map and becomes the card's header strip, and
+     the legend its footer, so neither hides the visualisation on a phone. */
   .maptitle{position:absolute;left:12px;top:12px;z-index:3;pointer-events:none;max-width:min(320px,calc(80% - 56px));padding:12px 15px 11px;background:color-mix(in srgb,var(--surface) 90%,transparent);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
   .maptitle .kicker{display:block}
   .maptitle .mt-row{display:flex;align-items:flex-start;gap:10px}
@@ -224,7 +227,11 @@
   .maptitle .mt-facts b{font-weight:600;color:var(--ink)}
   .maptitle .mt-foot{margin:7px 0 0;padding-top:6px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   @media (max-width:1020px){.maptitle h2{font-size:28px}}
-  @media (max-width:600px){.maptitle{padding:9px 11px 8px;max-width:calc(80% - 48px)}.maptitle h2{font-size:22px}.maptitle .mt-facts{font-size:10px;line-height:1.45}.maptitle .mt-foot,.maptitle .mt-more{display:none}}
+  @media (max-width:600px){
+    .maptitle{position:static;pointer-events:auto;max-width:none;padding:10px 12px 9px;background:var(--surface);border:0;border-bottom:1px solid var(--rule);border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .maptitle h2{font-size:24px}
+    .maptitle .mt-facts{font-size:10.5px;line-height:1.5}
+  }
   .zoomers .rst{font-size:10px;font-weight:700;letter-spacing:.04em}
   .legend{position:absolute;left:12px;bottom:12px;z-index:3;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--rule);border-radius:3px;padding:8px 10px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto auto;gap:3px 16px;font-size:11px}
   .legend .col{display:flex;flex-direction:column;gap:3px}
@@ -235,7 +242,11 @@
   .legend .lh{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
   .legend .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 3px}
   .legend .sw.stalled{background:transparent!important;border:2px solid var(--st-stalled);width:6px;height:6px}
-  @media (max-width:600px){.legend{grid-template-columns:1fr;gap:3px}.legend .col.status{display:none}}
+  @media (max-width:600px){
+    .legend{position:static;grid-template-columns:1fr;gap:6px;padding:8px 12px 9px;background:var(--surface);border:0;border-top:1px solid var(--rule);border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .legend .col.status{flex-direction:row;flex-wrap:wrap;gap:3px 12px;padding-top:6px;border-top:1px solid var(--rule-soft)}
+    .legend .col.status .lh{flex-basis:100%}
+  }
   .proj-note{position:absolute;right:12px;bottom:10px;z-index:3;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);background:color-mix(in srgb,var(--surface) 80%,transparent);padding:2px 6px;border-radius:2px;max-width:calc(100% - 200px);text-align:right}
 
   #tip{position:absolute;pointer-events:none;opacity:0;transition:opacity .1s;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:9px 11px;max-width:266px;z-index:5}
@@ -504,8 +515,6 @@ Country outlines: Natural Earth. Built 19 Sep 2026 by
       <dl class="kpis" id="kpis"></dl>
 
       <div class="mapwrap" id="mapwrap">
-        <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB projects, Chinese-financed projects, construction works, oil and gas pipelines and submarine cables"></canvas>
-        <div id="lmap" hidden aria-hidden="true"></div>
         <div class="maptitle" id="maptitle" aria-live="polite">
           <span class="kicker">Africa Infrastructure Monitor</span>
           <div class="mt-row">
@@ -515,14 +524,18 @@ Country outlines: Natural Earth. Built 19 Sep 2026 by
           <p class="mt-facts" id="mtfacts"></p>
           <p class="mt-foot" id="mtfoot"></p>
         </div>
-        <div class="zoomers">
-          <button class="ib" id="zin" title="Zoom in" aria-label="Zoom in">+</button>
-          <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
-          <button class="ib rst" id="zrst" title="Whole continent" aria-label="Reset view">RST</button>
+        <div class="mapbox" id="mapbox">
+          <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB projects, Chinese-financed projects, construction works, oil and gas pipelines and submarine cables"></canvas>
+          <div id="lmap" hidden aria-hidden="true"></div>
+          <div class="zoomers">
+            <button class="ib" id="zin" title="Zoom in" aria-label="Zoom in">+</button>
+            <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
+            <button class="ib rst" id="zrst" title="Whole continent" aria-label="Reset view">RST</button>
+          </div>
+          <span class="proj-note">Equirectangular · drag to pan, scroll to zoom, click a country to filter</span>
+          <div id="tip" role="status" aria-live="polite"></div>
         </div>
         <div class="legend" id="legend" aria-label="Legend"></div>
-        <span class="proj-note">Equirectangular · drag to pan, scroll to zoom, click a country to filter</span>
-        <div id="tip" role="status" aria-live="polite"></div>
       </div>
 
       <div class="charts">
@@ -1808,7 +1821,7 @@ el("cluster").onclick = () => setCluster(!S.cluster);
 
 /* ---------------- boot ---------------- */
 let rt=null;
-new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{ fit(); draw(); if(S.country && !dragging) zoomToIsos([S.country]); }, 60); }).observe(el("mapwrap"));
+new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{ fit(); draw(); if(S.country && !dragging) zoomToIsos([S.country]); }, 60); }).observe(el("mapbox"));
 matchMedia("(prefers-color-scheme:dark)").addEventListener("change", ()=>apply());
 new MutationObserver(()=>apply()).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
 renderSources(); renderLede(); fit(); apply();
