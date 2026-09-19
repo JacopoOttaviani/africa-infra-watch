@@ -19,11 +19,36 @@ import os
 import pathlib
 import re
 import shutil
+import sys
 import urllib.parse
 
 ROOT = pathlib.Path(__file__).parent
 DATA = ROOT / "data"
 DOCS = ROOT / "docs"
+
+# Leaflet + Leaflet.markercluster power the "Cluster markers" view on both
+# pages. They are inlined like the payload: the artifact sandbox blocks runtime
+# requests, and the site build should not depend on a CDN either.
+VENDOR = ROOT / "vendor"
+VENDOR_JS = ["leaflet-1.9.4.min.js", "leaflet.markercluster-1.5.3.min.js"]
+VENDOR_MARKER = "/*__VENDOR__*/"
+
+
+def vendor_js():
+    parts = []
+    for name in VENDOR_JS:
+        path = VENDOR / name
+        if not path.exists():
+            sys.exit(f"missing {path} — see vendor/README.md")
+        parts.append(path.read_text())
+    return "\n".join(parts)
+
+
+def inline_vendor(page):
+    """Replace the template's vendor marker with the bundled libraries."""
+    if VENDOR_MARKER not in page:
+        sys.exit("template missing the vendor marker")
+    return page.replace(VENDOR_MARKER, vendor_js(), 1)
 
 # AfDB publishes in SDR. One place, stated on both pages, so the figure is
 # auditable rather than an invented conversion.

@@ -105,7 +105,9 @@ as grey context; provinces and cities for Africa only; lakes and rivers in full
 around the continent and only the largest elsewhere.
 
 `data/africa_basemap.json` (Natural Earth 1:110m, Africa only, 32 KB) is
-committed rather than fetched — it draws the dashboard and clips the OSM results.
+committed rather than fetched — it draws the dashboard's Africa and clips the
+OSM results. The dashboard takes the rest of the world from the 1:10m file,
+simplified much harder (about 250 KB), as grey context around the continent.
 
 Two outputs from one template, because they run in different places:
 

@@ -7,7 +7,7 @@
     --ink:#16211C; --ink-2:#495A50; --ink-3:#71827A;
     --rule:#C6D0C8; --rule-soft:#DBE2DC;
     --accent:#1F5F4B; --accent-soft:#DDEBE3; --accent-ink:#154236;
-    --sea:#D3DDDC; --land:#F8FAF6; --land-2:#ECEFEA; --coast:#AEB9B1;
+    --sea:#D3DDDC; --land:#F8FAF6; --land-2:#ECEFEA; --land-ctx:#E2E7E3; --coast:#AEB9B1;
     /* the map's status palette: passes colour-vision checks in both themes */
     --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
     --st-operating:#2B7A4C; --st-stalled:#7F8B86;
@@ -23,7 +23,7 @@
       --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
       --rule:#2B3630; --rule-soft:#212A24;
       --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
-      --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --coast:#3D4A43;
+      --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-ctx:#121816; --coast:#3D4A43;
       --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
       --st-operating:#67C98B; --st-stalled:#6E7A75;
       --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
@@ -35,7 +35,7 @@
     --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
     --rule:#2B3630; --rule-soft:#212A24;
     --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
-    --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --coast:#3D4A43;
+    --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-ctx:#121816; --coast:#3D4A43;
     --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
     --st-operating:#67C98B; --st-stalled:#6E7A75;
     --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
@@ -139,13 +139,17 @@
   .topbar{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 -22px;padding:12px 340px 10px 22px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   .pill{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:5px 9px;font-size:11.5px;font-weight:600;box-shadow:var(--shadow);display:flex;gap:7px;align-items:center;white-space:nowrap;height:32px}
   .pill .m{font-size:11.5px;color:var(--ink)}
-  .pill.scope{color:var(--accent-ink)}
-  .pill.scope[hidden]{display:none}
-  .pill.scope button{margin-left:2px;color:var(--ink-3);font-size:13px;line-height:1}
   .ib{width:32px;height:32px;background:var(--surface);border:1px solid var(--rule);border-radius:3px;font-size:16px;font-weight:600;line-height:1;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
   .ib:hover{background:var(--surface-3)}
   .ib svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ib.menu{display:none}
+  .pill.toggle{cursor:pointer;color:var(--ink-2);gap:6px}
+  .pill.toggle svg{width:13px;height:13px;flex:none}
+  .pill.toggle:hover{background:var(--surface-3)}
+  .pill.toggle[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .pill.toggle[aria-pressed="true"]:hover{background:var(--accent-ink)}
+  .pill.toggle[aria-pressed="true"] .hole{fill:var(--accent)}
+  .pill.toggle:disabled{opacity:.5;cursor:default}
 
   /* ---------- kpis ---------- */
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:8px 0 0;box-shadow:var(--shadow)}
@@ -163,23 +167,69 @@
   canvas#map.dragging{cursor:grabbing}
   @media (max-width:1020px){canvas#map{height:440px}}
   @media (max-width:600px){canvas#map{height:360px}}
-  .zoomers{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px}
+  .zoomers{position:absolute;right:12px;top:12px;z-index:3;display:flex;flex-direction:column;gap:4px}
+
+  /* The title card in the map's top-left corner names what the frame shows.
+     A screenshot of the map alone should read as "Kenya · Africa
+     Infrastructure Monitor" without the rail or the top bar. It lets pointer
+     events through so the map still pans underneath; only the × is live. */
+  .maptitle{position:absolute;left:12px;top:12px;z-index:3;pointer-events:none;max-width:min(400px,calc(100% - 70px));padding:12px 15px 11px;background:color-mix(in srgb,var(--surface) 92%,transparent);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  .maptitle .kicker{display:block}
+  .maptitle .mt-row{display:flex;align-items:flex-start;gap:10px}
+  .maptitle h2{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:1;margin:3px 0 0;text-wrap:balance}
+  .maptitle.is-country h2{color:var(--accent-ink)}
+  .maptitle .mt-clear{pointer-events:auto;flex:none;margin-top:6px;width:22px;height:22px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink-3);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .maptitle .mt-clear:hover{color:var(--ink);background:var(--surface-3)}
+  .maptitle .mt-clear[hidden]{display:none}
+  .maptitle .mt-facts{margin:8px 0 0;font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--ink-2)}
+  .maptitle .mt-facts b{font-weight:600;color:var(--ink)}
+  .maptitle .mt-foot{margin:7px 0 0;padding-top:6px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:1020px){.maptitle h2{font-size:28px}}
+  @media (max-width:600px){.maptitle{padding:9px 11px 8px;max-width:calc(100% - 60px)}.maptitle h2{font-size:22px}.maptitle .mt-facts{font-size:10px;line-height:1.45}.maptitle .mt-foot,.maptitle .mt-more{display:none}}
   .zoomers .rst{font-size:10px;font-weight:700;letter-spacing:.04em}
   .legend{position:absolute;left:12px;bottom:12px;z-index:3;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:8px 10px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto auto;gap:3px 16px;font-size:11px}
   .legend .col{display:flex;flex-direction:column;gap:3px}
   .legend .lg{display:flex;align-items:center;gap:7px;color:var(--ink-2);white-space:nowrap}
   .legend .lg svg{width:16px;height:12px;flex:none}
+  .legend .lg svg.dn{width:14px;height:14px}
   .legend .lg b{font-weight:600;color:var(--ink)}
   .legend .lh{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
   .legend .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 3px}
   .legend .sw.stalled{background:transparent!important;border:2px solid var(--st-stalled);width:6px;height:6px}
   @media (max-width:600px){.legend{grid-template-columns:1fr;gap:3px}.legend .col.status{display:none}}
-  .proj-note{position:absolute;right:12px;bottom:10px;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);background:color-mix(in srgb,var(--surface) 80%,transparent);padding:2px 6px;border-radius:2px;max-width:calc(100% - 200px);text-align:right}
+  .proj-note{position:absolute;right:12px;bottom:10px;z-index:3;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);background:color-mix(in srgb,var(--surface) 80%,transparent);padding:2px 6px;border-radius:2px;max-width:calc(100% - 200px);text-align:right}
 
   #tip{position:absolute;pointer-events:none;opacity:0;transition:opacity .1s;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:9px 11px;max-width:266px;z-index:5}
   #tip .tn{font-size:12.5px;font-weight:700;letter-spacing:-.01em;line-height:1.3;margin-bottom:4px}
   #tip .tr{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--ink-2);font-family:var(--mono)}
   #tip .tr b{color:var(--ink);font-weight:500;text-align:right}
+  #tip .tr .sw{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:0}
+  #tip .tr.hint{color:var(--ink-3);font-style:italic;margin-top:3px}
+
+  /* cluster overlay: Leaflet places the icons, the canvas keeps the pointer.
+     Only the Leaflet CSS the overlay needs (no tiles, controls or popups). */
+  #lmap{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;background:transparent}
+  #lmap[hidden]{display:none}
+  #lmap .leaflet-pane,#lmap .leaflet-marker-icon,#lmap .leaflet-pane>svg{position:absolute;left:0;top:0}
+  #lmap .leaflet-pane{z-index:400}
+  #lmap .leaflet-overlay-pane{z-index:400}
+  #lmap .leaflet-marker-pane{z-index:600}
+  #lmap .leaflet-map-pane svg{z-index:200}
+  #lmap .leaflet-marker-icon{display:block;pointer-events:none}
+  #lmap .leaflet-zoom-animated{transform-origin:0 0}
+  #lmap .leaflet-cluster-anim .leaflet-marker-icon{transition:transform .3s ease-out,opacity .3s ease-in}
+  #lmap .leaflet-cluster-spider-leg{transition:stroke-dashoffset .3s ease-out,stroke-opacity .3s ease-in}
+  .donut svg{display:block;overflow:visible}
+  .donut .halo{fill:var(--surface);opacity:.6}
+  .donut .hole{fill:var(--surface)}
+  .donut text{font-family:var(--mono);font-weight:600;fill:var(--ink)}
+  .pmw{display:flex;align-items:center;justify-content:center}
+  .pm{display:block;width:10px;height:10px;border-radius:50%;background:var(--c,var(--st-stalled));box-shadow:0 0 0 1px var(--surface);opacity:.92}
+  .pm.finance{width:9px;height:9px;border-radius:1px}
+  .pm.ground{width:14px;height:3.5px;border-radius:2px;transform:rotate(-32deg)}
+  .pm.stalled{background:transparent;border:1.6px solid var(--st-stalled);box-shadow:none}
+  .pm.announced{--c:var(--st-announced)} .pm.approved{--c:var(--st-approved)}
+  .pm.under_construction{--c:var(--st-construction)} .pm.operating{--c:var(--st-operating)}
 
   /* ---------- charts ---------- */
   .charts{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-top:16px}
@@ -360,14 +410,24 @@
         <button class="ib menu" id="railopen" aria-label="Open filters" title="Filters and selection">
           <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
-        <span class="pill scope" id="scope" hidden><span id="scopename"></span><button id="scopeclear" aria-label="Clear country filter">×</button></span>
         <span class="pill"><span class="m" id="vis">0</span> records match</span>
+        <button class="pill toggle" id="cluster" aria-pressed="false" title="Group nearby records into donuts sized by count and sliced by status">Cluster markers</button>
       </div>
 
       <dl class="kpis" id="kpis"></dl>
 
       <div class="mapwrap" id="mapwrap">
         <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB projects, construction works, oil and gas pipelines and submarine cables"></canvas>
+        <div id="lmap" hidden aria-hidden="true"></div>
+        <div class="maptitle" id="maptitle" aria-live="polite">
+          <span class="kicker">Africa Infrastructure Monitor</span>
+          <div class="mt-row">
+            <h2 id="mtname">Africa</h2>
+            <button class="mt-clear" id="mtclear" hidden title="Back to the whole continent" aria-label="Clear country filter">×</button>
+          </div>
+          <p class="mt-facts" id="mtfacts"></p>
+          <p class="mt-foot" id="mtfoot"></p>
+        </div>
         <div class="zoomers">
           <button class="ib" id="zin" title="Zoom in" aria-label="Zoom in">+</button>
           <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
@@ -455,7 +515,12 @@
               <li><strong>Operating:</strong> GEM <code>operating</code>, IATI status 3–4, TeleGeography <code>in service</code></li>
               <li><strong>Stalled:</strong> GEM <code>cancelled</code>/<code>shelved</code>/<code>mothballed</code>/<code>idle</code>, IATI 5–6</li>
             </ul>
-            <p>Dashed lines are routes not yet built. A hollow mark is a stalled record.</p>
+            <p>
+              Dashed lines are routes not yet built. A hollow mark is a stalled record. With
+              <strong>Cluster markers</strong> on, records that would overlap at the current zoom are
+              grouped into a donut sized by count and sliced by status; click one to zoom in. Pipelines
+              and cables are routes, so they stay drawn as lines.
+            </p>
           </section>
           <section>
             <h4 class="caveat">Limits of the data</h4>
@@ -501,10 +566,13 @@
             <h4>Provenance</h4>
             <p id="prov"></p>
             <p>
-              Country outlines are Natural Earth 1:110m. Cabo Verde, São Tomé and Príncipe, Comoros,
+              African country outlines are Natural Earth 1:110m. Cabo Verde, São Tomé and Príncipe, Comoros,
               Mauritius and Seychelles are below that resolution and are drawn as markers, so their projects sit on a marker rather than a
-              coastline. The projection is plain equirectangular: undistorted near the equator, which
-              is where most of this continent sits, and progressively stretched north and south.
+              coastline. The rest of the world is drawn too, as grey context from Natural Earth 1:10m simplified
+              hard, so the map can be zoomed out to the whole world and a cable heading for Europe or India
+              ends on a coast; only African countries can be selected. The projection is plain equirectangular:
+              undistorted near the equator, which is where most of this continent sits, and progressively
+              stretched north and south.
             </p>
             <p>
               Natural Earth draws <strong>Somaliland</strong> and <strong>Western Sahara</strong> as
@@ -541,6 +609,7 @@
 </div>
 
 
+<script>/*__VENDOR__*/</script>
 <script>
 const DATA = /*__PAYLOAD__*/;
 
@@ -548,11 +617,17 @@ const DATA = /*__PAYLOAD__*/;
 const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
 const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables"];
+const HOME_HOST    = "__HOME_URL__".replace(/^https?:\/\//,"").replace(/\/$/,"");
 const LAYER_LABEL  = {assets:"Power assets",finance:"AfDB finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables"};
 const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"African Development Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography"};
 /* the colour each layer's glyph takes in the rail and the table: a status tone, so the legend stays one palette */
 const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved"};
 const LINE_LAYERS  = ["cables","pipelines","ground"];   /* drawing order: thin works last, on top */
+/* Cluster markers regroups point-like records. Pipelines and submarine cables
+   are routes across countries and seas: a donut at their midpoint would say
+   nothing, so they stay drawn as lines in the cluster view too. */
+const UNCLUSTERED  = new Set(["pipelines","cables"]);
+const clustered    = r => !UNCLUSTERED.has(r.layer);
 const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",road:"Road",rail:"Rail",air:"Air",other:"Other"};
 const SHORT        = {assets:"GEM", finance:"AfDB", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography"};
 const sectorLabel  = s => SECTOR_LABEL[s] || (s ? s[0].toUpperCase()+s.slice(1) : "Other");
@@ -563,6 +638,7 @@ const S = {
   country:"", sector:"", q:"",
   sort:{k:"size",dir:-1},
   picked:null,
+  cluster:false,
 };
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const statusColor = s => css("--st-" + (s==="under_construction" ? "construction" : (s||"stalled")));
@@ -660,6 +736,9 @@ const view = {k:1, tx:0, ty:0};
 const cv = el("map");
 const ctx = cv.getContext("2d");
 let W=0, H=0, base=1, bx=0, by=0;
+/* k=1 frames the continent; KMIN lets the whole world's width fit the canvas */
+let KMIN = 1;
+const KMAX = 14;
 
 function fit(){
   const rect = cv.getBoundingClientRect();
@@ -670,19 +749,59 @@ function fit(){
   const sw = BOUNDS.x1-BOUNDS.x0, sh = BOUNDS.y1-BOUNDS.y0;
   base = Math.min(W/sw, H/sh)*0.97;
   bx = (W - sw*base)/2; by = (H - sh*base)/2;
+  KMIN = Math.min(1, W/(360*base));
+  if(LM && S.cluster){ LM.invalidateSize({animate:false, pan:false}); lview = null; }
 }
 const px = lon => bx + (lon-BOUNDS.x0)*base*view.k + view.tx;
 const py = lat => by + (BOUNDS.y1-lat)*base*view.k + view.ty;
+const lonAt = x => (x - bx - view.tx)/(base*view.k) + BOUNDS.x0;
+const latAt = y => BOUNDS.y1 - (y - by - view.ty)/(base*view.k);
+
+/* Keep the world on the canvas: when it is narrower than the view it sits
+   centred, otherwise the view never scrolls past its edges. A no-op at the
+   continent frame, where the world overflows the canvas on every side. */
+function clamp(){
+  const ww = 360*base*view.k, wh = 170*base*view.k;
+  const x0 = px(-180), y0 = py(85);
+  if(ww <= W) view.tx += (W-ww)/2 - x0;
+  else if(x0 > 0) view.tx -= x0;
+  else if(x0+ww < W) view.tx += W-(x0+ww);
+  if(wh <= H) view.ty += (H-wh)/2 - y0;
+  else if(y0 > 0) view.ty -= y0;
+  else if(y0+wh < H) view.ty += H-(y0+wh);
+}
+
+/* The rest of the world, grey context like the map page's: the basemap is
+   the whole world, only Africa is drawn from the 110m file and selectable.
+   One bounding box per polygon so a frame skips what is off-screen. */
+const CONTEXT = [];
+for(const polys of DATA.basemap.context || []) for(const rings of polys){
+  let x0=Infinity, y0=Infinity, x1=-Infinity, y1=-Infinity;
+  for(const [x,y] of rings[0]){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+  CONTEXT.push({x0,y0,x1,y1, rings});
+}
 
 function tracePart(part){
   part.forEach((p,i) => i ? ctx.lineTo(px(p[0]),py(p[1])) : ctx.moveTo(px(p[0]),py(p[1])));
 }
 
 function draw(){
+  if(S.cluster) syncLeaflet();
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = css("--sea"); ctx.fillRect(0,0,W,H);
 
   const land = css("--land"), land2 = css("--land-2"), coast = css("--coast"), surface = css("--surface");
+
+  /* context land first, so Africa's own outlines paint over any shared edge */
+  const vx0 = lonAt(0), vx1 = lonAt(W), vy0 = latAt(H), vy1 = latAt(0);
+  ctx.beginPath();
+  for(const c of CONTEXT){
+    if(c.x1 < vx0 || c.x0 > vx1 || c.y1 < vy0 || c.y0 > vy1) continue;
+    for(const ring of c.rings){ tracePart(ring); ctx.closePath(); }
+  }
+  ctx.fillStyle = css("--land-ctx"); ctx.fill("evenodd");
+  ctx.strokeStyle = coast; ctx.lineWidth = 0.5; ctx.stroke();
+
   for(const c of DATA.basemap.countries){
     const hot = S.country && c.iso === S.country;
     ctx.beginPath();
@@ -714,6 +833,7 @@ function draw(){
     if(!S.layers[layer]) continue;
     for(const r of VIS){
       if(r.layer!==layer) continue;
+      if(S.cluster && clustered(r)) continue;   /* traced works live in the overlay */
       const col = statusColor(r.status), picked = r===S.picked;
       const unbuilt = r.status==="announced" || r.status==="approved";
       ctx.beginPath();
@@ -754,8 +874,9 @@ function draw(){
     }
   }
 
-  /* points: finance = squares, assets = circles sized by capacity; big first so small stay on top */
-  const pts = VIS.filter(r => r.layer==="assets" || r.layer==="finance");
+  /* points: finance = squares, assets = circles sized by capacity; big first so small stay on top.
+     While clustering, the overlay draws them (as donuts or uniform marks). */
+  const pts = S.cluster ? [] : VIS.filter(r => r.layer==="assets" || r.layer==="finance");
   pts.sort((a,b) => (b.size||0)-(a.size||0));
   for(const r of pts){
     const x = px(r.lon), y = py(r.lat);
@@ -779,10 +900,16 @@ function draw(){
   ctx.globalAlpha = 1;
 
   if(S.picked){
-    const x = px(S.picked.lon), y = py(S.picked.lat);
-    ctx.beginPath(); ctx.arc(x,y,13,0,6.284);
+    const p = S.picked;
+    let x = px(p.lon), y = py(p.lat), rr = 13;
+    if(S.cluster && CG && p._m){
+      /* ring the donut that holds the record when it is clustered away */
+      const vp = CG.getVisibleParent(p._m);
+      if(vp){ const ll = vp.getLatLng(); x = px(ll.lng); y = py(ll.lat); if(vp!==p._m) rr = donutSize(vp.getChildCount())/2 + 5; }
+    }
+    ctx.beginPath(); ctx.arc(x,y,rr,0,6.284);
     ctx.strokeStyle = css("--accent"); ctx.lineWidth = 2; ctx.stroke();
-    ctx.beginPath(); ctx.arc(x,y,13,0,6.284);
+    ctx.beginPath(); ctx.arc(x,y,rr,0,6.284);
     ctx.strokeStyle = surface; ctx.lineWidth = 0.8; ctx.stroke();
   }
 }
@@ -801,13 +928,15 @@ function nearest(mx,my){
      reach, so a route right under the pointer beats a marker a little way off. */
   let best=null, bestRel=1;
   const consider = (d2, thr, r) => { const rel = d2/(thr*thr); if(rel<bestRel){ bestRel=rel; best=r; } };
-  for(const r of VIS){
+  /* while clustering, points and traced works live in the overlay (clusterHit) */
+  if(!S.cluster) for(const r of VIS){
     if(r.layer!=="assets" && r.layer!=="finance") continue;
     const dx = px(r.lon)-mx, dy = py(r.lat)-my;
     consider(dx*dx+dy*dy, 12, r);
   }
   for(const r of VIS){
     if(r.layer==="assets" || r.layer==="finance") continue;
+    if(S.cluster && clustered(r)) continue;
     if(r.layer==="cables" && r.ref.lps){
       for(const lp of r.ref.lps){
         const dx = px(lp[0])-mx, dy = py(lp[1])-my;
@@ -826,8 +955,7 @@ function nearest(mx,my){
   return best;
 }
 function countryAt(mx,my){
-  const lon = (mx - bx - view.tx)/(base*view.k) + BOUNDS.x0;
-  const lat = BOUNDS.y1 - (my - by - view.ty)/(base*view.k);
+  const lon = lonAt(mx), lat = latAt(my);
   for(const c of DATA.basemap.countries){
     for(const poly of c.p){
       if(inRing(lon,lat,poly[0]) && !poly.slice(1).some(h=>inRing(lon,lat,h))) return c.iso;
@@ -887,6 +1015,26 @@ function renderLede(){
 /* Deliberately per-layer. The sources share no project identifier, so a
    single blended "projects" count would double-count an AfDB-financed power
    plant that OSM contributors have also traced. */
+/* the card in the map's corner: what is framed, and how much of it there is */
+const FACT_NOUN = {assets:["power unit","power units"], finance:["AfDB project","AfDB projects"], ground:["work","works"], pipelines:["pipeline","pipelines"], cables:["cable","cables"]};
+function renderTitle(){
+  const iso = S.country;
+  el("maptitle").classList.toggle("is-country", !!iso);
+  el("mtname").textContent = iso ? (NAMES[iso]||iso) : "Africa";
+  el("mtclear").hidden = !iso;
+  const counts = Object.fromEntries(LAYER_ORDER.map(k=>[k,0]));
+  for(const r of VIS) counts[r.layer]++;
+  const parts = LAYER_ORDER.filter(k=>counts[k]).map(k => `${fmt(counts[k])} ${FACT_NOUN[k][counts[k]===1?0:1]}`);
+  let lead = `<b>${fmt(VIS.length)}</b> ${VIS.length===1?"record":"records"}`;
+  if(!iso){
+    const isos = new Set(); for(const r of VIS) for(const i of (r.isos||[r.iso])) if(i) isos.add(i);
+    lead += ` across <b>${isos.size}</b> countries`;
+  }
+  const filtered = S.q || S.sector || S.status.size!==STATUS_ORDER.length || LAYER_ORDER.some(k=>!S.layers[k]);
+  el("mtfacts").innerHTML = lead + (parts.length ? `<span class="mt-more"> · ${parts.join(" · ")}</span>` : "") + (filtered ? ` <span style="color:var(--ink-3)">· filtered</span>` : "");
+  el("mtfoot").textContent = `${HOME_HOST} · data as of ${DATA.meta.built}`;
+}
+
 function renderKpis(){
   const by = k => VIS.filter(r => r.layer===k);
   const A = by("assets"), F = by("finance"), G = by("ground"), P = by("pipelines"), C = by("cables");
@@ -962,6 +1110,7 @@ function renderLegend(){
       <div class="lg">${glyph.ground(ink)}<span><b>Works</b> · traced way</span></div>
       <div class="lg">${glyph.pipelines(ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
+      ${S.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status</span></div>` : ""}
     </div>
     <div class="col status">
       <span class="lh">Colour = status</span>
@@ -995,7 +1144,7 @@ function renderByCountry(){
     ? "a route counts in each country it crosses · click to filter"
     : "records in active layers · click to filter";
   el("bycountry").querySelectorAll("[data-iso]").forEach(b =>
-    b.onclick = () => { S.country = S.country===b.dataset.iso ? "" : b.dataset.iso; apply(); });
+    b.onclick = () => setCountry(S.country===b.dataset.iso ? "" : b.dataset.iso));
 }
 
 function renderBySector(){
@@ -1106,7 +1255,7 @@ function renderTable(){
       <td class="num">${r.size==null?"—":fmt1(r.size)+" <span style='color:var(--ink-3)'>"+r.unit+"</span>"}</td>
     </tr>`).join("") || `<tr><td colspan="6" style="padding:26px;text-align:center;color:var(--ink-3)">No records match these filters.</td></tr>`;
   el("tbody").querySelectorAll("tr[data-i]").forEach(tr =>
-    tr.onclick = () => { S.picked = show[+tr.dataset.i]; renderSel(); renderTable(); draw(); });
+    tr.onclick = () => pickRec(show[+tr.dataset.i]));
   el("tcount").textContent = `${fmt(VIS.length)} records match · ${fmt(show.length)} listed`;
   el("tnote").textContent = VIS.length>CAP ? `capped at ${CAP} rows · narrow the filters to see more` : "";
   el("thint").textContent = S.country ? (NAMES[S.country]||S.country) : "all countries";
@@ -1121,11 +1270,16 @@ function apply(){
   VIS = ALL.filter(pass);
   if(S.picked && !VIS.includes(S.picked)) S.picked = null;
   el("vis").textContent = fmt(VIS.length);
-  el("scope").hidden = !S.country;
-  el("scopename").textContent = S.country ? (NAMES[S.country]||S.country) : "";
+  renderTitle();
   renderKpis(); renderLayers(); renderStatuses(); renderSelects(); renderLegend();
   renderByCountry(); renderBySector(); renderSel(); renderTable();
+  if(S.cluster) syncMarkers();
   draw();
+}
+/* one record chosen, from the map or the table: show it, and frame its country */
+function pickRec(r){
+  S.picked = r; renderSel(); renderTable(); draw();
+  zoomToIsos(r.isos || [r.iso]);
 }
 
 /* ---------------- interaction ---------------- */
@@ -1133,25 +1287,22 @@ let dragging=false, moved=false, lx=0, ly=0, raf=null;
 function queue(){ if(!raf) raf = requestAnimationFrame(()=>{ raf=null; draw(); }); }
 
 cv.addEventListener("pointerdown", e => {
-  dragging=true; moved=false; lx=e.offsetX; ly=e.offsetY;
+  stopAnim(); dragging=true; moved=false; lx=e.offsetX; ly=e.offsetY;
   cv.classList.add("dragging"); cv.setPointerCapture(e.pointerId);
 });
 cv.addEventListener("pointermove", e => {
   if(dragging){
     const dx=e.offsetX-lx, dy=e.offsetY-ly;
     if(Math.abs(dx)+Math.abs(dy)>2) moved=true;
-    view.tx+=dx; view.ty+=dy; lx=e.offsetX; ly=e.offsetY; queue();
+    view.tx+=dx; view.ty+=dy; lx=e.offsetX; ly=e.offsetY; clamp(); queue();
     el("tip").style.opacity=0;
     return;
   }
-  const hit = nearest(e.offsetX,e.offsetY);
+  const ch = clusterHit(e.offsetX,e.offsetY);
+  const hit = ch || nearest(e.offsetX,e.offsetY);
   const tip = el("tip");
   if(hit){
-    const bits = [["Status", STATUS_LABEL[hit.status]||"—"], [hit.isos ? "Countries" : "Country", esc(hit.country)]];
-    if(hit.size!=null) bits.push([hit.unit, fmt1(hit.size)]);
-    bits.push(["Source", LAYER_SUB[hit.layer]]);
-    tip.innerHTML = `<div class="tn">${esc(hit.name)}</div>` +
-      bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${b}</b></div>`).join("");
+    tip.innerHTML = ch ? (ch instanceof L.MarkerCluster ? clusterTip(ch) : recTip(ch.rec)) : recTip(hit);
     tip.style.opacity=1;
     const tw = tip.offsetWidth, th = tip.offsetHeight;
     tip.style.left = Math.min(Math.max(4, e.offsetX+14), W-tw-4) + "px";
@@ -1162,38 +1313,103 @@ cv.addEventListener("pointermove", e => {
 cv.addEventListener("pointerup", e => {
   cv.classList.remove("dragging");
   if(dragging && !moved){
-    const hit = nearest(e.offsetX,e.offsetY);
-    if(hit){ S.picked = hit; renderSel(); renderTable(); draw(); }
+    const ch = clusterHit(e.offsetX,e.offsetY);
+    const hit = ch ? null : nearest(e.offsetX,e.offsetY);
+    if(ch) clusterClick(ch);
+    else if(CG && CG._spiderfied) CG.unspiderfy();
+    else if(hit) pickRec(hit);
     else {
       const iso = countryAt(e.offsetX,e.offsetY);
-      if(iso){ S.country = S.country===iso ? "" : iso; apply(); }
+      if(iso) setCountry(S.country===iso ? "" : iso);
     }
   }
   dragging=false;
 });
 cv.addEventListener("pointerleave", ()=>{ el("tip").style.opacity=0; });
 cv.addEventListener("wheel", e => {
-  e.preventDefault();
+  e.preventDefault(); stopAnim();
   const f = e.deltaY<0 ? 1.15 : 1/1.15;
   zoomAt(e.offsetX, e.offsetY, f);
 }, {passive:false});
 
 function zoomAt(cx,cy,f){
-  const nk = Math.min(14, Math.max(1, view.k*f));
+  const nk = Math.min(KMAX, Math.max(KMIN, view.k*f));
   const eff = nk/view.k;
   view.tx = cx - (cx-view.tx)*eff;
   view.ty = cy - (cy-view.ty)*eff;
   view.k = nk;
-  if(view.k===1){ view.tx=0; view.ty=0; }
+  clamp();
   queue();
 }
-el("zin").onclick  = () => zoomAt(W/2,H/2,1.4);
-el("zout").onclick = () => zoomAt(W/2,H/2,1/1.4);
-el("zrst").onclick = () => { view.k=1; view.tx=0; view.ty=0; draw(); };
+el("zin").onclick  = () => { stopAnim(); zoomAt(W/2,H/2,1.4); };
+el("zout").onclick = () => { stopAnim(); zoomAt(W/2,H/2,1/1.4); };
+el("zrst").onclick = () => resetView();
 
-el("country").onchange = e => { S.country = e.target.value; apply(); };
+/* ---- zoom to a country ----
+   Choosing a country, on the map or in the rail, frames it; picking a record
+   frames the country (or countries) it sits in; clearing the filter returns
+   to the continent. The view eases over ~400 ms; any manual pan or zoom
+   interrupts it. */
+function setCountry(iso){
+  S.country = iso || "";
+  apply();
+  if(S.country) zoomToIsos([S.country]); else resetView();
+}
+function bboxOf(isos){
+  const want = new Set(isos.filter(Boolean));
+  if(!want.size) return null;
+  let x0=Infinity, y0=Infinity, x1=-Infinity, y1=-Infinity, any=false;
+  for(const c of DATA.basemap.countries){
+    if(!want.has(c.iso)) continue;
+    for(const poly of c.p) for(const [x,y] of poly[0]){
+      any=true; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
+    }
+  }
+  for(const i of DATA.basemap.islands){
+    if(!want.has(i.iso)) continue;
+    any=true;
+    x0=Math.min(x0,i.lon-1); x1=Math.max(x1,i.lon+1); y0=Math.min(y0,i.lat-1); y1=Math.max(y1,i.lat+1);
+  }
+  return any ? {x0,y0,x1,y1} : null;
+}
+function zoomToIsos(isos){
+  const b = bboxOf(isos||[]);
+  if(!b) return;
+  /* small states and islands still get a readable frame */
+  const MIN = 4, pad = 0.78;
+  const dw = Math.max(b.x1-b.x0, MIN), dh = Math.max(b.y1-b.y0, MIN);
+  const k = Math.min(KMAX, Math.max(1, Math.min(W/(dw*base), H/(dh*base))*pad));
+  animateTo((b.x0+b.x1)/2, (b.y0+b.y1)/2, k);
+}
+/* home: the continent frame, which is tx=ty=0 at k=1 */
+function resetView(){
+  animateTo((BOUNDS.x0+BOUNDS.x1)/2, (BOUNDS.y0+BOUNDS.y1)/2, 1);
+}
+function centerOf(){ return { lon: lonAt(W/2), lat: latAt(H/2) }; }
+function placeCenter(lon,lat,k){
+  view.k = k;
+  view.tx = W/2 - bx - (lon-BOUNDS.x0)*base*k;
+  view.ty = H/2 - by - (BOUNDS.y1-lat)*base*k;
+  clamp();
+}
+let anim=null;
+function stopAnim(){ if(anim){ cancelAnimationFrame(anim); anim=null; } }
+function animateTo(lon,lat,k){
+  stopAnim();
+  const from = centerOf(), k0 = view.k, t0 = performance.now(), dur = 420;
+  const step = now => {
+    const t = Math.min(1, (now-t0)/dur), e = 1-Math.pow(1-t,3);
+    const kk = Math.exp(Math.log(k0) + (Math.log(k)-Math.log(k0))*e);
+    placeCenter(from.lon+(lon-from.lon)*e, from.lat+(lat-from.lat)*e, t<1 ? kk : k);
+    draw();
+    anim = t<1 ? requestAnimationFrame(step) : null;
+  };
+  anim = requestAnimationFrame(step);
+}
+
+el("country").onchange = e => setCountry(e.target.value);
 el("sector").onchange  = e => { S.sector  = e.target.value; apply(); };
-el("scopeclear").onclick = () => { S.country=""; apply(); };
+el("mtclear").onclick = () => setCountry("");
 let qt=null;
 el("q").oninput = e => {
   clearTimeout(qt);
@@ -1202,6 +1418,7 @@ el("q").oninput = e => {
 el("reset").onclick = () => {
   S.layers = Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
   S.status=new Set(STATUS_ORDER); S.country=""; S.sector=""; S.q="";
+  resetView();
   S.picked=null; el("q").value="";
   view.k=1; view.tx=0; view.ty=0;
   apply();
@@ -1219,6 +1436,156 @@ el("railopen").onclick = () => railToggle(true);
 el("railclose").onclick = () => railToggle(false);
 el("scrim").onclick = () => railToggle(false);
 
+/* ---------------- clusters (Leaflet.markercluster) ---------------- */
+/* A second view of the same records: marks that would overlap at the current
+   zoom are grouped into donuts, sized by count and sliced by status. Leaflet
+   runs as a transparent, non-interactive overlay kept in lock-step with the
+   canvas. Both are plain equirectangular: Leaflet's EPSG:4326 draws
+   256·2^z/180 pixels per degree, the canvas base·k, so one zoom maps onto the
+   other exactly. The canvas keeps the basemap, the pointer and the
+   hit-testing; Leaflet only places the icons. */
+let LM = null, CG = null, lview = null, lpending = false, lt = null;
+const lzoom = () => Math.log2(base*view.k*180/256);
+const STATUS_VAR = s => "--st-" + (s==="under_construction" ? "construction" : s);
+const donutSize = n => Math.round(Math.min(56, 30 + 8*Math.log10(Math.max(1, n))));
+const shortN = n => n>=10000 ? Math.round(n/1000)+"k" : n>=1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"k" : String(n);
+/* arcs of a ring, one per status present, in status order from 12 o'clock */
+function donutArcs(by, n, c, r, gap){
+  const C = 2*Math.PI*r; let off = 0, out = "";
+  for(const s of STATUS_ORDER.filter(s=>by[s])){
+    const len = C*by[s]/n, on = Math.max(0, len-gap);
+    out += `<circle cx="${c}" cy="${c}" r="${r}" style="stroke:var(${STATUS_VAR(s)})" stroke-dasharray="${on.toFixed(2)} ${(C-on).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;
+    off += len;
+  }
+  return out;
+}
+function donutSVG(by, n, d){
+  const c = d/2, r = c-4.5, segs = Object.keys(by).filter(s=>by[s]).length;
+  return `<svg viewBox="0 0 ${d} ${d}" width="${d}" height="${d}" aria-hidden="true">
+    <circle cx="${c}" cy="${c}" r="${r+4.2}" class="halo"/><circle cx="${c}" cy="${c}" r="${r-3.2}" class="hole"/>
+    <g fill="none" stroke-width="6.5" transform="rotate(-90 ${c} ${c})">${donutArcs(by, n, c, r, segs>1 ? 1.4 : 0)}</g>
+    <text x="${c}" y="${c}" text-anchor="middle" dominant-baseline="central" font-size="${n>=1000 ? 10.5 : 11.5}">${shortN(n)}</text></svg>`;
+}
+/* the small legend / button glyph: a three-slice donut */
+function donutGlyph(){
+  return `<svg class="dn" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.4" class="hole" fill="none"/>
+    <g fill="none" stroke-width="3.4" transform="rotate(-90 8 8)">${donutArcs({operating:3, approved:2, under_construction:1}, 6, 8, 5.3, 1)}</g></svg>`;
+}
+const ICONS = {};
+function iconFor(r){
+  const k = r.layer+"|"+r.status;
+  return ICONS[k] || (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html:`<i class="pm ${r.layer} ${r.status}"></i>`}));
+}
+function markerFor(r){
+  if(!r._m){ r._m = L.marker([r.lat, r.lon], {icon:iconFor(r), interactive:false, keyboard:false}); r._m.rec = r; }
+  return r._m;
+}
+function ensureLeaflet(){
+  if(LM) return true;
+  if(typeof L==="undefined" || !L.MarkerClusterGroup) return false;
+  const box = el("lmap"); box.hidden = false;
+  /* zoom -3 covers the whole world on a phone-width canvas (KMIN) */
+  LM = L.map(box, {crs:L.CRS.EPSG4326, zoomSnap:0, zoomDelta:0, minZoom:-3, maxZoom:12, zoomControl:false, attributionControl:false,
+    dragging:false, touchZoom:false, scrollWheelZoom:false, doubleClickZoom:false, boxZoom:false, keyboard:false, tapHold:false,
+    zoomAnimation:false, fadeAnimation:false, markerZoomAnimation:false, inertia:false, trackResize:false});
+  syncLeaflet(true);
+  CG = L.markerClusterGroup({
+    maxClusterRadius:64, chunkedLoading:true, showCoverageOnHover:false, zoomToBoundsOnClick:false,
+    spiderfyOnMaxZoom:false, spiderfyDistanceMultiplier:1.35,
+    spiderLegPolylineOptions:{weight:1.2, color:"#888", opacity:.7},
+    iconCreateFunction: c => {
+      const kids = c.getAllChildMarkers(), n = kids.length, by = {};
+      for(const m of kids) by[m.rec.status] = (by[m.rec.status]||0)+1;
+      const d = donutSize(n);
+      return L.divIcon({className:"donut", iconSize:[d,d], html:donutSVG(by, n, d)});
+    },
+  });
+  LM.addLayer(CG);
+  return true;
+}
+/* Same centre, same fractional zoom. A pan just slides Leaflet's pane
+   (markercluster keeps a margin of markers around the view) and the full
+   re-cluster waits for the gesture to settle; a zoom re-clusters at once. */
+function syncLeaflet(force){
+  if(!LM) return;
+  const z = lzoom(), c = centerOf();
+  if(!isFinite(z+c.lon+c.lat)) return;
+  const same = lview && lview.z===z && lview.W===W && lview.H===H;
+  if(!force && same && lview.lon===c.lon && lview.lat===c.lat) return;
+  if(!force && same && LM._loaded){
+    LM._rawPanBy(L.point((c.lon-lview.lon)*base*view.k, (lview.lat-c.lat)*base*view.k));
+    lview.lon = c.lon; lview.lat = c.lat; lpending = true;
+    clearTimeout(lt); lt = setTimeout(()=>{ if(S.cluster && lpending){ syncLeaflet(true); draw(); } }, 90);
+    return;
+  }
+  if(CG && CG._spiderfied && LM._loaded && Math.abs(LM.getZoom()-z) > 1e-6) CG.unspiderfy();
+  LM.setView([c.lat, c.lon], z, {animate:false});
+  lview = {lon:c.lon, lat:c.lat, z, W, H}; lpending = false;
+}
+/* the overlay holds exactly the records that pass the filters */
+function syncMarkers(){
+  if(!CG) return;
+  const have = new Set(); CG.eachLayer(m => have.add(m.rec));
+  const drop = [...have].filter(r => !pass(r)).map(r => r._m);
+  const add = VIS.filter(r => clustered(r) && !have.has(r)).map(markerFor);
+  if(drop.length) CG.removeLayers(drop);
+  if(add.length) CG.addLayers(add);
+}
+function setCluster(on){
+  const btn = el("cluster");
+  if(on && !ensureLeaflet()){ on = false; btn.disabled = true; btn.title = "Clustering is not available in this build"; }
+  S.cluster = on;
+  btn.setAttribute("aria-pressed", String(on));
+  const box = el("lmap");
+  if(on){ box.hidden = false; LM.invalidateSize({animate:false, pan:false}); lview = null; syncMarkers(); }
+  else if(CG){ CG.unspiderfy(); box.hidden = true; }
+  renderLegend(); draw();
+}
+/* what the overlay shows under a canvas point: a cluster, a single marker or nothing */
+function clusterHit(mx,my){
+  if(!S.cluster || !CG) return null;
+  let best=null, bd=1e9;
+  CG._featureGroup.eachLayer(m => {
+    const ll = m.getLatLng(), dx = px(ll.lng)-mx, dy = py(ll.lat)-my, d = dx*dx+dy*dy;
+    const rad = m instanceof L.MarkerCluster ? donutSize(m.getChildCount())/2 : 8;
+    if(d < rad*rad && d < bd){ bd=d; best=m; }
+  });
+  return best;
+}
+function clusterClick(m){
+  if(!(m instanceof L.MarkerCluster)){ pickRec(m.rec); return; }
+  const b = m.getBounds();
+  const dw = b.getEast()-b.getWest(), dh = b.getNorth()-b.getSouth();
+  const spread = Math.max(dw, dh) * base*view.k;                 /* px at this zoom */
+  const kSplit = view.k * 70/Math.max(spread, 1e-6);             /* where it would come apart */
+  if(kSplit > KMAX || view.k >= KMAX-0.05){
+    /* they share one spot, or we are as close as the map goes: fan them out */
+    CG.options.spiderLegPolylineOptions.color = css("--ink-2");
+    if(CG._spiderfied && CG._spiderfied!==m) CG.unspiderfy();
+    m.spiderfy();
+    return;
+  }
+  const kFit = Math.min((W-140)/(Math.max(dw,1e-6)*base), (H-140)/(Math.max(dh,1e-6)*base));
+  animateTo((b.getWest()+b.getEast())/2, (b.getSouth()+b.getNorth())/2, Math.min(KMAX, Math.max(kFit, view.k*2)));
+}
+function clusterTip(c){
+  const kids = c.getAllChildMarkers(), by = {}, byL = Object.fromEntries(LAYER_ORDER.map(k=>[k,0]));
+  for(const m of kids){ by[m.rec.status] = (by[m.rec.status]||0)+1; byL[m.rec.layer]++; }
+  const rows = STATUS_ORDER.filter(s=>by[s]).map(s =>
+    `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${STATUS_LABEL[s]}</span><b>${fmt(by[s])}</b></div>`).join("");
+  const src = LAYER_ORDER.filter(k=>byL[k]).map(k => `${fmt(byL[k])} ${SHORT[k]}`).join(" · ");
+  return `<div class="tn">${fmt(kids.length)} records</div>${rows}<div class="tr"><span>Source</span><b>${src}</b></div><div class="tr hint">Click to zoom in</div>`;
+}
+function recTip(hit){
+  const bits = [["Status", STATUS_LABEL[hit.status]||"—"], [hit.isos ? "Countries" : "Country", esc(hit.country)]];
+  if(hit.size!=null) bits.push([hit.unit, fmt1(hit.size)]);
+  bits.push(["Source", LAYER_SUB[hit.layer]]);
+  return `<div class="tn">${esc(hit.name)}</div>` +
+    bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${b}</b></div>`).join("");
+}
+el("cluster").insertAdjacentHTML("afterbegin", donutGlyph());
+el("cluster").onclick = () => setCluster(!S.cluster);
+
 /* ---------------- theme (site only; the artifact host sets its own) ---------------- */
 (function(){
   let stored = null;
@@ -1235,8 +1602,11 @@ el("scrim").onclick = () => railToggle(false);
 
 /* ---------------- boot ---------------- */
 let rt=null;
-new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{ fit(); draw(); }, 60); }).observe(el("mapwrap"));
+new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{ fit(); draw(); if(S.country && !dragging) zoomToIsos([S.country]); }, 60); }).observe(el("mapwrap"));
 matchMedia("(prefers-color-scheme:dark)").addEventListener("change", ()=>apply());
 new MutationObserver(()=>apply()).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
 renderSources(); renderLede(); fit(); apply();
+/* Clustered from the start, as on the map: thousands of marks in a 560 px
+   frame read as noise; a few dozen donuts read as a distribution. */
+setCluster(true);
 </script>

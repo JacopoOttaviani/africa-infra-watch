@@ -2,7 +2,8 @@
 """
 Compile the five ingested layers into a single self-contained dashboard.
 
-Reads   data/*.geojson  +  data/africa_basemap.json
+Reads   data/*.geojson  +  data/africa_basemap.json  +  data/africa_basemap_10m.json
+        (the latter only for the rest of the world, drawn as grey context)
 Writes  dashboard.html   (payload injected inline)
 
 The dashboard has to be self-contained: the publishing sandbox blocks runtime
@@ -17,10 +18,10 @@ import pathlib
 import re
 import sys
 
-from fetch_basemap import dp
+from fetch_basemap import WIN, dp, ring_area, rnd, touches
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
-    DASHBOARD_LAYERS, DOCS, SDR_NOTE, SDR_USD, brand_assets, load_meta, payload_meta,
-    site_facts, wrap_document,
+    DASHBOARD_LAYERS, DOCS, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
+    payload_meta, site_facts, wrap_document,
 )
 
 ROOT = pathlib.Path(__file__).parent
@@ -63,6 +64,36 @@ ISLANDS = [
     {"n": "Mauritius", "iso": "MU", "lon": 57.55, "lat": -20.3},
     {"n": "Seychelles", "iso": "SC", "lon": 55.5, "lat": -4.6},
 ]
+
+def build_context():
+    """The rest of the world as grey context land, so the dashboard's basemap
+    is the whole world like the map page's and a cable heading for India or a
+    pipeline into Spain ends on a coast rather than in open sea. Taken from
+    the 1:10m file the map page ships and simplified much harder: this page
+    zooms to a country at most, and the land is context, never selectable.
+    Countries inside the detail window (Europe, the Middle East) keep a
+    little more shape than the far side of the world. Small islands go."""
+    p = DATA / "africa_basemap_10m.json"
+    if not p.exists():
+        sys.exit("missing data/africa_basemap_10m.json — run fetch_basemap.py first")
+    out = []
+    for c in json.loads(p.read_text())["countries"]:
+        if c["af"]:
+            continue   # Africa comes from the 110m file, with its own styling and hit-testing
+        polys = []
+        for poly in c["p"]:
+            near = touches(poly[0], WIN)
+            rings = []
+            for j, ring in enumerate(poly):
+                r = rnd(dp(ring, 0.04), 2) if near else rnd(dp(ring, 0.15), 1)
+                if len(r) >= 4 and (j == 0 or ring_area(r) > (0.05 if near else 0.2)):
+                    rings.append(r)
+            if rings and ring_area(rings[0]) > (0.1 if near else 0.4):
+                polys.append(rings)
+        if polys:
+            out.append(polys)
+    return out
+
 
 # DAC 5-digit purpose codes → the dashboard's sector vocabulary.
 DAC_SECTOR = [
@@ -439,6 +470,10 @@ def main():
     nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
     print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
 
+    print("context …")
+    context = build_context()
+    print(f"   {len(context):,} countries beyond Africa, {sum(len(r) for c in context for p in c for r in p):,} vertices")
+
     # Natural Earth's NAME field carries map abbreviations ("Dem. Rep. Congo",
     # "Eq. Guinea"). Those are right for a cramped label on a map and wrong for
     # a filter dropdown, so NE fills gaps and the full names win.
@@ -466,7 +501,7 @@ def main():
     payload = {
         "meta": payload_meta(load_meta(), DASHBOARD_LAYERS),
         "names": names,
-        "basemap": {"countries": countries, "islands": ISLANDS},
+        "basemap": {"countries": countries, "islands": ISLANDS, "context": context},
         "assets": assets,
         "finance": finance,
         "ground": ground,
@@ -475,7 +510,7 @@ def main():
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
-    html = brand_assets(TEMPLATE.read_text())
+    html = inline_vendor(brand_assets(TEMPLATE.read_text()))
     if "/*__PAYLOAD__*/" not in html:
         sys.exit("template missing /*__PAYLOAD__*/ marker")
     page = html.replace("/*__PAYLOAD__*/", blob)

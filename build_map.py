@@ -30,23 +30,6 @@ DATA = ROOT / "data"
 TEMPLATE = ROOT / "map.template.html"
 OUT = ROOT / "map.html"
 
-# Leaflet + Leaflet.markercluster power the optional "Cluster markers" view.
-# They are inlined like the payload: the artifact sandbox blocks runtime
-# requests, and the site build should not depend on a CDN either.
-VENDOR = ROOT / "vendor"
-VENDOR_JS = ["leaflet-1.9.4.min.js", "leaflet.markercluster-1.5.3.min.js"]
-VENDOR_MARKER = "/*__VENDOR__*/"
-
-
-def vendor_js():
-    parts = []
-    for name in VENDOR_JS:
-        path = VENDOR / name
-        if not path.exists():
-            sys.exit(f"missing {path} — see vendor/README.md")
-        parts.append(path.read_text())
-    return "\n".join(parts)
-
 # Shared with build_dashboard.py so the two pages quote the same figure.
 from build_dashboard import (  # noqa: E402
     NAME_TO_ISO, ISO_TO_NAME, DAC_SECTOR, SDR_USD,
@@ -54,7 +37,8 @@ from build_dashboard import (  # noqa: E402
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
-    DOCS, brand_assets, load_meta, payload_meta, site_facts, wrap_document, write_site_index,
+    DOCS, brand_assets, inline_vendor, load_meta, payload_meta, site_facts, wrap_document,
+    write_site_index,
 )
 
 
@@ -286,10 +270,7 @@ def main():
         "cables": cables,
     }
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
-    html = brand_assets(TEMPLATE.read_text())
-    if VENDOR_MARKER not in html:
-        sys.exit("template missing the vendor marker")
-    html = html.replace(VENDOR_MARKER, vendor_js(), 1)
+    html = inline_vendor(brand_assets(TEMPLATE.read_text()))
     marker = "<script>\nconst DATA = /*__PAYLOAD__*/;"
     if marker not in html:
         sys.exit("template missing the payload marker")
