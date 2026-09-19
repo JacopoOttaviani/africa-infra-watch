@@ -1282,8 +1282,13 @@ function renderLede(){
   el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
-  const pipe = ASSETS.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction").length;
-  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB and World Bank projects</strong> with money attached, <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, <strong>${fmt(PIPES.length)} oil and gas pipeline segments</strong>, <strong>${fmt(CABLES.length)} submarine cables</strong> and <strong>${fmt(CHINA.length)} Chinese-financed projects</strong> from 2000 to 2021, from six sources that are kept apart because they share no project identifier.`;
+  el("lede").innerHTML =
+    `What is being built across Africa, and who is paying for it. Six open datasets laid over one map:
+     power plants planned or under construction, African Development Bank and World Bank projects with
+     money attached, road, rail and airport works traced on the ground, oil and gas pipelines, submarine
+     cables and Chinese-financed projects from 2000 to 2021. They share no project identifier, so the
+     same power plant can sit in three layers and nothing here is summed across them. Zoom in and click
+     a marker for its record; every figure carries its source.`;
 }
 
 function counts(skip){
