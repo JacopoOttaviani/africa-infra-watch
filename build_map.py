@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Compile the five ingested layers plus the 1:10m basemap into the map page.
-The record builders for pipelines and cables live in build_dashboard.py, so
-both pages compile the same rows; only the route simplification differs.
+Compile the six ingested layers plus the 1:10m basemap into the map page.
+The record builders for pipelines, cables and Chinese finance live in
+build_dashboard.py, so both pages compile the same rows; only the geometry
+simplification differs.
 
 Reads   data/*.geojson  +  data/africa_basemap_10m.json  (+ africa_basemap.json
         for the fast country lookup)
@@ -33,7 +34,7 @@ OUT = ROOT / "map.html"
 # Shared with build_dashboard.py so the two pages quote the same figure.
 from build_dashboard import (  # noqa: E402
     NAME_TO_ISO, ISO_TO_NAME, DAC_SECTOR, SDR_USD,
-    build_lookup, locate, load, build_pipelines, build_cables,
+    build_lookup, locate, load, build_pipelines, build_cables, build_china,
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
@@ -245,6 +246,16 @@ def main():
     cables = build_cables(idx, lambda part: [simplify(part, 0.001)], rnd=r)
     nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
     print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
+    print("china   …")
+    # footprints keep every ring (a hospital block is visible at the closest
+    # zoom), thinned at ~150 m and to at most 400 vertices per record
+    china = build_china(idx, lambda part: [simplify(part, 0.0015)], rnd=r, cap=400, min_extent=0)
+    cc = china["cols"]
+    cusd = sum(x[cc.index("usd_m")] or 0 for x in china["rows"]) / 1000
+    cfp = sum(1 for x in china["rows"] if x[cc.index("g")])
+    cprec = {k: sum(1 for x in china["rows"] if x[cc.index("prec")] == k) for k in range(4)}
+    print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn (2021 USD); "
+          f"{cfp:,} footprints; precise {cprec[0]:,}, ~5 km {cprec[1]:,}, admin {cprec[2]:,}, country {cprec[3]:,}")
 
     names = {}
     for c in basemap["countries"]:
@@ -268,6 +279,7 @@ def main():
         "ground": ground,
         "pipelines": pipelines,
         "cables": cables,
+        "china": china,
     }
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
     html = inline_vendor(brand_assets(TEMPLATE.read_text()))
@@ -279,12 +291,12 @@ def main():
     OUT.write_text(html.replace("/*__PAYLOAD__*/", blob))
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
-    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables"):
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china"):
         print(f"   {k:8s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
 
     # 2. GitHub Pages build: complete document, payload fetched at runtime by a
     #    module script (top-level await), with a loading state until it lands.
-    n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables))
+    n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables, china))
     # The data URL carries a digest of the payload. Pages and CDN caches keep
     # index.html and map.json for ten minutes each, independently; without
     # this a freshly deployed page can load the previous deploy's data and
@@ -315,13 +327,14 @@ async function loadPayload(){{
     pages = pages.replace(marker, '<script type="module">\nconst DATA = await loadPayload();', 1)
     DOCS.mkdir(exist_ok=True)
     (DOCS / "data").mkdir(exist_ok=True)
-    facts = site_facts(assets, finance, ground, pipelines, cables)
+    facts = site_facts(assets, finance, ground, pipelines, cables, china)
     (DOCS / "index.html").write_text(wrap_document(
         pages, title="Africa Infrastructure Map", path="", kind="map", facts=facts,
         description="Interactive open-data map of infrastructure across Africa: power plants and "
                     "oil and gas pipelines (Global Energy Monitor), African Development Bank "
-                    "and World Bank projects, construction works traced in OpenStreetMap and "
-                    "submarine cables (TeleGeography). Filter by country, status and sector."))
+                    "and World Bank projects, Chinese-financed infrastructure 2000–2021 (AidData), "
+                    "construction works traced in OpenStreetMap and submarine cables "
+                    "(TeleGeography). Filter by country, status and sector."))
     write_site_index(facts)
     (DOCS / "data" / "map.json").write_text(blob)
     for f in sorted(DATA.glob("*.geojson")) + [DATA / "meta.json", DATA / "africa_basemap_10m.json"]:

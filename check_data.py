@@ -26,6 +26,7 @@ LAYERS = {
     "osm_construction": ("ground", 500),
     "gem_oil_gas_pipelines": ("pipelines", 150),
     "telegeography_cables": ("cables", 40),
+    "aiddata_china_finance": ("china", 1000),
 }
 MAX_DROP = 0.20          # refuse if a layer lost more than a fifth of its records
 WINDOW = (-30, -45, 70, 45)   # lon0, lat0, lon1, lat1

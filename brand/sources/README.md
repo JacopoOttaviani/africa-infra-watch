@@ -21,12 +21,13 @@ themes. Nothing else was redrawn.
 | `code-for-africa.svg` | Code for Africa (publisher of this project) | Supplied by the author as a PNG with transparent background; wrapped like the Natural Earth mark | © Code for Africa, trademark |
 | `world-bank.svg` | World Bank Group | `worldbank.org/content/dam/wbr/logo/logo-wb-header-en.svg`, the site header wordmark; the globe's radial gradient and the navy text set to `currentColor` | © The World Bank Group, trademark. Data CC BY 4.0 |
 | `telegeography.svg` | TeleGeography (Submarine Cable Map) | `submarinecablemap.com/images/telegeography-logo.svg`, the map's header wordmark; the globe's gradient fills and the white text set to `currentColor` | © TeleGeography, trademark. Data CC BY-SA 4.0 |
+| `aiddata.svg` | AidData at William & Mary (Chinese finance) | `aiddata.org`, site header (`AidData_Logo--flat.svg` on its Webflow CDN); the mark's nine colours and the navy wordmark set to `currentColor` | © AidData, trademark. Data ODC-By 1.0, footprints ODbL |
 
 The Natural Earth and Code for Africa marks exist only as PNGs, so their SVGs
 wrap them: the raster's alpha channel (white on transparent, base64 inside the file) is
 an SVG `<mask>` over a `currentColor` rectangle. Replace them with vectors when
 available.
 
-Fetched 18 Sep 2026 (TeleGeography added the same day). The logos are used solely to credit the data sources and
+Fetched 18 Sep 2026 (TeleGeography added the same day, AidData on 19 Sep 2026). The logos are used solely to credit the data sources and
 imply no endorsement; if an owner objects, delete the file and the tile
 disappears at the next build.

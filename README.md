@@ -15,10 +15,13 @@ hand about twice a year; the header of each page says when.
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
 rivers, lakes and cities around Africa), with
-the five data layers drawn as circles (power units, sized by MW), squares and
-diamonds (AfDB and World Bank projects, sized by commitment), thin lines (construction ways traced in
-OpenStreetMap), haloed lines (oil and gas pipeline routes) and lines ending in
-dots (submarine cables, dots at their African landing points). Filters, a viewport summary, a "largest in view" list, per-record
+the six data layers drawn as circles (power units, sized by MW), squares and
+diamonds (AfDB and World Bank projects, sized by commitment), triangles
+(Chinese-financed projects from AidData, 2000–2021, sized by commitment, with
+the works' OpenStreetMap footprint outlined from country zoom in), thin lines
+(construction ways traced in OpenStreetMap), haloed lines (oil and gas pipeline
+routes) and lines ending in dots (submarine cables, dots at their African
+landing points). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
 **Cluster markers** toggle (on by default; `cl=0` in the hash turns it off) regroups the records that pass
 the filters into donuts, sized by count and sliced by status (pipelines and
@@ -35,7 +38,7 @@ figures are computed from the same payload the map draws, so they cannot drift.
 The dashboard is the page-first view of the same data, in the same frame: the
 map's left rail (brand, lede, data-as-of line, view tabs, search, Layers, Status,
 Narrow, and a Selection panel in place of the map's lists) beside a scrolling
-column of KPIs, a smaller equirectangular map of all five layers over Natural
+column of KPIs, a smaller equirectangular map of all six layers over Natural
 Earth 1:110m, charts by country and sector, and a sortable table. The rail
 becomes a drawer below 880 px on both pages. Pipeline and cable routes are
 thinned harder for the dashboard and clipped to a window around its frame at
@@ -45,8 +48,8 @@ shared with the map. Both pages use one status palette.
 
 ## Sources
 
-Six open datasets in five layers, deliberately kept apart because they share no
-project identifier. Summing across them double-counts. Both pages show the five
+Seven open datasets in six layers, deliberately kept apart because they share no
+project identifier. Summing across them double-counts. Both pages show the six
 layers; the dashboard's finance layer is AfDB only, the map adds the World Bank.
 
 | Layer | Source | Records | Answers |
@@ -57,9 +60,11 @@ layers; the dashboard's finance layer is AfDB only, the map adds the World Bank.
 | Ground truth | OpenStreetMap via Overpass | 3,586 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 324 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
+| Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,324 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
 
 The two line layers and the World Bank lender were added in September 2026
-(`fetch_sources.py pipes cables wb`). The finance layer carries a `ln` column
+(`fetch_sources.py pipes cables wb`), the Chinese finance layer on
+2026-09-19 (`fetch_sources.py china`). The finance layer carries a `ln` column
 (`AfDB` / `WB`) and a lender filter (`ln=` in the hash); World Bank markers are
 diamonds, AfDB squares, and the two are never summed.
 Status vocabulary for them: GEM `proposed` is *announced*, `construction`, `operating`
@@ -67,6 +72,31 @@ and `shelved`/`cancelled`/`idle` as *stalled*; TeleGeography's *in service* is
 *operating*, and a *planned* cable is *under construction* when its ready-for-service
 year is within a year of the snapshot, *announced* otherwise. The Methodology tab
 states the inference.
+
+**The Chinese finance layer** is AidData's GCDF 3.0 workbook (26 MB Excel,
+ODC-By) joined with the per-project footprints of its Geospatial companion
+(GeoGCDF v3.0.1 on GitHub, one GeoJSON per project, ODbL because the geometry
+is OpenStreetMap's). Kept: every non-umbrella commitment to an African recipient
+that AidData flags as `Infrastructure` (building, extending or maintaining a
+physical structure: power plants and highways, but also hospitals, stadiums and
+ministry buildings). Left out: 835 umbrella agreements (their money reappears in
+the projects under them), 489 pledges (MoUs and letters of intent, which AidData
+excludes from its own aggregates and never geocodes, so the layer has no
+*announced* records) and 5,674 records that are not physical infrastructure
+(cash, equipment and vehicle donations, scholarships, medical teams, oil-backed
+corporate loans). Status: *Pipeline: Commitment* is **approved**,
+*Implementation* **under construction**, *Completion* **operating**,
+*Suspended*/*Cancelled* **stalled**. Amounts are AidData's constant 2021 USD and
+are never added to the IATI figures; the map's lender filter offers "Chinese
+official lenders" beside AfDB and the World Bank. Location comes in four tiers,
+stated on every card: precise (on the OSM feature; 894 of these carry a footprint
+that both pages outline), within 5 km, administrative area (the centre of the
+district or province AidData names), and country only (the country's interior
+point, computed from the 1:110m basemap). It is a **2000–2021 baseline**, which
+is why it was first evaluated and left out; the pages say so wherever the layer
+is described. The layer's GeoJSON carries the simplified footprints as
+`MultiLineString` rings (a buffered road is a 2 m sliver, so rings are stroked,
+never filled) and every other record as a `Point`.
 
 ## Rebuild
 
@@ -77,7 +107,7 @@ python3 refresh.py                # fetch → gate → build, in one go (see "Up
 or step by step:
 
 ```bash
-python3 fetch_sources.py          # all six sources -> data/*.geojson + data/meta.json
+python3 fetch_sources.py          # all seven sources -> data/*.geojson + data/meta.json
 python3 fetch_basemap.py          # Natural Earth 1:10m -> data/africa_basemap_10m.json
 python3 check_data.py             # refuse a snapshot that shrank or moved
 python3 build_dashboard.py        # -> dashboard.html  and  docs/dashboard.html
@@ -90,11 +120,15 @@ logo sheet: the continent traced from the basemap with a compass rose cut out).
 `python3 brand/trace.py && python3 brand/logos.py` regenerates them; see
 `brand/README.md`.
 
-`fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` runs a single source.
+`fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` / `china` runs a single source.
 The OSM pass takes ~10 minutes: it walks latitude bands and sleeps between them
 to stay inside Overpass's slot budget. The cables pass reads one small JSON per
 cable system in the world (~700, a few minutes); the pipelines pass downloads two
-GeoJSON files of ~70 MB each from GEM's bucket. Each run records the fetch date, release and record
+GeoJSON files of ~70 MB each from GEM's bucket. The china pass downloads
+AidData's 28 MB zip, reads the Excel workbook with the standard library (zip +
+XML, about three seconds), then fetches ~1,900 per-project GeoJSONs from GitHub
+eight at a time (two minutes; cached under `data/.aiddata_cache/` by GeoGCDF
+version, so a rerun is seconds). Each run records the fetch date, release and record
 count in `data/meta.json`; the pages read their "data as of" dates from there.
 
 `fetch_basemap.py` downloads the Natural Earth GeoJSON mirrors from
@@ -119,8 +153,8 @@ Two outputs from one template, because they run in different places:
   HTML document (doctype, head, favicon, social tags) that loads
   `data/map.json` at runtime via a module script with a loading state, so the
   page and the data cache separately. `docs/data/` also carries the raw
-  GeoJSON layers and `meta.json`, linked from the Methodology tab, so the site
-  publishes its data. The site build alone shows a light/dark toggle and links
+  GeoJSON layers (the AidData one with simplified footprints) and `meta.json`,
+  linked from the Methodology tab, so the site publishes its data. The site build alone shows a light/dark toggle and links
   between the map and the dashboard.
 
 ## Deploying to jacopoottaviani.com/africa-infra-watch
@@ -155,11 +189,11 @@ Two things follow from that:
   in `shared.py` (or set `AIW_SITE_URL` when building) and rebuild.
 
 What `docs/` holds: `index.html` (the map, which loads `data/map.json` at
-runtime), `dashboard.html`, `data/` (the compiled payload, the three raw
+runtime), `dashboard.html`, `data/` (the compiled payload, the seven raw
 GeoJSON layers, the basemap and `meta.json` — the site publishes its data,
 linked from the Methodology tab), `social.png`, `favicon.svg` and the two PNG
 icons, `sitemap.xml`, `llms.txt`, and `.nojekyll` so Pages serves the folder
-as-is. About 17 MB per snapshot.
+as-is. About 40 MB per snapshot.
 
 ## Search engines, link previews and AI crawlers
 
@@ -211,7 +245,7 @@ none, so nothing is blocked. If one is ever added there, include
 python3 refresh.py
 ```
 
-This fetches the six sources (about 20 minutes, most of it the
+This fetches the seven sources (about 20 minutes, most of it the
 OpenStreetMap pass), records the dates in `data/meta.json`, runs
 `check_data.py`, and rebuilds `docs/` and the artifact files, including the
 link-preview image and `llms.txt` with the new counts. Then look at it:
@@ -373,14 +407,46 @@ These each cost real time to find. They are not in any of the upstream docs.
   `check_data.py` tests that a line *touches* the Africa window rather than
   that it starts in it, and the map's "zoom to" fits the part of the route
   inside that window, not the whole thing.
+- **Every GeoGCDF footprint is a MultiPolygon**, even a road or a single
+  node: AidData buffers points and lines by about a metre and dissolves them.
+  A railway arrives as a two-metre-wide sliver whose ring runs up one side and
+  back the other. Stroke the exterior ring, never fill it, and drop rings
+  narrower than ~20 m (a buffered node is a 65-vertex circle). The whole TAZARA
+  railway (1,882 vertices after simplification) comes with five records, so cap
+  the vertices a single record may carry in the payload.
+- **Only AidData's "Recommended For Aggregates" records have a precision or a
+  footprint**; pledges and umbrella agreements carry `NA`. Umbrella agreements
+  (master facilities, ECTA framework deals) must go, or their money is counted
+  twice. AidData's `Infrastructure` flag is the right filter, not the sector:
+  a vehicle donation sits in transport and an oil-backed corporate loan in
+  industry, and neither builds anything.
+- **The per-project GeoJSON carries only a dozen fields.** Funder, contractor,
+  flow class, terms and the precision tier live in the 128-column workbook,
+  which the pipeline reads without openpyxl: an `.xlsx` is a zip of XML, and a
+  70-line `iterparse` reader matches openpyxl cell for cell in a third of the
+  time. Dates come out as Excel serials, which is fine because only years are
+  used.
+- **One GeoGCDF footprint is in Colombia** (record 34840, a buyer's credit in
+  Africa whose OSM link points at the wrong feature). The fetcher tests every
+  footprint's interior point against the Africa window and falls back to the
+  country's centre, ignoring the ADM rows derived from the same bad link.
+- **AidData records the recipient as ISO-3**, and "Africa, regional" has no
+  code at all. Regional projects with a footprint are attributed by
+  point-in-polygon; the 26 without one are dropped and counted in `meta.json`.
+- **GitHub's raw host serves 1,900 small files in about two minutes** at eight
+  concurrent requests with no throttling, so the 496 MB GeoPackage release is
+  never needed. A 404 is a project without a feature; cache it as an empty file.
 
 ## Not used, and why
 
 - **PIDA / VPIC** — Africa's own continental pipeline, and conceptually ideal,
   but `au-pida.org` is a stock WordPress install with no project post type and
   no CSV or GeoJSON. Project data reaches the public only as PDF reports.
-- **AidData Chinese development finance 3.0** — excellent geocoding, but
-  coverage ends 2021, so it cannot answer "ongoing". Good historical baseline.
+- **AidData Chinese development finance 3.0** was left out at first because its
+  coverage ends with 2021 commitments, so it cannot answer "ongoing". It was
+  added on 2026-09-19 as the Chinese finance layer, explicitly as a historical
+  baseline (see Sources): for a map of who pays for African infrastructure, two
+  decades of Chinese official lending were too large a gap.
 - **Boston University's Chinese Loans to Africa database** — updated through
   2024 and loan-level, but no coordinates; country-level only.
 - **Microsoft's Global Renewables Watch** — quarterly satellite detections of

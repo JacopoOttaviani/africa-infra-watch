@@ -152,7 +152,7 @@
   .notes .src:first-of-type{border-top:0}
   .notes .src .sk{font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;min-width:88px;padding-top:2px}
   .sk.assets{color:var(--st-operating)} .sk.finance{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
-  .sk.pipelines{color:var(--st-operating)} .sk.cables{color:var(--st-approved)}
+  .sk.pipelines{color:var(--st-operating)} .sk.cables{color:var(--st-approved)} .sk.china{color:var(--st-operating)}
   .notes .src .sd{flex:1;color:var(--ink-2)}
   .notes .src .sd b{color:var(--ink);font-weight:600}
   .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
@@ -234,6 +234,7 @@
   .pm.pipelines{width:14px;height:4px;border-radius:2px;transform:rotate(-32deg);box-shadow:0 0 0 2.5px color-mix(in srgb,var(--c,var(--st-stalled)) 30%,transparent)}
   .pm.cables{width:14px;height:2px;border-radius:2px;transform:rotate(-32deg);box-shadow:-6px 0 0 1px var(--c,var(--st-stalled)),6px 0 0 1px var(--c,var(--st-stalled))}
   .pm.stalled{background:transparent;border:1.6px solid var(--st-stalled);box-shadow:none}
+  .pmw svg.tri{display:block;width:15px;height:15px;overflow:visible}
   .pm.announced{--c:var(--st-announced)} .pm.approved{--c:var(--st-approved)}
   .pm.under_construction{--c:var(--st-construction)} .pm.operating{--c:var(--st-operating)}
   #tip .tr .sw{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:0}
@@ -488,7 +489,7 @@
     </div>
 
     <div class="readmore map-only">
-      <span>Where the data comes from, how the six sources are aligned, and what it cannot tell you.</span>
+      <span>Where the data comes from, how the seven sources are aligned, and what it cannot tell you.</span>
       <button id="tomethod">Read the methodology →</button>
       <span class="byline">A project by <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
     </div>
@@ -500,7 +501,7 @@
   </aside>
 
   <main class="stage" id="stage">
-    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB and World Bank projects, construction works, oil and gas pipelines and submarine cables"></canvas>
+    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB and World Bank projects, Chinese-financed projects, construction works, oil and gas pipelines and submarine cables"></canvas>
     <div id="lmap" hidden aria-hidden="true"></div>
 
     <div class="hud hud-tl">
@@ -533,7 +534,7 @@
 
     <div class="attrib">
       <div class="scale" id="scale"></div>
-      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB and World Bank via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a></div>
+      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB and World Bank via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a> · <a href="https://www.aiddata.org/" target="_blank" rel="noopener noreferrer">AidData</a></div>
     </div>
 
     <article id="method" aria-label="Methodology">
@@ -573,13 +574,21 @@ const STATUS_ORDER = ["announced","approved","under_construction","operating","s
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
 const STATUS_KEY   = {announced:"an",approved:"ap",under_construction:"uc",operating:"op",stalled:"st"};
 const KEY_STATUS   = Object.fromEntries(Object.entries(STATUS_KEY).map(([k,v])=>[v,k]));
-const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables"];
-const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography"};
-/* the finance layer holds two lenders, told apart by shape: square and diamond */
-const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank"};
+const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables","china"];
+const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · 2000–2021"};
+/* the finance layer holds two lenders, told apart by shape: square and diamond;
+   Chinese official lenders are a layer of their own (triangles) but join the
+   lender filter, so "who is paying" can be asked of all three */
+const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", CN:"Chinese official lenders"};
 const sourceOf     = r => r.layer==="finance" ? (LENDER_NAME[r.lender]||LAYER_SUB.finance) : LAYER_SUB[r.layer];
-const LAYER_KEY    = {assets:"a",finance:"f",ground:"g",pipelines:"p",cables:"c"};
+const LAYER_KEY    = {assets:"a",finance:"f",ground:"g",pipelines:"p",cables:"c",china:"d"};
+/* AidData's vocabulary behind the shared one */
+const CHINA_RAW    = {approved:"Pipeline: Commitment", under_construction:"Implementation", operating:"Completion"};
+const CHINA_PREC   = ["precise", "approximate · within 5 km", "approximate · administrative area", "country only"];
+const OECD_SECTOR  = {110:"Education",120:"Health",130:"Population and reproductive health",140:"Water supply and sanitation",150:"Government and civil society",160:"Other social infrastructure",210:"Transport and storage",220:"Communications",230:"Energy",240:"Banking and financial services",250:"Business and other services",310:"Agriculture, forestry, fishing",320:"Industry, mining, construction",330:"Trade policies and regulations",410:"General environmental protection",430:"Other multisector",510:"General budget support",520:"Food aid and food security",530:"Other commodity assistance",600:"Action relating to debt",700:"Humanitarian aid",720:"Emergency response",730:"Reconstruction relief",740:"Disaster prevention",998:"Unallocated"};
+/* the footprint outlines appear from about country zoom */
+const FOOTPRINT_Z  = 5.6;
 const ALL_LAYER_KEYS = LAYER_ORDER.map(k=>LAYER_KEY[k]).join("");
 /* the layers drawn as lines, in drawing order: sea first, thin works on top */
 const LINE_LAYERS  = ["cables","pipelines","ground"];
@@ -591,11 +600,11 @@ const isLine = r => r.layer in LINE_RANK;
 const UNCLUSTERED = new Set(["pipelines","cables"]);
 const clustered = r => !UNCLUSTERED.has(r.layer);
 /* the colour each layer's button and stat row wear: its most common status */
-const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved"};
+const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved",china:"operating"};
 const allLayersOn  = () => Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
 const NAMES = DATA.names;
 const PAGES = document.documentElement.dataset.host === "pages";
-const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",other:"Other / multi-sector",road:"Road",rail:"Rail",air:"Airport"};
+const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",health:"Health",education:"Education",government:"Government buildings",social:"Social infrastructure",agriculture:"Agriculture",other:"Other / multi-sector",road:"Road",rail:"Rail",air:"Airport"};
 
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 let COL = {};
@@ -683,6 +692,7 @@ const FINANCE = inflate("finance", DATA.finance);
 const GROUND  = inflate("ground",  DATA.ground);
 const PIPES   = inflate("pipelines", DATA.pipelines || {cols:[], rows:[]});
 const CABLES  = inflate("cables",    DATA.cables    || {cols:[], rows:[]});
+const CHINA   = inflate("china",     DATA.china     || {cols:[], rows:[]});
 
 /* A pipeline into Spain or a cable on to India is African without all of it
    being so: "zoom to" fits the part inside this window, not the whole route. */
@@ -752,6 +762,19 @@ function unify(){
       status:c.status, kind:"Submarine cable" + (c.rfs ? ` · RFS ${c.rfs}` : ""), sector:"ict", size:c.km, unit:"km",
       x:mx(c.lon), y:my(c.lat), lon:c.lon, lat:c.lat, b:c.b, bz:c.bz,
       text:[c.name,c.owners,c.suppliers,...(c.lps||[]).map(l=>l[2]),...(c.isos||[]).map(i=>NAMES[i])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  /* Chinese-financed projects are points (a triangle at the site, the admin
+     centre or the country's centre); a precise one also carries the outline
+     of its OpenStreetMap footprint, drawn from country zoom in */
+  for(const c of CHINA){
+    if(c.g){ c.parts = c.g.map(prepRing); c.b = unionBox(c.parts); delete c.g; }
+    out.push({
+      ref:c, layer:"china", lender:"CN", name:c.name||"(untitled project)", iso:c.iso,
+      country:c.iso ? (NAMES[c.iso]||c.iso) : "Africa, regional",
+      status:c.status, kind:SECTOR_LABEL[c.sector]||c.sector||"—", sector:c.sector||"other", size:c.usd_m, unit:"$m",
+      x:mx(c.lon), y:my(c.lat), lon:c.lon, lat:c.lat, b:c.b||null,
+      text:[c.name,c.funders,c.impl,c.cofin,c.place,NAMES[c.iso],c.flow,c.cls,OECD_SECTOR[c.sc],"china chinese aiddata",c.aid].filter(Boolean).join(" ").toLowerCase(),
     });
   }
   return out;
@@ -1041,6 +1064,26 @@ function draw(){
     }
   }
 
+  /* the OpenStreetMap footprint behind a precisely located Chinese-financed
+     project: a thin outline in its status colour (a buffered road arrives as
+     a sliver, so the outline reads as a line). From country zoom in, or when
+     the record is picked; drawn in the cluster view too, since it is
+     geography rather than a marker. */
+  if(S_.layers.china && (view.z >= FOOTPRINT_Z || (S_.picked && S_.picked.layer==="china"))){
+    const fw = Math.max(0.8, Math.min(2.6, 0.8 + (view.z-FOOTPRINT_Z)*0.32));
+    for(const r of VIS_PTS){
+      if(r.layer!=="china" || !r.ref.parts) continue;
+      const picked = r===S_.picked;
+      if(!picked && view.z < FOOTPRINT_Z) continue;
+      if(!ringVisible(r.b)) continue;
+      ctx.beginPath();
+      for(const p of r.ref.parts){ if(ringVisible(p.b)){ trace(p.a); ctx.closePath(); } }
+      ctx.strokeStyle = statusColor(r.status); ctx.globalAlpha = picked ? 0.95 : 0.72;
+      ctx.lineWidth = picked ? fw+1.8 : fw; ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
   /* points: big first so small ones stay on top */
   if(!S_.cluster) for(const r of VIS_PTS){
     const x = r.x*S+OX, y = r.y*S+OY;
@@ -1051,6 +1094,7 @@ function draw(){
       if(r.lender==="WB"){ const d = rad*1.38; ctx.moveTo(x, y-d); ctx.lineTo(x+d, y); ctx.lineTo(x, y+d); ctx.lineTo(x-d, y); ctx.closePath(); }
       else ctx.rect(x-rad, y-rad, rad*2, rad*2);
     }
+    else if(r.layer==="china"){ const d = rad*1.3; ctx.moveTo(x, y-d*1.05); ctx.lineTo(x+d*1.08, y+d*0.75); ctx.lineTo(x-d*1.08, y+d*0.75); ctx.closePath(); }
     else ctx.arc(x, y, rad, 0, 6.2832);
     if(hollow){
       ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.stroke();
@@ -1164,8 +1208,9 @@ function nearest(px_, py_){
   if(best) return best;
   const tol = 7, mxp = (px_-OX)/S, myp = (py_-OY)/S, tm = tol/S;
   let bl=null, bld=tol*tol;
-  for(const r of VIS_LINES){
-    if(S_.cluster && clustered(r)) continue;
+  const cand = view.z >= FOOTPRINT_Z && S_.layers.china ? VIS_LINES.concat(VIS_PTS.filter(r=>r.layer==="china" && r.ref.parts)) : VIS_LINES;
+  for(const r of cand){
+    if(S_.cluster && clustered(r) && r.layer!=="china") continue;
     const b = r.b;
     if(mxp<b[0]-tm||mxp>b[2]+tm||myp<b[1]-tm||myp>b[3]+tm) continue;
     for(const p of r.ref.parts){
@@ -1208,6 +1253,7 @@ const glyph = {
   ground:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   pipelines: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none" opacity=".3"/><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   cables:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 12 13.5 4" stroke="${col}" stroke-width="1.7" stroke-linecap="round" fill="none"/><circle cx="2.8" cy="11.8" r="2.3" fill="${col}"/><circle cx="13.2" cy="4.2" r="2.3" fill="${col}"/></svg>`,
+  china:   col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2.2 14.3 13.6H1.7Z" fill="${col}"/></svg>`,
 };
 const glyphStatus = (layer, status, lender) => {
   const col = statusColor(status);
@@ -1216,16 +1262,17 @@ const glyphStatus = (layer, status, lender) => {
   if(layer==="assets") return `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.3" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(wb) return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2.4 13.6 8 8 13.6 2.4 8Z" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(layer==="finance") return `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3.8" y="3.8" width="8.4" height="8.4" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
+  if(layer==="china") return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3.4 13.2 12.8H2.8Z" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
   return (glyph[layer] || glyph.ground)(col);
 };
 
-const SHORT = {assets:"GEM", finance:"AfDB", finance_wb:"World Bank", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography"};
+const SHORT = {assets:"GEM", finance:"AfDB", finance_wb:"World Bank", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData"};
 function renderLede(){
   el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   const pipe = ASSETS.filter(a => a.status==="announced"||a.status==="approved"||a.status==="under_construction").length;
-  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB and World Bank projects</strong> with money attached, <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, <strong>${fmt(PIPES.length)} oil and gas pipeline segments</strong> and <strong>${fmt(CABLES.length)} submarine cables</strong>, from five sources that are kept apart because they share no project identifier.`;
+  el("lede").innerHTML = `<strong>${fmt(pipe)} power units</strong> in the pipeline, <strong>${fmt(FINANCE.length)} AfDB and World Bank projects</strong> with money attached, <strong>${fmt(GROUND.length)} road, rail and airport works</strong> traced on the ground, <strong>${fmt(PIPES.length)} oil and gas pipeline segments</strong>, <strong>${fmt(CABLES.length)} submarine cables</strong> and <strong>${fmt(CHINA.length)} Chinese-financed projects</strong> from 2000 to 2021, from six sources that are kept apart because they share no project identifier.`;
 }
 
 function counts(skip){
@@ -1273,7 +1320,7 @@ function renderSelects(){
   const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort((a,b)=>(SECTOR_LABEL[a]||a).localeCompare(SECTOR_LABEL[b]||b));
   el("sector").innerHTML = `<option value="">All sectors</option>` +
     secs.map(s=>`<option value="${s}"${S_.sector===s?" selected":""}>${SECTOR_LABEL[s]||s}</option>`).join("");
-  el("lender").innerHTML = `<option value="">Both lenders</option>` +
+  el("lender").innerHTML = `<option value="">All lenders</option>` +
     Object.entries(LENDER_NAME).map(([k,n])=>`<option value="${k}"${S_.lender===k?" selected":""}>${n} only</option>`).join("");
 }
 function renderLegend(){
@@ -1290,6 +1337,7 @@ function renderLegend(){
       <div class="lg">${glyph.ground(COL.ink)}<span><b>Works traced</b> in OpenStreetMap</span></div>
       <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(COL.ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
+      <div class="lg">${glyph.china(COL.ink)}<span><b>Chinese-financed project</b> · size = commitment</span></div>
       <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = not yet built</span></div>
       ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
     </div>`;
@@ -1307,8 +1355,9 @@ let listExpanded = false;
 function renderView(){
   const v = inView();
   const A = v.filter(r=>r.layer==="assets"), F = v.filter(r=>r.layer==="finance"), G = v.filter(r=>r.layer==="ground");
-  const P = v.filter(r=>r.layer==="pipelines"), C = v.filter(r=>r.layer==="cables");
+  const P = v.filter(r=>r.layer==="pipelines"), C = v.filter(r=>r.layer==="cables"), N = v.filter(r=>r.layer==="china");
   const pkm = P.reduce((a,r)=>a+(r.size||0),0), landings = C.reduce((a,r)=>a+((r.ref.lps||[]).length),0);
+  const cnUsd = N.reduce((a,r)=>a+(r.size||0),0)/1000, cnLoans = N.filter(r=>r.ref.flow==="Loan").length;
   const gw = A.reduce((a,r)=>a+(r.size||0),0)/1000;
   const pipeGw = A.filter(r=>r.status!=="operating"&&r.status!=="stalled").reduce((a,r)=>a+(r.size||0),0)/1000;
   const usd = F.reduce((a,r)=>a+(r.size||0),0)/1000;
@@ -1326,7 +1375,9 @@ function renderView(){
     <div class="stat"><span class="glyph">${glyph.pipelines(COL.operating)}</span>
       <span><span class="k">Oil & gas pipelines</span><br><span class="v">${fmt(P.length)} segments · ${fmt(pkm)} km <span>of route</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.cables(COL.approved)}</span>
-      <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>African landings</span></span></span></div>`;
+      <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>African landings</span></span></span></div>
+    <div class="stat"><span class="glyph">${glyph.china(COL.operating)}</span>
+      <span><span class="k">Chinese finance</span><br><span class="v">${fmt(N.length)} projects · $${fmt1(cnUsd)}bn <span>committed 2000–2021 · ${fmt(cnLoans)} loans · 2021 USD</span></span></span></div>`;
 
   const CAP = 60, FIRST = 10;
   const ranked = v.filter(r=>r.size!=null).sort((a,b)=>(b.size/P95[b.layer])-(a.size/P95[a.layer]));
@@ -1416,6 +1467,28 @@ function renderDetail(){
     link = ["https://www.submarinecablemap.com/submarine-cable/"+encodeURIComponent(f.cid), "TeleGeography record"];
     if(f.url) link2 = [f.url, "Cable website"];
     note = "Route, owners and ready-for-service year as published by TeleGeography's Submarine Cable Map. A planned cable due within a year is shown as under construction; one due later, as announced.";
+  } else if(r.layer==="china"){
+    rows.push(["Recipient", esc(r.country)]);
+    rows.push(["Status", `${STATUS_LABEL[r.status]} <span>· AidData "${esc(f.raw || CHINA_RAW[r.status] || r.status)}"</span>`]);
+    rows.push(["Sector", `${esc(r.kind)}${OECD_SECTOR[f.sc] ? ` <span>· OECD ${esc(OECD_SECTOR[f.sc])}</span>` : ""}`]);
+    rows.push(["Committed", f.usd_m!=null ? `<span class="num">$${fmt2(f.usd_m)}m</span> <span>· constant 2021 USD${f.est ? ", estimated by AidData" : ""}</span>` : "not published <span>· AidData found no amount</span>"]);
+    if(f.flow) rows.push(["Flow", esc(f.flow) + (f.cls ? ` <span>· ${esc(f.cls)}</span>` : "")]);
+    if(f.rate!=null || f.mat!=null) rows.push(["Loan terms", [f.rate!=null ? `${fmt2(f.rate)}% interest` : null, f.mat!=null ? `${fmt1(f.mat)}-year maturity` : null].filter(Boolean).join(" <span>·</span> ")]);
+    if(f.funders) rows.push(["Funder", esc(f.funders)]);
+    if(f.impl) rows.push(["Implementer", esc(f.impl)]);
+    if(f.cofin) rows.push(["Co-financed by", esc(f.cofin)]);
+    const yrs = [f.cyr ? `committed ${f.cyr}` : null, f.syr ? `started ${f.syr}` : null, f.eyr ? `completed ${f.eyr}` : null].filter(Boolean);
+    if(yrs.length) rows.push(["Timeline", yrs.join(" <span>·</span> ")]);
+    if(f.distress) rows.push(["Repayment", "financial distress reported <span>· AidData's flag on the loan</span>"]);
+    const where = f.prec===0 ? (f.parts ? "precise <span>· its OpenStreetMap footprint is outlined on the map</span>" : "precise <span>· a single OpenStreetMap feature</span>")
+      : f.prec===1 ? "approximate <span>· within about 5 km</span>"
+      : f.prec===2 ? `administrative area${f.place ? ` <span>· centre of ${esc(f.place)}</span>` : ""}`
+      : "country only <span>· AidData found no location; placed at the country's centre</span>";
+    rows.push(["Location", where]);
+    rows.push(["AidData record", `<span class="m">${esc(f.aid)}</span>`]);
+    link = [`https://china.aiddata.org/projects/${encodeURIComponent(f.aid)}/`, "AidData project page"];
+    if(f.osm) link2 = ["https://www.openstreetmap.org/"+esc(f.osm), "OSM feature"];
+    note = "Commitment, status, terms and location as AidData reconstructs them from public sources (its TUFF 3.0 method), in constant 2021 US dollars. Covers commitments made from 2000 to 2021, so this is a historical baseline, not what China is financing now. Chinese money is never added to the AfDB or World Bank figures.";
   } else {
     rows.push(["Becomes", esc(r.kind)]);
     rows.push(["Status", r.status==="announced" ? "proposed alignment (OSM <i>proposed</i>)" : "under construction (OSM <i>construction</i>)"]);
@@ -1530,7 +1603,15 @@ function donutGlyph(){
 const ICONS = {};
 function iconFor(r){
   const k = r.layer+"|"+r.status+"|"+(r.lender||"");
-  return ICONS[k] || (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html:`<i class="pm ${r.layer} ${r.status}${r.lender==="WB"?" wb":""}"></i>`}));
+  if(ICONS[k]) return ICONS[k];
+  let html;
+  if(r.layer==="china"){
+    const v = `var(${STATUS_VAR(r.status)})`;
+    html = r.status==="stalled"
+      ? `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.2 13.4 12.9H2.6Z" fill="none" stroke="${v}" stroke-width="1.7" stroke-linejoin="round"/></svg>`
+      : `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 14.6 13.8H1.4Z" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
+  } else html = `<i class="pm ${r.layer} ${r.status}${r.lender==="WB"?" wb":""}"></i>`;
+  return (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html}));
 }
 function markerFor(r){
   if(!r._m){ r._m = L.marker([r.lat, r.lon], {icon:iconFor(r), interactive:false, keyboard:false}); r._m.rec = r; }
@@ -1837,11 +1918,11 @@ function topList(counter, n, labeler = x=>x){
 function statusTable(){
   const dash = "<span class='dim'>—</span>";
   const rows = [
-    ["announced", "Announced", "Pipeline", "Proposed (dashed line)", "Proposed (dashed)", "Planned, RFS later than next year (dashed)"],
-    ["approved", "Pre-construction, permitted", dash, dash, dash, dash],
-    ["under_construction", "Construction", "Implementation", "Construction", "Construction", "Planned, RFS by next year"],
-    ["operating", "Operating, retired", "Completed, closed", dash, "Operating", "In service"],
-    ["stalled", "Cancelled, shelved, mothballed", "Cancelled, suspended", dash, "Cancelled, shelved, idle", dash],
+    ["announced", "Announced", "Pipeline", "Proposed (dashed line)", "Proposed (dashed)", "Planned, RFS later than next year (dashed)", "<span class='dim'>Pledges left out</span>"],
+    ["approved", "Pre-construction, permitted", dash, dash, dash, dash, "Pipeline: Commitment"],
+    ["under_construction", "Construction", "Implementation", "Construction", "Construction", "Planned, RFS by next year", "Implementation"],
+    ["operating", "Operating, retired", "Completed, closed", dash, "Operating", "In service", "Completion"],
+    ["stalled", "Cancelled, shelved, mothballed", "Cancelled, suspended", dash, "Cancelled, shelved, idle", dash, "Cancelled, suspended"],
   ];
   return rows.map(([s,...cells]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
 }
@@ -1893,6 +1974,20 @@ function renderMethod(){
   const cKm = C.reduce((t,c)=>t+(c.km||0),0);
   const cOwners = {}; for(const c of C) for(const o of (c.owners||"").split(",").map(x=>x.trim()).filter(Boolean)) cOwners[o]=(cOwners[o]||0)+1;
   const cYear = new Date().getFullYear();
+
+  const N = CHINA;
+  const nUsd = N.reduce((t,x)=>t+(x.usd_m||0),0)/1000, nAmt = N.filter(x=>x.usd_m!=null).length;
+  const nLoan = N.filter(x=>x.flow==="Loan"), nGrant = N.filter(x=>x.flow==="Grant");
+  const nLoanUsd = nLoan.reduce((t,x)=>t+(x.usd_m||0),0)/1000;
+  const nFp = N.filter(x=>x.parts).length, nPrec = N.filter(x=>x.prec===0).length, nApprox = N.filter(x=>x.prec===1||x.prec===2).length, nCountry = N.filter(x=>x.prec===3).length;
+  const nCts = new Set(N.map(x=>x.iso).filter(Boolean)).size;
+  const nFund = {}; for(const x of N) for(const o of (x.funders||"").split(";").map(s=>s.trim()).filter(Boolean)) nFund[o]=(nFund[o]||0)+1;
+  const nImpl = {}; for(const x of N) for(const o of (x.impl||"").split(";").map(s=>s.trim()).filter(Boolean)) nImpl[o]=(nImpl[o]||0)+1;
+  const nSec = {}; for(const x of N) nSec[x.sector||"other"] = (nSec[x.sector||"other"]||0)+1;
+  const nDistress = N.filter(x=>x.distress).length, nCofin = N.filter(x=>x.cofin).length;
+  const nYears = N.map(x=>x.cyr).filter(Boolean);
+  const nY0 = nYears.length ? Math.min(...nYears) : 2000, nY1 = nYears.length ? Math.max(...nYears) : 2021;
+  const nOut = DATA.meta.china_left_out || {};
   const allCts = new Set(ALL.flatMap(r=>r.isos||[r.iso]).filter(Boolean)).size;
 
   const SECTIONS = [
@@ -1902,6 +1997,7 @@ function renderMethod(){
     ["m-osm","Ground truth","sub"],
     ["m-pipes","Oil & gas pipelines","sub"],
     ["m-cables","Submarine cables","sub"],
+    ["m-china","Chinese finance","sub"],
     ["m-status","One status scale"],
     ["m-draw","How to read the map"],
     ["m-limits","What to keep in mind"],
@@ -1922,20 +2018,22 @@ function renderMethod(){
   <span class="kicker">Methodology · africa-infra-watch</span>
   <h1>Where the data comes from, and what it can and cannot say</h1>
   <p class="standfirst">
-    This map brings together six open datasets in five layers. Each answers a different question:
+    This map brings together seven open datasets in six layers. Each answers a different question:
     <strong>what is being built</strong>, <strong>who is paying for it</strong>,
-    <strong>what has broken ground</strong>, <strong>where oil and gas move</strong> and
-    <strong>where the continent connects to the internet</strong>. They share no common
-    project ID, so they are shown as separate layers and are never added up.
+    <strong>what has broken ground</strong>, <strong>where oil and gas move</strong>,
+    <strong>where the continent connects to the internet</strong> and <strong>where two decades of
+    Chinese official finance went</strong>. They share no common project ID, so they are shown as
+    separate layers and are never added up.
   </p>
 
   <section id="m-what">
     <div class="eyebrow"><span>01</span><span>What this map shows</span></div>
     <h2>What each source answers</h2>
     <p class="lead">
-      No single dataset covers infrastructure in Africa. This map uses six open sources that
+      No single dataset covers infrastructure in Africa. This map uses seven open sources that
       complement each other, and keeps them apart rather than merging them. Two lenders share the
-      finance layer, told apart by shape, and are never summed into one project cost.
+      finance layer, told apart by shape; Chinese official lenders have a layer of their own; none
+      of the three is ever summed into one project cost.
     </p>
     <div class="twrap"><table>
       <thead><tr><th>Layer</th><th>Source</th><th>Records</th><th>Answers</th><th>Data as of</th></tr></thead>
@@ -1946,6 +2044,7 @@ function renderMethod(){
         <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
         <tr><td>${glyph.pipelines(COL.operating)} Oil &amp; gas pipelines</td><td>${esc(src.pipelines.name)}<br><span class="dim">${esc(src.pipelines.detail)}</span></td><td class="m">${fmt(P.length)} segments</td><td>Which oil, NGL and gas pipelines run, are being laid or are proposed, and where they go</td><td class="dim">${esc(src.pipelines.fresh)}</td></tr>
         <tr><td>${glyph.cables(COL.approved)} Submarine cables</td><td>${esc(src.cables.name)}<br><span class="dim">${esc(src.cables.detail)}</span></td><td class="m">${fmt(C.length)} cables</td><td>Which submarine cables reach the continent, where they land, who owns them and when</td><td class="dim">${esc(src.cables.fresh)}</td></tr>
+        <tr><td>${glyph.china(COL.operating)} Chinese finance</td><td>${esc(src.china.name)}<br><span class="dim">${esc(src.china.detail)}</span></td><td class="m">${fmt(N.length)} projects</td><td>What Chinese official lenders and agencies committed to infrastructure from 2000 to 2021, where, on what terms, and what was built</td><td class="dim">${esc(src.china.fresh)}</td></tr>
       </tbody>
     </table></div>
     <p>
@@ -2137,17 +2236,57 @@ function renderMethod(){
     </div>
   </section>
 
+  <section id="m-china">
+    <div class="eyebrow"><span class="sk china">Layer · Chinese finance</span><span class="m">triangles, with footprints</span></div>
+    <h2>AidData</h2>
+    <p class="lead">The Global Chinese Development Finance Dataset, compiled by the research lab AidData at William &amp; Mary from official documents, press, filings and field sources: every known project supported by an official financial commitment from China, 2000 to 2021, with the footprint of the works traced in OpenStreetMap where AidData could find it.</p>
+    <dl class="spec">
+      <dt>Source</dt><dd><strong>AidData</strong>, ${esc(src.china.detail)}. Two files: the project workbook (GCDF 3.0, released November 2023, ${esc(src.china.lic).split(" (")[0]}) and its geospatial companion (GeoGCDF 3.0, June 2024), whose footprints are OpenStreetMap features and stay under OSM's ODbL. <a href="${src.china.url}" target="_blank" rel="noopener noreferrer">Dataset page ↗</a> · <a href="https://github.com/aiddata/gcdf-geospatial-data" target="_blank" rel="noopener noreferrer">Footprints on GitHub ↗</a></dd>
+      <dt>One record is</dt><dd>A <strong>project</strong> as AidData records it: one official commitment (a loan, a grant, a buyer's credit) from one or more Chinese official lenders or agencies to one recipient. A railway financed in three tranches is three records, each with the same footprint; a syndicated loan is one.</dd>
+      <dt>What is included</dt><dd>Every commitment to an African recipient that AidData flags as <strong>infrastructure</strong>: building, extending or maintaining a physical structure, from a power plant or a highway to a hospital, a stadium or a ministry building. Left out: <strong>${fmt(nOut.umbrella)} umbrella agreements</strong> (framework deals whose money reappears in the projects under them), <strong>${fmt(nOut.pledges)} pledges</strong> (MoUs and letters of intent that never became a signed commitment, which AidData excludes from its own aggregates) and <strong>${fmt(nOut.not_infrastructure)} records that are not physical infrastructure</strong>: cash, equipment and vehicle donations, scholarships, medical teams, and corporate or commodity-backed loans such as oil-backed credit lines to state companies.</dd>
+      <dt>Status</dt><dd>AidData's <em>Pipeline: Commitment</em> (signed, not started) is <strong>approved</strong>; <em>Implementation</em> is <strong>under construction</strong>; <em>Completion</em> is <strong>operating</strong>; <em>Suspended</em> and <em>Cancelled</em> are <strong>stalled</strong>. Because pledges are left out, this layer has no <em>announced</em> records.</dd>
+      <dt>Money</dt><dd>The commitment in <strong>constant 2021 US dollars</strong>, as AidData converts it (original currency to nominal dollars at the commitment year's rate, then deflated), so amounts from 2003 and 2019 compare. ${fmt(nAmt)} of ${fmt(N.length)} records carry an amount; the rest, mostly grants, are placed but not sized. Chinese money is never added to AfDB or World Bank money.</dd>
+      <dt>Location</dt><dd><strong>${pct(nPrec, N.length)}</strong> of records sit on the site itself, and <strong>${fmt(nFp)}</strong> of those carry a footprint drawn on the map from country zoom in; <strong>${pct(nApprox, N.length)}</strong> are approximate, within 5 km or at the centre of a district or province; <strong>${pct(nCountry, N.length)}</strong> have no published location and sit at the centre of their country, flagged so on the card.</dd>
+      <dt>Coverage</dt><dd>Commitments made <strong>${nY0}–${nY1}</strong>, implementation followed to 2023. This layer is a <strong>historical baseline</strong>: where Chinese money went and what it built. It does not say what China is financing this year.</dd>
+    </dl>
+    <div class="facts">
+      <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
+      <div class="fig">
+        <div><b>${fmt(N.length)}</b><span>projects in ${nCts} countries, ${nY0}–${nY1}</span></div>
+        <div><b>$${fmt1(nUsd)}bn</b><span>committed, constant 2021 USD · $${fmt1(nLoanUsd)}bn of it as loans</span></div>
+        <div><b>${fmt(nLoan.length)} · ${fmt(nGrant.length)}</b><span>loans · grants</span></div>
+        <div><b>${fmt(nDistress)}</b><span>loans with financial distress reported by AidData</span></div>
+      </div>
+      ${sbar(byStatus(N), N.length, "Chinese-financed projects by status")}
+      <p style="margin-top:12px;font-size:13px">Most frequent funders: ${topList(nFund, 5)}.<br>Most frequent implementers: ${topList(nImpl, 5)}.<br>By sector: ${topList(nSec, 8, k=>SECTOR_LABEL[k]||k)}. ${nCofin ? `${fmt(nCofin)} projects were co-financed with other lenders.` : ""}</p>
+    </div>
+    <div class="split">
+      <div class="yes"><h4>What it tells you</h4><ul>
+        <li>Where Chinese official finance went over two decades, project by project, and which lenders (China Eximbank, China Development Bank, the Ministry of Commerce, the state banks) and contractors were behind it.</li>
+        <li>The terms, where AidData found them: interest rate, maturity, ODA-like or commercial, co-financiers, and whether repayment ran into trouble.</li>
+        <li>The actual footprint of a railway, a highway or a dam, traced in OpenStreetMap, which no lender's own publication offers.</li>
+      </ul></div>
+      <div class="no"><h4>What it cannot tell you</h4><ul>
+        <li><strong>What China is financing now.</strong> The dataset ends with 2021 commitments; a project signed in 2022 or later is not here.</li>
+        <li>Official figures. China publishes no project-level aid or lending data; every record is AidData's reconstruction from public sources, and amounts marked "estimated" are exactly that.</li>
+        <li>Disbursements or repayments. The figure is the commitment, not money actually paid.</li>
+        <li>Chinese private investment, or commodity-backed corporate loans that build nothing. Only official finance for physical infrastructure is kept.</li>
+        <li>A precise site for about ${pct(nCountry, N.length)} of records, which sit at the country's centre.</li>
+      </ul></div>
+    </div>
+  </section>
+
   <section id="m-status">
     <div class="eyebrow"><span>02</span><span>One status scale</span></div>
-    <h2>Five statuses across five sources</h2>
+    <h2>Five statuses across six sources</h2>
     <p class="lead">Each source describes progress in its own words. They are mapped onto five shared statuses so one filter works everywhere. The mapping is a judgement call, shown here so you can disagree with it.</p>
     <div class="twrap"><table>
-      <thead><tr><th>Shared status</th><th>GEM power</th><th>AfDB · World Bank (IATI)</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th></tr></thead>
+      <thead><tr><th>Shared status</th><th>GEM power</th><th>AfDB · World Bank (IATI)</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th><th>AidData</th></tr></thead>
       <tbody>${statusTable()}</tbody>
     </table></div>
     <ul>
-      <li><strong>Approved exists only for power.</strong> The other sources have no such stage. The World Bank publishes nothing before board approval, so it has no announced activities either.</li>
-      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit or a pipeline segment, the Bank's implementation stage for an AfDB project, a mapper's tag for OpenStreetMap, and for a cable an inference from its ready-for-service year.</li>
+      <li><strong>Approved exists only for power and for Chinese finance</strong>, where it is a signed commitment whose works have not started. The other sources have no such stage. The World Bank publishes nothing before board approval, so it has no announced activities either; AidData's pledges are left out, so Chinese finance has none.</li>
+      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit or a pipeline segment, the Bank's implementation stage for an AfDB project, AidData's implementation stage for a Chinese-financed one, a mapper's tag for OpenStreetMap, and for a cable an inference from its ready-for-service year.</li>
       <li><strong>Operating includes the past.</strong> Retired units and closed projects stay visible rather than vanishing from every filter.</li>
       <li><strong>Stalled is drawn hollow</strong>, so abandoned projects stay on the map without competing with live ones.</li>
     </ul>
@@ -2163,6 +2302,7 @@ function renderMethod(){
       <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn along the traced route. Solid for construction, dashed for proposed.</span></div></div>
       <div>${glyph.pipelines(COL.ink)}<div><b>Haloed line · pipeline</b><span>Drawn along the route with a translucent halo of its own colour, so it reads as a pipe. Dashed while proposed.</span></div></div>
       <div>${glyph.cables(COL.ink)}<div><b>Line with dots · submarine cable</b><span>Drawn along the whole route; a dot at each African landing point. Dashed until in service.</span></div></div>
+      <div>${glyph.china(COL.ink)}<div><b>Triangle · Chinese-financed project</b><span>Area scales with the commitment in constant 2021 US dollars. Where AidData traced the works in OpenStreetMap, the footprint is outlined in the same colour from country zoom in.</span></div></div>
       <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved or suspended.</span></div></div>
     </div>
     <h3>Colour</h3>
@@ -2179,6 +2319,9 @@ function renderMethod(){
       diamonds sit on the Bank's own geocoded project sites, usually a town or district.
       OpenStreetMap works follow their traced route. Pipelines and cables follow their published
       route, which for a cable may run to Europe or Asia; "zoom to" fits the African part.
+      Chinese-financed triangles sit on the works when AidData located them precisely, at the
+      centre of the district or province when it could only get that close, and at the centre of
+      the country when it found no location at all; the card says which.
     </p>
     <h3>Clusters</h3>
     <p>
@@ -2212,7 +2355,7 @@ function renderMethod(){
       <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres, pipeline kilometres and cable landings apart.</li>
       <li><strong>"In view" means what is on screen</strong> and matches the filters. Zoom into a province and you get that province's figures.</li>
       <li><strong>"Largest in view" ranks each record against its own layer</strong>, so a power plant, a loan and a railway can share one list.</li>
-      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every status, since a closed project's money was still spent, and are shown per lender.</li>
+      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> include every status, since a closed project's money was still spent, and are shown per lender. Chinese commitments are in constant 2021 dollars and are shown on their own line, never added to the IATI figures.</li>
       <li><strong>Every number is computed from the source files.</strong></li>
     </ul>
   </section>
@@ -2220,8 +2363,9 @@ function renderMethod(){
   <section id="m-limits">
     <div class="eyebrow"><span>04</span><span>What to keep in mind</span></div>
     <h2>Limits of the data</h2>
-    <div class="callout"><p><strong>Money is two lenders only.</strong> The dollar figures are AfDB's and the World Bank's exposure, kept apart. Chinese policy banks, private finance, domestic budgets and other multilaterals are absent, and for many corridors they are the larger share.</p></div>
+    <div class="callout"><p><strong>Money is three lenders, kept apart.</strong> The dollar figures are AfDB's, the World Bank's and Chinese official lenders' exposure, never summed. The Chinese figures are AidData's reconstruction from public sources and stop at commitments made in 2021. Private finance, domestic budgets, Gulf and other bilateral lenders and the other multilaterals are absent, and for many corridors they are the larger share.</p></div>
     <ul>
+      <li><strong>Chinese finance is a baseline, not a feed.</strong> AidData's 3.0 release covers 2000–2021. Read it for where the money went and what it built; read the power, pipeline and OpenStreetMap layers for what is being built now. About ${pct(nCountry, N.length)} of its records sit at a country's centre for want of a location.</li>
       <li><strong>About ${pct(FA.length - fExact, FA.length)} of AfDB markers are approximate</strong>, and the World Bank marks all of its approximate. Check the location line on a card before drawing any conclusion finer than a district.</li>
       <li><strong>OpenStreetMap coverage follows mappers.</strong> The layer can confirm works; it can never prove their absence.</li>
       <li><strong>Energy and connectivity are over-represented.</strong> No comparable open tracker exists for ports, water or electricity transmission.</li>
@@ -2239,33 +2383,37 @@ function renderMethod(){
     <p>
       Each record's detail card links to the source record it came from: the GEM wiki page for a
       power unit or a pipeline, the IATI activity for an AfDB project, the Bank's project page for
-      a World Bank one, the OpenStreetMap way for traced works, the TeleGeography page for a cable. If a figure here looks wrong, check it
-      against the source.
+      a World Bank one, the OpenStreetMap way for traced works, the TeleGeography page for a cable,
+      the AidData project page, with its sources listed, for a Chinese-financed project. If a figure
+      here looks wrong, check it against the source.
     </p>
     <p>
       The pipeline is a handful of scripts that fetch the layers, build the basemap and compile this page.
       Re-running them refreshes every number, including the ones on this page. Other sources, such
-      as the African Union's PIDA pipeline, AidData and the World Bank, were evaluated and left out;
-      the ${DATA.meta.repo ? `<a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">repository README ↗</a>` : "repository README"} explains why.
+      as the African Union's PIDA pipeline and Boston University's Chinese Loans to Africa database,
+      were evaluated and left out; the ${DATA.meta.repo ? `<a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">repository README ↗</a>` : "repository README"} explains why.
     </p>
     ${PAGES ? `
     <h3>Download the data</h3>
     <p>
       The site publishes what it draws. <a href="data/map.json">map.json</a> is the compiled payload
-      (${fmt(A.length + F.length + G.length + P.length + C.length)} records plus the basemap). The raw layers as GeoJSON:
+      (${fmt(A.length + F.length + G.length + P.length + C.length + N.length)} records plus the basemap). The raw layers as GeoJSON:
       <a href="data/gem_power_assets.geojson">power assets</a>,
       <a href="data/iati_afdb_finance.geojson">AfDB finance</a>,
       <a href="data/iati_worldbank_finance.geojson">World Bank finance</a>,
       <a href="data/osm_construction.geojson">OpenStreetMap construction ways</a>,
-      <a href="data/gem_oil_gas_pipelines.geojson">oil and gas pipelines</a> and
-      <a href="data/telegeography_cables.geojson">submarine cables</a>;
+      <a href="data/gem_oil_gas_pipelines.geojson">oil and gas pipelines</a>,
+      <a href="data/telegeography_cables.geojson">submarine cables</a> and
+      <a href="data/aiddata_china_finance.geojson">Chinese-financed projects</a> (with their simplified footprints);
       <a href="data/meta.json">meta.json</a> records when each was fetched.
     </p>` : ""}
     <h3>Attribution</h3>
     <p>
       Power asset and pipeline data © Global Energy Monitor, CC BY 4.0. Finance data © African
       Development Bank Group, published via IATI, and © The World Bank, CC BY 4.0, via IATI. Map data © OpenStreetMap contributors, ODbL.
-      Submarine cable data © TeleGeography, Submarine Cable Map, CC BY-SA 4.0. Basemap by Natural
+      Submarine cable data © TeleGeography, Submarine Cable Map, CC BY-SA 4.0. Chinese finance data
+      © AidData at William &amp; Mary, Global Chinese Development Finance Dataset 3.0, ODC-By 1.0, with
+      project footprints © OpenStreetMap contributors, ODbL, via AidData's Geospatial GCDF 3.0. Basemap by Natural
       Earth, public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
     <div class="logos" aria-label="Data sources and publisher">
@@ -2275,6 +2423,7 @@ function renderMethod(){
       ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
       ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
       ${SOURCE_LOGOS["telegeography"] ? logoTile("telegeography", "https://www.submarinecablemap.com/", "TeleGeography", "Submarine cables") : ""}
+      ${SOURCE_LOGOS["aiddata"] ? logoTile("aiddata", "https://www.aiddata.org/", "AidData", "Chinese finance") : ""}
       ${logoTile("natural-earth", "https://www.naturalearthdata.com/", "Natural Earth", "Basemap")}${PAGES ? `
       ${logoTile("eox", "https://s2maps.eu/", "EOX IT Services, Sentinel-2 cloudless", "Satellite imagery")}` : ""}
       ${logoTile("code-for-africa", "https://codeforafrica.org/", "Code for Africa", "Publisher")}
@@ -2282,7 +2431,7 @@ function renderMethod(){
     <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data and its publisher.</p>
     <p class="foot">
       Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)}, World Bank in USD as published ·
-      ${fmt(A.length)} power units · ${fmt(FA.length)} AfDB and ${fmt(FW.length)} World Bank activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables ·
+      ${fmt(A.length)} power units · ${fmt(FA.length)} AfDB and ${fmt(FW.length)} World Bank activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables · ${fmt(N.length)} Chinese-financed projects ·
       ${allCts} countries and territories · africa-infra-watch · a project by
       <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">Jacopo Ottaviani</a>
     </p>

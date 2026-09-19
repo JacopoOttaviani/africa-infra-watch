@@ -86,11 +86,15 @@ SOURCE_INFO = {
                   "url": "https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/"},
     "cables": {"name": "TeleGeography", "lic": "CC BY-SA 4.0",
                "url": "https://www.submarinecablemap.com/"},
+    # the project records are AidData's (ODC-By); the footprints are traced in
+    # OpenStreetMap and stay under OSM's ODbL
+    "china": {"name": "AidData", "lic": "ODC-By 1.0 (footprints ODbL)",
+              "url": "https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0"},
 }
-# The layers each page draws. Both pages show the five layers; the dashboard's
+# The layers each page draws. Both pages show the six layers; the dashboard's
 # finance layer is AfDB only, so the World Bank source card is the map's alone.
-MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables")
-DASHBOARD_LAYERS = ("assets", "finance", "ground", "pipelines", "cables")
+MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables", "china")
+DASHBOARD_LAYERS = ("assets", "finance", "ground", "pipelines", "cables", "china")
 
 
 # ------------------------------------------------------------------ meta.json
@@ -128,6 +132,7 @@ def fmt_date(iso):
 def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
     p, c, w = meta.get("pipelines", {}), meta.get("cables", {}), meta.get("finance_wb", {})
+    ch = meta.get("china", {})
     rows = [
         {"k": "assets", **SOURCE_INFO["assets"],
          "detail": f"Global Integrated Power Tracker, release {a.get('release', 'unknown')}",
@@ -147,6 +152,10 @@ def sources(meta, keys=MAP_LAYERS):
         {"k": "cables", **SOURCE_INFO["cables"],
          "detail": "Submarine Cable Map, cables with an African landing point",
          "fresh": c.get("fresh") or fmt_date(c.get("fetched"))},
+        {"k": "china", **SOURCE_INFO["china"],
+         "detail": f"{ch.get('release') or 'Global Chinese Development Finance Dataset 3.0'}, "
+                   "official commitments to infrastructure 2000–2021, footprints from OpenStreetMap",
+         "fresh": ch.get("fresh") or fmt_date(ch.get("fetched"))},
     ]
     return [r for r in rows if r["k"] in keys]
 
@@ -156,7 +165,10 @@ def payload_meta(meta, keys=MAP_LAYERS):
             "sources": sources(meta, keys), "repo": REPO_URL or None,
             # GEM segments that exist in the tracker but carry no route, so the
             # Methodology can say how much of the layer is not drawn
-            "unrouted_pipelines": (meta.get("pipelines") or {}).get("unrouted")}
+            "unrouted_pipelines": (meta.get("pipelines") or {}).get("unrouted"),
+            # what the AidData fetch left out, so the Methodology can say so
+            "china_left_out": {k: (meta.get("china") or {}).get(k)
+                               for k in ("umbrella", "pledges", "not_infrastructure", "unlocated")}}
 
 
 # ------------------------------------------------------------ HTML document
@@ -209,16 +221,19 @@ KEYWORDS = ["Africa infrastructure", "infrastructure projects Africa", "Africa p
             "construction Africa map",
             "energy Africa", "Global Energy Monitor", "OpenStreetMap construction",
             "oil and gas pipelines Africa", "submarine cables Africa", "TeleGeography",
+            "Chinese investment Africa", "China Africa infrastructure", "AidData",
+            "Chinese loans Africa", "Belt and Road Africa",
             "open data Africa", "infrastructure investment Africa", "interactive map"]
 
 LICENSE_URL = {"CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
                "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
-               "ODbL 1.0": "https://opendatacommons.org/licenses/odbl/1-0/"}
+               "ODbL 1.0": "https://opendatacommons.org/licenses/odbl/1-0/",
+               "ODC-By 1.0 (footprints ODbL)": "https://opendatacommons.org/licenses/by/1-0/"}
 
 LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": "iati_afdb_finance.geojson",
               "finance_wb": "iati_worldbank_finance.geojson",
               "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
-              "cables": "telegeography_cables.geojson"}
+              "cables": "telegeography_cables.geojson", "china": "aiddata_china_finance.geojson"}
 
 
 def _rows(layer):
@@ -229,7 +244,7 @@ def _rows(layer):
     return list(layer), []
 
 
-def site_facts(assets, finance, ground, pipelines=None, cables=None, meta=None):
+def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None, meta=None):
     """Counts and totals of the snapshot being built, for the crawlable text.
     A page that does not draw a layer passes None for it and the count comes
     from meta.json, so the JSON-LD still describes every file the site
@@ -263,6 +278,7 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, meta=None):
             "ground": len(g),
             "pipelines": count(pipelines, "pipelines"), "cables": count(cables, "cables"),
             "pipe_km": total(pipelines, "km"),
+            "china": count(china, "china"), "china_usd_bn": total(china, "usd_m") / 1000,
             "gw": mw / 1000, "usd_bn": usd / 1000, "usd_bn_wb": usd_wb / 1000,
             "sources": sources(meta), "built": today(), "meta": meta}
 
@@ -277,6 +293,9 @@ def facts_sentence(facts):
         s += f", {facts['pipelines']:,} oil and gas pipeline segments from Global Energy Monitor"
     if facts.get("cables"):
         s += f" and {facts['cables']:,} submarine cables landing in Africa from TeleGeography"
+    if facts.get("china"):
+        s += (f", plus {facts['china']:,} infrastructure projects financed by Chinese official "
+              f"lenders and agencies between 2000 and 2021, from AidData")
     return s
 
 
@@ -291,6 +310,9 @@ def facts_totals(facts):
                          f"commitments as published")
         else:
             parts.append(f"USD {facts['usd_bn']:,.1f} billion of AfDB commitments, converted at {SDR_NOTE}")
+    if facts.get("china_usd_bn"):
+        parts.append(f"USD {facts['china_usd_bn']:,.1f} billion of Chinese official commitments to "
+                     f"infrastructure over 2000–2021, in constant 2021 dollars as AidData publishes them")
     return "; ".join(parts)
 
 
@@ -332,7 +354,15 @@ def structured_data(facts, *, path, title, description, kind):
                 "cables": "Submarine telecommunications cables with at least one landing point "
                           "in Africa, planned or in service, as route geometries with owners, "
                           "suppliers, ready-for-service year, length and African landing points, "
-                          "from TeleGeography's Submarine Cable Map."}[k]
+                          "from TeleGeography's Submarine Cable Map.",
+                "china": "Infrastructure projects in Africa supported by official financial "
+                         "commitments from China between 2000 and 2021 (loans and grants from "
+                         "China Eximbank, China Development Bank, the Ministry of Commerce and "
+                         "other official lenders), with status, sector, funder, implementer, "
+                         "commitment in constant 2021 USD, loan terms where known, and the "
+                         "project's footprint traced in OpenStreetMap where AidData geocoded it, "
+                         "from AidData's Global Chinese Development Finance Dataset 3.0 and its "
+                         "Geospatial companion."}[k]
         d = {"@type": "Dataset", "@id": site_url(f"#dataset-{k}"),
              "name": f"{SITE_NAME}: {src['name']} layer",
              "description": f"{what} {n:,} records in this snapshot. {src['detail']}.",
@@ -347,7 +377,7 @@ def structured_data(facts, *, path, title, description, kind):
         parts.append(d)
     dataset = {"@type": "Dataset", "@id": site_url("#dataset"),
                "name": f"{SITE_NAME}: infrastructure projects across Africa",
-               "description": f"Six open datasets on infrastructure in Africa, kept as separate "
+               "description": f"Seven open datasets on infrastructure in Africa, kept as separate "
                               f"layers because they share no project identifier: {facts_sentence(facts)}. "
                               f"Each source's lifecycle is mapped onto five shared statuses (announced, "
                               f"approved, under construction, operating, stalled).",
@@ -394,7 +424,7 @@ def crawl_fallback(facts, *, kind):
     return f"""<noscript>
 <article style="max-width:72ch;margin:0 auto;padding:24px 16px;font:16px/1.5 Georgia,serif">
 <h2>{e(SITE_NAME)}: announced, approved and ongoing infrastructure in Africa</h2>
-<p>{lede} of infrastructure projects across Africa, built from six open datasets:
+<p>{lede} of infrastructure projects across Africa, built from seven open datasets:
 {e(facts_sentence(facts))}. Together they describe {e(facts_totals(facts))}.
 The page needs JavaScript to draw; without it, this summary, the data files below
 and {other} are what is here.</p>
@@ -407,12 +437,14 @@ under construction, operating and stalled.</p>
 <thead><tr><th>Source</th><th>Dataset</th><th>Records</th><th>Licence</th><th>Data as of</th><th>Download</th></tr></thead>
 <tbody>{rows}</tbody>
 </table>
-<p>Limits: money is two multilateral lenders only, AfDB and the World Bank, so totals are
-their exposure, not investment in Africa; about two thirds of AfDB locations sit on a country
-or region centroid and the World Bank marks every location approximate; OpenStreetMap
-presence is mapper-driven, so absence is not evidence; energy and connectivity are
-over-represented because no comparable open tracker exists for ports, water or
-electricity transmission.</p>
+<p>Limits: money is two multilateral lenders, AfDB and the World Bank, plus Chinese official
+finance as AidData reconstructs it from public sources, and the Chinese layer ends with
+commitments made in 2021, so totals are those lenders' exposure, not investment in Africa;
+about two thirds of AfDB locations sit on a country or region centroid, the World Bank marks
+every location approximate, and about a quarter of the Chinese-financed projects have no
+published location and sit at their country's centre; OpenStreetMap presence is mapper-driven,
+so absence is not evidence; energy and connectivity are over-represented because no comparable
+open tracker exists for ports, water or electricity transmission.</p>
 <p>The compiled payload is <a href="data/map.json">data/map.json</a>; fetch dates and
 release names are in <a href="data/meta.json">data/meta.json</a>. A plain-text summary
 for language models is at <a href="llms.txt">llms.txt</a>.
@@ -525,7 +557,7 @@ def write_site_index(facts):
     (DOCS / "llms.txt").write_text(f"""# {SITE_NAME}
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
-> Africa, for investors, researchers and journalists. Compiled from six open datasets:
+> Africa, for investors, researchers and journalists. Compiled from seven open datasets:
 > {facts_sentence(facts)}. Together they describe {facts_totals(facts)}.
 > Snapshot built {fmt_date(day)}; data is refreshed by hand about twice a year.
 
@@ -534,13 +566,13 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the five layers (finance holds two lenders) with filters
+- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the six layers (finance holds two lenders) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the power, AfDB and
-  OpenStreetMap layers as a page with KPIs, a country map, bar charts by country and
-  sector, and a sortable table.
+- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the same layers (AfDB only
+  for finance) as a page with KPIs, a country map, bar charts by country and sector, and a
+  sortable table.
 
 ## Data
 
@@ -563,19 +595,32 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   Stalled: GEM cancelled/shelved/mothballed, IATI 5-6. Pipelines: GEM proposed is
   announced, construction, operating, shelved/cancelled as stalled. Submarine cables:
   TeleGeography "in service" is operating; "planned" is under construction when the
-  ready-for-service year is within a year of the snapshot, otherwise announced.
+  ready-for-service year is within a year of the snapshot, otherwise announced. Chinese
+  finance (AidData): "Pipeline: Commitment" is approved, "Implementation" is under
+  construction, "Completion" is operating, "Suspended" and "Cancelled" are stalled; pledges
+  (MoUs, letters of intent) and umbrella agreements are left out, so the layer has no
+  announced records and no double-counted money.
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
   squares are AfDB projects and diamonds World Bank projects, both sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
-  with their African landing points. Dashed lines are not yet built.
+  with their African landing points, triangles are Chinese-financed projects sized by
+  commitment, with the project's OpenStreetMap footprint drawn as a thin outline where
+  AidData geocoded it precisely. Dashed lines are not yet built.
 - Amounts are commitments (IATI transaction type 2). AfDB publishes in SDR, converted at a
-  fixed, stated rate: {SDR_NOTE}. The World Bank publishes in USD, taken as is.
+  fixed, stated rate: {SDR_NOTE}. The World Bank publishes in USD, taken as is. AidData's
+  Chinese commitments are in constant 2021 US dollars, as published, and are never added to
+  the IATI figures.
 
 ## Limits
 
-- Money is two multilateral lenders only, AfDB and the World Bank. Chinese, private,
-  domestic-budget and other-lender finance is not here. Read totals as their exposure, not
-  as investment in Africa. The two are never summed into one project cost.
+- Money is two multilateral lenders, AfDB and the World Bank, plus Chinese official finance
+  as AidData reconstructs it from public sources. Private, domestic-budget and other-lender
+  finance is not here. Read totals as each lender's exposure, not as investment in Africa.
+  The three are never summed into one project cost.
+- The Chinese layer is a historical baseline: AidData's 3.0 release covers commitments
+  made 2000-2021 and their implementation to 2023. It says where Chinese money went, not
+  what China is financing now. Only projects AidData flags as physical infrastructure are
+  kept; about a quarter have no published location and sit at their country's centre.
 - About two thirds of AfDB locations are approximate (a country or region centroid). The
   World Bank marks every location approximate and states its class: site, populated place
   or administrative region. The pages say which for each record.
@@ -591,6 +636,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 
 - [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
 - [African Development Bank on the IATI Registry](https://iatiregistry.org/publisher/afdb)
+- [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
 - [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)
 - [Natural Earth](https://www.naturalearthdata.com/)
 """)

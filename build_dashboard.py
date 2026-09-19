@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Compile the five ingested layers into a single self-contained dashboard.
+Compile the six ingested layers into a single self-contained dashboard.
 
 Reads   data/*.geojson  +  data/africa_basemap.json  +  data/africa_basemap_10m.json
-        (the latter only for the rest of the world, drawn as grey context)
+        (the latter for the rest of the world, drawn as grey context, and
+        for the country label anchors)
 Writes  dashboard.html   (payload injected inline)
 
 The dashboard has to be self-contained: the publishing sandbox blocks runtime
@@ -65,6 +66,21 @@ ISLANDS = [
     {"n": "Seychelles", "iso": "SC", "lon": 55.5, "lat": -4.6},
 ]
 
+def load_10m():
+    p = DATA / "africa_basemap_10m.json"
+    if not p.exists():
+        sys.exit("missing data/africa_basemap_10m.json — run fetch_basemap.py first")
+    return json.loads(p.read_text())
+
+
+def build_labels():
+    """One label anchor per African country, as the map page draws them:
+    Natural Earth's LABEL_X/Y and MIN_LABEL, with NE's short map name
+    ("Dem. Rep. Congo"), which is the right form for a label even though
+    the dropdowns use the full one."""
+    return load_10m()["labels"]
+
+
 def build_context():
     """The rest of the world as grey context land, so the dashboard's basemap
     is the whole world like the map page's and a cable heading for India or a
@@ -73,11 +89,8 @@ def build_context():
     zooms to a country at most, and the land is context, never selectable.
     Countries inside the detail window (Europe, the Middle East) keep a
     little more shape than the far side of the world. Small islands go."""
-    p = DATA / "africa_basemap_10m.json"
-    if not p.exists():
-        sys.exit("missing data/africa_basemap_10m.json — run fetch_basemap.py first")
     out = []
-    for c in json.loads(p.read_text())["countries"]:
+    for c in load_10m()["countries"]:
         if c["af"]:
             continue   # Africa comes from the 110m file, with its own styling and hit-testing
         polys = []
@@ -440,6 +453,81 @@ def build_cables(idx, simp=simplify_line, rnd=r):
             "rows": rows}
 
 
+# AidData's Chinese official finance. Shared with build_map.py like the line
+# layers: a point per project, plus the OpenStreetMap footprint (closed rings
+# of a buffered, dissolved feature) where AidData geocoded the project
+# precisely. `min_extent` drops rings too small to read at the page's scale
+# (a building on the dashboard's continental frame); `cap` bounds the vertices
+# a single footprint may carry (the whole TAZARA railway comes with several
+# records).
+CHINA_PREC = {"precise": 0, "within_5km": 1, "admin": 2, "country": 3}
+
+
+def _decimate(geoms, cap):
+    total = sum(len(g) for g in geoms)
+    if total <= cap:
+        return geoms
+    out = []
+    for g in geoms:
+        n = max(3, int(len(g) * cap / total))
+        if len(g) <= n:
+            out.append(g)
+            continue
+        step = (len(g) - 1) / (n - 1)
+        q = [g[round(i * step)] for i in range(n - 1)] + [g[-1]]
+        out.append(q)
+    return out
+
+
+def _china_title(t, n=130):
+    """AidData's titles are sentences, sometimes suffixed "(Linked to Project
+    ID#12345)"; drop the suffix and cut long ones at a word boundary."""
+    t = re.sub(r"\s*\(Linked to Project ID#?[^)]*\)", "", (t or "").strip())
+    if len(t) <= n:
+        return t or None
+    cut = t[:n].rsplit(" ", 1)[0]
+    return (cut if len(cut) > n * 0.6 else t[:n - 1]).rstrip(",;:·-— ") + "…"
+
+
+def build_china(idx, simp=simplify_line, rnd=r, cap=60, min_extent=0.02):
+    rows = []
+    for f in load("aiddata_china_finance.geojson"):
+        p = f["properties"]
+        if not p.get("dash_status"):
+            continue
+        geoms = None
+        if f["geometry"]["type"] == "MultiLineString":
+            geoms = [g for g in _route_parts(f, simp)
+                     if max(max(q[0] for q in g) - min(q[0] for q in g),
+                            max(q[1] for q in g) - min(q[1] for q in g)) >= min_extent]
+            geoms = _decimate(geoms, cap) if geoms else None
+        lon, lat = p["lon"], p["lat"]
+        iso = p.get("country") or locate(lon, lat, idx)[0]
+        amt = p.get("amount_usd_2021")
+        # the OSM link without its host and map fragment: "way/1164438280"
+        osm = re.sub(r"^https?://www\.openstreetmap\.org/|#.*$", "", (p.get("osm_links") or [""])[0]) or None
+        rows.append([
+            _china_title(p.get("name")), iso, rnd(lon), rnd(lat),
+            p["dash_status"], p.get("sector") or "other",
+            round(amt / 1e6, 2) if amt else None,
+            CHINA_PREC.get(p.get("geo_precision"), 3), (p.get("place") or "")[:50] or None,
+            p.get("aiddata_id"), p.get("sector_code"),
+            p.get("flow_simple"), p.get("flow_class"),
+            (p.get("funders") or "")[:110] or None, (p.get("implementers") or "")[:110] or None,
+            p.get("commitment_year"), p.get("start_year"), p.get("completion_year"),
+            p.get("interest_rate"), p.get("maturity_years"),
+            1 if p.get("financial_distress") else 0,
+            (p.get("cofinanciers") or "")[:100] if p.get("cofinanced") else None,
+            # AidData's own word only where the shared status does not imply it
+            p.get("raw_status") if p["dash_status"] == "stalled" else None,
+            1 if p.get("amount_estimated") else 0, osm, geoms,
+        ])
+    return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m", "prec", "place", "aid",
+                     "sc", "flow", "cls", "funders", "impl", "cyr", "syr", "eyr", "rate", "mat",
+                     "distress", "cofin", "raw", "est", "osm", "g"],
+            "rows": rows}
+
+
 # ------------------------------------------------------------------- build
 
 def main():
@@ -469,6 +557,16 @@ def main():
     cables = build_cables(idx)
     nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
     print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
+
+    print("china   …")
+    china = build_china(idx)
+    cc = china["cols"]
+    cusd = sum(x[cc.index("usd_m")] or 0 for x in china["rows"]) / 1000
+    cfp = sum(1 for x in china["rows"] if x[cc.index("g")])
+    print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn (2021 USD), {cfp:,} footprints kept")
+
+    labels = build_labels()
+    print(f"   {len(labels):,} country labels")
 
     print("context …")
     context = build_context()
@@ -501,12 +599,13 @@ def main():
     payload = {
         "meta": payload_meta(load_meta(), DASHBOARD_LAYERS),
         "names": names,
-        "basemap": {"countries": countries, "islands": ISLANDS, "context": context},
+        "basemap": {"countries": countries, "islands": ISLANDS, "context": context, "labels": labels},
         "assets": assets,
         "finance": finance,
         "ground": ground,
         "pipelines": pipelines,
         "cables": cables,
+        "china": china,
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
@@ -517,7 +616,7 @@ def main():
     OUT.write_text(page)
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
-    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables"):
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china"):
         print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
     if kb > 15000:
         print("  ! approaching the 16 MB artifact ceiling")
@@ -526,12 +625,12 @@ def main():
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
         page, title="Africa Infrastructure Monitor", path="dashboard.html", kind="dashboard",
-        facts=site_facts(assets, finance, ground, pipelines, cables),
+        facts=site_facts(assets, finance, ground, pipelines, cables, china),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "
-                    "Development Bank finance, construction works from OpenStreetMap and submarine "
-                    "cables (TeleGeography), with charts by country and sector and a sortable "
-                    "project table."))
+                    "Development Bank finance, Chinese-financed projects 2000–2021 (AidData), "
+                    "construction works from OpenStreetMap and submarine cables (TeleGeography), "
+                    "with charts by country and sector and a sortable project table."))
     print(f"→ docs/dashboard.html")
 
 

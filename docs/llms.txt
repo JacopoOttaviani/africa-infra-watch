@@ -1,8 +1,8 @@
 # Africa Infra Watch
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
-> Africa, for investors, researchers and journalists. Compiled from six open datasets:
-> 4,274 power units tracked by Global Energy Monitor, 1,767 projects financed by the African Development Bank and 1,123 by the World Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography. Together they describe about 1,090 GW of generating capacity across all statuses; USD 101.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026), and USD 181.6 billion of World Bank commitments as published.
+> Africa, for investors, researchers and journalists. Compiled from seven open datasets:
+> 4,274 power units tracked by Global Energy Monitor, 1,767 projects financed by the African Development Bank and 1,123 by the World Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,324 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2021, from AidData. Together they describe about 1,090 GW of generating capacity across all statuses; USD 101.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026), and USD 181.6 billion of World Bank commitments as published; USD 242.7 billion of Chinese official commitments to infrastructure over 2000–2021, in constant 2021 dollars as AidData publishes them.
 > Snapshot built 19 Sep 2026; data is refreshed by hand about twice a year.
 
 Made by Jacopo Ottaviani (https://www.linkedin.com/in/jacopo-ottaviani/). Free to use; cite the underlying sources by name.
@@ -10,13 +10,13 @@ Site: https://jacopoottaviani.com/africa-infra-watch/
 
 ## Pages
 
-- [Africa Infrastructure Map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the five layers (finance holds two lenders) with filters
+- [Africa Infrastructure Map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the six layers (finance holds two lenders) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the power, AfDB and
-  OpenStreetMap layers as a page with KPIs, a country map, bar charts by country and
-  sector, and a sortable table.
+- [Africa Infrastructure Monitor](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same layers (AfDB only
+  for finance) as a page with KPIs, a country map, bar charts by country and sector, and a
+  sortable table.
 
 ## Data
 
@@ -30,6 +30,7 @@ https://jacopoottaviani.com/africa-infra-watch/data/meta.json. The raw layers as
 - [OpenStreetMap](https://www.openstreetmap.org/copyright): Overpass API, significant road/rail/air classes. 3,586 records, data as of 7 Sep 2026, licence ODbL 1.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson
 - [Global Energy Monitor](https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/): Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07. 324 records, data as of 18 Sep 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson
 - [TeleGeography](https://www.submarinecablemap.com/): Submarine Cable Map, cables with an African landing point. 81 records, data as of 18 Sep 2026, licence CC BY-SA 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson
+- [AidData](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0): GCDF 3.0 · GeoGCDF v3.0.1, official commitments to infrastructure 2000–2021, footprints from OpenStreetMap. 2,324 records, data as of Nov 2023 · to 2021, licence ODC-By 1.0 (footprints ODbL). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/aiddata_china_finance.geojson
 
 Country outlines are Natural Earth (1:10m on the map, 1:110m on the dashboard). The
 satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off by default.
@@ -44,19 +45,32 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   Stalled: GEM cancelled/shelved/mothballed, IATI 5-6. Pipelines: GEM proposed is
   announced, construction, operating, shelved/cancelled as stalled. Submarine cables:
   TeleGeography "in service" is operating; "planned" is under construction when the
-  ready-for-service year is within a year of the snapshot, otherwise announced.
+  ready-for-service year is within a year of the snapshot, otherwise announced. Chinese
+  finance (AidData): "Pipeline: Commitment" is approved, "Implementation" is under
+  construction, "Completion" is operating, "Suspended" and "Cancelled" are stalled; pledges
+  (MoUs, letters of intent) and umbrella agreements are left out, so the layer has no
+  announced records and no double-counted money.
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
   squares are AfDB projects and diamonds World Bank projects, both sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
-  with their African landing points. Dashed lines are not yet built.
+  with their African landing points, triangles are Chinese-financed projects sized by
+  commitment, with the project's OpenStreetMap footprint drawn as a thin outline where
+  AidData geocoded it precisely. Dashed lines are not yet built.
 - Amounts are commitments (IATI transaction type 2). AfDB publishes in SDR, converted at a
-  fixed, stated rate: 1 SDR = 1.37 USD (IMF, Sep 2026). The World Bank publishes in USD, taken as is.
+  fixed, stated rate: 1 SDR = 1.37 USD (IMF, Sep 2026). The World Bank publishes in USD, taken as is. AidData's
+  Chinese commitments are in constant 2021 US dollars, as published, and are never added to
+  the IATI figures.
 
 ## Limits
 
-- Money is two multilateral lenders only, AfDB and the World Bank. Chinese, private,
-  domestic-budget and other-lender finance is not here. Read totals as their exposure, not
-  as investment in Africa. The two are never summed into one project cost.
+- Money is two multilateral lenders, AfDB and the World Bank, plus Chinese official finance
+  as AidData reconstructs it from public sources. Private, domestic-budget and other-lender
+  finance is not here. Read totals as each lender's exposure, not as investment in Africa.
+  The three are never summed into one project cost.
+- The Chinese layer is a historical baseline: AidData's 3.0 release covers commitments
+  made 2000-2021 and their implementation to 2023. It says where Chinese money went, not
+  what China is financing now. Only projects AidData flags as physical infrastructure are
+  kept; about a quarter have no published location and sit at their country's centre.
 - About two thirds of AfDB locations are approximate (a country or region centroid). The
   World Bank marks every location approximate and states its class: site, populated place
   or administrative region. The pages say which for each record.
@@ -72,5 +86,6 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 
 - [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
 - [African Development Bank on the IATI Registry](https://iatiregistry.org/publisher/afdb)
+- [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
 - [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)
 - [Natural Earth](https://www.naturalearthdata.com/)

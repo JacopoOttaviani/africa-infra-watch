@@ -11,8 +11,9 @@ Writes  docs/social.png                1200 x 630, what Slack, WhatsApp, LinkedI
                                        the favicon as PNG, for Google's result
                                        favicon and home-screen icons
 
-The picture is the map itself: every power unit, AfDB project and construction
-way over the continent, in the status palette, with the title on the left. It
+The picture is the map itself: every power unit, AfDB and World Bank project,
+Chinese-financed project and construction way over the continent, in the status
+palette, with the title on the left. It
 is drawn as SVG and rasterised by a headless Chrome, which every Mac with Chrome
 has and which renders the web fonts the pages use. Pass AIW_CHROME to point at
 another Chromium binary; without any, the script warns and keeps the PNG that
@@ -35,7 +36,7 @@ ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
-from build_dashboard import build_lookup  # noqa: E402
+from build_dashboard import build_china, build_lookup  # noqa: E402
 from shared import BRAND, DATA, DOCS, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W  # noqa: E402
 
 W, H = SOCIAL_W, SOCIAL_H
@@ -113,7 +114,7 @@ def esc(s):
     return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 
-def draw(assets, finance, ground, countries, is10m):
+def draw(assets, finance, ground, china, countries, is10m):
     proj, s = make_proj()
     out = []
 
@@ -146,6 +147,17 @@ def draw(assets, finance, ground, countries, is10m):
             lines.append(f'<path d="{d}" stroke="{col}"/>')
     out.append('<g fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity=".9">'
                + "".join(lines) + "</g>")
+
+    # -- Chinese finance: triangles, by sqrt(commitment), biggest first
+    ni = {k: i for i, k in enumerate(china["cols"])}
+    tri = []
+    for r in sorted(china["rows"], key=lambda r: -(r[ni["usd_m"]] or 0)):
+        x, y = proj(r[ni["lon"]], r[ni["lat"]])
+        d = min(7.5, 2.2 + math.sqrt(max(0, r[ni["usd_m"]] or 1)) * 0.2)
+        col = C.get(r[ni["status"]], C["stalled"])
+        tri.append(f'<path d="M{x:.1f} {y - d * 1.05:.1f}L{x + d * 1.08:.1f} {y + d * 0.75:.1f}'
+                   f'L{x - d * 1.08:.1f} {y + d * 0.75:.1f}Z" fill="{col}"/>')
+    out.append(f'<g opacity=".82" stroke="{C["paper"]}" stroke-width=".6">' + "".join(tri) + "</g>")
 
     # -- finance: squares, side by sqrt(commitment), biggest first
     fi = {k: i for i, k in enumerate(finance["cols"])}
@@ -181,24 +193,27 @@ def draw(assets, finance, ground, countries, is10m):
     out.append(f'<text x="62" y="276" class="title">Infrastructure</text>')
     out.append(f'<text x="62" y="352" class="title">Map</text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
-    out.append('<text x="64" y="430" class="sub">the continent, from three open datasets.</text>')
+    out.append('<text x="64" y="430" class="sub">the continent, from seven open datasets.</text>')
 
-    n_a, n_f, n_g = len(assets["rows"]), len(finance["rows"]), len(ground["rows"])
-    y = 478
+    n_a, n_f, n_g, n_c = len(assets["rows"]), len(finance["rows"]), len(ground["rows"]), len(china["rows"])
+    y = 466
     for glyph, num, src in (
         ("circle", f"{n_a:,} power units", "Global Energy Monitor"),
-        ("rect", f"{n_f:,} AfDB projects", "African Development Bank"),
+        ("rect", f"{n_f:,} AfDB and World Bank projects", "via IATI"),
+        ("tri", f"{n_c:,} Chinese-financed projects", "AidData, 2000–2021"),
         ("line", f"{n_g:,} construction works", "OpenStreetMap"),
     ):
         if glyph == "circle":
             out.append(f'<circle cx="72" cy="{y - 5}" r="6" fill="{C["operating"]}"/>')
         elif glyph == "rect":
             out.append(f'<rect x="66" y="{y - 11}" width="12" height="12" fill="{C["approved"]}"/>')
+        elif glyph == "tri":
+            out.append(f'<path d="M72 {y - 12}L79 {y + 1}H65Z" fill="{C["operating"]}"/>')
         else:
             out.append(f'<path d="M64 {y - 5}h16" stroke="{C["under_construction"]}" stroke-width="3.5" stroke-linecap="round"/>')
         out.append(f'<text x="92" y="{y}" class="num">{num}</text>'
                    f'<text x="92" y="{y + 18}" class="src">{esc(src)}</text>')
-        y += 44
+        y += 38
 
     # -- status legend under the map, and the address
     lx = MAP_X0 + 6
@@ -294,9 +309,10 @@ def main():
     base110 = json.loads((DATA / "africa_basemap.json").read_text())
     idx = build_lookup(base110["countries"])
     assets, finance, ground = build_assets(), build_finance(), build_ground(idx)
+    china = build_china(idx, simp=lambda part: [])     # markers only, no footprints
     countries, is10m = load_basemap()
     print("drawing …")
-    html = page(draw(assets, finance, ground, countries, is10m))
+    html = page(draw(assets, finance, ground, china, countries, is10m))
     DOCS.mkdir(exist_ok=True)
     if rasterise(html, OUT):
         print(f"→ {OUT.relative_to(ROOT)}  {W}x{H}, {OUT.stat().st_size / 1024:.0f} KB")

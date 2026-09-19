@@ -35,5 +35,20 @@
     "datasets": 52,
     "records": 10268,
     "activities": 1123
+  },
+  "china": {
+    "fetched": "2026-09-19",
+    "fresh": "Nov 2023 · to 2021",
+    "release": "GCDF 3.0 · GeoGCDF v3.0.1",
+    "records": 2324,
+    "footprints": 894,
+    "precise": 1168,
+    "approximate": 728,
+    "country_level": 428,
+    "unlocated": 26,
+    "umbrella": 835,
+    "pledges": 489,
+    "mislinked": 1,
+    "not_infrastructure": 5674
   }
 }
