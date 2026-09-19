@@ -110,9 +110,9 @@ or step by step:
 python3 fetch_sources.py          # all seven sources -> data/*.geojson + data/meta.json
 python3 fetch_basemap.py          # Natural Earth 1:10m -> data/africa_basemap_10m.json
 python3 check_data.py             # refuse a snapshot that shrank or moved
+python3 build_social.py           # -> docs/social.png (link preview) + docs/icon-192.png, apple-touch-icon.png
 python3 build_dashboard.py        # -> dashboard.html  and  docs/dashboard.html
 python3 build_map.py              # -> map.html  and  docs/index.html + docs/data/ + sitemap.xml + llms.txt
-python3 build_social.py           # -> docs/social.png (link preview) + docs/icon-192.png, apple-touch-icon.png
 ```
 
 Both builds inline the favicon and header mark from `brand/` (option A of the

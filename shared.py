@@ -69,6 +69,22 @@ AUTHOR_NAME = "Jacopo Ottaviani"
 SOCIAL_IMAGE = "social.png"
 SOCIAL_W, SOCIAL_H = 1200, 630
 
+
+def social_image_url():
+    """The preview image's absolute URL, versioned with a digest of the file.
+
+    WhatsApp, Facebook, LinkedIn and Slack cache an og:image by its URL, some
+    for weeks, so a redrawn social.png at the same address keeps showing the
+    old card. A content digest in the query string gives every new drawing a
+    new address; the file itself stays docs/social.png.
+    """
+    import hashlib
+    path = DOCS / SOCIAL_IMAGE
+    if not path.exists():
+        return site_url(SOCIAL_IMAGE)
+    digest = hashlib.sha1(path.read_bytes()).hexdigest()[:10]
+    return site_url(SOCIAL_IMAGE) + "?v=" + digest
+
 # The repository the site is deployed from, linked from the Methodology tab
 # when set (e.g. "https://github.com/<user>/africa-infra-watch"). Optional.
 REPO_URL = os.environ.get("AIW_REPO_URL", "").strip()
@@ -394,7 +410,7 @@ def structured_data(facts, *, path, title, description, kind):
             "isPartOf": {"@id": website["@id"]}, "about": {"@id": dataset["@id"]},
             "mainEntity": {"@id": dataset["@id"]}, "author": {"@id": person["@id"]},
             "dateModified": facts["built"], "keywords": ", ".join(KEYWORDS),
-            "primaryImageOfPage": {"@type": "ImageObject", "url": site_url(SOCIAL_IMAGE),
+            "primaryImageOfPage": {"@type": "ImageObject", "url": social_image_url(),
                                    "width": SOCIAL_W, "height": SOCIAL_H}}
     if kind == "map":
         page["applicationCategory"] = "Map"
@@ -477,7 +493,7 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
     q = lambda x: html.escape(x, quote=True)
     t, d = q(title), q(description)
     url = q(site_url(path))
-    img = q(site_url(SOCIAL_IMAGE))
+    img = q(social_image_url())
     alt = q(f"{title}: Africa with every tracked power unit, AfDB project and construction "
             f"work drawn in its status colour, and the site's title.")
     jsonld = fallback = ""
