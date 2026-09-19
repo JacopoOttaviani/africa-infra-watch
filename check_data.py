@@ -93,6 +93,10 @@ def main():
                             f"{int(MAX_DROP * 100)}% lost; a source or mirror probably failed")
         if n and outside > 0.01 * n:
             problems.append(f"{stem}: {outside:,} features outside the Africa window")
+        null_island = sum(1 for f in feats if (f.get("geometry") or {}).get("type") == "Point"
+                          and (f["geometry"].get("coordinates") or [None])[:2] == [0.0, 0.0])
+        if null_island:      # inside the window, but a publisher's "no location" placeholder
+            problems.append(f"{stem}: {null_island:,} point(s) at 0 0 (Null Island)")
     if problems:
         print("\nREFUSING to build from this snapshot:")
         for p in problems:

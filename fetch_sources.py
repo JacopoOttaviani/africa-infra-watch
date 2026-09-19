@@ -183,12 +183,66 @@ IATI_INFRA_DAC = ("210", "23", "140", "321", "322", "323", "331", "410", "220")
 #              files, 289 South of Sahara and 298 Africa regional), USD
 #              amounts, every location marked exactness 2 (approximate) with
 #              the precision carried by location-class instead: 4 = site,
-#              2 = populated place, 1 = administrative region
+#              2 = populated place, 1 = administrative region. Activities
+#              with no location still carry one, "No Data Available" at
+#              <pos>0 0</pos> (Null Island, in the Gulf of Guinea), and a
+#              few dozen are geocoded to the wrong continent; place_iati()
+#              below deals with both.
 IATI_PUBLISHERS = {
     "afdb": {"lender": "AfDB", "meta": "finance", "files": None},
     "worldbank": {"lender": "World Bank", "meta": "finance_wb",
                   "files": [c.lower() for c in AFRICA_ISO] + ["289", "298"]},
 }
+
+
+# Cabo Verde to Mauritius, Tunis to the Cape. Wider than the continent so a
+# site on an island is kept, narrower than check_data's window so that the
+# Gulf of Guinea's Null Island, Kosovo (a Guinea project) and Nepal (three
+# Mozambican districts) are not.
+IATI_WINDOW = (-30.0, -40.0, 65.0, 40.0)   # lon0, lat0, lon1, lat1
+
+
+def place_iati(feats):
+    """Drop the locations a publisher could not place, and pin what is left
+    of the activity to its country.
+
+    A location is kept when its point is in IATI_WINDOW and not exactly
+    0 0. An activity that loses every location is re-pinned to the interior
+    point of its recipient country, marked exactness 2 / location-class 1
+    so the map draws it as a country centroid, when it names one that the
+    basemap has; the regional files' activities name a region and no
+    country, and those are dropped."""
+    kept, lost = [], {}
+    x0, y0, x1, y1 = IATI_WINDOW
+    for f in feats:
+        lon, lat = f["geometry"]["coordinates"]
+        if (lon, lat) == (0.0, 0.0) or not (x0 <= lon <= x1 and y0 <= lat <= y1):
+            lost.setdefault(f["properties"].get("iati_id"), f)
+        else:
+            kept.append(f)
+    n_lost = len(feats) - len(kept)
+    placed = {f["properties"].get("iati_id") for f in kept}
+    recentred = dropped = 0
+    for iid, f in lost.items():
+        if iid in placed:               # the activity still has a good location
+            continue
+        iso = f["properties"].get("country")
+        lon, lat = _country_centre(iso) if iso else (None, None)
+        if lon is None:
+            dropped += 1
+            continue
+        kept.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [round(lon, 5), round(lat, 5)]},
+            "properties": dict(f["properties"], location_name=None,
+                               geo_precision="2", location_class="1"),
+        })
+        recentred += 1
+    if n_lost:
+        print(f"  {n_lost} location(s) at 0 0 or off the continent dropped; "
+              f"{recentred} activity(ies) re-pinned to the country's centre, "
+              f"{dropped} with no country left off the map")
+    return kept
 
 
 def fetch_iati(publisher="afdb", infra_only=True):
@@ -309,6 +363,7 @@ def fetch_iati(publisher="afdb", infra_only=True):
         if i % 15 == 0:
             print(f"  … {i}/{len(urls)} files, {len(feats):,} located so far")
 
+    feats = place_iati(feats)
     out = write_layer(f"iati_{publisher}_finance", feats)
     update_meta(conf["meta"], fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
                 activities=len({f["properties"]["iati_id"] for f in feats}))

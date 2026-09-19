@@ -78,6 +78,11 @@
   .titlerow .home:hover .mark{opacity:.75}
   .titlerow .home:hover h1{color:var(--accent)}
   .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .made{margin:-2px 0 0;font-size:11.5px;line-height:1.5;color:var(--ink-3)}
+  .made .heart{color:var(--accent)}
+  .made .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .made a{color:var(--ink-2);font-weight:600;text-decoration:none;border-bottom:1px solid var(--rule)}
+  .made a:hover{color:var(--accent);border-color:var(--accent)}
   .lede{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:4px 0 0}
   .lede strong{color:var(--ink);font-weight:600}
   .asof{margin:6px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3)}
@@ -444,6 +449,7 @@
         <button class="close" id="railclose" aria-label="Close filters">×</button>
       </div>
       <div class="titlerow"><a class="home" href="__HOME_URL__"><!--__LOGO__--><h1>Africa Infrastructure Map</h1></a></div>
+      <p class="made">made with <span class="heart" aria-hidden="true">♥</span><span class="sr">love</span> by Jacopo Ottaviani (<a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">LinkedIn</a>, <a href="__WEB_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani's website">Web</a>)</p>
       <p class="lede" id="lede"></p>
       <p class="asof" id="asof"></p>
       <nav class="tabs" aria-label="View">
@@ -491,7 +497,6 @@
     <div class="readmore map-only">
       <span>Where the data comes from, how the seven sources are aligned, and what it cannot tell you.</span>
       <button id="tomethod">Read the methodology →</button>
-      <span class="byline">A project by <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
     </div>
 
     <div class="panel method-only" style="border-bottom:0">

@@ -58,9 +58,10 @@ SDR_NOTE = "1 SDR = 1.37 USD (IMF, Sep 2026)"
 # Where the site lives. Canonical and social-preview URLs point here; the pages
 # themselves use only relative links, so they also work at any other address.
 SITE_URL = os.environ.get("AIW_SITE_URL", "https://jacopoottaviani.com/africa-infra-watch/")
-# Personal links carried by both pages (support button, byline). Change here, rebuild.
+# Personal links carried by both pages (support button, credit line). Change here, rebuild.
 COFFEE_URL = os.environ.get("AIW_COFFEE_URL", "https://ko-fi.com/jacopoottaviani")
 AUTHOR_URL = os.environ.get("AIW_AUTHOR_URL", "https://www.linkedin.com/in/jacopo-ottaviani/")
+WEB_URL = os.environ.get("AIW_WEB_URL", "https://jacopoottaviani.com/")
 
 # What the site is called in search results, link previews and structured data.
 SITE_NAME = "Africa Infra Watch"
@@ -219,7 +220,8 @@ def brand_assets(page):
                 .replace("/*__SOURCE_LOGOS__*/{}", json.dumps(SOURCE_LOGOS, ensure_ascii=False))
                 .replace("__HOME_URL__", SITE_URL)
                 .replace("__COFFEE_URL__", COFFEE_URL)
-                .replace("__AUTHOR_URL__", AUTHOR_URL))
+                .replace("__AUTHOR_URL__", AUTHOR_URL)
+                .replace("__WEB_URL__", WEB_URL))
 
 
 def site_url(path=""):
@@ -337,7 +339,7 @@ def structured_data(facts, *, path, title, description, kind):
     Dataset with one part per source, each with its licence and GeoJSON
     download. Google Dataset Search and the AI crawlers both read this."""
     person = {"@type": "Person", "@id": site_url("#author"), "name": AUTHOR_NAME,
-              "url": AUTHOR_URL, "sameAs": [AUTHOR_URL, COFFEE_URL]}
+              "url": WEB_URL, "sameAs": [WEB_URL, AUTHOR_URL, COFFEE_URL]}
     website = {"@type": "WebSite", "@id": site_url("#website"), "name": SITE_NAME,
                "url": SITE_URL, "inLanguage": "en",
                "description": "An interactive map and dashboard of announced, approved and "
