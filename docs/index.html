@@ -45,6 +45,7 @@
     --label:#586760; --label-city:#3E4B44; --halo:#F8FAF6;
     --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
     --st-operating:#2B7A4C; --st-stalled:#7F8B86;
+    --copper:#B0642A; --tint:14%;
     --display:"Archivo","Helvetica Neue",Arial,sans-serif;
     --serif:"Source Serif 4",Georgia,serif;
     --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -62,6 +63,7 @@
       --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
       --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
       --st-operating:#67C98B; --st-stalled:#6E7A75;
+      --copper:#D9935C; --tint:22%;
       --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
       --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
     }
@@ -76,6 +78,7 @@
     --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
     --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
     --st-operating:#67C98B; --st-stalled:#6E7A75;
+      --copper:#D9935C; --tint:22%;
     --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
     --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
   }
@@ -129,9 +132,11 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371827A' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");background-repeat:no-repeat;background-position:9px 50%}
   input[type=search]::placeholder{color:var(--ink-3)}
 
-  .lyr{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid var(--rule-soft);border-radius:3px;background:var(--surface);text-align:left;margin-top:5px}
+  .lyr{--tone:var(--st-stalled);display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid color-mix(in srgb,var(--tone) 30%,var(--rule-soft));border-radius:3px;background:color-mix(in srgb,var(--tone) var(--tint),var(--surface));text-align:left;margin-top:5px}
+  .lyr[data-l="assets"],.lyr[data-l="china"]{--tone:var(--st-operating)} .lyr[data-l="finance"],.lyr[data-l="cables"]{--tone:var(--st-approved)}
+  .lyr[data-l="ground"]{--tone:var(--st-construction)} .lyr[data-l="pipelines"]{--tone:var(--copper)}
   .lyr:first-child{margin-top:0}
-  .lyr[aria-pressed="false"]{background:transparent;color:var(--ink-3)}
+  .lyr[aria-pressed="false"]{background:transparent;border-color:var(--rule-soft);color:var(--ink-3)}
   .lyr[aria-pressed="false"] .glyph{opacity:.35}
   .lyr[aria-pressed="false"] b{color:var(--ink-3)}
   .lyr .glyph{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
@@ -188,7 +193,7 @@
   .notes .src:first-of-type{border-top:0}
   .notes .src .sk{font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;min-width:88px;padding-top:2px}
   .sk.assets{color:var(--st-operating)} .sk.finance{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
-  .sk.pipelines{color:var(--st-operating)} .sk.cables{color:var(--st-approved)} .sk.china{color:var(--st-operating)}
+  .sk.pipelines{color:var(--copper)} .sk.cables{color:var(--st-approved)} .sk.china{color:var(--st-operating)}
   .notes .src .sd{flex:1;color:var(--ink-2)}
   .notes .src .sd b{color:var(--ink);font-weight:600}
   .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
@@ -709,8 +714,9 @@ const isLine = r => r.layer in LINE_RANK;
    nothing, so they stay drawn as lines in the cluster view too. */
 const UNCLUSTERED = new Set(["pipelines","cables"]);
 const clustered = r => !UNCLUSTERED.has(r.layer);
-/* the colour each layer's button and stat row wear: its most common status */
-const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"operating",cables:"approved",china:"operating"};
+/* the colour each layer's button and stat row wear: its most common status,
+   except oil and gas, which get a copper of their own so they never read as power */
+const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"copper",cables:"approved",china:"operating"};
 const allLayersOn  = () => Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
 const NAMES = DATA.names;
 const PAGES = document.documentElement.dataset.host === "pages";
@@ -721,7 +727,7 @@ let COL = {};
 function readColors(){
   COL = {sea:css("--sea"),land:css("--land"),landDim:css("--land-dim"),landCtx:css("--land-ctx"),border:css("--border"),
     admin:css("--admin"),lake:css("--lake"),river:css("--river"),label:css("--label"),labelCity:css("--label-city"),
-    halo:css("--halo"),accent:css("--accent"),accentSoft:css("--accent-soft"),surface:css("--surface"),ink:css("--ink")};
+    halo:css("--halo"),accent:css("--accent"),accentSoft:css("--accent-soft"),surface:css("--surface"),ink:css("--ink"),copper:css("--copper")};
   for(const s of STATUS_ORDER) COL[s] = css("--st-"+(s==="under_construction"?"construction":s));
   if(S_.sat) Object.assign(COL, {halo:SAT.halo, label:SAT.label, labelCity:SAT.labelCity, border:SAT.border, admin:SAT.admin});
 }
@@ -1482,7 +1488,7 @@ function renderView(){
       <span><span class="k">Development finance</span><br><span class="v">${fmt(F.length)} projects · $${fmt1(usd)}bn <span>committed · AfDB $${fmt1(usd-usdW)}bn · WB $${fmt1(usdW)}bn</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.ground(COL.under_construction)}</span>
       <span><span class="k">Ground works</span><br><span class="v">${fmt(G.length)} works · ${fmt(km)} km <span>traced</span></span></span></div>
-    <div class="stat"><span class="glyph">${glyph.pipelines(COL.operating)}</span>
+    <div class="stat"><span class="glyph">${glyph.pipelines(COL.copper)}</span>
       <span><span class="k">Oil & gas pipelines</span><br><span class="v">${fmt(P.length)} segments · ${fmt(pkm)} km <span>of route</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.cables(COL.approved)}</span>
       <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>African landings</span></span></span></div>
@@ -2152,7 +2158,7 @@ function renderMethod(){
         <tr><td>${glyph.finance(COL.approved)} Development finance</td><td>${esc(src.finance.name)}<br><span class="dim">${esc(src.finance.detail)}</span></td><td class="m">${fmt(FA.length)} projects</td><td>What the Bank has committed and paid out, where and in which sector</td><td class="dim">${esc(src.finance.fresh)}</td></tr>
         <tr><td>${glyph.finance_wb(COL.approved)} Development finance</td><td>${esc(src.finance_wb.name)}<br><span class="dim">${esc(src.finance_wb.detail)}</span></td><td class="m">${fmt(FW.length)} projects</td><td>The same question for the World Bank, on the Bank's own geocoded project sites</td><td class="dim">${esc(src.finance_wb.fresh)}</td></tr>
         <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
-        <tr><td>${glyph.pipelines(COL.operating)} Oil &amp; gas pipelines</td><td>${esc(src.pipelines.name)}<br><span class="dim">${esc(src.pipelines.detail)}</span></td><td class="m">${fmt(P.length)} segments</td><td>Which oil, NGL and gas pipelines run, are being laid or are proposed, and where they go</td><td class="dim">${esc(src.pipelines.fresh)}</td></tr>
+        <tr><td>${glyph.pipelines(COL.copper)} Oil &amp; gas pipelines</td><td>${esc(src.pipelines.name)}<br><span class="dim">${esc(src.pipelines.detail)}</span></td><td class="m">${fmt(P.length)} segments</td><td>Which oil, NGL and gas pipelines run, are being laid or are proposed, and where they go</td><td class="dim">${esc(src.pipelines.fresh)}</td></tr>
         <tr><td>${glyph.cables(COL.approved)} Submarine cables</td><td>${esc(src.cables.name)}<br><span class="dim">${esc(src.cables.detail)}</span></td><td class="m">${fmt(C.length)} cables</td><td>Which submarine cables reach the continent, where they land, who owns them and when</td><td class="dim">${esc(src.cables.fresh)}</td></tr>
         <tr><td>${glyph.china(COL.operating)} Chinese finance</td><td>${esc(src.china.name)}<br><span class="dim">${esc(src.china.detail)}</span></td><td class="m">${fmt(N.length)} projects</td><td>What Chinese official lenders and agencies committed to infrastructure from 2000 to 2021, where, on what terms, and what was built</td><td class="dim">${esc(src.china.fresh)}</td></tr>
       </tbody>
