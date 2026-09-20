@@ -163,14 +163,19 @@
   .pill.toggle:disabled{opacity:.5;cursor:default}
 
   /* ---------- kpis ---------- */
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:8px 0 0;box-shadow:var(--shadow)}
-  .kpi{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:3px}
-  .kpi dt{font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-  .kpi dd{margin:0;font-family:var(--mono);font-size:24px;font-weight:500;letter-spacing:-.035em;line-height:1.1;font-variant-numeric:tabular-nums}
-  .kpi .sub{font-size:11px;color:var(--ink-3);font-family:var(--display);letter-spacing:0}
+  /* one tile per KPI, always on a single row; the tiles shrink with the column and scroll sideways on phones */
+  .kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:8px 0 0;box-shadow:var(--shadow);container-type:inline-size}
+  .kpi{background:var(--surface);padding:12px 12px 11px;display:flex;flex-direction:column;gap:3px;min-width:0}
+  .kpi dt{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);line-height:1.3}
+  .kpi dd{margin:0;font-family:var(--mono);font-size:clamp(15px,2.5cqw,24px);font-weight:500;letter-spacing:-.035em;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .kpi .sub{font-size:11px;color:var(--ink-3);font-family:var(--display);letter-spacing:0;line-height:1.35}
   .kpi.is-filtered dd{color:var(--accent)}
-  @media (max-width:1180px){.kpis{grid-template-columns:repeat(3,1fr)}}
-  @media (max-width:600px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  @container (max-width:760px){.kpi{padding:10px 9px 9px} .kpi dt{font-size:8.5px;letter-spacing:.08em} .kpi .sub{font-size:10px}}
+  @media (max-width:640px){
+    .kpis{display:flex;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+    .kpi{flex:0 0 150px;scroll-snap-align:start;padding:12px 14px 11px}
+    .kpi dd{font-size:22px} .kpi dt{font-size:9.5px;letter-spacing:.12em} .kpi .sub{font-size:11px}
+  }
 
   /* ---------- map ---------- */
   .mapwrap{position:relative;margin-top:16px;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--sea);box-shadow:var(--shadow-lg)}
