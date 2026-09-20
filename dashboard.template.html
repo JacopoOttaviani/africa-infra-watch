@@ -466,7 +466,7 @@
             <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
             <button class="ib rst" id="zrst" title="Whole continent" aria-label="Reset view">RST</button>
           </div>
-          <span class="proj-note">Equirectangular · drag to pan, scroll to zoom, click a country to filter</span>
+          <span class="proj-note">Equirectangular · drag to pan, use the zoom buttons, click a country to filter</span>
           <div id="tip" role="status" aria-live="polite"></div>
         </div>
         <div class="legend" id="legend" aria-label="Legend"></div>
@@ -1464,12 +1464,6 @@ cv.addEventListener("pointerup", e => {
   dragging=false;
 });
 cv.addEventListener("pointerleave", ()=>{ el("tip").style.opacity=0; });
-cv.addEventListener("wheel", e => {
-  e.preventDefault(); stopAnim();
-  const f = e.deltaY<0 ? 1.15 : 1/1.15;
-  zoomAt(e.offsetX, e.offsetY, f);
-}, {passive:false});
-
 function zoomAt(cx,cy,f){
   const nk = Math.min(KMAX, Math.max(KMIN, view.k*f));
   const eff = nk/view.k;
