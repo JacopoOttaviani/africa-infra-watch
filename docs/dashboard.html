@@ -40,7 +40,7 @@
     --ink:#16211C; --ink-2:#495A50; --ink-3:#71827A;
     --rule:#C6D0C8; --rule-soft:#DBE2DC;
     --accent:#1F5F4B; --accent-soft:#DDEBE3; --accent-ink:#154236;
-    --sea:#D3DDDC; --land:#F8FAF6; --land-2:#ECEFEA; --land-ctx:#E2E7E3; --coast:#AEB9B1;
+    --sea:#D3DDDC; --land:#F8FAF6; --land-2:#ECEFEA; --land-hover:#E4EDE7; --land-ctx:#E2E7E3; --coast:#AEB9B1;
     --label:#586760; --halo:#F8FAF6;
     /* the map's status palette: passes colour-vision checks in both themes */
     --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
@@ -58,7 +58,7 @@
       --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
       --rule:#2B3630; --rule-soft:#212A24;
       --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
-      --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-ctx:#121816; --coast:#3D4A43; --label:#8E9C94; --halo:#1B231E;
+      --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-hover:#26332C; --land-ctx:#121816; --coast:#3D4A43; --label:#8E9C94; --halo:#1B231E;
       --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
       --st-operating:#67C98B; --st-stalled:#6E7A75;
       --copper:#D9935C; --tint:22%;
@@ -71,7 +71,7 @@
     --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
     --rule:#2B3630; --rule-soft:#212A24;
     --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
-    --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-ctx:#121816; --coast:#3D4A43; --label:#8E9C94; --halo:#1B231E;
+    --sea:#090E0C; --land:#1B231E; --land-2:#151C18; --land-hover:#26332C; --land-ctx:#121816; --coast:#3D4A43; --label:#8E9C94; --halo:#1B231E;
     --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
     --st-operating:#67C98B; --st-stalled:#6E7A75;
       --copper:#D9935C; --tint:22%;
@@ -775,6 +775,7 @@ const S = {
   country:"", sector:"", q:"",
   sort:{k:"size",dir:-1},
   picked:null,
+  hover:null,      /* the country under the pointer, shaded as a hint that it can be picked */
   cluster:false,
 };
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -929,6 +930,15 @@ for(const polys of DATA.basemap.context || []) for(const rings of polys){
   CONTEXT.push({x0,y0,x1,y1, rings});
 }
 
+/* One bounding box per country, so the country under the pointer — asked for
+   on every move, to shade what a click would select — is found by testing the
+   few outlines whose box holds it rather than every outline on the continent. */
+for(const c of DATA.basemap.countries){
+  let x0=Infinity, y0=Infinity, x1=-Infinity, y1=-Infinity;
+  for(const poly of c.p) for(const [x,y] of poly[0]){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+  c.box = [x0,y0,x1,y1];
+}
+
 /* One name per country, anchored where Natural Earth puts it (LABEL_X/Y).
    `z` is Natural Earth's MIN_LABEL, a Leaflet zoom; lzoom() gives this
    page's view in the same unit, so the map page's thresholds carry over. */
@@ -980,8 +990,10 @@ function draw(){
   ctx.fillStyle = css("--land-ctx"); ctx.fill("evenodd");
   ctx.strokeStyle = coast; ctx.lineWidth = 0.5; ctx.stroke();
 
+  const hover = css("--land-hover");
   for(const c of DATA.basemap.countries){
     const hot = S.country && c.iso === S.country;
+    const over = !hot && c.iso === S.hover;
     ctx.beginPath();
     for(const poly of c.p){
       for(const ring of poly){
@@ -989,7 +1001,7 @@ function draw(){
         ctx.closePath();
       }
     }
-    ctx.fillStyle = hot ? css("--accent-soft") : (S.country ? land2 : land);
+    ctx.fillStyle = hot ? css("--accent-soft") : over ? hover : (S.country ? land2 : land);
     ctx.fill();
     ctx.strokeStyle = hot ? css("--accent") : coast;
     ctx.lineWidth = hot ? 1.4 : 0.6;
@@ -997,6 +1009,11 @@ function draw(){
   }
   for(const i of DATA.basemap.islands){
     const hot = S.country && i.iso === S.country;
+    /* an island is a dot, so its shade is a soft disc under it */
+    if(!hot && i.iso === S.hover){
+      ctx.beginPath(); ctx.arc(px(i.lon), py(i.lat), 7, 0, 6.284);
+      ctx.fillStyle = hover; ctx.fill();
+    }
     ctx.beginPath();
     ctx.arc(px(i.lon), py(i.lat), hot?4.5:3, 0, 6.284);
     ctx.fillStyle = hot ? css("--accent") : coast;
@@ -1159,6 +1176,8 @@ function nearest(mx,my){
 function countryAt(mx,my){
   const lon = lonAt(mx), lat = latAt(my);
   for(const c of DATA.basemap.countries){
+    const b = c.box;
+    if(lon<b[0] || lon>b[2] || lat<b[1] || lat>b[3]) continue;
     for(const poly of c.p){
       if(inRing(lon,lat,poly[0]) && !poly.slice(1).some(h=>inRing(lon,lat,h))) return c.iso;
     }
@@ -1519,7 +1538,7 @@ cv.addEventListener("pointermove", e => {
   if(dragging){
     const dx=e.offsetX-lx, dy=e.offsetY-ly;
     if(Math.abs(dx)+Math.abs(dy)>2) moved=true;
-    view.tx+=dx; view.ty+=dy; lx=e.offsetX; ly=e.offsetY; clamp(); queue();
+    view.tx+=dx; view.ty+=dy; lx=e.offsetX; ly=e.offsetY; clamp(); S.hover=null; queue();
     el("tip").style.opacity=0;
     return;
   }
@@ -1534,6 +1553,10 @@ cv.addEventListener("pointermove", e => {
     tip.style.top  = Math.min(Math.max(4, e.offsetY-th/2), H-th-4) + "px";
     cv.style.cursor="pointer";
   } else { tip.style.opacity=0; cv.style.cursor = "grab"; }
+  /* the shade follows the pointer whether or not a mark is under it, and only
+     a change of country costs a frame */
+  const iso = countryAt(e.offsetX, e.offsetY);
+  if(iso !== S.hover){ S.hover = iso; queue(); }
 });
 cv.addEventListener("pointerup", e => {
   cv.classList.remove("dragging");
@@ -1550,7 +1573,7 @@ cv.addEventListener("pointerup", e => {
   }
   dragging=false;
 });
-cv.addEventListener("pointerleave", ()=>{ el("tip").style.opacity=0; });
+cv.addEventListener("pointerleave", ()=>{ el("tip").style.opacity=0; if(S.hover){ S.hover=null; queue(); } });
 function zoomAt(cx,cy,f){
   const nk = Math.min(KMAX, Math.max(KMIN, view.k*f));
   const eff = nk/view.k;
