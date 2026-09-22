@@ -313,17 +313,26 @@
 
   /* ---------- notes ---------- */
   details.notes{margin-top:26px;border:1px solid var(--rule);border-radius:4px;background:var(--surface);overflow:hidden}
-  details.notes > summary{padding:13px 16px;cursor:pointer;font-size:12.5px;font-weight:700;letter-spacing:.02em;background:var(--surface-3);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  details.notes > summary{padding:12px 16px;cursor:pointer;font-size:12.5px;font-weight:700;letter-spacing:.02em;background:var(--surface-3);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
   details.notes > summary::-webkit-details-marker{display:none}
   details.notes > summary::after{content:"+";font-family:var(--mono);font-size:15px;color:var(--ink-3)}
   details.notes[open] > summary::after{content:"–"}
-  .ncols{padding:6px 18px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(276px,1fr));gap:6px 30px}
-  .ncols section{padding-top:14px}
+  /* The sections run to very different lengths, so they flow into balanced
+     columns instead of sitting in grid rows: a row as tall as "Limits of the
+     data" left the two short sections trailing a screenful of white space. */
+  .ncols{padding:20px 16px;columns:3 276px;column-gap:32px}
+  .ncols section{break-inside:avoid;margin:0 0 24px}
+  .ncols section:last-child{margin-bottom:0}
   .ncols h4{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 8px}
-  .ncols p,.ncols li{font-family:var(--serif);font-size:14.5px;line-height:1.55;color:var(--ink-2);margin:0 0 9px}
-  .ncols ul{margin:0;padding-left:18px}
+  .ncols p,.ncols li{font-family:var(--serif);font-size:14.5px;line-height:1.55;color:var(--ink-2);margin:0 0 8px}
+  .ncols p:last-child,.ncols li:last-child{margin-bottom:0}
+  .ncols ul{margin:0;padding-left:16px}
   .ncols code{font-family:var(--mono);font-size:12px;background:var(--surface-2);padding:1px 4px;border-radius:2px;color:var(--ink)}
   .ncols strong{color:var(--ink);font-weight:600}
+  /* The accent rule stands in for the bullet, so the heading and its items
+     line up on one left edge rather than on three. */
+  .ncols ul.caveats{padding-left:0;list-style:none}
+  .ncols ul.caveats li{margin-bottom:12px}
   .caveat{border-left:2px solid var(--st-construction);padding-left:12px}
 
   /* ---------- sources + footer ---------- */
@@ -562,7 +571,7 @@
           </section>
           <section>
             <h4 class="caveat">Limits of the data</h4>
-            <ul>
+            <ul class="caveats">
               <li class="caveat">
                 <strong>Money is AfDB plus Chinese official finance, kept apart.</strong> AfDB commitments come
                 from its transaction records (IATI type 2), converted from SDR at a fixed published rate.
