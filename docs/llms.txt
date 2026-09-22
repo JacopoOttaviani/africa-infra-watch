@@ -3,7 +3,7 @@
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
 > Africa, for investors, researchers and journalists. Compiled from seven open datasets:
 > 4,274 power units tracked by Global Energy Monitor, 1,767 projects financed by the African Development Bank and 1,107 by the World Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,324 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2021, from AidData. Together they describe about 1,090 GW of generating capacity across all statuses; USD 101.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026), and USD 179.3 billion of World Bank commitments as published; USD 242.7 billion of Chinese official commitments to infrastructure over 2000–2021, in constant 2021 dollars as AidData publishes them.
-> Snapshot built 20 Sep 2026; data is refreshed by hand about twice a year.
+> Snapshot built 22 Sep 2026; data is refreshed by hand about twice a year.
 
 Made by Jacopo Ottaviani (https://www.linkedin.com/in/jacopo-ottaviani/). Free to use; cite the underlying sources by name.
 Site: https://jacopoottaviani.com/africa-infra-watch/
@@ -14,9 +14,8 @@ Site: https://jacopoottaviani.com/africa-infra-watch/
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same layers (AfDB only
-  for finance) as a page with KPIs, a country map, bar charts by country and sector, and a
-  sortable table.
+- [Africa Infrastructure Monitor](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
+  with KPIs, a country map, bar charts by country and sector, and a sortable table.
 
 ## Data
 

@@ -108,10 +108,11 @@ SOURCE_INFO = {
     "china": {"name": "AidData", "lic": "ODC-By 1.0 (footprints ODbL)",
               "url": "https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0"},
 }
-# The layers each page draws. Both pages show the six layers; the dashboard's
-# finance layer is AfDB only, so the World Bank source card is the map's alone.
+# The layers each page draws. Both pages show the same six layers over the
+# same records, and both split the finance layer between its two lenders, so
+# both carry the World Bank source card.
 MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables", "china")
-DASHBOARD_LAYERS = ("assets", "finance", "ground", "pipelines", "cables", "china")
+DASHBOARD_LAYERS = MAP_LAYERS
 
 
 # ------------------------------------------------------------------ meta.json
@@ -273,7 +274,8 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
     g, _ = _rows(ground)
     mw = sum((r[ac.index("mw")] or 0) for r in a) if "mw" in ac else 0
     usd = sum((r[fc.index("usd_m")] or 0) for r in f) if "usd_m" in fc else 0
-    # the map's finance rows carry a lender column; the dashboard's are AfDB only
+    # both pages' finance rows carry a lender column; the fallback covers a
+    # caller that passes a lenderless layer
     if "ln" in fc:
         n_afdb = sum(1 for r in f if r[fc.index("ln")] == "AfDB")
         n_wb = sum(1 for r in f if r[fc.index("ln")] == "WB")
@@ -588,9 +590,8 @@ Site: {SITE_URL}
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the same layers (AfDB only
-  for finance) as a page with KPIs, a country map, bar charts by country and sector, and a
-  sortable table.
+- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the same records as a page
+  with KPIs, a country map, bar charts by country and sector, and a sortable table.
 
 ## Data
 

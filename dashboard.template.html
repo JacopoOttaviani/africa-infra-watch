@@ -253,6 +253,7 @@
   .pmw{display:flex;align-items:center;justify-content:center}
   .pm{display:block;width:10px;height:10px;border-radius:50%;background:var(--c,var(--st-stalled));box-shadow:0 0 0 1px var(--surface);opacity:.92}
   .pm.finance{width:9px;height:9px;border-radius:1px}
+  .pm.finance.wb{transform:rotate(45deg) scale(.92)}
   .pm.ground{width:14px;height:3.5px;border-radius:2px;transform:rotate(-32deg)}
   .pm.stalled{background:transparent;border:1.6px solid var(--st-stalled);box-shadow:none}
   .pmw svg.tri{display:block;width:15px;height:15px;overflow:visible}
@@ -331,7 +332,7 @@
   .src .sk{font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
   .src .sn{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:-.008em}
   .src .sf{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
-  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.cables{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
+  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.finance_wb,.sk.cables{color:var(--st-approved)} .sk.ground{color:var(--st-construction)}
   footer.foot{margin-top:16px;padding-top:16px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
   footer.foot .byline{font-family:var(--mono);font-size:11px}
 
@@ -417,6 +418,7 @@
       <div class="narrow">
         <select id="country" aria-label="Country"></select>
         <select id="sector" aria-label="Sector"></select>
+        <select id="lender" aria-label="Lender" style="grid-column:1/-1"></select>
         <button class="reset" id="reset">Clear all filters</button>
       </div>
     </div>
@@ -663,8 +665,13 @@ const STATUS_ORDER = ["announced","approved","under_construction","operating","s
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
 const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables","china"];
 const HOME_HOST    = "__HOME_URL__".replace(/^https?:\/\//,"").replace(/\/$/,"");
-const LAYER_LABEL  = {assets:"Power assets",finance:"AfDB finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"African Development Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · 2000–2021"};
+const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",finance_wb:"World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · 2000–2021"};
+/* the finance layer holds two lenders, told apart by shape: square and diamond;
+   Chinese official lenders are a layer of their own (triangles) but join the
+   lender filter, so "who is paying" can be asked of all three */
+const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", CN:"Chinese official lenders"};
+const sourceOf     = r => r.layer==="finance" ? (LENDER_NAME[r.lender] || LAYER_SUB.finance) : LAYER_SUB[r.layer];
 /* AidData's vocabulary behind the shared one */
 const CHINA_RAW    = {approved:"Pipeline: Commitment", under_construction:"Implementation", operating:"Completion"};
 const OECD_SECTOR  = {110:"Education",120:"Health",130:"Population and reproductive health",140:"Water supply and sanitation",150:"Government and civil society",160:"Other social infrastructure",210:"Transport and storage",220:"Communications",230:"Energy",240:"Banking and financial services",250:"Business and other services",310:"Agriculture, forestry, fishing",320:"Industry, mining, construction",330:"Trade policies and regulations",410:"General environmental protection",430:"Other multisector",510:"General budget support",520:"Food aid and food security",530:"Other commodity assistance",600:"Action relating to debt",700:"Humanitarian aid",720:"Emergency response",730:"Reconstruction relief",740:"Disaster prevention",998:"Unallocated"};
@@ -679,13 +686,13 @@ const LINE_LAYERS  = ["cables","pipelines","ground"];   /* drawing order: thin w
 const UNCLUSTERED  = new Set(["pipelines","cables"]);
 const clustered    = r => !UNCLUSTERED.has(r.layer);
 const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",health:"Health",education:"Education",government:"Government buildings",social:"Social infrastructure",agriculture:"Agriculture",road:"Road",rail:"Rail",air:"Air",other:"Other"};
-const SHORT        = {assets:"GEM", finance:"AfDB", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData"};
+const SHORT        = {assets:"GEM", finance:"AfDB", finance_wb:"World Bank", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData"};
 const sectorLabel  = s => SECTOR_LABEL[s] || (s ? s[0].toUpperCase()+s.slice(1) : "Other");
 
 const S = {
   layers:Object.fromEntries(LAYER_ORDER.map(k=>[k,true])),
   status:new Set(STATUS_ORDER),
-  country:"", sector:"", q:"",
+  country:"", sector:"", lender:"", q:"",
   sort:{k:"size",dir:-1},
   picked:null,
   hover:null,      /* the country under the pointer, shaded as a hint that it can be picked */
@@ -740,11 +747,11 @@ function unify(){
     text:words(a.name, a.tech, NAMES[a.iso]),
   });
   for(const f of FINANCE) out.push({
-    ref:f, layer:"finance", name:f.name||"(untitled activity)", iso:f.iso,
-    country:NAMES[f.iso]||f.iso, status:f.status, kind:sectorLabel(f.sector||"other"),
+    ref:f, layer:"finance", lender:f.ln||"AfDB", name:f.name||"(untitled activity)", iso:f.iso,
+    country:f.iso ? (NAMES[f.iso]||f.iso) : "Multinational", status:f.status, kind:sectorLabel(f.sector||"other"),
     sector:f.sector||"other", size:f.usd_m, unit:"USD m", lon:f.lon, lat:f.lat,
     place:f.place, prec:f.prec,
-    text:words(f.name, f.place, NAMES[f.iso]),
+    text:words(f.name, f.place, f.iso?NAMES[f.iso]:"multinational", f.iid, LENDER_NAME[f.ln||"AfDB"], f.ln||"AfDB"),
   });
   for(const g of GROUND) out.push({
     ref:g, layer:"ground", name:g.name||"(unnamed works)", iso:g.iso,
@@ -771,7 +778,7 @@ function unify(){
      country's centre; a precise one also carries its OpenStreetMap footprint
      on ref.g, outlined once the frame is zoomed in */
   for(const c of CHINA) out.push({
-    ref:c, layer:"china", name:c.name||"(untitled project)", iso:c.iso,
+    ref:c, layer:"china", lender:"CN", name:c.name||"(untitled project)", iso:c.iso,
     country:c.iso?(NAMES[c.iso]||c.iso):"Africa, regional", status:c.status, kind:sectorLabel(c.sector||"other"),
     sector:c.sector||"other", size:c.usd_m, unit:"USD m", lon:c.lon, lat:c.lat,
     place:c.place, prec:c.prec,
@@ -788,6 +795,7 @@ const passBut = (r, skip) =>
   (skip==="status" || S.status.has(r.status)) &&
   inCountry(r) &&
   (!S.sector || r.sector===S.sector) &&
+  (!S.lender || r.lender===S.lender) &&
   (!S.q || r.text.includes(S.q));
 const pass = r => passBut(r, null);
 let VIS = [];
@@ -999,7 +1007,7 @@ function draw(){
     ctx.globalAlpha = 1;
   }
 
-  /* points: finance = squares, assets = circles sized by capacity, Chinese finance = triangles
+  /* points: AfDB = squares and the World Bank diamonds, assets = circles sized by capacity, Chinese finance = triangles
      sized by commitment; big first so small stay on top.
      While clustering, the overlay draws them (as donuts or uniform marks). */
   const pts = S.cluster ? [] : VIS.filter(r => r.layer==="assets" || r.layer==="finance" || r.layer==="china");
@@ -1011,7 +1019,8 @@ function draw(){
     ctx.beginPath();
     if(r.layer==="finance"){
       const s = 3.4 + Math.min(4, Math.sqrt((r.size||0))/9);
-      ctx.rect(x-s/2, y-s/2, s, s);
+      if(r.lender==="WB"){ const d = s*0.69; ctx.moveTo(x, y-d); ctx.lineTo(x+d, y); ctx.lineTo(x, y+d); ctx.lineTo(x-d, y); ctx.closePath(); }
+      else ctx.rect(x-s/2, y-s/2, s, s);
     } else if(r.layer==="china"){
       const d = 2.3 + Math.min(2.8, Math.sqrt((r.size||0))/12);
       ctx.moveTo(x, y-d*1.05); ctx.lineTo(x+d*1.08, y+d*0.75); ctx.lineTo(x-d*1.08, y+d*0.75); ctx.closePath();
@@ -1113,11 +1122,14 @@ function inRing(x,y,ring){
 const glyph = {
   assets:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${col}"/></svg>`,
   finance: col => `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" fill="${col}"/></svg>`,
+  finance_wb: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.6 14.4 8 8 14.4 1.6 8Z" fill="${col}"/></svg>`,
   ground:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   pipelines: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none" opacity=".3"/><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   cables:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 12 13.5 4" stroke="${col}" stroke-width="1.7" stroke-linecap="round" fill="none"/><circle cx="2.8" cy="11.8" r="2.3" fill="${col}"/><circle cx="13.2" cy="4.2" r="2.3" fill="${col}"/></svg>`,
   china:   col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2.2 14.3 13.6H1.7Z" fill="${col}"/></svg>`,
 };
+/* a record's own glyph: the finance layer's two lenders differ by shape */
+const glyphOf = r => (r.layer==="finance" && r.lender==="WB" ? glyph.finance_wb : glyph[r.layer]);
 
 function renderSources(){
   el("srcs").innerHTML = DATA.meta.sources.map(s => `
@@ -1129,7 +1141,7 @@ function renderSources(){
   el("builtnote").textContent = `Built ${DATA.meta.built} · every figure computed from the source files`;
   el("prov").innerHTML = DATA.meta.sources.map(s =>
     `<strong>${esc(s.name)}</strong> (${LAYER_LABEL[s.k]||s.k}): ${esc(s.detail)} (${esc(s.lic)}).`).join(" ")
-    + ` AfDB commitments converted at ${esc(DATA.meta.sdr_note)}.`;
+    + ` AfDB commitments converted at ${esc(DATA.meta.sdr_note)}; World Bank commitments in US dollars as published.`;
   const un = DATA.meta.unrouted_pipelines;
   el("unrouted").textContent = un ? `GEM lists ${fmt(un)} more African segments without a route; they are not drawn or counted.` : "";
 }
@@ -1140,9 +1152,9 @@ function renderLede(){
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   el("lede").innerHTML =
     `What is being built across Africa, and who is paying for it. Six open datasets laid over one map:
-     power plants planned or under construction, African Development Bank projects with money attached,
-     road, rail and airport works traced on the ground, oil and gas pipelines, submarine cables and
-     Chinese-financed projects from 2000 to 2021. They share no project identifier, so the same power
+     power plants planned or under construction, African Development Bank and World Bank projects with
+     money attached, road, rail and airport works traced on the ground, oil and gas pipelines, submarine
+     cables and Chinese-financed projects from 2000 to 2021. They share no project identifier, so the same power
      plant can sit in three layers and nothing here is summed across them. Charts and a table follow the
      map; every figure carries its source.`;
 }
@@ -1151,7 +1163,7 @@ function renderLede(){
    single blended "projects" count would double-count an AfDB-financed power
    plant that OSM contributors have also traced. */
 /* the card in the map's corner: what is framed, and how much of it there is */
-const FACT_NOUN = {assets:["power unit","power units"], finance:["AfDB project","AfDB projects"], ground:["work","works"], pipelines:["pipeline","pipelines"], cables:["cable","cables"], china:["Chinese-financed project","Chinese-financed projects"]};
+const FACT_NOUN = {assets:["power unit","power units"], finance:["bank project","bank projects"], ground:["work","works"], pipelines:["pipeline","pipelines"], cables:["cable","cables"], china:["Chinese-financed project","Chinese-financed projects"]};
 function renderTitle(){
   const iso = S.country;
   el("maptitle").classList.toggle("is-country", !!iso);
@@ -1165,7 +1177,7 @@ function renderTitle(){
     const isos = new Set(); for(const r of VIS) for(const i of (r.isos||[r.iso])) if(i) isos.add(i);
     lead += ` across <b>${isos.size}</b> countries`;
   }
-  const filtered = S.q || S.sector || S.status.size!==STATUS_ORDER.length || LAYER_ORDER.some(k=>!S.layers[k]);
+  const filtered = S.q || S.sector || S.lender || S.status.size!==STATUS_ORDER.length || LAYER_ORDER.some(k=>!S.layers[k]);
   el("mtfacts").innerHTML = lead + (parts.length ? `<span class="mt-more"> · ${parts.join(" · ")}</span>` : "") + (filtered ? ` <span style="color:var(--ink-3)">· filtered</span>` : "");
   el("mtfoot").textContent = `${HOME_HOST} · data as of ${DATA.meta.built}`;
 }
@@ -1177,12 +1189,13 @@ function renderKpis(){
   const aPipe = A.filter(r => r.status!=="operating" && r.status!=="stalled");
   const mw = aPipe.reduce((a,r)=>a+(r.size||0),0);
   const usd = F.reduce((a,r)=>a+(r.size||0),0);
+  const usdW = F.filter(r=>r.lender==="WB").reduce((a,r)=>a+(r.size||0),0);
   const pkm = P.reduce((a,r)=>a+(r.size||0),0);
   const landings = C.reduce((a,r)=>a+((r.ref.lps||[]).length),0);
   const filtered = VIS.length !== ALL.length;
   const K = [
     ["Power pipeline", fmt(aPipe.length), `${fmt1(mw/1000)} GW · Global Energy Monitor`],
-    ["AfDB commitment", "$" + fmt1(usd/1000) + "bn", `${fmt(F.length)} projects · AfDB only`],
+    ["Bank commitment", "$" + fmt1(usd/1000) + "bn", `${fmt(F.length)} projects · AfDB $${fmt1((usd-usdW)/1000)}bn · WB $${fmt1(usdW/1000)}bn`],
     ["Works on the ground", fmt(G.length), "road, rail, air · OpenStreetMap"],
     ["Pipeline segments", fmt(P.length), `${fmt(pkm)} km of oil and gas route · GEM`],
     ["Submarine cables", fmt(C.length), `${fmt(landings)} African landings · TeleGeography`],
@@ -1235,6 +1248,8 @@ function renderSelects(){
   const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort();
   el("sector").innerHTML = `<option value="">All sectors</option>` +
     secs.map(s=>`<option value="${s}"${S.sector===s?" selected":""}>${sectorLabel(s)}</option>`).join("");
+  el("lender").innerHTML = `<option value="">All lenders</option>` +
+    Object.entries(LENDER_NAME).map(([k,n])=>`<option value="${k}"${S.lender===k?" selected":""}>${n} only</option>`).join("");
 }
 
 function renderLegend(){
@@ -1244,6 +1259,7 @@ function renderLegend(){
       <span class="lh">Shape = source</span>
       <div class="lg">${glyph.assets(ink)}<span><b>Power unit</b> · sized by MW</span></div>
       <div class="lg">${glyph.finance(ink)}<span><b>AfDB project</b> · sized by $</span></div>
+      <div class="lg">${glyph.finance_wb(ink)}<span><b>World Bank project</b> · same layer, other lender</span></div>
       <div class="lg">${glyph.ground(ink)}<span><b>Works</b> · traced way</span></div>
       <div class="lg">${glyph.pipelines(ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
@@ -1305,7 +1321,7 @@ function renderBySector(){
 /* ---------------- rendering: selection ---------------- */
 function renderSel(){
   const b = el("selbody");
-  el("selhint").textContent = S.picked ? LAYER_SUB[S.picked.layer] : "";
+  el("selhint").textContent = S.picked ? sourceOf(S.picked) : "";
   if(!S.picked){
     b.innerHTML = `<p class="selempty">Click a marker or a route on the map, or a row in the table, to inspect one record.</p>`;
     return;
@@ -1315,7 +1331,7 @@ function renderSel(){
   const rows = [
     ["Country", esc(r.layer==="pipelines"||r.layer==="cables" ? (r.isos||[r.iso]).filter(Boolean).map(i=>NAMES[i]||i).join(", ") || "—" : r.country)],
     ["Status", STATUS_LABEL[r.status]||"—"],
-    ["Layer", `${LAYER_LABEL[r.layer]} <i>· ${LAYER_SUB[r.layer]}</i>`],
+    ["Layer", `${LAYER_LABEL[r.layer]} <i>· ${sourceOf(r)}</i>`],
   ];
   let note = "", links = [];
   if(r.layer==="assets"){
@@ -1324,12 +1340,19 @@ function renderSel(){
     if(f.yr) rows.push(["Start year", f.yr]);
     if(f.url) links.push([f.url, "GEM record"]);
   } else if(r.layer==="finance"){
+    const wb = r.lender==="WB";
+    rows.push(["Lender", LENDER_NAME[r.lender]||r.lender]);
     rows.push(["Sector", esc(r.kind)]);
     if(r.size!=null) rows.push(["Commitment", num("$"+fmt1(r.size)+"m", "USD")]);
     if(r.place) rows.push(["Reported place", esc(r.place)]);
-    rows.push(["Geo precision", r.prec==="1" ? "exact site" : "approximate <i>· country or region centroid</i>"]);
+    rows.push(["Geo precision", r.prec===0 ? "exact site"
+      : r.prec===1 ? "named place or district <i>· the Bank marks it approximate</i>"
+      : "approximate <i>· country or region centroid</i>"]);
+    if(wb && f.purl) links.push([f.purl, "World Bank project page"]);
     if(f.iid) links.push(["https://d-portal.org/ctrack.html?aid=" + encodeURIComponent(f.iid), "IATI activity"]);
-    note = `AfDB commitment from IATI type-2 transactions, converted at ${esc(DATA.meta.sdr_note)}. AfDB money only; co-financiers are not counted.`;
+    note = wb
+      ? "World Bank commitment from IATI type-2 transactions, in US dollars as published. World Bank money only; co-financiers, including AfDB, are not counted."
+      : `AfDB commitment from IATI type-2 transactions, converted at ${esc(DATA.meta.sdr_note)}. AfDB money only; co-financiers, including the World Bank, are not counted.`;
   } else if(r.layer==="ground"){
     rows.push(["Becomes", esc(r.kind)]);
     if(f.oid) links.push(["https://www.openstreetmap.org/way/" + f.oid, "OSM way"]);
@@ -1405,7 +1428,7 @@ function renderTable(){
     <tr data-i="${i}" class="${S.picked===r?"picked":""}">
       <td class="name">${esc(r.name)}${r.place?`<span class="pl">${esc(r.place)}</span>`:""}</td>
       <td class="dim">${esc(r.country)}</td>
-      <td class="dim lyr-cell">${glyph[r.layer](toneColor(r.layer))}${LAYER_SUB[r.layer]}</td>
+      <td class="dim lyr-cell">${glyphOf(r)(toneColor(r.layer))}${sourceOf(r)}</td>
       <td><span class="badge ${r.status}" style="color:${statusColor(r.status)}">
         <span class="sw" style="background:${statusColor(r.status)}"></span>${STATUS_LABEL[r.status]||"—"}</span></td>
       <td class="dim">${esc(r.kind)}</td>
@@ -1564,6 +1587,7 @@ function animateTo(lon,lat,k){
 
 el("country").onchange = e => setCountry(e.target.value);
 el("sector").onchange  = e => { S.sector  = e.target.value; apply(); };
+el("lender").onchange  = e => { S.lender  = e.target.value; apply(); };
 el("mtclear").onclick = () => setCountry("");
 let qt=null;
 el("q").oninput = e => {
@@ -1572,7 +1596,7 @@ el("q").oninput = e => {
 };
 el("reset").onclick = () => {
   S.layers = Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
-  S.status=new Set(STATUS_ORDER); S.country=""; S.sector=""; S.q="";
+  S.status=new Set(STATUS_ORDER); S.country=""; S.sector=""; S.lender=""; S.q="";
   resetView();
   S.picked=null; el("q").value="";
   view.k=1; view.tx=0; view.ty=0;
@@ -1628,7 +1652,7 @@ function donutGlyph(){
 }
 const ICONS = {};
 function iconFor(r){
-  const k = r.layer+"|"+r.status;
+  const k = r.layer+"|"+r.status+"|"+(r.lender||"");
   if(ICONS[k]) return ICONS[k];
   let html;
   if(r.layer==="china"){
@@ -1636,7 +1660,7 @@ function iconFor(r){
     html = r.status==="stalled"
       ? `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.2 13.4 12.9H2.6Z" fill="none" stroke="${v}" stroke-width="1.7" stroke-linejoin="round"/></svg>`
       : `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 14.6 13.8H1.4Z" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
-  } else html = `<i class="pm ${r.layer} ${r.status}"></i>`;
+  } else html = `<i class="pm ${r.layer} ${r.status}${r.lender==="WB"?" wb":""}"></i>`;
   return (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html}));
 }
 function markerFor(r){
@@ -1731,18 +1755,20 @@ function clusterClick(m){
   const kFit = Math.min((W-140)/(Math.max(dw,1e-6)*base), (H-140)/(Math.max(dh,1e-6)*base));
   animateTo((b.getWest()+b.getEast())/2, (b.getSouth()+b.getNorth())/2, Math.min(KMAX, Math.max(kFit, view.k*2)));
 }
+const SRC_ORDER = ["assets","finance","finance_wb","ground","pipelines","cables","china"];
+const srcKey = r => r.layer==="finance" && r.lender==="WB" ? "finance_wb" : r.layer;
 function clusterTip(c){
-  const kids = c.getAllChildMarkers(), by = {}, byL = Object.fromEntries(LAYER_ORDER.map(k=>[k,0]));
-  for(const m of kids){ by[m.rec.status] = (by[m.rec.status]||0)+1; byL[m.rec.layer]++; }
+  const kids = c.getAllChildMarkers(), by = {}, byL = Object.fromEntries(SRC_ORDER.map(k=>[k,0]));
+  for(const m of kids){ by[m.rec.status] = (by[m.rec.status]||0)+1; byL[srcKey(m.rec)]++; }
   const rows = STATUS_ORDER.filter(s=>by[s]).map(s =>
     `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${STATUS_LABEL[s]}</span><b>${fmt(by[s])}</b></div>`).join("");
-  const src = LAYER_ORDER.filter(k=>byL[k]).map(k => `${fmt(byL[k])} ${SHORT[k]}`).join(" · ");
+  const src = SRC_ORDER.filter(k=>byL[k]).map(k => `${fmt(byL[k])} ${SHORT[k]}`).join(" · ");
   return `<div class="tn">${fmt(kids.length)} records</div>${rows}<div class="tr"><span>Source</span><b>${src}</b></div><div class="tr hint">Click to zoom in</div>`;
 }
 function recTip(hit){
   const bits = [["Status", STATUS_LABEL[hit.status]||"—"], [hit.isos ? "Countries" : "Country", esc(hit.country)]];
   if(hit.size!=null) bits.push([hit.unit, fmt1(hit.size)]);
-  bits.push(["Source", LAYER_SUB[hit.layer]]);
+  bits.push(["Source", sourceOf(hit)]);
   return `<div class="tn">${esc(hit.name)}</div>` +
     bits.map(([a,b])=>`<div class="tr"><span>${a}</span><b>${b}</b></div>`).join("");
 }

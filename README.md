@@ -49,8 +49,9 @@ shared with the map. Both pages use one status palette.
 ## Sources
 
 Seven open datasets in six layers, deliberately kept apart because they share no
-project identifier. Summing across them double-counts. Both pages show the six
-layers; the dashboard's finance layer is AfDB only, the map adds the World Bank.
+project identifier. Summing across them double-counts. Both pages show the same
+six layers over the same records; the finance layer holds both lenders on each,
+drawn as squares (AfDB) and diamonds (World Bank).
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|

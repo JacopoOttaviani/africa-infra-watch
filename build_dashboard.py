@@ -108,6 +108,12 @@ def build_context():
     return out
 
 
+# The finance layer's two lenders: file, short lender code as the payload
+# carries it, and how their amounts reach US dollars. AfDB reports in XDR
+# (IMF SDR); the World Bank in USD. Kept in step with build_map.py.
+FINANCE_FILES = [("iati_afdb_finance.geojson", "AfDB"), ("iati_worldbank_finance.geojson", "WB")]
+TO_USD = {"XDR": SDR_USD, "USD": 1.0}
+
 # DAC 5-digit purpose codes → the dashboard's sector vocabulary.
 DAC_SECTOR = [
     ("210", "transport"), ("220", "ict"), ("23", "energy"),
@@ -273,40 +279,55 @@ def build_assets():
 
 
 def build_finance():
-    """AfDB activities, deduped to one point per project.
+    """AfDB and World Bank activities, one record per activity per lender.
 
-    Prefers an exactness=1 location so the marker sits on the works rather
-    than at a country centroid.
+    The map carries the same two lenders (build_map.build_finance); this keeps
+    the leaner column set the dashboard actually reads. Precision rank per
+    location: 0 = exact site (IATI exactness 1, AfDB), 1 = a named place or
+    site (World Bank location-class 2 or 4, which the Bank still marks
+    exactness 2), 2 = a country or region centroid. The best location a lender
+    publishes becomes the marker.
     """
     best = {}
-    for f in load("iati_afdb_finance.geojson"):
-        p = f["properties"]
-        pid = p.get("iati_id")
-        if not pid:
+    for fname, ln in FINANCE_FILES:
+        if not (DATA / fname).exists():
+            print(f"   ! {fname} missing, lender {ln} skipped")
             continue
-        prec = p.get("geo_precision")
-        rank = 0 if prec == "1" else 1
-        if pid in best and best[pid][0] <= rank:
-            continue
-        lon, lat = f["geometry"]["coordinates"]
-        sector = None
-        for code in (p.get("dac_sectors") or []):
-            for pre, s in DAC_SECTOR:
-                if code.startswith(pre):
-                    sector = s
+        for f in load(fname):
+            p = f["properties"]
+            pid = p.get("iati_id")
+            if not pid:
+                continue
+            if p.get("geo_precision") == "1":
+                rank = 0
+            elif p.get("location_class") in ("2", "4"):
+                rank = 1
+            else:
+                rank = 2
+            key = (ln, pid)
+            if key in best and best[key][0] <= rank:
+                continue
+            lon, lat = f["geometry"]["coordinates"]
+            sector = None
+            for code in (p.get("dac_sectors") or []):
+                for pre, s in DAC_SECTOR:
+                    if code.startswith(pre):
+                        sector = s
+                        break
+                if sector:
                     break
-            if sector:
-                break
-        com = p.get("commitment")
-        best[pid] = (rank, [
-            (p.get("name") or "").strip()[:88],
-            p.get("country") or "", r(lon), r(lat), p.get("dash_status"),
-            sector, round(com * SDR_USD / 1e6, 2) if com else None,
-            prec, p.get("location_name") or None, pid,
-        ])
+            com = p.get("commitment")
+            rate = TO_USD.get(p.get("currency") or ("XDR" if ln == "AfDB" else "USD"))
+            best[key] = (rank, [
+                (p.get("name") or "").strip()[:88],
+                p.get("country") or "", r(lon), r(lat), p.get("dash_status"),
+                sector, round(com * rate / 1e6, 2) if com and rate else None,
+                rank, (p.get("location_name") or "")[:40] or None, pid, ln,
+                p.get("project_url") or None,
+            ])
     return {
         "cols": ["name", "iso", "lon", "lat", "status", "sector",
-                 "usd_m", "prec", "place", "iid"],
+                 "usd_m", "prec", "place", "iid", "ln", "purl"],
         "rows": [v[1] for v in best.values()],
     }
 
@@ -541,7 +562,9 @@ def main():
 
     print("finance …")
     finance = build_finance()
-    print(f"   {len(finance['rows']):,} projects")
+    fc = finance["cols"]
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in ("AfDB", "WB")}
+    print(f"   {len(finance['rows']):,} projects ({by_ln['AfDB']:,} AfDB, {by_ln['WB']:,} World Bank)")
 
     print("ground  …")
     ground = build_ground(idx)
@@ -628,7 +651,8 @@ def main():
         facts=site_facts(assets, finance, ground, pipelines, cables, china),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "
-                    "Development Bank finance, Chinese-financed projects 2000–2021 (AidData), "
+                    "Development Bank and World Bank finance, Chinese-financed projects "
+                    "2000–2021 (AidData), "
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "
                     "with charts by country and sector and a sortable project table."))
     print(f"→ docs/dashboard.html")
