@@ -647,7 +647,7 @@ def main():
     # GitHub Pages copy: a complete document rather than an artifact fragment.
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
-        page, title="Africa Infrastructure Monitor", path="dashboard.html", kind="dashboard",
+        page, title="Africa Infrastructure Map", path="dashboard.html", kind="dashboard",
         facts=site_facts(assets, finance, ground, pipelines, cables, china),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "

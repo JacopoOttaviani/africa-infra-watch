@@ -424,7 +424,7 @@ def structured_data(facts, *, path, title, description, kind):
     if path:
         graph.append({"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Africa Infrastructure Map", "item": SITE_URL},
-            {"@type": "ListItem", "position": 2, "name": title, "item": site_url(path)}]})
+            {"@type": "ListItem", "position": 2, "name": "Dashboard" if kind == "dashboard" else title, "item": site_url(path)}]})
     return {"@context": "https://schema.org", "@graph": graph}
 
 
@@ -590,7 +590,7 @@ Site: {SITE_URL}
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor]({site_url('dashboard.html')}): the same records as a page
+- [Africa Infrastructure Map, dashboard view]({site_url('dashboard.html')}): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
 
 ## Data

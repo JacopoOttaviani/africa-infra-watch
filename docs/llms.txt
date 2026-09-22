@@ -14,7 +14,7 @@ Site: https://jacopoottaviani.com/africa-infra-watch/
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Monitor](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
+- [Africa Infrastructure Map, dashboard view](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
 
 ## Data
