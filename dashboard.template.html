@@ -1746,7 +1746,7 @@ new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{ fit(); draw(); if
 matchMedia("(prefers-color-scheme:dark)").addEventListener("change", ()=>apply());
 new MutationObserver(()=>apply()).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
 renderSources(); renderLede(); fit(); apply();
-/* Clustered from the start, as on the map: thousands of marks in a 560 px
-   frame read as noise; a few dozen donuts read as a distribution. */
-setCluster(true);
+/* Unclustered from the start: the dashboard opens on the records themselves,
+   and Cluster markers is one click away when the marks crowd. The state boots
+   at cluster:false, so apply() above has already drawn the individual marks. */
 </script>
