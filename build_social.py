@@ -12,7 +12,7 @@ Writes  docs/social.png                1200 x 630, what Slack, WhatsApp, LinkedI
                                        favicon and home-screen icons
 
 The picture is the map itself: every power unit, AfDB and World Bank project,
-Chinese-financed project and construction way over the continent, in the status
+Chinese- and EU-financed project and construction way over the continent, in the status
 palette, with the title on the left. It
 is drawn as SVG and rasterised by a headless Chrome, which every Mac with Chrome
 has and which renders the web fonts the pages use. Pass AIW_CHROME to point at
@@ -36,7 +36,7 @@ ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
-from build_dashboard import build_china, build_lookup  # noqa: E402
+from build_dashboard import build_china, build_eu, build_lookup  # noqa: E402
 from shared import BRAND, DATA, DOCS, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W  # noqa: E402
 
 W, H = SOCIAL_W, SOCIAL_H
@@ -114,7 +114,17 @@ def esc(s):
     return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 
-def draw(assets, finance, ground, china, countries, is10m):
+def star_path(x, y, d):
+    """A five-pointed star of outer radius d, one point up, as an SVG path."""
+    pts = []
+    for i in range(10):
+        a = -math.pi / 2 + i * math.pi / 5
+        rr = d if i % 2 == 0 else d * 0.42
+        pts.append(f"{x + rr * math.cos(a):.1f} {y + rr * math.sin(a):.1f}")
+    return "M" + "L".join(pts) + "Z"
+
+
+def draw(assets, finance, ground, china, eu, countries, is10m):
     proj, s = make_proj()
     out = []
 
@@ -159,6 +169,16 @@ def draw(assets, finance, ground, china, countries, is10m):
                    f'L{x - d * 1.08:.1f} {y + d * 0.75:.1f}Z" fill="{col}"/>')
     out.append(f'<g opacity=".82" stroke="{C["paper"]}" stroke-width=".6">' + "".join(tri) + "</g>")
 
+    # -- EU finance: five-pointed stars, by sqrt(commitment), biggest first
+    ei = {k: i for i, k in enumerate(eu["cols"])}
+    stars = []
+    for r in sorted(eu["rows"], key=lambda r: -(r[ei["usd_m"]] or 0)):
+        x, y = proj(r[ei["lon"]], r[ei["lat"]])
+        d = min(8, 2.6 + math.sqrt(max(0, r[ei["usd_m"]] or 1)) * 0.2)
+        col = C.get(r[ei["status"]], C["stalled"])
+        stars.append(f'<path d="{star_path(x, y, d)}" fill="{col}"/>')
+    out.append(f'<g opacity=".82" stroke="{C["paper"]}" stroke-width=".6" stroke-linejoin="round">' + "".join(stars) + "</g>")
+
     # -- finance: squares, side by sqrt(commitment), biggest first
     fi = {k: i for i, k in enumerate(finance["cols"])}
     sq = []
@@ -193,13 +213,14 @@ def draw(assets, finance, ground, china, countries, is10m):
     out.append(f'<text x="62" y="276" class="title">Infrastructure</text>')
     out.append(f'<text x="62" y="352" class="title">Map</text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
-    out.append('<text x="64" y="430" class="sub">the continent, from seven open datasets.</text>')
+    out.append('<text x="64" y="430" class="sub">the continent, from nine open datasets.</text>')
 
-    n_a, n_f, n_g, n_c = len(assets["rows"]), len(finance["rows"]), len(ground["rows"]), len(china["rows"])
+    n_a, n_f, n_g, n_c, n_e = (len(assets["rows"]), len(finance["rows"]), len(ground["rows"]),
+                               len(china["rows"]), len(eu["rows"]))
     y = 466
     for glyph, num, src in (
         ("circle", f"{n_a:,} power units", "Global Energy Monitor"),
-        ("rect", f"{n_f:,} AfDB and World Bank projects", "via IATI"),
+        ("rect", f"{n_f + n_e:,} AfDB, World Bank and EU projects", "via IATI"),
         ("tri", f"{n_c:,} Chinese-financed projects", "AidData, 2000–2021"),
         ("line", f"{n_g:,} construction works", "OpenStreetMap"),
     ):
@@ -310,9 +331,10 @@ def main():
     idx = build_lookup(base110["countries"])
     assets, finance, ground = build_assets(), build_finance(), build_ground(idx)
     china = build_china(idx, simp=lambda part: [])     # markers only, no footprints
+    eu = build_eu(idx)
     countries, is10m = load_basemap()
     print("drawing …")
-    html = page(draw(assets, finance, ground, china, countries, is10m))
+    html = page(draw(assets, finance, ground, china, eu, countries, is10m))
     DOCS.mkdir(exist_ok=True)
     if rasterise(html, OUT):
         print(f"→ {OUT.relative_to(ROOT)}  {W}x{H}, {OUT.stat().st_size / 1024:.0f} KB")

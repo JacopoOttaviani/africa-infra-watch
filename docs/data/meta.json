@@ -50,5 +50,20 @@
     "pledges": 489,
     "mislinked": 1,
     "not_infrastructure": 5674
+  },
+  "eu": {
+    "fetched": "2026-10-02",
+    "fresh": null,
+    "datasets": 58,
+    "records": 1992,
+    "contracts": 1565,
+    "decisions": 147,
+    "decisions_folded": 433,
+    "eib": 280,
+    "named_place": 584,
+    "country_point": 1089,
+    "regional": 319,
+    "unplaced": 0,
+    "eur_usd": 1.1225
   }
 }

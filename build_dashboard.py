@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compile the six ingested layers into a single self-contained dashboard.
+Compile the seven ingested layers into a single self-contained dashboard.
 
 Reads   data/*.geojson  +  data/africa_basemap.json  +  data/africa_basemap_10m.json
         (the latter for the rest of the world, drawn as grey context, and
@@ -21,7 +21,7 @@ import sys
 
 from fetch_basemap import WIN, dp, ring_area, rnd, touches
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
-    DASHBOARD_LAYERS, DOCS, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
+    DASHBOARD_LAYERS, DOCS, EUR_USD, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
     payload_meta, site_facts, wrap_document,
 )
 
@@ -549,6 +549,60 @@ def build_china(idx, simp=simplify_line, rnd=r, cap=60, min_extent=0.02):
             "rows": rows}
 
 
+# The EU institutions' finance, shared with build_map.py like the Chinese
+# layer: one point per record (a Commission contract or uncontracted decision,
+# an EIB operation), its commitment in euros converted at the stated rate,
+# and the other named places a contract lists, for the detail view.
+def build_eu(idx, rnd=r):
+    rows = []
+    for f in load("iati_eu_finance.geojson"):
+        p = f["properties"]
+        if not p.get("dash_status"):
+            continue
+        lon, lat = f["geometry"]["coordinates"]
+        sector = p.get("sector")
+        codes = p.get("sector_codes") or []
+        if not sector:
+            for code in codes:
+                for pre, s in DAC_SECTOR:
+                    if code.startswith(pre):
+                        sector = s
+                        break
+                if sector:
+                    break
+        com, dis = p.get("commitment"), p.get("disbursed")
+        locs = p.get("locations") or None
+        if locs:
+            locs = [[rnd(x), rnd(y), (n or "")[:40]] for x, y, n in locs[:16]]
+        cts = p.get("countries") or []
+        rows.append([
+            (p.get("name") or "").strip()[:110] or None, p.get("country") or "",
+            rnd(lon), rnd(lat), p["dash_status"], sector or "other",
+            round(com * EUR_USD / 1e6, 2) if com else None,
+            round(com / 1e6, 2) if com else None,
+            round(dis * EUR_USD / 1e6, 2) if dis else None,
+            p.get("geo_precision"), (p.get("location_name") or "")[:40] or None,
+            p.get("iati_id"), codes[0] if codes else None, (p.get("sector_label") or "")[:60] or None,
+            p.get("publisher"), p.get("kind"), (p.get("parent_name") or "")[:110] or None,
+            (p.get("implementers") or "")[:120] or None, p.get("instrument"), p.get("aid_type_name"),
+            p.get("start_year"), p.get("end_year"), p.get("project_url"), locs,
+            1 if p.get("mixed_currency") else 0, cts if len(cts) > 1 else None, p.get("region"),
+        ])
+    return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m", "eur_m", "dis_m", "prec",
+                     "place", "iid", "dac", "slabel", "pub", "kind", "parent", "impl", "instr", "aid",
+                     "syr", "eyr", "purl", "locs", "mixed", "isos", "region"],
+            "rows": rows}
+
+
+def eu_summary(eu):
+    """One line for the build log: records, dollars, and the split by publisher."""
+    ec = eu["cols"]
+    usd = sum(x[ec.index("usd_m")] or 0 for x in eu["rows"]) / 1000
+    by = {k: sum(1 for x in eu["rows"] if x[ec.index("pub")] == k) for k in ("INTPA", "NEAR", "EIB")}
+    return (f"{len(eu['rows']):,} EU-financed records, ${usd:,.1f}bn at {EUR_USD} USD/EUR "
+            f"({by['INTPA']:,} INTPA, {by['NEAR']:,} NEAR, {by['EIB']:,} EIB)")
+
+
 # ------------------------------------------------------------------- build
 
 def main():
@@ -587,6 +641,10 @@ def main():
     cusd = sum(x[cc.index("usd_m")] or 0 for x in china["rows"]) / 1000
     cfp = sum(1 for x in china["rows"] if x[cc.index("g")])
     print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn (2021 USD), {cfp:,} footprints kept")
+
+    print("eu      …")
+    eu = build_eu(idx)
+    print(f"   {eu_summary(eu)}")
 
     labels = build_labels()
     print(f"   {len(labels):,} country labels")
@@ -629,6 +687,7 @@ def main():
         "pipelines": pipelines,
         "cables": cables,
         "china": china,
+        "eu": eu,
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
@@ -639,7 +698,7 @@ def main():
     OUT.write_text(page)
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
-    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china"):
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu"):
         print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
     if kb > 15000:
         print("  ! approaching the 16 MB artifact ceiling")
@@ -648,11 +707,11 @@ def main():
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
         page, title="Africa Infrastructure Map", path="dashboard.html", kind="dashboard",
-        facts=site_facts(assets, finance, ground, pipelines, cables, china),
+        facts=site_facts(assets, finance, ground, pipelines, cables, china, eu),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "
                     "Development Bank and World Bank finance, Chinese-financed projects "
-                    "2000–2021 (AidData), "
+                    "2000–2021 (AidData), European Union finance (European Commission and EIB), "
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "
                     "with charts by country and sector and a sortable project table."))
     print(f"→ docs/dashboard.html")

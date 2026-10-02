@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate africa-infra-watch from the seven verified sources.
+Populate africa-infra-watch from the nine verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
 `dash_status` vocabulary so a single filter works across every layer.
@@ -10,11 +10,12 @@ Every endpoint here was tested live on 2026-09-07 (power, AfDB, OSM),
 evaluation and the README for the reasoning and the known gotchas.
 
 Usage:
-    python3 fetch_sources.py                 # all seven sources
+    python3 fetch_sources.py                 # all nine sources
     python3 fetch_sources.py gem osm         # only the named layers
     python3 fetch_sources.py pipes cables    # the two line layers added Sep 2026
     python3 fetch_sources.py wb              # World Bank, second lender in the finance layer
     python3 fetch_sources.py china           # AidData, Chinese official finance 2000-2021
+    python3 fetch_sources.py eu              # European Commission and EIB, via IATI
 """
 
 import concurrent.futures
@@ -32,7 +33,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 from fetch_basemap import dp
-from shared import today, update_meta
+from shared import EUR_USD, today, update_meta
 
 DATA = pathlib.Path(__file__).parent / "data"
 UA = {"User-Agent": "africa-infra-watch/0.1 (dataset evaluation)"}
@@ -1272,6 +1273,313 @@ def ring_area_deg(ring):
     return abs(a) / 2
 
 
+# ------------------------------------------------- EU institutions (finance)
+
+# The European Union's own money in Africa, from the two institutions that
+# publish it project by project to IATI: the European Commission (DG INTPA
+# for sub-Saharan Africa and the continental programmes, DG NEAR for the five
+# North African neighbours) and the European Investment Bank. Member states'
+# agencies (AFD, KfW, Enabel…) are national, not EU, and are not here.
+#
+# The Commission publishes two levels in the same per-country files:
+# financing decisions (hierarchy 1: the action the Commission adopted, with
+# its whole envelope) and the contracts under them (hierarchy 2: a grant to
+# an NGO, a delegation agreement with the EIB or KfW, a works contract),
+# linked by <related-activity type="1">. Money sits at both levels, so one
+# record is a contract, and a decision is kept only when none of its
+# contracts is in the set: an action still in the pipeline is one announced
+# record, and nothing is counted twice. Locations carry no exactness: a point
+# is either the Commission's default for the country (one point per country,
+# used by most of its activities; "AFRICA", in Chad, for the regional files)
+# or a named place.
+#
+# The EIB publishes one global file with no locations at all, and repeats its
+# commitment transaction once per contract or tranche record (same date,
+# same value, four to seven times for one loan): the signed amount is the sum
+# of the distinct ones, which matches the Bank's project pages. Sectors are
+# the Bank's own NACE-like codes (vocabulary 99), mapped below to the same
+# buckets the DAC filter yields for the other lenders.
+EU_PUBLISHERS = {
+    "ec-intpa": {"pub": "INTPA", "lender": "European Commission",
+                 "files": [c.lower() for c in AFRICA_ISO] + ["289", "298"]},
+    "ec-near": {"pub": "NEAR", "lender": "European Commission",
+                "files": ["dz", "eg", "ly", "ma", "tn", "189"]},
+    "eib": {"pub": "EIB", "lender": "European Investment Bank", "files": ["act"]},
+}
+EU_REGIONS = {"189", "289", "298"}            # North of Sahara, South of Sahara, Africa regional
+EU_AFRICA_POINT = (17.7578122, 11.5024338)   # lon, lat: the Commission's point for Africa-wide activities
+# island states the 1:110m basemap has no polygon for: a point on the main island
+ISLAND_POINT = {"CV": (-23.6, 15.1), "ST": (6.6, 0.3), "SC": (55.45, -4.65), "MU": (57.55, -20.3), "KM": (43.35, -11.7)}
+# EIB sector codes: the two leading digits decide. Everything else (global
+# loans and SME credit lines, funds, health, education, agriculture, finance)
+# is left out, as the DAC filter leaves it out for the other lenders.
+EIB_SECTOR = [((5, 9), "industry"), ((10, 33), "industry"), ((35, 35), "energy"), ((36, 38), "water"),
+              ((39, 39), "environment"), ((41, 43), "industry"), ((49, 52), "transport"), ((60, 63), "ict")]
+EU_INSTRUMENT = {"110": "grant", "111": "grant", "210": "grant", "411": "loan", "412": "loan", "421": "loan",
+                 "510": "equity", "511": "equity", "512": "equity", "520": "equity"}
+EU_AID_TYPE = {"A01": "general budget support", "A02": "sector budget support", "B01": "core contribution",
+               "B02": "core contribution", "B03": "contribution to a programme or fund",
+               "B04": "basket fund", "C01": "project-type intervention", "D01": "donor personnel",
+               "D02": "technical assistance", "E01": "scholarships", "F01": "debt relief",
+               "G01": "administrative costs", "H01": "development awareness", "H02": "refugees in donor country"}
+
+
+def _narr(e, path):
+    x = e.find(path)
+    return (x.text or "").strip() if x is not None and x.text else None
+
+
+def _eib_bucket(code):
+    try:
+        n = int((code or "")[:2])
+    except ValueError:
+        return None
+    for (lo, hi), bucket in EIB_SECTOR:
+        if lo <= n <= hi:
+            return bucket
+    return None
+
+
+def _clean_place(name, iso):
+    """"KE - Tharaka Nithi county" -> "Tharaka Nithi county"; a contract
+    number ("KE - 419705-4"), a bare country or "AFRICA" -> None."""
+    s = re.sub(r"^[A-Z0-9]{2,3}\s*-\s*", "", (name or "").strip())
+    s = re.sub(r"^[A-Z]{1,4}_", "", s)                           # "AA_Ethiopia"
+    if not s or s.upper() in ("AFRICA", "ACTION LOCATION", "N/A") or s.upper() == (iso or "").upper():
+        return None
+    if re.fullmatch(r"[\dA-Z_\-\. ]*\d[\dA-Z_\-\. ]*", s):      # a code, not a place
+        return None
+    if s.title() in AFRICA_NAMES or len(s) > 40:                 # the country itself, or a title
+        return None
+    if s.isupper() and len(s) > 3:
+        s = s.title()
+    return s[:60]
+
+
+def _eu_activity(act, conf):
+    """One parsed activity, or None when it is not infrastructure in Africa."""
+    pub = conf["pub"]
+    if pub == "EIB":
+        codes = [(s.get("code") or "", _narr(s, "narrative")) for s in act.iter("sector")
+                 if s.get("vocabulary") == "99"]
+        buckets = [b for b in (_eib_bucket(c) for c, _ in codes) if b]
+        if not buckets:
+            return None
+        sector, sector_codes = buckets[0], [c for c, _ in codes]
+        sector_label = next((n for c, n in codes if _eib_bucket(c)), None)
+        if sector_label:                        # the Bank's file carries cp1252 dashes
+            sector_label = sector_label.replace("\x96", "–").replace("\x97", "—")
+    else:
+        sector_codes = [s.get("code") for s in act.iter("sector")
+                        if s.get("code") and s.get("vocabulary") in (None, "1")]
+        if not any(c.startswith(IATI_INFRA_DAC) for c in sector_codes):
+            return None
+        sector, sector_label = None, None       # the builder maps DAC codes
+
+    countries = []
+    for rc in act.iter("recipient-country"):
+        try:
+            pct = float(rc.get("percentage") or 100)
+        except ValueError:
+            pct = 100.0
+        countries.append((rc.get("code"), pct))
+    regions = [rr.get("code") for rr in act.iter("recipient-region")]
+    african = [c for c in countries if c[0] in AFRICA_ISO]
+    if not african and not (set(regions) & EU_REGIONS):
+        return None
+    iso = max(african, key=lambda c: c[1])[0] if african else None
+
+    st = act.find("activity-status")
+    code = st.get("code") if st is not None else None
+    if not IATI_STATUS.get(code):
+        return None
+
+    currency = act.get("default-currency") or "EUR"
+    seen, commitment, disbursed, mixed = set(), 0.0, 0.0, False
+    for tx in act.iter("transaction"):
+        tt, v = tx.find("transaction-type"), tx.find("value")
+        if tt is None or v is None or not v.text:
+            continue
+        try:
+            amt = float(v.text)
+        except ValueError:
+            continue
+        cur = v.get("currency") or currency
+        if cur == "USD":
+            amt, mixed = amt / EUR_USD, True
+        elif cur != "EUR":
+            mixed = True
+            continue
+        td = tx.find("transaction-date")
+        key = (tt.get("code"), td.get("iso-date") if td is not None else None, v.text, cur)
+        if pub == "EIB" and key in seen:        # the Bank's repeated tranche records
+            continue
+        seen.add(key)
+        if tt.get("code") == "2":
+            commitment += amt
+        elif tt.get("code") == "3":
+            disbursed += amt
+
+    locs = []
+    for loc in act.iter("location"):
+        pos = _narr(loc, "point/pos")
+        if not pos:
+            continue
+        try:
+            lat, lon = (float(x) for x in pos.split()[:2])
+        except ValueError:
+            continue
+        locs.append((lon, lat, _narr(loc, "name/narrative")))
+
+    dates = {d.get("type"): (d.get("iso-date") or "")[:4] for d in act.iter("activity-date") if d.get("iso-date")}
+    impl = []
+    for po in act.iter("participating-org"):
+        if po.get("role") == "4":
+            n = (_narr(po, "narrative") or "").strip(" *")
+            if n and n.title() not in impl:
+                impl.append(n.title() if n.isupper() else n)
+    aid = next((d.get("code") for d in act.iter("default-aid-type")), None)
+    fin = next((d.get("code") for d in act.iter("default-finance-type")), None)
+    iid = _narr(act, "iati-identifier")
+    purl = None
+    if pub == "EIB" and iid:
+        m = re.match(r"XM-DAC-918-3-(\d{8})", iid)
+        if m:
+            purl = f"https://www.eib.org/en/projects/all/{m.group(1)}"
+    title = _narr(act, "title/narrative") or ""
+    if pub == "EIB" and title.isupper():
+        title = title.title()
+    return {
+        "pub": pub, "lender": conf["lender"], "id": iid, "hierarchy": act.get("hierarchy") or "1",
+        "parents": [ra.get("ref") for ra in act.iter("related-activity") if ra.get("type") == "1" and ra.get("ref")],
+        "name": title, "desc": (_narr(act, "description/narrative") or "")[:300] or None,
+        "country": iso, "countries": [c for c, _ in african] or None, "regions": regions,
+        "sector": sector, "sector_codes": sector_codes, "sector_label": sector_label,
+        "raw_status": code, "dash_status": IATI_STATUS.get(code),
+        "commitment": round(commitment, 2) or None, "disbursed": round(disbursed, 2) or None,
+        "mixed_currency": mixed, "locs": locs,
+        "start_year": dates.get("2") or dates.get("1"), "end_year": dates.get("4") or dates.get("3"),
+        "implementers": "; ".join(impl)[:200] or None,
+        "aid_type": aid, "instrument": EU_INSTRUMENT.get(fin or "", "budget support" if (aid or "").startswith("A") else None),
+        "project_url": purl,
+    }
+
+
+def fetch_eu():
+    """European Commission (INTPA, NEAR) and EIB activities in Africa, one
+    GeoJSON point per record, from the publishers' IATI files via the registry."""
+    acts, n_files = [], 0
+    for publisher, conf in EU_PUBLISHERS.items():
+        meta = json.loads(get(f"{REGISTRY}?q=organization:{publisher}&rows=300", timeout=90))
+        pkgs = [pk for pk in meta["result"]["results"]
+                if pk["name"].rsplit("-", 1)[-1].lower() in conf["files"]]
+        urls = [r["url"] for pk in pkgs for r in pk["resources"]]
+        print(f"IATI {publisher}: {len(urls)} datasets")
+        for i, u in enumerate(urls, 1):
+            try:
+                xml = get(u, timeout=300)
+            except Exception as e:                                # noqa: BLE001
+                print(f"  ! skipped {u.rsplit('/', 1)[-1]}: {e}")
+                continue
+            try:
+                root = ET.fromstring(xml)
+            except ET.ParseError as e:
+                print(f"  ! unparseable {u.rsplit('/', 1)[-1]}: {e}")
+                continue
+            n_files += 1
+            for act in root.iter("iati-activity"):
+                a = _eu_activity(act, conf)
+                if a:
+                    acts.append(a)
+            if i % 15 == 0 or i == len(urls):
+                print(f"  … {i}/{len(urls)} files, {len(acts):,} infrastructure activities in Africa so far")
+
+    # one record per contract; a decision only when none of its contracts is here
+    ec = [a for a in acts if a["pub"] != "EIB"]
+    parents = {p for a in ec if a["hierarchy"] == "2" for p in a["parents"]}
+    by_id = {a["id"]: a for a in ec}
+    kept = [a for a in acts if a["pub"] == "EIB" or a["hierarchy"] == "2" or a["id"] not in parents]
+    n_contracts = sum(1 for a in kept if a["pub"] != "EIB" and a["hierarchy"] == "2")
+    n_decisions = sum(1 for a in kept if a["pub"] != "EIB" and a["hierarchy"] != "2")
+    n_folded = len(ec) - n_contracts - n_decisions
+    print(f"  {n_contracts:,} contracts, {n_decisions:,} decisions without a contract, "
+          f"{n_folded:,} decisions folded into their contracts; {len(kept) - n_contracts - n_decisions:,} EIB operations")
+
+    # the Commission's default point per country: the position most of a
+    # country's located activities share
+    x0, y0, x1, y1 = IATI_WINDOW
+    in_win = lambda lon, lat: x0 <= lon <= x1 and y0 <= lat <= y1 and (lon, lat) != (0.0, 0.0)
+    tally = {}
+    for a in ec:
+        for lon, lat, _ in a["locs"]:
+            tally.setdefault(a["country"], {}).setdefault((lon, lat), 0)
+            tally[a["country"]][(lon, lat)] += 1
+    default = {}
+    for iso, c in tally.items():
+        pos, n = max(c.items(), key=lambda kv: kv[1])
+        if n >= 2:
+            default[iso] = pos
+
+    feats, prec_n, unplaced = [], {1: 0, 2: 0, 3: 0}, 0
+    for a in kept:
+        iso = a["country"]
+        pts = [(lon, lat, nm) for lon, lat, nm in a["locs"] if in_win(lon, lat)]
+        named = [p for p in pts if (p[0], p[1]) != default.get(iso) and (p[0], p[1]) != EU_AFRICA_POINT
+                 and (iso or _country_at(p[0], p[1]))]
+        place, locs = None, None
+        if named:
+            lon, lat, nm = named[0]
+            prec, place = 1, _clean_place(nm, iso)
+            if not iso:
+                iso = _country_at(lon, lat)
+            if len(named) > 1:
+                locs = [[round(x, 5), round(y, 5), _clean_place(n, iso) or ""] for x, y, n in named[:16]]
+        elif iso:
+            if pts and (pts[0][0], pts[0][1]) == default.get(iso):
+                lon, lat = pts[0][0], pts[0][1]          # the Commission's own country point
+            else:
+                lon, lat = ISLAND_POINT.get(iso) or _country_centre(iso)
+            if lon is None:
+                unplaced += 1
+                continue
+            prec = 2
+        else:
+            lon, lat = EU_AFRICA_POINT
+            prec = 3
+        prec_n[prec] += 1
+        parent = next((by_id[p] for p in a["parents"] if p in by_id), None)
+        feats.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [round(lon, 5), round(lat, 5)]},
+            "properties": {
+                "source": "EC-" + a["pub"] if a["pub"] != "EIB" else "EIB",
+                "publisher": a["pub"], "lender": a["lender"], "layer": "eu",
+                "kind": "operation" if a["pub"] == "EIB" else ("contract" if a["hierarchy"] == "2" else "decision"),
+                "name": a["name"] or None, "description": a["desc"],
+                "parent_id": parent["id"] if parent else (a["parents"][0] if a["parents"] else None),
+                "parent_name": parent["name"] if parent else None,
+                "country": iso, "countries": a["countries"], "region": next(iter(set(a["regions"]) & EU_REGIONS), None),
+                "sector": a["sector"], "sector_codes": a["sector_codes"], "sector_label": a["sector_label"],
+                "raw_status": a["raw_status"], "dash_status": a["dash_status"],
+                "geo_precision": prec, "location_name": place, "locations": locs,
+                "commitment": a["commitment"], "disbursed": a["disbursed"], "currency": "EUR",
+                "mixed_currency": a["mixed_currency"] or None,
+                "implementers": a["implementers"], "aid_type": a["aid_type"],
+                "aid_type_name": EU_AID_TYPE.get(a["aid_type"] or ""), "instrument": a["instrument"],
+                "start_year": a["start_year"], "end_year": a["end_year"],
+                "iati_id": a["id"], "project_url": a["project_url"],
+            },
+        })
+    print(f"  placed: {prec_n[1]:,} on a named place, {prec_n[2]:,} at the country's point, "
+          f"{prec_n[3]:,} Africa-wide at the Commission's regional point; {unplaced} could not be placed")
+    out = write_layer("iati_eu_finance", feats)
+    update_meta("eu", fetched=today(), fresh=None, datasets=n_files, records=len(feats),
+                contracts=n_contracts, decisions=n_decisions, decisions_folded=n_folded,
+                eib=len(feats) - n_contracts - n_decisions, named_place=prec_n[1],
+                country_point=prec_n[2], regional=prec_n[3], unplaced=unplaced, eur_usd=EUR_USD)
+    return out
+
+
 # ------------------------------------------------------------------ entrypoint
 
 LAYERS = {
@@ -1282,6 +1590,7 @@ LAYERS = {
     "pipes": fetch_pipelines,
     "cables": fetch_cables,
     "china": fetch_aiddata,
+    "eu": fetch_eu,
 }
 
 if __name__ == "__main__":
