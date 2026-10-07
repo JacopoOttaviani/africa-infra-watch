@@ -102,7 +102,7 @@
   input[type=search]::placeholder{color:var(--ink-3)}
 
   .lyr{--tone:var(--st-stalled);display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid color-mix(in srgb,var(--tone) 30%,var(--rule-soft));border-radius:3px;background:color-mix(in srgb,var(--tone) var(--tint),var(--surface));text-align:left;margin-top:5px}
-  .lyr[data-l="assets"],.lyr[data-l="china"]{--tone:var(--st-operating)} .lyr[data-l="finance"],.lyr[data-l="cables"],.lyr[data-l="eu"]{--tone:var(--st-approved)}
+  .lyr[data-l="assets"]{--tone:var(--st-operating)} .lyr[data-l="cables"]{--tone:var(--st-approved)}
   .lyr[data-l="ground"]{--tone:var(--st-construction)} .lyr[data-l="pipelines"]{--tone:var(--copper)}
   .lyr:first-child{margin-top:0}
   .lyr[aria-pressed="false"]{background:transparent;border-color:var(--rule-soft);color:var(--ink-3)}
@@ -113,6 +113,17 @@
   .lyr .lt b{font-weight:600;font-size:13px}
   .lyr .lt span{font-size:11px;color:var(--ink-3)}
   .lyr .lc{font-family:var(--mono);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  /* lender buttons wear no status tint: a monogram names the institution, the
+     map shape rides small in the sub line, and the rows sit under family headings */
+  .lyr[data-ln]{--tone:var(--ink-3);grid-template-columns:38px 1fr auto;background:var(--surface);border-color:var(--rule)}
+  .lyr[data-ln][aria-pressed="false"]{background:transparent;border-color:var(--rule-soft)}
+  .lyr .badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:20px;padding:0 4px;border:1px solid var(--rule);border-radius:3px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--ink-2)}
+  .lyr[aria-pressed="false"] .badge{opacity:.45}
+  .lyr .mini{display:inline-flex;vertical-align:-1px;margin-right:4px;color:var(--ink-2)}
+  .lyr .mini svg{width:10px;height:10px}
+  .fam{margin-top:10px} .fam:first-child{margin-top:0}
+  .fh{font-size:11px;font-weight:600;color:var(--ink-2);margin:0 0 4px 1px}
+  .fh + .lyr{margin-top:0}
 
   .chips{display:flex;flex-wrap:wrap;gap:5px}
   .chip{display:inline-flex;gap:6px;align-items:center;padding:4px 8px 4px 6px;border:1px solid var(--rule);border-radius:2px;background:var(--surface);font-size:12px;font-weight:500}
@@ -473,6 +484,11 @@
     </div>
 
     <div class="panel map-only">
+      <h3>Lenders <span class="hint">who is paying</span></h3>
+      <div id="lenders"></div>
+    </div>
+
+    <div class="panel map-only">
       <h3>Status <span class="hint">colour = status</span></h3>
       <div class="chips" id="statuses"></div>
     </div>
@@ -482,7 +498,6 @@
       <div class="narrow">
         <select id="country" aria-label="Country"></select>
         <select id="sector" aria-label="Sector"></select>
-        <select id="lender" aria-label="Lender" style="grid-column:1/-1"></select>
         <button class="reset" id="reset">Clear all filters</button>
       </div>
     </div>
@@ -587,11 +602,21 @@ const KEY_STATUS   = Object.fromEntries(Object.entries(STATUS_KEY).map(([k,v])=>
 const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables","china","eu"];
 const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance"};
 const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · 2000–2021",eu:"European Commission · EIB"};
-/* the finance layer holds two lenders, told apart by shape: square and diamond;
-   Chinese official lenders (triangles) and the European Union's institutions
-   (stars) are layers of their own but join the lender filter, so "who is
-   paying" can be asked of all four */
-const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", CN:"Chinese official lenders", EU:"European Union institutions"};
+/* The rail lists the data in two groups. "Layers" is what is built: power
+   units, works on the ground, pipelines, cables. "Lenders" is who is paying:
+   the finance layer's two banks (squares and diamonds), the EU layer's two
+   institutions (stars) and Chinese official lenders (triangles). The three
+   finance layers stay layers in the payload and the drawing; their on/off
+   flags are derived from the lenders (syncLayers), so everything that reads
+   the layer flags keeps working. */
+const RAIL_LAYERS  = ["assets","ground","pipelines","cables"];
+const LENDER_ORDER = ["AfDB","WB","EC","EIB","CN"];
+const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders"};
+const LENDER_SUB   = {AfDB:"IATI activity files", WB:"IATI activity files", EC:"DG INTPA · DG NEAR · IATI", EIB:"IATI activity file", CN:"AidData · 2000–2021"};
+const LENDER_LAYER = {AfDB:"finance", WB:"finance", EC:"eu", EIB:"eu", CN:"china"};
+const LENDER_GLYPH = {AfDB:"finance", WB:"finance_wb", EC:"eu", EIB:"eu", CN:"china"};
+const LENDER_FAMILY = [["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]]];
+const allLendersOn = () => Object.fromEntries(LENDER_ORDER.map(k=>[k,true]));
 const sourceOf     = r => r.layer==="finance" ? (LENDER_NAME[r.lender]||LAYER_SUB.finance) : LAYER_SUB[r.layer];
 const LAYER_KEY    = {assets:"a",finance:"f",ground:"g",pipelines:"p",cables:"c",china:"d",eu:"e"};
 /* AidData's vocabulary behind the shared one */
@@ -797,7 +822,7 @@ function unify(){
      a regional programme; a contract that lists other places carries them on
      ref.locs, ringed when picked */
   for(const e of EU) out.push({
-    ref:e, layer:"eu", lender:"EU", name:e.name||"(untitled activity)", iso:e.iso, isos:e.isos||null,
+    ref:e, layer:"eu", lender:e.pub==="EIB"?"EIB":"EC", name:e.name||"(untitled activity)", iso:e.iso, isos:e.isos||null,
     country:e.isos ? countryList(e.isos, e.iso) : (e.iso ? (NAMES[e.iso]||e.iso) : "Africa, regional"),
     status:e.status, kind:SECTOR_LABEL[e.sector]||e.sector||"—", sector:e.sector||"other", size:e.usd_m, unit:"$m",
     x:mx(e.lon), y:my(e.lat), lon:e.lon, lat:e.lat,
@@ -816,17 +841,22 @@ for(const L of LAYER_ORDER){
 /* ================= state ================= */
 const S_ = {
   layers:allLayersOn(),
+  lenders:allLendersOn(),
   status:new Set(STATUS_ORDER),
-  country:"", sector:"", lender:"", q:"",
+  country:"", sector:"", q:"",
   picked:null,
   cluster:false,
   sat:false,
 };
+/* a finance layer is on while any of its lenders is */
+function syncLayers(){
+  for(const L of ["finance","china","eu"]) S_.layers[L] = LENDER_ORDER.some(k => LENDER_LAYER[k]===L && S_.lenders[k]);
+}
+const shown = r => S_.layers[r.layer] && (!r.lender || S_.lenders[r.lender]);
 const pass = r =>
-  S_.layers[r.layer] && S_.status.has(r.status) &&
+  shown(r) && S_.status.has(r.status) &&
   (!S_.country || (r.isos ? r.isos.includes(S_.country) : r.iso===S_.country)) &&
   (!S_.sector || r.sector===S_.sector) &&
-  (!S_.lender || r.lender===S_.lender) &&
   (!S_.q || r.text.includes(S_.q));
 let VIS = [], VIS_PTS = [], VIS_LINES = [];
 
@@ -1318,22 +1348,21 @@ function renderLede(){
      own contracts and loans. Zoom in and click a marker for its record; every figure carries its source.`;
 }
 
-function counts(skip){
-  const c = {layer:Object.fromEntries(LAYER_ORDER.map(k=>[k,0])), status:{}};
+function counts(){
+  const c = {layer:Object.fromEntries(LAYER_ORDER.map(k=>[k,0])), lender:Object.fromEntries(LENDER_ORDER.map(k=>[k,0])), status:{}};
   for(const r of ALL){
-    const okL = S_.layers[r.layer], okS = S_.status.has(r.status);
+    const okL = shown(r), okS = S_.status.has(r.status);
     if(S_.country && r.iso!==S_.country) continue;
     if(S_.sector && r.sector!==S_.sector) continue;
-    if(S_.lender && r.lender!==S_.lender) continue;
     if(S_.q && !r.text.includes(S_.q)) continue;
-    if(okS) c.layer[r.layer]++;
+    if(okS){ c.layer[r.layer]++; if(r.lender) c.lender[r.lender]++; }
     if(okL) c.status[r.status] = (c.status[r.status]||0)+1;
   }
   return c;
 }
 
 function renderLayers(c){
-  el("layers").innerHTML = LAYER_ORDER.map(k => `
+  el("layers").innerHTML = RAIL_LAYERS.map(k => `
     <button class="lyr" data-l="${k}" aria-pressed="${S_.layers[k]}">
       <span class="glyph">${glyph[k](COL[LAYER_TONE[k]])}</span>
       <span class="lt"><b>${LAYER_LABEL[k]}</b><span>${LAYER_SUB[k]}</span></span>
@@ -1341,6 +1370,17 @@ function renderLayers(c){
     </button>`).join("");
   el("layers").querySelectorAll("[data-l]").forEach(b =>
     b.onclick = () => { S_.layers[b.dataset.l] = !S_.layers[b.dataset.l]; apply(); });
+}
+function renderLenders(c){
+  el("lenders").innerHTML = LENDER_FAMILY.map(([fam, ks]) => `
+    <div class="fam"><div class="fh">${fam}</div>${ks.map(k => `
+    <button class="lyr" data-ln="${k}" aria-pressed="${S_.lenders[k]}">
+      <span class="badge">${k}</span>
+      <span class="lt"><b>${LENDER_NAME[k]}</b><span><span class="mini">${glyph[LENDER_GLYPH[k]]("currentColor")}</span>${LENDER_SUB[k]}</span></span>
+      <span class="lc">${fmt(c.lender[k])}</span>
+    </button>`).join("")}</div>`).join("");
+  el("lenders").querySelectorAll("[data-ln]").forEach(b =>
+    b.onclick = () => { S_.lenders[b.dataset.ln] = !S_.lenders[b.dataset.ln]; syncLayers(); apply(); });
 }
 function renderStatuses(c){
   el("statuses").innerHTML = STATUS_ORDER.map(s => `
@@ -1363,8 +1403,6 @@ function renderSelects(){
   const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort((a,b)=>(SECTOR_LABEL[a]||a).localeCompare(SECTOR_LABEL[b]||b));
   el("sector").innerHTML = `<option value="">All sectors</option>` +
     secs.map(s=>`<option value="${s}"${S_.sector===s?" selected":""}>${SECTOR_LABEL[s]||s}</option>`).join("");
-  el("lender").innerHTML = `<option value="">All lenders</option>` +
-    Object.entries(LENDER_NAME).map(([k,n])=>`<option value="${k}"${S_.lender===k?" selected":""}>${n} only</option>`).join("");
 }
 function renderLegend(){
   el("legend").innerHTML = `
@@ -1605,7 +1643,7 @@ function apply(){
   el("scope").hidden = !S_.country;
   el("scopename").textContent = S_.country ? (NAMES[S_.country]||S_.country) : "";
   const c = counts();
-  renderLayers(c); renderStatuses(c); renderSelects();
+  renderLayers(c); renderLenders(c); renderStatuses(c); renderSelects();
   if(S_.cluster) syncMarkers();
   draw(); renderView(); writeHash();
 }
@@ -1904,12 +1942,11 @@ el("country").onchange = e => {
   const c = AFRICA.find(x=>x.iso===S_.country); if(c) flyTo(fitBounds(c.b, 60, 8));
 };
 el("sector").onchange = e => { S_.sector = e.target.value; apply(); };
-el("lender").onchange = e => { S_.lender = e.target.value; apply(); };
 let qt=null;
 el("q").oninput = e => { clearTimeout(qt); qt = setTimeout(()=>{ S_.q = e.target.value.trim().toLowerCase(); apply(); }, 150); };
 el("reset").onclick = () => {
-  S_.layers=allLayersOn(); S_.status=new Set(STATUS_ORDER);
-  S_.country=""; S_.sector=""; S_.lender=""; S_.q=""; el("q").value="";
+  S_.layers=allLayersOn(); S_.lenders=allLendersOn(); S_.status=new Set(STATUS_ORDER);
+  S_.country=""; S_.sector=""; S_.q=""; el("q").value="";
   S_.picked=null; renderDetail(); apply(); flyTo(homeView());
 };
 
@@ -1925,7 +1962,9 @@ function writeHash(){
     if(S_.status.size<STATUS_ORDER.length) parts.push("s="+STATUS_ORDER.filter(s=>S_.status.has(s)).map(s=>STATUS_KEY[s]).join(","));
     if(S_.country) parts.push("c="+S_.country);
     if(S_.sector) parts.push("k="+S_.sector);
-    if(S_.lender) parts.push("ln="+S_.lender);
+    /* l= already says which finance layers are on; ln= is needed only when a
+       layer is on with some of its lenders off */
+    if(LENDER_ORDER.some(k=>S_.layers[LENDER_LAYER[k]] && !S_.lenders[k])) parts.push("ln="+LENDER_ORDER.filter(k=>S_.lenders[k]).join(","));
     if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
     if(!S_.cluster) parts.push("cl=0");   /* clustering is the default; only its absence is worth recording */
     if(S_.sat) parts.push("sat=1");
@@ -1941,11 +1980,20 @@ function readHash(){
     const m = part.match(/^([\d.]+)\/(-?[\d.]+)\/(-?[\d.]+)$/);
     if(m){ view.z=Math.max(ZMIN,Math.min(ZMAX,+m[1])); view.cy=my(+m[2]); view.cx=mx(+m[3]); ok=true; continue; }
     const [k,v] = part.split("=");
-    if(k==="l"){ for(const L of LAYER_ORDER) S_.layers[L] = v.includes(LAYER_KEY[L]); }
+    if(k==="l"){
+      for(const L of LAYER_ORDER) S_.layers[L] = v.includes(LAYER_KEY[L]);
+      for(const n of LENDER_ORDER) S_.lenders[n] = S_.layers[LENDER_LAYER[n]];
+    }
     else if(k==="s"){ const set = new Set(v.split(",").map(x=>KEY_STATUS[x]).filter(Boolean)); if(set.size) S_.status=set; }
     else if(k==="c" && NAMES[v]) S_.country=v;
     else if(k==="k") S_.sector=v;
-    else if(k==="ln" && LENDER_NAME[v]) S_.lender=v;
+    else if(k==="ln"){
+      /* the lenders switched on, comma-separated; the old single-lender form
+         (ln=WB, ln=EU) reads as that lender alone, EU as both its institutions */
+      const on = new Set(v.split(",").flatMap(x => x==="EU" ? ["EC","EIB"] : [x]).filter(x => LENDER_NAME[x]));
+      for(const n of LENDER_ORDER) S_.lenders[n] = on.has(n);
+      syncLayers();
+    }
     else if(k==="q"){ S_.q=decodeURIComponent(v); el("q").value=S_.q; }
     else if(k==="t" && v==="m") wantTab = "method";
     else if(k==="cl") wantCluster = v==="1";
