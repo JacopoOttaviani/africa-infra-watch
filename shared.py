@@ -114,11 +114,15 @@ SOURCE_INFO = {
     # (CC BY 4.0); the EIB's are under the Bank's own terms, attribution required
     "eu": {"name": "European Union", "lic": "CC BY 4.0 (Commission), attribution (EIB)",
            "url": "https://iatiregistry.org/publisher/ec-intpa"},
+    # the Italian Government's portal content is CC BY 3.0 IT (governo.it, Note
+    # legali); the gazetteer coordinates behind the named places are OpenStreetMap's
+    "mattei": {"name": "Italian Government", "lic": "CC BY 3.0 IT (gazetteer ODbL)",
+               "url": "https://www.governo.it/en/piano-mattei/progetti/"},
 }
-# The layers each page draws. Both pages show the same seven layers over the
+# The layers each page draws. Both pages show the same eight layers over the
 # same records, and both split the finance layer between its two lenders, so
 # both carry the World Bank source card.
-MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables", "china", "eu")
+MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables", "china", "eu", "mattei")
 DASHBOARD_LAYERS = MAP_LAYERS
 
 
@@ -157,7 +161,7 @@ def fmt_date(iso):
 def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
     p, c, w = meta.get("pipelines", {}), meta.get("cables", {}), meta.get("finance_wb", {})
-    ch, eu = meta.get("china", {}), meta.get("eu", {})
+    ch, eu, pm = meta.get("china", {}), meta.get("eu", {}), meta.get("mattei", {})
     rows = [
         {"k": "assets", **SOURCE_INFO["assets"],
          "detail": f"Global Integrated Power Tracker, release {a.get('release', 'unknown')}",
@@ -186,6 +190,10 @@ def sources(meta, keys=MAP_LAYERS):
                    f"{max((eu.get('datasets') or 1) - 1, 0)} African country and regional datasets) "
                    "and the European Investment Bank's global file",
          "fresh": eu.get("fresh") or fmt_date(eu.get("fetched"))},
+        {"k": "mattei", **SOURCE_INFO["mattei"],
+         "detail": "Piano Mattei per l'Africa project portal (Presidency of the Council of Ministers), "
+                   "one page per project, read in its Italian and English versions",
+         "fresh": pm.get("fresh") or fmt_date(pm.get("fetched"))},
     ]
     return [r for r in rows if r["k"] in keys]
 
@@ -202,7 +210,11 @@ def payload_meta(meta, keys=MAP_LAYERS):
             # how the EU fetch assembled its records, so the Methodology can say so
             "eu_meta": {k: (meta.get("eu") or {}).get(k)
                         for k in ("contracts", "decisions", "decisions_folded", "eib",
-                                  "named_place", "country_point", "regional", "unplaced")}}
+                                  "named_place", "country_point", "regional", "unplaced")},
+            # how the Piano Mattei fetch placed its records, so the Methodology can say so
+            "mattei_meta": {k: (meta.get("mattei") or {}).get(k)
+                            for k in ("stages", "named_place", "named_area", "country_point",
+                                      "multi_country", "with_amount", "partner_countries")}}
 
 
 # ------------------------------------------------------------ HTML document
@@ -260,18 +272,20 @@ KEYWORDS = ["Africa infrastructure", "infrastructure projects Africa", "Africa p
             "Chinese loans Africa", "Belt and Road Africa",
             "EU investment Africa", "Global Gateway Africa", "European Investment Bank Africa",
             "European Commission Africa infrastructure",
+            "Piano Mattei", "Mattei Plan Africa", "Italy Africa investment", "Italian cooperation Africa",
             "open data Africa", "infrastructure investment Africa", "interactive map"]
 
 LICENSE_URL = {"CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
                "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
                "ODbL 1.0": "https://opendatacommons.org/licenses/odbl/1-0/",
-               "ODC-By 1.0 (footprints ODbL)": "https://opendatacommons.org/licenses/by/1-0/"}
+               "ODC-By 1.0 (footprints ODbL)": "https://opendatacommons.org/licenses/by/1-0/",
+               "CC BY 3.0 IT (gazetteer ODbL)": "https://creativecommons.org/licenses/by/3.0/it/"}
 
 LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": "iati_afdb_finance.geojson",
               "finance_wb": "iati_worldbank_finance.geojson",
               "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
               "cables": "telegeography_cables.geojson", "china": "aiddata_china_finance.geojson",
-              "eu": "iati_eu_finance.geojson"}
+              "eu": "iati_eu_finance.geojson", "mattei": "piano_mattei.geojson"}
 
 
 def _rows(layer):
@@ -282,7 +296,7 @@ def _rows(layer):
     return list(layer), []
 
 
-def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None, eu=None, meta=None):
+def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None, eu=None, mattei=None, meta=None):
     """Counts and totals of the snapshot being built, for the crawlable text.
     A page that does not draw a layer passes None for it and the count comes
     from meta.json, so the JSON-LD still describes every file the site
@@ -319,6 +333,7 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
             "pipe_km": total(pipelines, "km"),
             "china": count(china, "china"), "china_usd_bn": total(china, "usd_m") / 1000,
             "eu": count(eu, "eu"), "eu_usd_bn": total(eu, "usd_m") / 1000,
+            "mattei": count(mattei, "mattei"), "mattei_eur_bn": total(mattei, "eur_m") / 1000,
             "gw": mw / 1000, "usd_bn": usd / 1000, "usd_bn_wb": usd_wb / 1000,
             "sources": sources(meta), "built": today(), "meta": meta}
 
@@ -339,6 +354,9 @@ def facts_sentence(facts):
     if facts.get("eu"):
         s += (f", and {facts['eu']:,} infrastructure projects financed by the European Union's "
               f"institutions, the European Commission and the European Investment Bank, via IATI")
+    if facts.get("mattei"):
+        s += (f", and the {facts['mattei']:,} projects of Italy's Piano Mattei per l'Africa as the "
+              f"Italian Government's portal lists them")
     return s
 
 
@@ -359,6 +377,9 @@ def facts_totals(facts):
     if facts.get("eu_usd_bn"):
         parts.append(f"USD {facts['eu_usd_bn']:,.1f} billion of European Union commitments, Commission "
                      f"contracts and EIB loans, converted at {EUR_NOTE}")
+    if facts.get("mattei_eur_bn"):
+        parts.append(f"EUR {facts['mattei_eur_bn']:,.2f} billion of stated Piano Mattei project amounts, "
+                     f"the figures the Italian Government's portal prints, which may include other funders' shares")
     return "; ".join(parts)
 
 
@@ -415,7 +436,14 @@ def structured_data(facts, *, path, title, description, kind):
                       "European Investment Bank's loans, equity and grants, from their IATI activity "
                       "files, with status, DAC or EIB sector, implementer, instrument, commitment "
                       "and disbursement in euros, and the location the publisher gives: a named "
-                      "place, the country's point or the Commission's Africa-wide point."}[k]
+                      "place, the country's point or the Commission's Africa-wide point.",
+                "mattei": "The projects of Italy's Piano Mattei per l'Africa (Mattei Plan) as the "
+                          "Italian Government's project portal lists them: title, the plan's "
+                          "directive (energy, water, agriculture, health, education, infrastructure), "
+                          "objective, countries, implementing body, partners, funding source, the "
+                          "stated amount in euros and the portal's progress stage (identified, "
+                          "formulated, approved, ongoing, completed), placed on the site the "
+                          "description names, the country's point or between the countries listed."}[k]
         d = {"@type": "Dataset", "@id": site_url(f"#dataset-{k}"),
              "name": f"{SITE_NAME}: {src['name']} layer",
              "description": f"{what} {n:,} records in this snapshot. {src['detail']}.",
@@ -430,7 +458,7 @@ def structured_data(facts, *, path, title, description, kind):
         parts.append(d)
     dataset = {"@type": "Dataset", "@id": site_url("#dataset"),
                "name": f"{SITE_NAME}: infrastructure projects across Africa",
-               "description": f"Nine open datasets on infrastructure in Africa, kept as separate "
+               "description": f"Ten open datasets on infrastructure in Africa, kept as separate "
                               f"layers because they share no project identifier: {facts_sentence(facts)}. "
                               f"Each source's lifecycle is mapped onto five shared statuses (announced, "
                               f"approved, under construction, operating, stalled).",
@@ -477,7 +505,7 @@ def crawl_fallback(facts, *, kind):
     return f"""<noscript>
 <article style="max-width:72ch;margin:0 auto;padding:24px 16px;font:16px/1.5 Georgia,serif">
 <h2>{e(SITE_NAME)}: announced, approved and ongoing infrastructure in Africa</h2>
-<p>{lede} of infrastructure projects across Africa, built from nine open datasets:
+<p>{lede} of infrastructure projects across Africa, built from ten open datasets:
 {e(facts_sentence(facts))}. Together they describe {e(facts_totals(facts))}.
 The page needs JavaScript to draw; without it, this summary, the data files below
 and {other} are what is here.</p>
@@ -491,12 +519,14 @@ under construction, operating and stalled.</p>
 <tbody>{rows}</tbody>
 </table>
 <p>Limits: money is two multilateral lenders, AfDB and the World Bank, the European Union's
-institutions (the Commission's contracts and the EIB's loans, as each publishes them to IATI)
-and Chinese official finance as AidData reconstructs it from public sources, and the Chinese
-layer ends with commitments made in 2021, so totals are those lenders' exposure, never summed
-and not investment in Africa; about two thirds of AfDB locations sit on a country or region
-centroid, the World Bank marks every location approximate, the EIB publishes no locations at
-all, so its records sit at their country's point, and about a quarter of the Chinese-financed
+institutions (the Commission's contracts and the EIB's loans, as each publishes them to IATI),
+Chinese official finance as AidData reconstructs it from public sources, and the amounts Italy's
+Piano Mattei portal states for its projects, which may be a whole project's value rather than
+Italy's share; the Chinese layer ends with commitments made in 2021, so totals are those lenders'
+exposure, never summed and not investment in Africa; about two thirds of AfDB locations sit on a
+country or region centroid, the World Bank marks every location approximate, the EIB and the
+Piano Mattei portal publish no locations at all, so their records sit on a place the record names
+or at their country's point, and about a quarter of the Chinese-financed
 projects have no published location and sit at their country's centre; OpenStreetMap presence is mapper-driven,
 so absence is not evidence; energy and connectivity are over-represented because no comparable
 open tracker exists for ports, water or electricity transmission.</p>
@@ -612,7 +642,7 @@ def write_site_index(facts):
     (DOCS / "llms.txt").write_text(f"""# {SITE_NAME}
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
-> Africa, for investors, researchers and journalists. Compiled from nine open datasets:
+> Africa, for investors, researchers and journalists. Compiled from ten open datasets:
 > {facts_sentence(facts)}. Together they describe {facts_totals(facts)}.
 > Snapshot built {fmt_date(day)}; data is refreshed by hand about twice a year.
 
@@ -621,7 +651,7 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the seven layers (finance holds two lenders, EU finance the Commission and the EIB) with filters
+- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
@@ -655,14 +685,17 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   (MoUs, letters of intent) and umbrella agreements are left out, so the layer has no
   announced records and no double-counted money. EU finance: IATI statuses as for AfDB
   (1 announced, 2 under construction, 3-4 operating, 5-6 stalled); a Commission financing
-  decision still in the pipeline is an announced record.
+  decision still in the pipeline is an announced record. Piano Mattei: the portal's progress
+  stage, "identified" and "formulated" are announced, "approved" is approved, "ongoing" is
+  under construction, "completed" is operating; the portal has no cancelled stage.
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
   squares are AfDB projects and diamonds World Bank projects, both sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
   with their African landing points, triangles are Chinese-financed projects sized by
   commitment, with the project's OpenStreetMap footprint drawn as a thin outline where
   AidData geocoded it precisely, stars are EU-financed records (European Commission
-  contracts and decisions, EIB operations) sized by commitment. Dashed lines are not yet built.
+  contracts and decisions, EIB operations) sized by commitment, hexagons are Piano Mattei
+  projects sized by the amount the Italian Government's portal states. Dashed lines are not yet built.
 - Amounts are commitments (IATI transaction type 2). AfDB publishes in SDR, converted at a
   fixed, stated rate: {SDR_NOTE}. The World Bank publishes in USD, taken as is. AidData's
   Chinese commitments are in constant 2021 US dollars, as published, and are never added to
@@ -670,6 +703,10 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   {EUR_NOTE}; a Commission contract carries the contracted amount, a financing decision with
   no contract yet its whole envelope, an EIB operation the signed amount (the Bank's file
   repeats each commitment transaction per tranche record; the distinct ones are summed).
+  Piano Mattei amounts are the figure the portal prints for each project, in euros as
+  stated, converted at the same rate; the portal does not say whether a figure is Italy's
+  share or the whole project's value, so they are shown on their own and never added to
+  the lenders' commitments.
 
 ## Limits
 
@@ -678,7 +715,13 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   Chinese official finance as AidData reconstructs it from public sources. Private,
   domestic-budget, EU member states' bilateral and other-lender finance is not here. Read
   totals as each lender's exposure, not as investment in Africa. The four are never summed
-  into one project cost.
+  into one project cost, and the Piano Mattei figures are not added to any of them.
+- The Piano Mattei layer is the Italian Government's own list of the plan's projects, all of
+  them, not an infrastructure subset: 40 of the 76 are education, training or culture.
+  Narrow by sector to keep the ones that build something. The portal publishes no
+  coordinates: a record sits on the place its description names (coordinates from
+  OpenStreetMap), on the country's point, or, for a multi-country programme, between its
+  countries, which is not a site.
 - The EU layer is the Commission's contracts (one record per grant, delegation agreement or
   works contract under a financing decision; a decision is a record only when none of its
   contracts is published yet) and the EIB's operations. The Commission's points are either
@@ -705,6 +748,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 - [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
 - [African Development Bank on the IATI Registry](https://iatiregistry.org/publisher/afdb)
 - [European Commission, DG International Partnerships](https://iatiregistry.org/publisher/ec-intpa), [DG Neighbourhood and Enlargement](https://iatiregistry.org/publisher/ec-near) and the [European Investment Bank](https://iatiregistry.org/publisher/eib) on the IATI Registry
+- [Piano Mattei per l'Africa, project portal of the Italian Government](https://www.governo.it/en/piano-mattei/progetti/)
 - [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
 - [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)
 - [Natural Earth](https://www.naturalearthdata.com/)

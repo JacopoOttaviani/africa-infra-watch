@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compile the seven ingested layers into a single self-contained dashboard.
+Compile the eight ingested layers into a single self-contained dashboard.
 
 Reads   data/*.geojson  +  data/africa_basemap.json  +  data/africa_basemap_10m.json
         (the latter for the rest of the world, drawn as grey context, and
@@ -603,6 +603,53 @@ def eu_summary(eu):
             f"({by['INTPA']:,} INTPA, {by['NEAR']:,} NEAR, {by['EIB']:,} EIB)")
 
 
+# Italy's Piano Mattei, shared with build_map.py like the EU layer: one
+# point per project as the Government's portal lists it, the amount the portal
+# states (euros, converted at the stated rate), the portal's stage and
+# directives, and the other named places for the detail view.
+def build_mattei(idx, rnd=r):
+    rows = []
+    for f in load("piano_mattei.geojson"):
+        p = f["properties"]
+        if not p.get("dash_status"):
+            continue
+        lon, lat = f["geometry"]["coordinates"]
+        eur = p.get("amount_eur")
+        locs = p.get("locations") or None
+        if locs:
+            locs = [[rnd(x), rnd(y), (n or "")[:40]] for x, y, n in locs[:16]]
+        cts = p.get("countries") or []
+        rows.append([
+            (p.get("name") or "").strip()[:120] or None, p.get("country") or "",
+            rnd(lon), rnd(lat), p["dash_status"], p.get("sector") or "other",
+            round(eur * EUR_USD / 1e6, 2) if eur else None,
+            round(eur / 1e6, 2) if eur else None,
+            p.get("geo_precision"), (p.get("location_name") or "")[:48] or None,
+            p.get("id"), " · ".join(p.get("directives") or []) or None,
+            (p.get("objective") or "")[:140] or None, p.get("stage"),
+            (p.get("implementer") or "")[:160] or None, (p.get("partnerships") or "")[:160] or None,
+            (p.get("international_partners") or "")[:120] or None, (p.get("resources") or "")[:160] or None,
+            (p.get("amount_text") or "")[:120] or None, 1 if p.get("amount_shared") else 0,
+            locs, cts if len(cts) > 1 else None, p.get("url_en") or p.get("url"), p.get("url"),
+            (p.get("description") or "")[:360] or None, (p.get("name_it") or "").strip()[:120] or None,
+        ])
+    return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m", "eur_m", "prec", "place",
+                     "id", "dirs", "obj", "stage", "impl", "partners", "intl", "funds", "amt", "shared",
+                     "locs", "isos", "url", "url_it", "desc", "name_it"],
+            "rows": rows}
+
+
+def mattei_summary(m):
+    """One line for the build log: projects, stated euros, and the split by stage."""
+    c = m["cols"]
+    eur = sum(x[c.index("eur_m")] or 0 for x in m["rows"]) / 1000
+    by = {}
+    for x in m["rows"]:
+        by[x[c.index("stage")]] = by.get(x[c.index("stage")], 0) + 1
+    return (f"{len(m['rows']):,} Piano Mattei projects, €{eur:,.2f}bn stated by the portal "
+            f"({', '.join(f'{v} {k.lower()}' for k, v in sorted(by.items(), key=lambda kv: -kv[1]))})")
+
+
 # ------------------------------------------------------------------- build
 
 def main():
@@ -646,6 +693,10 @@ def main():
     eu = build_eu(idx)
     print(f"   {eu_summary(eu)}")
 
+    print("mattei  …")
+    mattei = build_mattei(idx)
+    print(f"   {mattei_summary(mattei)}")
+
     labels = build_labels()
     print(f"   {len(labels):,} country labels")
 
@@ -688,6 +739,7 @@ def main():
         "cables": cables,
         "china": china,
         "eu": eu,
+        "mattei": mattei,
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
@@ -698,7 +750,7 @@ def main():
     OUT.write_text(page)
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
-    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu"):
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei"):
         print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
     if kb > 15000:
         print("  ! approaching the 16 MB artifact ceiling")
@@ -707,11 +759,12 @@ def main():
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
         page, title="Africa Infrastructure Map", path="dashboard.html", kind="dashboard",
-        facts=site_facts(assets, finance, ground, pipelines, cables, china, eu),
+        facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "
                     "Development Bank and World Bank finance, Chinese-financed projects "
                     "2000–2021 (AidData), European Union finance (European Commission and EIB), "
+                    "Italy's Piano Mattei projects, "
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "
                     "with charts by country and sector and a sortable project table."))
     print(f"→ docs/dashboard.html")

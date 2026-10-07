@@ -15,12 +15,13 @@ hand about twice a year; the header of each page says when.
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
 rivers, lakes and cities around Africa), with
-the seven data layers drawn as circles (power units, sized by MW), squares and
+the eight data layers drawn as circles (power units, sized by MW), squares and
 diamonds (AfDB and World Bank projects, sized by commitment), triangles
 (Chinese-financed projects from AidData, 2000–2021, sized by commitment, with
 the works' OpenStreetMap footprint outlined from country zoom in), five-pointed
 stars (EU-financed records: European Commission contracts and EIB operations,
-sized by commitment), thin lines
+sized by commitment), hexagons (the projects of Italy's Piano Mattei, sized by
+the amount the Government's portal states), thin lines
 (construction ways traced in OpenStreetMap), haloed lines (oil and gas pipeline
 routes) and lines ending in dots (submarine cables, dots at their African
 landing points). Filters, a viewport summary, a "largest in view" list, per-record
@@ -40,7 +41,7 @@ figures are computed from the same payload the map draws, so they cannot drift.
 The dashboard is the page-first view of the same data, in the same frame: the
 map's left rail (brand, lede, data-as-of line, view tabs, search, Layers, Status,
 Narrow, and a Selection panel in place of the map's lists) beside a scrolling
-column of KPIs, a smaller equirectangular map of all seven layers over Natural
+column of KPIs, a smaller equirectangular map of all eight layers over Natural
 Earth 1:110m, charts by country and sector, and a sortable table. The rail
 becomes a drawer below 880 px on both pages. Pipeline and cable routes are
 thinned harder for the dashboard and clipped to a window around its frame at
@@ -50,11 +51,13 @@ shared with the map. Both pages use one status palette.
 
 ## Sources
 
-Nine open datasets in seven layers, deliberately kept apart because they share no
+Ten open datasets in eight layers, deliberately kept apart because they share no
 project identifier. Summing across them double-counts. Both pages show the same
-seven layers over the same records; the finance layer holds both lenders on each,
-drawn as squares (AfDB) and diamonds (World Bank), and the EU finance layer holds
-the European Commission and the European Investment Bank, both drawn as stars.
+eight layers over the same records; the finance layer holds both lenders on each,
+drawn as squares (AfDB) and diamonds (World Bank), the EU finance layer holds
+the European Commission and the European Investment Bank, both drawn as stars,
+and the Piano Mattei layer is the Italian Government's own project list, drawn
+as hexagons.
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|
@@ -66,13 +69,16 @@ the European Commission and the European Investment Bank, both drawn as stars.
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
 | Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,324 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
 | EU finance | European Commission (DG INTPA, DG NEAR), IATI 2.03 activity files (57 African country and regional files) + European Investment Bank, IATI 2.02 global activity file | 1,992 records | what the EU's own institutions have contracted and signed for infrastructure, through whom, and how much is paid out |
+| Piano Mattei | Italian Government (Presidency of the Council of Ministers), Piano Mattei per l'Africa project portal, 76 project pages in Italian and English | 76 projects | what Italy counts under its Mattei Plan, where, at what stage, through whom, and for how much as the Government states it |
 
 The two line layers and the World Bank lender were added in September 2026
 (`fetch_sources.py pipes cables wb`), the Chinese finance layer on
 2026-09-19 (`fetch_sources.py china`). The finance layer carries a `ln` column
 (`AfDB` / `WB`) and a lender filter (`ln=` in the hash); World Bank markers are
 diamonds, AfDB squares, and the two are never summed. The EU finance layer was
-added on 2026-10-02 (`fetch_sources.py eu`); its records join the lender filter
+added on 2026-10-02 (`fetch_sources.py eu`); the Piano Mattei layer on 2026-10-07
+(`fetch_sources.py mattei`), its records joining the lender filter as "Piano
+Mattei (Italy)" (`ln=IT`). The EU layer was; its records join the lender filter
 as "European Union institutions" (`ln=EU`).
 
 **The EU finance layer** is what the Union's own two publishing institutions
@@ -97,6 +103,40 @@ Commission's point differs from its default for the country), the country's
 point (the Commission's default, or the country's interior for the EIB, which
 publishes no locations at all) and the Commission's Africa-wide point, in Chad,
 for regional programmes with no African location of their own.
+
+**The Piano Mattei layer** is the Italian Government's own list of the
+projects it counts under the Piano Mattei per l'Africa (Mattei Plan), read from
+the Presidency of the Council's project portal
+([governo.it/it/piano-mattei/progetti](https://www.governo.it/it/piano-mattei/progetti/),
+content CC BY 3.0 IT): one record per project page, with the plan's
+directive(s), objective, countries, implementing body, partners, funding
+source, a stated amount and the portal's five-step progress bar. It is the
+whole plan as published, not an infrastructure subset: 40 of the 76 projects
+carry the education, training and culture directive, and the map's sector
+filter is what narrows it to works. The map's sector bucket follows a project's
+first directive; "physical and digital infrastructure" projects are sorted by
+what they build (`MATTEI_SECTOR_BY_ID` in `fetch_sources.py`), and a
+budget-support loan or a fund that spans all six directives is "other". Stage
+mapping: *identified* and *formulated* are **announced**, *approved* is
+**approved**, *ongoing* is **under construction**, *completed* is
+**operating**; the portal has no cancelled step, so the layer has no stalled
+records. The amount is the figure the portal prints, in euros as stated (one in
+dollars), converted at the same rate as the EU layer; the portal does not say
+whether it is Italy's share or the whole project's value (ELMED's €1.4 billion
+is mostly European and Tunisian money), so the figures are shown on their own
+and never added to the lenders' commitments. Four education memoranda share one
+stated €5 million envelope; only their country-specific parts are counted. The
+portal publishes no coordinates. Location comes in four tiers, stated on every
+card: a site or town the project's description names, a named administrative
+area at its centre (both from a hand-kept gazetteer in `fetch_sources.py`,
+`MATTEI_PLACES`, coordinates from OpenStreetMap via Nominatim, ODbL), the
+country's interior point, and, for a programme across several countries or
+Africa-wide, one fixed point for the layer, the mean of the plan's 18 partner
+countries' points (in the Central African Republic), which the card says is not
+a site. The 18 partner countries are the nine pilots of 2024 (Algeria, Côte
+d'Ivoire, Egypt, Ethiopia, Kenya, Morocco, Mozambique, Republic of the Congo,
+Tunisia), the five added in 2025 (Angola, Ghana, Mauritania, Senegal, Tanzania)
+and the four of 2026 (DR Congo, Gabon, Rwanda, Zambia).
 Status vocabulary for them: GEM `proposed` is *announced*, `construction`, `operating`
 and `shelved`/`cancelled`/`idle` as *stalled*; TeleGeography's *in service* is
 *operating*, and a *planned* cable is *under construction* when its ready-for-service
@@ -137,7 +177,7 @@ python3 refresh.py                # fetch → gate → build, in one go (see "Up
 or step by step:
 
 ```bash
-python3 fetch_sources.py          # all nine sources -> data/*.geojson + data/meta.json
+python3 fetch_sources.py          # all ten sources -> data/*.geojson + data/meta.json
 python3 fetch_basemap.py          # Natural Earth 1:10m -> data/africa_basemap_10m.json
 python3 check_data.py             # refuse a snapshot that shrank or moved
 python3 build_social.py           # -> docs/social.png (link preview) + docs/icon-192.png, apple-touch-icon.png
@@ -150,8 +190,11 @@ logo sheet: the continent traced from the basemap with a compass rose cut out).
 `python3 brand/trace.py && python3 brand/logos.py` regenerates them; see
 `brand/README.md`.
 
-`fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` / `china` / `eu` runs a single source.
+`fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` / `china` / `eu` / `mattei` runs a single source.
 The eu pass reads 57 Commission files and the EIB's 6 MB file (about three minutes).
+The mattei pass reads the portal's list page and 152 project pages, four at a
+time (about a minute); the gazetteer of named places is in the script, so no
+geocoder is called at fetch time.
 The OSM pass takes ~10 minutes: it walks latitude bands and sleeps between them
 to stay inside Overpass's slot budget. The cables pass reads one small JSON per
 cable system in the world (~700, a few minutes); the pipelines pass downloads two
@@ -220,7 +263,7 @@ Two things follow from that:
   in `shared.py` (or set `AIW_SITE_URL` when building) and rebuild.
 
 What `docs/` holds: `index.html` (the map, which loads `data/map.json` at
-runtime), `dashboard.html`, `data/` (the compiled payload, the eight raw
+runtime), `dashboard.html`, `data/` (the compiled payload, the nine raw
 GeoJSON layers, the basemap and `meta.json` — the site publishes its data,
 linked from the Methodology tab), `social.png`, `favicon.svg` and the two PNG
 icons, `sitemap.xml`, `llms.txt`, and `.nojekyll` so Pages serves the folder
@@ -276,7 +319,7 @@ none, so nothing is blocked. If one is ever added there, include
 python3 refresh.py
 ```
 
-This fetches the nine sources (about 25 minutes, most of it the
+This fetches the ten sources (about 25 minutes, most of it the
 OpenStreetMap pass), records the dates in `data/meta.json`, runs
 `check_data.py`, and rebuilds `docs/` and the artifact files, including the
 link-preview image and `llms.txt` with the new counts. Then look at it:
@@ -491,6 +534,29 @@ These each cost real time to find. They are not in any of the upstream docs.
 - **Cabo Verde, São Tomé, Seychelles and Mauritius are not in the 1:110m
   basemap**, so a country centre computed from it is `None` for them; the
   fetcher keeps a small table of island points.
+- **The Piano Mattei portal is a Next.js app whose RSC payload holds no data.**
+  The `self.__next_f.push` chunks carry only the shell; the project fields are
+  in the server-rendered HTML (a `<dl>` of `<dt>`/`<dd>` pairs, the directives
+  as buttons, the progress bar as five `<span>`s of which the active one is not
+  `#C5C7C9`). Read the HTML, not the payload.
+- **The portal's Italian and English lists are not in the same order**, and
+  the English slugs are translated, so position pairs the wrong projects (ELMED
+  came out as the Digital Flagship). Each Italian page carries an
+  `hrefLang="en"` link to its translation; follow that.
+- **The portal's amounts are prose.** "EUR 1.4 billion", "$75 million",
+  "EUR 250 million for TANIT infrastructure / EUR 36.5 million for TANIT KT",
+  "5 million for the internationalisation of ITS institutes (Algeria, Egypt,
+  Tunisia, Ethiopia) and EUR 85,000 for the promotion of Italian language
+  teaching", "To be defined". The first figure is the headline; the ITS envelope
+  is printed on four records and would be counted four times.
+- **Brazzaville falls inside the DRC on the 1:110m basemap.** The two capitals
+  face each other across the river, and the coarse polygon puts the point on
+  the wrong bank. Trust the portal's own country over point-in-polygon when a
+  project lists one country.
+- **A mean of a programme's countries' points can land at sea.** The mean of
+  Senegal, Ghana, Côte d'Ivoire and Mozambique is in the Gulf of Guinea, and
+  it reads as a place. Multi-country programmes are drawn at one stated point
+  for the layer instead.
 
 ## Not used, and why
 
@@ -512,7 +578,17 @@ These each cost real time to find. They are not in any of the upstream docs.
 - **The EU's Global Gateway flagship list** is a political label on a PDF, not a
   dataset: no identifiers, amounts or coordinates. The contracts and loans
   beneath it are what the Commission and the EIB publish to IATI, which is the
-  EU finance layer added on 2026-10-02. EU member states' agencies (AFD, KfW,
+  EU finance layer added on 2026-10-02. Italy's Piano Mattei is a political
+  label too, but its portal is a dataset in all but format: one page per
+  project with a stable slug, countries, implementer, funding source, amount
+  and stage, which is why it is a layer (2026-10-07) and the Global Gateway
+  list is not.
+- **Italy's own IATI files** (AICS, the Foreign Ministry, CDP) were not joined
+  to the Piano Mattei layer. They carry Italy's whole cooperation portfolio,
+  not the plan's list, their activities do not name the plan, and the portal's
+  projects have no IATI identifier to match on; the layer is the Government's
+  list as published, and the IATI files would be an "Italian finance" layer of
+  their own. EU member states' agencies (AFD, KfW,
   Enabel, Sida…) publish to IATI too, but they are national money, "Team
   Europe" rather than the EU, and were left out of the layer on purpose.
 - **AfDB Open Data Platform** — country indicator series, not project records.

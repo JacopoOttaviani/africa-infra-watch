@@ -12,7 +12,7 @@ Writes  docs/social.png                1200 x 630, what Slack, WhatsApp, LinkedI
                                        favicon and home-screen icons
 
 The picture is the map itself: every power unit, AfDB and World Bank project,
-Chinese- and EU-financed project and construction way over the continent, in the status
+Chinese- and EU-financed project, Piano Mattei project and construction way over the continent, in the status
 palette, with the title on the left. It
 is drawn as SVG and rasterised by a headless Chrome, which every Mac with Chrome
 has and which renders the web fonts the pages use. Pass AIW_CHROME to point at
@@ -36,7 +36,7 @@ ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
-from build_dashboard import build_china, build_eu, build_lookup  # noqa: E402
+from build_dashboard import build_china, build_eu, build_lookup, build_mattei  # noqa: E402
 from shared import BRAND, DATA, DOCS, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W  # noqa: E402
 
 W, H = SOCIAL_W, SOCIAL_H
@@ -124,7 +124,13 @@ def star_path(x, y, d):
     return "M" + "L".join(pts) + "Z"
 
 
-def draw(assets, finance, ground, china, eu, countries, is10m):
+def hex_path(x, y, d):
+    """A flat-topped hexagon of circumradius d, as an SVG path."""
+    pts = [f"{x + d * math.cos(i * math.pi / 3):.1f} {y + d * math.sin(i * math.pi / 3):.1f}" for i in range(6)]
+    return "M" + "L".join(pts) + "Z"
+
+
+def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     proj, s = make_proj()
     out = []
 
@@ -179,6 +185,16 @@ def draw(assets, finance, ground, china, eu, countries, is10m):
         stars.append(f'<path d="{star_path(x, y, d)}" fill="{col}"/>')
     out.append(f'<g opacity=".82" stroke="{C["paper"]}" stroke-width=".6" stroke-linejoin="round">' + "".join(stars) + "</g>")
 
+    # -- Piano Mattei: hexagons, by sqrt(stated amount), biggest first
+    mi = {k: i for i, k in enumerate(mattei["cols"])}
+    hexes = []
+    for r in sorted(mattei["rows"], key=lambda r: -(r[mi["usd_m"]] or 0)):
+        x, y = proj(r[mi["lon"]], r[mi["lat"]])
+        d = min(7.5, 2.4 + math.sqrt(max(0, r[mi["usd_m"]] or 1)) * 0.2)
+        col = C.get(r[mi["status"]], C["stalled"])
+        hexes.append(f'<path d="{hex_path(x, y, d)}" fill="{col}"/>')
+    out.append(f'<g opacity=".82" stroke="{C["paper"]}" stroke-width=".6" stroke-linejoin="round">' + "".join(hexes) + "</g>")
+
     # -- finance: squares, side by sqrt(commitment), biggest first
     fi = {k: i for i, k in enumerate(finance["cols"])}
     sq = []
@@ -213,7 +229,7 @@ def draw(assets, finance, ground, china, eu, countries, is10m):
     out.append(f'<text x="62" y="276" class="title">Infrastructure</text>')
     out.append(f'<text x="62" y="352" class="title">Map</text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
-    out.append('<text x="64" y="430" class="sub">the continent, from nine open datasets.</text>')
+    out.append('<text x="64" y="430" class="sub">the continent, from ten open datasets.</text>')
 
     n_a, n_f, n_g, n_c, n_e = (len(assets["rows"]), len(finance["rows"]), len(ground["rows"]),
                                len(china["rows"]), len(eu["rows"]))
@@ -332,9 +348,10 @@ def main():
     assets, finance, ground = build_assets(), build_finance(), build_ground(idx)
     china = build_china(idx, simp=lambda part: [])     # markers only, no footprints
     eu = build_eu(idx)
+    mattei = build_mattei(idx)
     countries, is10m = load_basemap()
     print("drawing …")
-    html = page(draw(assets, finance, ground, china, eu, countries, is10m))
+    html = page(draw(assets, finance, ground, china, eu, mattei, countries, is10m))
     DOCS.mkdir(exist_ok=True)
     if rasterise(html, OUT):
         print(f"→ {OUT.relative_to(ROOT)}  {W}x{H}, {OUT.stat().st_size / 1024:.0f} KB")

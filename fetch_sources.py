@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate africa-infra-watch from the nine verified sources.
+Populate africa-infra-watch from the ten verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
 `dash_status` vocabulary so a single filter works across every layer.
@@ -10,16 +10,18 @@ Every endpoint here was tested live on 2026-09-07 (power, AfDB, OSM),
 evaluation and the README for the reasoning and the known gotchas.
 
 Usage:
-    python3 fetch_sources.py                 # all nine sources
+    python3 fetch_sources.py                 # all ten sources
     python3 fetch_sources.py gem osm         # only the named layers
     python3 fetch_sources.py pipes cables    # the two line layers added Sep 2026
     python3 fetch_sources.py wb              # World Bank, second lender in the finance layer
     python3 fetch_sources.py china           # AidData, Chinese official finance 2000-2021
     python3 fetch_sources.py eu              # European Commission and EIB, via IATI
+    python3 fetch_sources.py mattei          # Italy's Piano Mattei, from the Government's project portal
 """
 
 import concurrent.futures
 import csv
+import html as html_mod
 import io
 import json
 import pathlib
@@ -1580,6 +1582,299 @@ def fetch_eu():
     return out
 
 
+# ------------------------------------------------------------ Piano Mattei
+#
+# Italy's "Piano Mattei per l'Africa" is a political label, like the EU's
+# Global Gateway, but unlike the Global Gateway's PDF flagship list the
+# Italian Government publishes its projects as a portal with one page per
+# project (governo.it/it/piano-mattei/progetti/): title, the plan's
+# directive(s), objective, countries, implementing body, partners, funding
+# source, a stated amount and a five-step progress bar. No coordinates. The
+# layer is that list, one record per page, in the portal's English version
+# where it has one, with the Italian page as the record of reference. The
+# pages are server-rendered Next.js, so the fields are read from the HTML
+# itself; each Italian page links to its English translation (the two lists
+# are not in the same order, and the English slugs are translated).
+#
+# Location: the portal gives none, so a record sits on the place its
+# description names, when it names one (a hand-kept gazetteer below, with
+# coordinates from OpenStreetMap), on the country's interior point for a
+# bilateral project without a named place, and, for a project that lists
+# several countries or none, at one Africa-wide point for the layer, the mean
+# of the plan's partner countries' points, which is not a site and is said to
+# be none on the card (a mean of the project's own countries lands at sea for
+# a Senegal-Ghana-Mozambique programme, and reads as a place).
+MATTEI_SITE = "https://www.governo.it"
+MATTEI_LIST = "/{lang}/piano-mattei/progetti/"
+MATTEI_UA = {"User-Agent": "Mozilla/5.0 africa-infra-watch/0.1 (dataset build)"}
+# the portal's progress bar; the active step is the one not drawn grey
+MATTEI_STAGE = {"Identificato": ("Identified", ANNOUNCED), "Formulato": ("Formulated", ANNOUNCED),
+                "Approvato": ("Approved", APPROVED), "In corso": ("Ongoing", BUILDING),
+                "Concluso": ("Completed", OPERATING)}
+# the portal's six directives (English labels) -> the map's sector buckets;
+# "Physical and digital infrastructure" is decided per project below
+MATTEI_SECTOR = {"Energy": "energy", "Water": "water", "Health": "health",
+                 "Education/Training/Culture": "education", "Agriculture/Fisheries": "agriculture",
+                 "Physical and digital infrastructure": None}
+# per-project sector where the first directive is "infrastructure" or the
+# project spans all six (a budget-support loan, a fund): by what it builds
+MATTEI_SECTOR_BY_ID = {
+    "progetto-lobito-economic-corridor-development-project": "transport",
+    "progetto-digital-flagship-dell-italia-con-l-africa": "ict",
+    "progetto-ai-hub-for-sustainable-development": "ict",
+    "progetto-supporto-al-rafforzamento-dei-servizi-digitali-in-etiopia-attraverso-la-creazione-di-un-centro-d-incub-1763c944": "ict",
+    "progetto-a-roadmap-to-connect-africa-to-europe-for-clean-energy-production": "energy",
+    "progetto-programma-di-sostegno-alla-repubblica-federale-democratica-d-etiopia-per-lo-sviluppo-ambientale-e-la-g-c2dd01d8": "water",
+    "progetto-tandem-italia-tunisia-finanziamento-nell-ambito-della-sicurezza-agroalimentare-e-idrica-tanit": "water",
+    "progetto-g7-adaptation-accelerator-hub": "environment",
+    "progetto-finanziamentoin-favore-di-exchange-traded-commodities-group-etc-per-attivita-connesse-alla-catena-di-a-aa53e41b": "agriculture",
+    "progetto-area-africa-rafforzamento-degli-ecosistemi-agro-alimentari-in-africa-in-partenariato-con-il-sistema-pr-cd21711f": "agriculture",
+}
+# the portal's country names (English pages) -> ISO; anything else is dropped
+MATTEI_ISO = {
+    "Algeria": "DZ", "Angola": "AO", "Benin": "BJ", "Burkina Faso": "BF", "Côte d'Ivoire": "CI",
+    "Cote d'Ivoire": "CI", "Democratic Republic of the Congo": "CD", "Egypt": "EG", "Ethiopia": "ET",
+    "Gabon": "GA", "Ghana": "GH", "Guinea-Bissau": "GW", "Kenya": "KE", "Malawi": "MW", "Mali": "ML",
+    "Mauritania": "MR", "Mauritius": "MU", "Morocco": "MA", "Mozambique": "MZ", "Niger": "NE",
+    "Republic of the Congo": "CG", "Rwanda": "RW", "Senegal": "SN", "South Africa": "ZA",
+    "Tanzania": "TZ", "Togo": "TG", "Tunisia": "TN", "Uganda": "UG", "Zambia": "ZM",
+}
+# the plan's partner countries, as the portal lists them on its continental
+# programmes (nine pilots of 2024, five added in 2025, four in 2026); a
+# project with no country at all is drawn at the mean of their points
+MATTEI_PARTNERS = ["DZ", "AO", "CI", "CD", "EG", "ET", "GA", "GH", "KE", "MR", "MA", "MZ", "CG", "RW", "SN", "TZ", "TN", "ZM"]
+# Where a description names a place: label, lon, lat, tier (1 site or town,
+# 2 administrative area at its centre), and other named places for the card.
+# Coordinates are OpenStreetMap's (Nominatim, 7 Oct 2026), ODbL.
+MATTEI_PLACES = {
+    "progetto-recupero-terreni-semi-aridi-per-la-produzione-agricola-in-algeria":
+        ("Timimoun", 0.2286, 29.2605, 1, []),
+    "progetto-supporto-al-progetto-di-sviluppo-rurale-per-il-polo-agro-industriale-nel-nord-est-della-costa-d-avorio-2pai-ne":
+        ("Zanzan district", -2.7993, 8.0843, 2, []),
+    "progetto-supporto-alla-realizzazione-di-un-impianto-fotovoltaico-in-egitto-abydos-ii-plafond-africa":
+        ("Benban, Aswan", 32.73, 24.46, 1, []),
+    "progetto-tandem-italia-tunisia-finanziamento-nell-ambito-della-sicurezza-agroalimentare-e-idrica-tanit":
+        ("Tunis (El Attar plant)", 10.1858, 36.8002, 1, [("Enfidha", 10.378, 36.1341), ("Sfax", 10.7604, 34.7394)]),
+    "progetto-finanziamento-sovrano-a-supporto-del-programma-di-rafforzamento-del-sistema-elettrico-nazionale-in-rep-7d281773":
+        ("Brazzaville", 15.2712, -4.2694, 1, [("Pointe-Noire", 11.8503, -4.7975)]),
+    "progetto-creazione-del-centro-algero-italiano-di-eccellenza-per-la-formazione-la-ricerca-e-l-innovazione-in-agr-f2b6585a":
+        ("Sidi Bel Abbès", -0.6341, 35.1907, 1, []),
+    "progetto-rafforzamento-del-settore-sanitario":
+        ("Abobo, Abidjan", -4.0202, 5.4263, 1, [("Abengourou", -3.4968, 6.7269)]),
+    "progetto-programma-di-sostegno-alla-repubblica-federale-democratica-d-etiopia-per-lo-sviluppo-ambientale-e-la-g-c2dd01d8":
+        ("Jimma, Lake Boye", 36.8479, 7.6756, 1, []),
+    "progetto-sostegno-settore-sanitario-nella-regione-settentrionale-del-tigray":
+        ("Shire", 38.2825, 14.1024, 1, [("Adwa", 38.8912, 14.1671), ("Gondar", 37.4668, 12.6104)]),
+    "progetto-supporto-al-rafforzamento-dei-servizi-digitali-in-etiopia-attraverso-la-creazione-di-un-centro-d-incub-1763c944":
+        ("Addis Ababa", 38.7524, 9.0358, 1, []),
+    "progetto-laboratorio-dei-talenti":
+        ("Meru County (Chaaria)", 37.65, 0.047, 2, []),
+    "progetto-istituzione-di-un-polo-agroalimentare-nella-provincia-di-manica-centro-agroalimentare-di-manica-caam":
+        ("Manica province", 33.478, -19.1437, 2, []),
+    "progetto-progetti-di-ampliamento-struttura-ed-equipaggiamenti-istituto-don-bosco-di-maputo":
+        ("Maputo", 32.5675, -25.9662, 1, []),
+    "progetto-programma-integrato-di-sviluppo-delle-filiere-agroalimentari-pideca":
+        ("Matam region", -13.6992, 15.2681, 2, [("Louga region", -15.6779, 15.3967), ("Kolda region", -14.4181, 13.1292), ("Sédhiou region", -15.553, 12.9103)]),
+    "progetto-formazione-professionale-di-qualita-nel-settore-turistico-alberghiero-dell-arcipelago-di-zanzibar-fo-pr-alb":
+        ("Zanzibar", 39.2074, -6.1665, 2, []),
+    "progetto-polo-patrimonio-tunisia-formazione-conservazione-e-valorizzazione-nei-siti-archeologici-di-kerkpuane-p-d5b7db2d":
+        ("Kerkouane", 11.099, 36.946, 1, [("Neapolis (Nabeul)", 10.7356, 36.4513), ("Pupput (Hammamet)", 10.5573, 36.4013)]),
+    "progetto-bleue-tunisie-programma-di-sostegno-all-economia-blu-per-lo-sviluppo-sostenibile-delle-comunita-costiere":
+        ("Sidi Daoud port", 10.9134, 37.0213, 1, [("El Kraten", 11.2554, 34.8171), ("Mahres", 10.4984, 34.5218), ("Skhira", 10.0689, 34.3004)]),
+    "progetto-gemellaggio-tra-il-parco-archeologico-di-pompei-e-la-citta-antica-di-timgad-in-algeria":
+        ("Timgad", 6.4668, 35.4836, 1, []),
+    "progetto-gemellaggio-tra-il-parco-archeologico-del-colosseo-e-l-anfiteatro-di-el-jem-e-valorizzazione-del-patri-3a2f9a1e":
+        ("El Jem", 10.7128, 35.2966, 1, []),
+    "progetto-ethiopia-borana-resilient-water-development-for-improved-livelihood-programme-borana-rwdp-ii":
+        ("Borana zone", 38.095, 4.8926, 2, []),
+    "progetto-eastern-region-agricultural-value-chain-development-project-eravcdp":
+        ("Six eastern provinces (at Luena, Moxico)", 19.9123, -11.779, 2, [("Dundo, Lunda Norte", 20.8338, -7.3811), ("Saurimo, Lunda Sul", 20.3981, -9.6589), ("Menongue, Cuando Cubango", 17.682, -14.6611)]),
+    "progetto-lobito-economic-corridor-development-project":
+        ("Lobito", 13.5464, -12.3507, 1, []),
+    "progetto-terna-innovation-zone":
+        ("Tunis", 10.1858, 36.8002, 1, []),
+    "progetto-elmed":
+        ("Mlaabi, Cap Bon (near Menzel Temime)", 10.9939, 36.7807, 1, []),
+    "progetto-centro-di-eccellenza-panafricano-per-la-formazione-sulle-energie-rinnovabili-e-la-transizione-energetica":
+        ("Ben Guerir (UM6P campus)", -7.9462, 32.2328, 1, [("Nairobi", 36.8173, -1.289), ("Pretoria", 28.188, -25.746)]),
+    "progetto-finanziamento-alla-banque-ouest-africaine-de-developpement":
+        ("Lomé (BOAD headquarters)", 1.2158, 6.1304, 1, []),
+}
+
+
+def _mattei_text(s):
+    s = re.sub(r"<br\s*/?>", "\n", s)
+    s = re.sub(r"</p>", "\n", s)
+    s = re.sub(r"<[^>]+>", "", s)
+    s = html_mod.unescape(s).replace("\xa0", " ")
+    return re.sub(r"\n{2,}", "\n", s).strip()
+
+
+def _mattei_list(lang):
+    """The project slugs in the order the list page shows them."""
+    page = get(f"{MATTEI_SITE}{MATTEI_LIST.format(lang=lang)}", timeout=90).decode("utf-8", "replace")
+    out = []
+    for m in re.finditer(rf'href="/{lang}/piano-mattei/progetti/progetto/([^"/]+)/"', page):
+        if m.group(1) not in out:
+            out.append(m.group(1))
+    return out
+
+
+def _mattei_page(lang, slug):
+    """The fields of one project page, from its server-rendered HTML."""
+    req = urllib.request.Request(f"{MATTEI_SITE}/{lang}/piano-mattei/progetti/progetto/{slug}/", headers=MATTEI_UA)
+    with urllib.request.urlopen(req, timeout=60) as r:
+        s = r.read().decode("utf-8", "replace")
+    d = {"slug": slug}
+    other = "en" if lang == "it" else "it"
+    m = re.search(rf'hrefLang="{other}"[^>]*href="/{other}/piano-mattei/progetti/progetto/([^"/]+)/"', s)
+    d["other_slug"] = m.group(1) if m else None
+    m = re.search(r'<h3 class="project-subtitle[^"]*">(.*?)</h3>\s*<h1 id="project-heading"[^>]*>(.*?)</h1>', s, re.S)
+    d["title"] = _mattei_text(m.group(2)) if m else None
+    m = re.search(r'<div class="[^"]*markdown-text"[^>]*>(.*?)</div><div class="mt-4 w-100" role="list"', s, re.S)
+    d["desc"] = _mattei_text(m.group(1)) if m else None
+    m = re.search(r'role="list" aria-label="[^"]*direttric[^"]*">(.*?)</div></div></div><div class="col-12 col-lg-4', s, re.S)
+    d["directives"] = [_mattei_text(x) for x in re.findall(
+        r'<span class="fw-semibold text-base font-titillium text-truncate[^"]*"[^>]*>(.*?)</span>', m.group(1) if m else "", re.S)]
+    for k, v in re.findall(r'<dt class="text-muted[^"]*">(.*?)</dt><dd[^>]*>(.*?)</dd>', s, re.S):
+        k = _mattei_text(k)
+        steps = re.findall(r'background:(#[0-9A-Fa-f]{6})"></span><span class="text-base text-center">(.*?)</span>', v)
+        if steps:
+            d["stage"] = next((_mattei_text(n) for c, n in steps if c.upper() != "#C5C7C9"), None)
+        else:
+            d[k] = _mattei_text(v)
+    d["gallery"] = len(re.findall(r'<li class="splide__slide', s))
+    return d
+
+
+def _mattei_amount(text):
+    """"EUR 1.4 billion" -> (1.4e9, "EUR"); "$75 million" -> (75e6, "USD");
+    the first figure in the text, or None."""
+    t = (text or "").replace(" ", " ")
+    m = re.search(r"(EUR|USD|€|\$)?\s*(\d[\d,]*(?:\.\d+)?)\s*(billion|million|thousand)?", t)
+    if not m or not m.group(2):
+        return None, None
+    try:
+        v = float(m.group(2).replace(",", ""))
+    except ValueError:
+        return None, None
+    v *= {"billion": 1e9, "million": 1e6, "thousand": 1e3, None: 1}[m.group(3)]
+    cur = "USD" if m.group(1) in ("USD", "$") else "EUR"
+    return v, cur
+
+
+def fetch_mattei(workers=4):
+    """The Italian Government's Piano Mattei project portal, one GeoJSON
+    point per project, read from the portal's project pages."""
+    it_slugs = _mattei_list("it")
+    print(f"Piano Mattei portal: {len(it_slugs)} projects listed")
+    pages = {}
+    with concurrent.futures.ThreadPoolExecutor(workers) as ex:
+        for slug, d in zip(it_slugs, ex.map(lambda sl: _mattei_page("it", sl), it_slugs)):
+            pages[("it", slug)] = d
+    pair = {sl: pages[("it", sl)]["other_slug"] for sl in it_slugs if pages[("it", sl)].get("other_slug")}
+    en_slugs = sorted(set(pair.values()))
+    with concurrent.futures.ThreadPoolExecutor(workers) as ex:
+        for slug, d in zip(en_slugs, ex.map(lambda sl: _mattei_page("en", sl), en_slugs)):
+            pages[("en", slug)] = d
+    print(f"  {len(it_slugs)} Italian pages read, {len(en_slugs)} English translations linked from them")
+
+    feats, tiers, stages, n_amount, total_eur, n_sector = [], {1: 0, 2: 0, 3: 0, 4: 0}, {}, 0, 0.0, {}
+    partner_pts = [p for p in (_country_centre(i) for i in MATTEI_PARTNERS) if p[0] is not None]
+    continent = (sum(p[0] for p in partner_pts) / len(partner_pts), sum(p[1] for p in partner_pts) / len(partner_pts))
+    for slug in it_slugs:
+        it = pages[("it", slug)]
+        en = pages.get(("en", pair.get(slug))) or {}
+        stage_it = it.get("stage")
+        stage_en, status = MATTEI_STAGE.get(stage_it or "", (None, None))
+        if not status:
+            print(f"  ! {slug}: no stage read, skipped")
+            continue
+        stages[stage_en] = stages.get(stage_en, 0) + 1
+        names = [c.strip() for c in re.split(r",\s*", en.get("Countries") or "") if c.strip()]
+        isos = []
+        for n in names:
+            if MATTEI_ISO.get(n) and MATTEI_ISO[n] not in isos:
+                isos.append(MATTEI_ISO[n])
+        if not isos and not en:          # no English page: read the Italian list through the ISO table's values
+            names = [c.strip() for c in re.split(r",\s*", it.get("Nazioni") or "") if c.strip()]
+        directives = en.get("directives") or it.get("directives") or []
+        sector = MATTEI_SECTOR_BY_ID.get(slug)
+        if not sector:
+            sector = "other" if len(directives) >= 6 else (MATTEI_SECTOR.get(directives[0]) if directives else None) or "other"
+        n_sector[sector] = n_sector.get(sector, 0) + 1
+        amount_text = en.get("Amount") or it.get("Importo") or ""
+        value, cur = _mattei_amount(amount_text)
+        shared = bool(re.search(r"\(Algeria, Egypt, Tunisia, Ethiopia\)", amount_text))   # one envelope printed on four records
+        eur = None
+        if value:
+            eur = round(value / EUR_USD, 2) if cur == "USD" else value
+            if shared:
+                m = re.search(r"(?:EUR|and)\s*(\d[\d,]*)\s*for the promotion", amount_text)
+                eur = float(m.group(1).replace(",", "")) if m else None
+            if eur:
+                n_amount += 1
+                total_eur += eur
+        place = MATTEI_PLACES.get(slug)
+        locs = None
+        if place:
+            label, lon, lat, tier, others = place
+            if others:
+                locs = [[round(x, 5), round(y, 5), n] for n, x, y in others]
+            # the portal's own country wins (Brazzaville falls into the DRC on
+            # the 1:110m basemap); point-in-polygon only decides for a
+            # multi-country project with a named site
+            iso = isos[0] if len(isos) == 1 else (_country_at(lon, lat) or (isos[0] if isos else None))
+        elif len(isos) == 1:
+            label, tier, iso = None, 3, isos[0]
+            lon, lat = ISLAND_POINT.get(iso) or _country_centre(iso)
+        else:
+            label, tier, iso = None, 4, None
+            lon, lat = continent
+        tiers[tier] += 1
+        feats.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [round(lon, 5), round(lat, 5)]},
+            "properties": {
+                "source": "Piano Mattei portal", "layer": "mattei", "id": slug,
+                "name": (en.get("title") or it.get("title") or "").strip() or None,
+                "name_it": (it.get("title") or "").strip() or None,
+                "description": (en.get("desc") or it.get("desc") or "")[:600] or None,
+                "directives": directives, "sector": sector,
+                "objective": en.get("Objective") or it.get("Obiettivo") or None,
+                "country": iso, "countries": isos if len(isos) > 1 else None,
+                "country_names": names or None,
+                "stage": stage_en, "stage_it": stage_it, "dash_status": status,
+                "amount_text": amount_text or None, "amount_eur": eur, "amount_currency": cur,
+                "amount_shared": shared or None,
+                "implementer": en.get("Implementing body") or it.get("Ente esecutore") or None,
+                "partnerships": en.get("Partnerships") or it.get("Partenariati") or None,
+                "international_partners": en.get("International partners") or it.get("Partner internazionali") or None,
+                "resources": en.get("Resources") or it.get("Risorse") or None,
+                "geo_precision": tier, "location_name": label, "locations": locs,
+                "gallery": it.get("gallery") or 0,
+                "url": f"{MATTEI_SITE}/it/piano-mattei/progetti/progetto/{slug}/",
+                "url_en": f"{MATTEI_SITE}/en/piano-mattei/progetti/progetto/{pair[slug]}/" if slug in pair else None,
+            },
+        })
+    for p in feats:   # a "—" is the portal's empty value
+        for k in ("implementer", "partnerships", "international_partners", "resources", "objective"):
+            if p["properties"].get(k) in ("—", "-", ""):
+                p["properties"][k] = None
+    print(f"  stages: " + ", ".join(f"{k} {v}" for k, v in sorted(stages.items(), key=lambda kv: -kv[1])))
+    print(f"  placed: {tiers[1]} on a named site or town, {tiers[2]} on a named administrative area, "
+          f"{tiers[3]} at the country's point, {tiers[4]} multi-country at the layer's Africa-wide point "
+          f"({continent[0]:.2f}, {continent[1]:.2f}, in {_country_at(*continent) or 'the sea'})")
+    print(f"  {n_amount} of {len(feats)} carry a stated amount, €{total_eur / 1e9:,.2f}bn in all")
+    out = write_layer("piano_mattei", feats)
+    update_meta("mattei", fetched=today(), fresh=None, records=len(feats),
+                stages=stages, named_place=tiers[1], named_area=tiers[2], country_point=tiers[3],
+                multi_country=tiers[4], with_amount=n_amount, total_eur=round(total_eur),
+                partner_countries=len(MATTEI_PARTNERS), eur_usd=EUR_USD,
+                continent_point=[round(continent[0], 3), round(continent[1], 3)])
+    return out
+
+
 # ------------------------------------------------------------------ entrypoint
 
 LAYERS = {
@@ -1591,6 +1886,7 @@ LAYERS = {
     "cables": fetch_cables,
     "china": fetch_aiddata,
     "eu": fetch_eu,
+    "mattei": fetch_mattei,
 }
 
 if __name__ == "__main__":

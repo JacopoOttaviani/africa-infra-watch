@@ -65,5 +65,29 @@
     "regional": 319,
     "unplaced": 0,
     "eur_usd": 1.1225
+  },
+  "mattei": {
+    "fetched": "2026-10-07",
+    "fresh": null,
+    "records": 76,
+    "stages": {
+      "Ongoing": 51,
+      "Approved": 17,
+      "Formulated": 3,
+      "Completed": 4,
+      "Identified": 1
+    },
+    "named_place": 19,
+    "named_area": 7,
+    "country_point": 24,
+    "multi_country": 26,
+    "with_amount": 71,
+    "total_eur": 4352022145,
+    "partner_countries": 18,
+    "eur_usd": 1.1225,
+    "continent_point": [
+      15.278,
+      6.807
+    ]
   }
 }

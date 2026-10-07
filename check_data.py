@@ -28,6 +28,7 @@ LAYERS = {
     "telegeography_cables": ("cables", 40),
     "aiddata_china_finance": ("china", 1000),
     "iati_eu_finance": ("eu", 800),
+    "piano_mattei": ("mattei", 50),
 }
 MAX_DROP = 0.20          # refuse if a layer lost more than a fifth of its records
 WINDOW = (-30, -45, 70, 45)   # lon0, lat0, lon1, lat1
