@@ -217,7 +217,7 @@
   /* the Deep dives menu (shared.donor_nav): one button in the top bar, the
      reading pages in a panel under it */
   .lmenu{position:relative}
-  .lmenu>summary{list-style:none;cursor:pointer}
+  .lmenu>summary{display:inline-flex;list-style:none;cursor:pointer}   /* .methodbtn is not a flex box on every page */
   .lmenu>summary::-webkit-details-marker{display:none}
   .lmenu>summary .lm-cur{font-weight:500;color:var(--ink-3)}
   .lmenu>summary .lm-car{width:11px;height:11px;margin-left:1px;transition:transform .15s}
