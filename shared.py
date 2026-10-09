@@ -224,15 +224,23 @@ DONORS = [d for d in DONORS if (DATA / "donors" / (d["slug"] + ".json")).exists(
 # menu lists them apart from the single countries.
 DONOR_BLOCS = ("eu", "gulf", "nordics")
 
-LENDERS_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6"/>'
-                '<path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 21h18M4 18h16"/></svg>')
+# The deep dives that are about a theme rather than one lender, listed first
+# in the menu: slug, title, one line on what it holds, and the file whose
+# existence means the page is built.
+DEEP_THEMES = [
+    ("debt", "Who Africa owes", "Debt by creditor, 2000–2024, from the World Bank", "debt.json"),
+    ("compare", "Seven lenders side by side", "Debt, aid and what each one builds, compared", "donors"),
+]
+
+DEEP_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/>'
+             '<path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>')
 
 # The menu's look, in one place: brand_assets() fills /*__LMENU_CSS__*/ in
 # every template's stylesheet with it. It reuses the .methodbtn look for the
 # button and the site's tokens for the panel, so it follows each theme.
 LMENU_CSS = """
-  /* the Lenders menu (shared.donor_nav): one button in the top bar, the
-     profiles in a panel under it */
+  /* the Deep dives menu (shared.donor_nav): one button in the top bar, the
+     reading pages in a panel under it */
   .lmenu{position:relative}
   .lmenu>summary{list-style:none;cursor:pointer}
   .lmenu>summary::-webkit-details-marker{display:none}
@@ -240,10 +248,19 @@ LMENU_CSS = """
   .lmenu>summary .lm-car{width:11px;height:11px;margin-left:1px;transition:transform .15s}
   .lmenu[open]>summary{background:var(--surface-2)}
   .lmenu[open]>summary .lm-car{transform:rotate(180deg)}
-  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:344px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
-  .lm-h{margin:0 2px 10px;font-size:12px;line-height:1.4;color:var(--ink-3);max-width:none}
+  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:356px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
+  .lm-h{margin:0 2px 4px;font-size:12px;line-height:1.45;color:var(--ink-3);max-width:none}
   .lm-h b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
-  .lm-gl{display:block;margin:10px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-tab{display:flex;align-items:center;gap:6px;margin:6px 2px 2px;font-size:11.5px;font-weight:600;color:var(--accent-ink)}
+  .lm-tab svg{width:12px;height:12px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .lm-gl{display:block;margin:12px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-themes{display:grid;gap:4px}
+  .lm-theme{display:block;padding:7px 9px;border-radius:3px;border:1px solid var(--rule-soft);background:var(--surface-3);color:var(--ink);text-decoration:none;font-family:var(--display);line-height:1.3}
+  .lm-theme b{display:block;font-size:12.5px;font-weight:700}
+  .lm-theme span{display:block;font-size:11.5px;color:var(--ink-3)}
+  .lm-theme:hover{background:var(--surface-2)}
+  .lm-theme[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .lm-theme[aria-current="page"] span{color:color-mix(in srgb,var(--paper) 70%,transparent)}
   .lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
   .lm-item{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px 6px 6px;border-radius:3px;border:1px solid transparent;color:var(--ink);text-decoration:none;font-family:var(--display);font-size:12.5px;font-weight:600;line-height:1.2}
   .lm-item:hover{background:var(--surface-2)}
@@ -251,11 +268,6 @@ LMENU_CSS = """
   .lm-item[aria-current="page"] .lm-badge{background:transparent;border-color:color-mix(in srgb,var(--paper) 40%,transparent);color:var(--paper)}
   .lm-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 4px;border:1px solid var(--rule);border-radius:2px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2);flex:none}
   .lm-item>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .lm-foot{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 8px 2px;border-top:1px solid var(--rule-soft);color:var(--accent);font-family:var(--display);font-size:12.5px;font-weight:700;text-decoration:none}
-  .lm-foot svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .lm-foot:hover span{text-decoration:underline}
-  .lm-foot[aria-current="page"]{color:var(--ink)}
-  .lm-foot em{font-style:normal;font-weight:500;color:var(--ink-3)}
   @media (max-width:600px){
     .lmenu>summary .lm-cur{display:none}
     .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
@@ -264,42 +276,59 @@ LMENU_CSS = """
 
 
 def donor_nav(current=None):
-    """The Lenders menu, the first button of the top bar on every page: a
-    <details> whose panel lists the lender profiles, single countries apart
-    from groups of countries, and the comparison of the seven. It opens
-    without scripts; the small script only closes it on an outside click or
-    Escape. Links are absolute, so they also work from an artifact;
-    wrap_document makes them relative for the Pages build. `current` is the
-    slug of the profile being viewed, or "compare": that entry is marked
-    aria-current and named on the button."""
+    """The Deep dives menu, the first button of the top bar on every page: a
+    <details> whose panel lists the reading pages beyond the map, the themes
+    (debt, the comparison) first, then the lender profiles, single countries
+    apart from groups of countries. It opens without scripts; the small
+    script only closes it on an outside click or Escape.
+
+    `current` is the page being built: None on the map and the dashboard,
+    where every entry opens in a new tab (so the reader's filters and view
+    stay where they were, and the panel says so), or the slug of a deep dive
+    ("debt", "compare", a lender), whose entry is marked aria-current and
+    named on the button, and where entries open in the same tab. Links are
+    absolute, so they also work from an artifact; wrap_document makes them
+    relative for the Pages build."""
     if not DONORS:
         return ""
     esc = lambda x: html.escape(x, quote=True)
+    new_tab = current is None
+    tab = ' target="_blank" rel="noopener"' if new_tab else ""
+    tip = " (opens in a new tab)" if new_tab else ""
+
+    def link_attrs(slug, title):
+        cur = ' aria-current="page"' if slug == current else ""
+        return f'href="{site_url(slug + "/")}"{tab}{cur} title="{esc(title + tip)}"'
 
     def item(d):
-        cur = ' aria-current="page"' if d["slug"] == current else ""
-        return (f'<a class="lm-item" href="{site_url(d["slug"] + "/")}"{cur} title="{esc(d["title"])}">'
+        return (f'<a class="lm-item" {link_attrs(d["slug"], d["title"])}>'
                 f'<span class="lm-badge">{esc(d["badge"])}</span><span>{esc(d["name"])}</span></a>')
+    themes = [(slug, t, sub) for slug, t, sub, need in DEEP_THEMES if (DATA / need).exists()]
     single = sorted((d for d in DONORS if d["slug"] not in DONOR_BLOCS), key=lambda d: d["name"])
     blocs = sorted((d for d in DONORS if d["slug"] in DONOR_BLOCS), key=lambda d: d["name"])
-    here = next((d["name"] for d in DONORS if d["slug"] == current), "Compare" if current == "compare" else "")
-    groups = f'<span class="lm-gl">Countries</span><div class="lm-grid">{"".join(map(item, single))}</div>'
+    here = next((d["name"] for d in DONORS if d["slug"] == current), None) or \
+        next((t for slug, t, _, _ in DEEP_THEMES if slug == current), "")
+    short = {"debt": "Debt", "compare": "Compare"}.get(current, here)
+    body = ""
+    if themes:
+        body += ('<span class="lm-gl">Themes</span><div class="lm-themes">' + "".join(
+            f'<a class="lm-theme" {link_attrs(slug, t)}><b>{esc(t)}</b><span>{esc(sub)}</span></a>'
+            for slug, t, sub in themes) + "</div>")
+    body += f'<span class="lm-gl">Lenders, one by one</span><div class="lm-grid">{"".join(map(item, single))}</div>'
     if blocs:
-        groups += f'<span class="lm-gl">Groups of countries</span><div class="lm-grid">{"".join(map(item, blocs))}</div>'
-    cmp_cur = ' aria-current="page"' if current == "compare" else ""
-    cur_html = f' <span class="lm-cur">· {esc(here)}</span>' if here else ""
+        body += f'<span class="lm-gl">Groups of lending countries</span><div class="lm-grid">{"".join(map(item, blocs))}</div>'
+    note = (f'<p class="lm-tab">{DEEP_ICON}Each one opens in a new tab; the map keeps your filters.</p>'
+            if new_tab else "")
+    cur_html = f' <span class="lm-cur">· {esc(short)}</span>' if short else ""
     return (
         '<details class="lmenu" id="lmenu">'
-        '<summary class="methodbtn" aria-label="Lender profiles" title="Lender profiles: what the open data holds on each lender\'s money in Africa">'
-        f'{LENDERS_ICON}<span>Lenders{cur_html}</span>'
+        '<summary class="methodbtn" aria-label="Deep dives" title="Deep dives: reading pages on one theme or one lender, '
+        'beyond the map">'
+        f'{DEEP_ICON}<span>Deep dives{cur_html}</span>'
         '<svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>'
-        '<nav class="lm-panel" aria-label="Lender profiles">'
-        f'<p class="lm-h"><b>Lender profiles</b>What the open data holds on each lender\'s money in Africa: '
-        f'{len(DONORS)} profiles.</p>{groups}'
-        f'<a class="lm-foot" href="{site_url("compare/")}"{cmp_cur}>'
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7v16H3zM14 4h7v16h-7z"/>'
-        '<path d="M5.5 9h2M5.5 12.5h2M16.5 9h2M16.5 12.5h2"/></svg>'
-        '<span>Compare seven lenders side by side</span></a>'
+        '<nav class="lm-panel" aria-label="Deep dives">'
+        '<p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, '
+        f'beyond what the map\'s filters show.</p>{note}{body}'
         '</nav></details>'
         '<script>(()=>{const d=document.getElementById("lmenu");if(!d)return;'
         'document.addEventListener("click",e=>{if(d.open&&!d.contains(e.target))d.open=false;});'

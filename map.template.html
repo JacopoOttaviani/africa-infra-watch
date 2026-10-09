@@ -179,13 +179,13 @@
   .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
 
   /* ---------- support button (always visible) ---------- */
-  /* one row, right-aligned: the Lenders menu, Debt, Methodology and support */
+  /* one row, right-aligned: the Deep dives menu and Methodology; support sits at the map's bottom right */
   .topright{position:fixed;right:12px;top:12px;z-index:8;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .topright .actions{display:flex;gap:6px;align-items:center}
   /*__LMENU_CSS__*/
-  /* below 1200 px the bar shrinks to its icons, so it clears the map's own controls; each button's
+  /* below 1000 px the bar shrinks to its icons, so it clears the map's own controls; each button's
      title and aria-label still name it */
-  @media (max-width:1200px){.topright .methodbtn,.topright .coffee{padding:0 7px;gap:0}.topright .methodbtn>span,.topright .coffee span{display:none}.topright .lmenu>summary{gap:3px}}
+  @media (max-width:1000px){.topright .methodbtn{padding:0 7px;gap:0}.topright .methodbtn>span{display:none}.topright .lmenu>summary{gap:3px}}
   .methodbtn{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;box-shadow:var(--shadow);cursor:pointer;transition:background .15s,color .15s}
   .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .methodbtn:hover{background:var(--surface-2)}
@@ -267,7 +267,13 @@
   #tip .tr .sw{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:0}
   #tip .tr.hint{color:var(--ink-3);font-style:italic;margin-top:3px}
 
-  .legend{position:absolute;left:12px;bottom:12px;z-index:3;background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--rule);border-radius:3px;padding:9px 11px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto auto;gap:4px 18px;font-size:11px}
+  .legendbox{position:absolute;left:12px;bottom:12px;z-index:3;display:flex;flex-direction:column;align-items:flex-start;gap:6px;pointer-events:none}
+  .legendbox > *{pointer-events:auto}
+  .pill.toggle.lgbtn svg{stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .pill.toggle.lgbtn .chev{width:10px;height:10px;transition:transform .15s}
+  .pill.toggle.lgbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .legend[hidden]{display:none}
+  .legend{background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--rule);border-radius:3px;padding:9px 11px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto auto;gap:4px 18px;font-size:11px}
   .legend .col{display:flex;flex-direction:column;gap:4px}
   .legend .lg{display:flex;align-items:center;gap:7px;color:var(--ink-2);white-space:nowrap}
   .legend .lg svg{width:16px;height:12px;flex:none}
@@ -318,7 +324,7 @@
     .ib.menu{display:flex}
     .scrim{display:block;position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
     .scrim.show{opacity:1;pointer-events:auto}
-    .legend{grid-template-columns:1fr;gap:4px;left:12px;bottom:12px;max-width:180px}
+    .legend{grid-template-columns:1fr;gap:4px;max-width:180px}
     .legend .col.sizes{display:none}
     .detail{right:12px;left:12px;width:auto;bottom:12px;max-height:60%}
     .credit{max-width:230px;text-align:right}
@@ -561,9 +567,19 @@
       </button>
     </div>
 
-    <div class="legend" id="legend" aria-label="Legend"></div>
+    <div class="legendbox">
+      <div class="legend" id="legend" aria-label="Legend" hidden></div>
+      <button class="pill toggle lgbtn" id="legendbtn" aria-expanded="false" aria-controls="legend" title="Show the map legend">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="7" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="5" cy="17" r="1.5"/><path d="M10 7h10M10 12h10M10 17h10"/></svg>Legend
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+      </button>
+    </div>
 
     <div class="attrib">
+      <a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
+        <span>Buy me a coffee</span>
+      </a>
       <div class="scale" id="scale"></div>
       <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB, World Bank, European Commission and EIB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a> · <a href="https://www.aiddata.org/" target="_blank" rel="noopener noreferrer">AidData</a> · <a href="https://www.governo.it/en/piano-mattei/progetti/" target="_blank" rel="noopener noreferrer">Piano Mattei portal</a></div>
     </div>
@@ -586,18 +602,10 @@
 <div class="topright">
 <div class="actions">
 <!--__DONORS__-->
-<a class="methodbtn pages-only" href="debt/" title="Who African governments owe, creditor by creditor" aria-label="Debt">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-  <span>Debt</span>
-</a>
 <button class="methodbtn" id="methodtop" aria-pressed="false" title="Where the data comes from and how it is aligned" aria-label="Methodology">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
   <span>Methodology</span>
 </button>
-<a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
-  <span>Buy me a coffee</span>
-</a>
 </div>
 </div>
 </div>
@@ -1901,6 +1909,12 @@ function recTip(hit){
 el("cluster").insertAdjacentHTML("afterbegin", donutGlyph());
 el("cluster").onclick = () => setCluster(!S_.cluster);
 el("sat").onclick = () => setSat(!S_.sat);
+el("legendbtn").onclick = () => {
+  const open = el("legend").hidden;
+  el("legend").hidden = !open;
+  el("legendbtn").setAttribute("aria-expanded", String(open));
+  el("legendbtn").title = open ? "Hide the map legend" : "Show the map legend";
+};
 
 const tip = el("tip");
 let drag=null, movedPx=0, pointers=new Map(), pinch=null;

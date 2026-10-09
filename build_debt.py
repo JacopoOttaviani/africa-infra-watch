@@ -342,9 +342,8 @@ def jsonld(path):
             + json.dumps(page, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>\n")
 
 
-# The frame's top bar carries a Debt button beside Methodology (on every
-# profile); on this page it is marked as the current one.
-DEBT_BTN = '<a class="methodbtn" href="__HOME_URL__debt/"'
+# The debt section is a theme of the top bar's Deep dives menu
+# (shared.donor_nav); brand_assets(page, donor="debt") marks it current.
 
 
 def build():
@@ -355,14 +354,11 @@ def build():
                    "__DATA_URL__": site_url("data/debt.json"), "__DATA_FILE__": "debt.json",
                    "__BUILT__": fmt_date(today())})
     page = FRAME.read_text().replace("<!--__BODY__-->", FRAG.read_text(), 1)
-    if page.count(DEBT_BTN) != 1:
-        sys.exit("donor.template.html: expected one Debt button in the top bar")
-    page = page.replace(DEBT_BTN, DEBT_BTN.replace('class="methodbtn"', 'class="methodbtn debtbtn" aria-current="page"'), 1)
     for k, v in tokens.items():
         page = page.replace(k, v)
     page = page.replace("<!--__LAND__-->", land_paths(), 1)
     page = page.replace("/*__PAYLOAD__*/", json.dumps(payload, ensure_ascii=False, separators=(",", ":")), 1)
-    page = brand_assets(page)
+    page = brand_assets(page, donor="debt")
     left = sorted(set(re.findall(r"__[A-Z][A-Z0-9_]*__", page)))
     if left:
         sys.exit(f"debt: unfilled tokens {', '.join(left)}")

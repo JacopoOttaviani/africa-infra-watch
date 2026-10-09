@@ -110,8 +110,8 @@
   .topright{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .actions{display:flex;gap:6px;align-items:center}
   
-  /* the Lenders menu (shared.donor_nav): one button in the top bar, the
-     profiles in a panel under it */
+  /* the Deep dives menu (shared.donor_nav): one button in the top bar, the
+     reading pages in a panel under it */
   .lmenu{position:relative}
   .lmenu>summary{list-style:none;cursor:pointer}
   .lmenu>summary::-webkit-details-marker{display:none}
@@ -119,10 +119,19 @@
   .lmenu>summary .lm-car{width:11px;height:11px;margin-left:1px;transition:transform .15s}
   .lmenu[open]>summary{background:var(--surface-2)}
   .lmenu[open]>summary .lm-car{transform:rotate(180deg)}
-  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:344px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
-  .lm-h{margin:0 2px 10px;font-size:12px;line-height:1.4;color:var(--ink-3);max-width:none}
+  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:356px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
+  .lm-h{margin:0 2px 4px;font-size:12px;line-height:1.45;color:var(--ink-3);max-width:none}
   .lm-h b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
-  .lm-gl{display:block;margin:10px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-tab{display:flex;align-items:center;gap:6px;margin:6px 2px 2px;font-size:11.5px;font-weight:600;color:var(--accent-ink)}
+  .lm-tab svg{width:12px;height:12px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .lm-gl{display:block;margin:12px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-themes{display:grid;gap:4px}
+  .lm-theme{display:block;padding:7px 9px;border-radius:3px;border:1px solid var(--rule-soft);background:var(--surface-3);color:var(--ink);text-decoration:none;font-family:var(--display);line-height:1.3}
+  .lm-theme b{display:block;font-size:12.5px;font-weight:700}
+  .lm-theme span{display:block;font-size:11.5px;color:var(--ink-3)}
+  .lm-theme:hover{background:var(--surface-2)}
+  .lm-theme[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .lm-theme[aria-current="page"] span{color:color-mix(in srgb,var(--paper) 70%,transparent)}
   .lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
   .lm-item{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px 6px 6px;border-radius:3px;border:1px solid transparent;color:var(--ink);text-decoration:none;font-family:var(--display);font-size:12.5px;font-weight:600;line-height:1.2}
   .lm-item:hover{background:var(--surface-2)}
@@ -130,11 +139,6 @@
   .lm-item[aria-current="page"] .lm-badge{background:transparent;border-color:color-mix(in srgb,var(--paper) 40%,transparent);color:var(--paper)}
   .lm-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 4px;border:1px solid var(--rule);border-radius:2px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2);flex:none}
   .lm-item>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .lm-foot{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 8px 2px;border-top:1px solid var(--rule-soft);color:var(--accent);font-family:var(--display);font-size:12.5px;font-weight:700;text-decoration:none}
-  .lm-foot svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .lm-foot:hover span{text-decoration:underline}
-  .lm-foot[aria-current="page"]{color:var(--ink)}
-  .lm-foot em{font-style:normal;font-weight:500;color:var(--ink-3)}
   @media (max-width:600px){
     .lmenu>summary .lm-cur{display:none}
     .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
@@ -293,11 +297,7 @@
 </svg><span class="hb"><span class="kicker">Geopolitics of Africa</span><b>Africa Infrastructure Map</b></span></a>
     <div class="topright">
       <div class="actions">
-        <details class="lmenu" id="lmenu"><summary class="methodbtn" aria-label="Lender profiles" title="Lender profiles: what the open data holds on each lender's money in Africa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 21h18M4 18h16"/></svg><span>Lenders</span><svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav class="lm-panel" aria-label="Lender profiles"><p class="lm-h"><b>Lender profiles</b>What the open data holds on each lender's money in Africa: 12 profiles.</p><span class="lm-gl">Countries</span><div class="lm-grid"><a class="lm-item" href="../china/" title="China in Africa&#x27;s infrastructure"><span class="lm-badge">CN</span><span>China</span></a><a class="lm-item" href="../france/" title="France in Africa&#x27;s infrastructure"><span class="lm-badge">FR</span><span>France</span></a><a class="lm-item" href="../germany/" title="Germany in Africa&#x27;s infrastructure"><span class="lm-badge">DE</span><span>Germany</span></a><a class="lm-item" href="../italy/" title="Italy in Africa&#x27;s infrastructure"><span class="lm-badge">IT</span><span>Italy</span></a><a class="lm-item" href="../japan/" title="Japan in Africa&#x27;s infrastructure"><span class="lm-badge">JP</span><span>Japan</span></a><a class="lm-item" href="../russia/" title="Russia in Africa&#x27;s infrastructure"><span class="lm-badge">RU</span><span>Russia</span></a><a class="lm-item" href="../spain/" title="Spain in Africa&#x27;s infrastructure"><span class="lm-badge">ES</span><span>Spain</span></a><a class="lm-item" href="../turkey/" title="Turkey in Africa&#x27;s infrastructure"><span class="lm-badge">TR</span><span>Turkey</span></a><a class="lm-item" href="../usa/" title="The United States in Africa&#x27;s infrastructure"><span class="lm-badge">US</span><span>United States</span></a></div><span class="lm-gl">Groups of countries</span><div class="lm-grid"><a class="lm-item" href="../eu/" title="The European Union in Africa&#x27;s infrastructure"><span class="lm-badge">EU</span><span>European Union</span></a><a class="lm-item" href="../gulf/" title="The Gulf states in Africa&#x27;s infrastructure"><span class="lm-badge">GCC</span><span>Gulf states</span></a><a class="lm-item" href="../nordics/" title="The Nordic countries in Africa&#x27;s infrastructure"><span class="lm-badge">NORD</span><span>Nordic countries</span></a></div><a class="lm-foot" href="../compare/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7v16H3zM14 4h7v16h-7z"/><path d="M5.5 9h2M5.5 12.5h2M16.5 9h2M16.5 12.5h2"/></svg><span>Compare seven lenders side by side</span></a></nav></details><script>(()=>{const d=document.getElementById("lmenu");if(!d)return;document.addEventListener("click",e=>{if(d.open&&!d.contains(e.target))d.open=false;});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&d.open){d.open=false;d.querySelector("summary").focus();}});})();</script>
-        <a class="methodbtn debtbtn" aria-current="page" href="../debt/" title="Who African governments owe, creditor by creditor" aria-label="Debt">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-          <span>Debt</span>
-        </a>
+        <details class="lmenu" id="lmenu"><summary class="methodbtn" aria-label="Deep dives" title="Deep dives: reading pages on one theme or one lender, beyond the map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span>Deep dives <span class="lm-cur">· Debt</span></span><svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav class="lm-panel" aria-label="Deep dives"><p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, beyond what the map's filters show.</p><span class="lm-gl">Themes</span><div class="lm-themes"><a class="lm-theme" href="../debt/" aria-current="page" title="Who Africa owes"><b>Who Africa owes</b><span>Debt by creditor, 2000–2024, from the World Bank</span></a><a class="lm-theme" href="../compare/" title="Seven lenders side by side"><b>Seven lenders side by side</b><span>Debt, aid and what each one builds, compared</span></a></div><span class="lm-gl">Lenders, one by one</span><div class="lm-grid"><a class="lm-item" href="../china/" title="China in Africa&#x27;s infrastructure"><span class="lm-badge">CN</span><span>China</span></a><a class="lm-item" href="../france/" title="France in Africa&#x27;s infrastructure"><span class="lm-badge">FR</span><span>France</span></a><a class="lm-item" href="../germany/" title="Germany in Africa&#x27;s infrastructure"><span class="lm-badge">DE</span><span>Germany</span></a><a class="lm-item" href="../italy/" title="Italy in Africa&#x27;s infrastructure"><span class="lm-badge">IT</span><span>Italy</span></a><a class="lm-item" href="../japan/" title="Japan in Africa&#x27;s infrastructure"><span class="lm-badge">JP</span><span>Japan</span></a><a class="lm-item" href="../russia/" title="Russia in Africa&#x27;s infrastructure"><span class="lm-badge">RU</span><span>Russia</span></a><a class="lm-item" href="../spain/" title="Spain in Africa&#x27;s infrastructure"><span class="lm-badge">ES</span><span>Spain</span></a><a class="lm-item" href="../turkey/" title="Turkey in Africa&#x27;s infrastructure"><span class="lm-badge">TR</span><span>Turkey</span></a><a class="lm-item" href="../usa/" title="The United States in Africa&#x27;s infrastructure"><span class="lm-badge">US</span><span>United States</span></a></div><span class="lm-gl">Groups of lending countries</span><div class="lm-grid"><a class="lm-item" href="../eu/" title="The European Union in Africa&#x27;s infrastructure"><span class="lm-badge">EU</span><span>European Union</span></a><a class="lm-item" href="../gulf/" title="The Gulf states in Africa&#x27;s infrastructure"><span class="lm-badge">GCC</span><span>Gulf states</span></a><a class="lm-item" href="../nordics/" title="The Nordic countries in Africa&#x27;s infrastructure"><span class="lm-badge">NORD</span><span>Nordic countries</span></a></div></nav></details><script>(()=>{const d=document.getElementById("lmenu");if(!d)return;document.addEventListener("click",e=>{if(d.open&&!d.contains(e.target))d.open=false;});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&d.open){d.open=false;d.querySelector("summary").focus();}});})();</script>
         <a class="methodbtn" href="../index.html#t=m" title="Where the map's data comes from and how it is aligned" aria-label="Methodology">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
           <span>Methodology</span>
@@ -360,7 +360,6 @@
   .mix{display:flex;width:150px;height:10px;gap:1px;border-radius:2px;overflow:hidden;margin-top:3px;background:var(--surface)}
   .mix i{display:block;height:100%;min-width:1px}
   table.debt td:nth-child(3){padding-right:4px}
-  .debtbtn[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
   /* the method notes quote API addresses; let them wrap on a phone */
   #method .spec dd{min-width:0}
   #method code{overflow-wrap:anywhere}

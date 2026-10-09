@@ -196,6 +196,9 @@
   @media (max-width:1020px){canvas#map{height:440px}}
   @media (max-width:600px){canvas#map{height:360px}}
   .zoomers{position:absolute;right:12px;top:12px;z-index:3;display:flex;flex-direction:column;gap:4px}
+  /* the map's bottom right: support, then the projection note */
+  .mapbr{position:absolute;right:12px;bottom:10px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:6px;max-width:calc(100% - 200px)}
+  .mapbr .proj-note{position:static;max-width:none}
 
   /* The title card is the map card's header. It names what the frame shows
      (the kicker, "Africa" or a country, the × back to the continent), with
@@ -416,13 +419,13 @@
   html[data-host="pages"] a.tab.pages-only{display:flex}
 
   /* ---------- support and method buttons (always visible) ---------- */
-  /* one row, right-aligned: the Lenders menu, Debt, Methodology and support */
+  /* one row, right-aligned: the Deep dives menu and Methodology; support sits at the map's bottom right */
   .topright{position:fixed;right:12px;top:12px;z-index:8;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .topright .actions{display:flex;gap:6px;align-items:center}
   /*__LMENU_CSS__*/
-  /* below 1200 px the bar shrinks to its icons, so it clears the map's own controls; each button's
+  /* below 1000 px the bar shrinks to its icons, so it clears the map's own controls; each button's
      title and aria-label still name it */
-  @media (max-width:1200px){.topright .methodbtn,.topright .coffee{padding:0 7px;gap:0}.topright .methodbtn>span,.topright .coffee span{display:none}.topright .lmenu>summary{gap:3px}}
+  @media (max-width:1000px){.topright .methodbtn{padding:0 7px;gap:0}.topright .methodbtn>span{display:none}.topright .lmenu>summary{gap:3px}}
   .methodbtn{align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);transition:background .15s}
   .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .methodbtn:hover{background:var(--surface-2)}
@@ -531,7 +534,13 @@
             <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
             <button class="ib rst" id="zrst" title="Whole continent" aria-label="Reset view">RST</button>
           </div>
-          <span class="proj-note">Equirectangular · drag to pan, use the zoom buttons, click a country to filter</span>
+          <div class="mapbr">
+            <a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
+              <span>Buy me a coffee</span>
+            </a>
+            <span class="proj-note">Equirectangular · drag to pan, use the zoom buttons, click a country to filter</span>
+          </div>
           <div id="tip" role="status" aria-live="polite"></div>
         </div>
         <div class="legend" id="legend" aria-label="Legend"></div>
@@ -741,17 +750,9 @@
   <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg>
 </button>
 <!--__DONORS__-->
-<a class="methodbtn pages-only" href="debt/" title="Who African governments owe, creditor by creditor" aria-label="Debt">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-  <span>Debt</span>
-</a>
 <a class="methodbtn pages-only" href="index.html#t=m" title="Where the data comes from and how it is aligned" aria-label="Methodology">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
   <span>Methodology</span>
-</a>
-<a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
-  <span>Buy me a coffee</span>
 </a>
 </div>
 </div>
@@ -1686,7 +1687,7 @@ function renderDebt(){
   if(!DEBT){ card.hidden = true; return; }
   const iso = S.country, b = iso ? DEBT.c[iso] : DEBT.africa, who = iso ? (NAMES[iso]||iso) : "Africa";
   el("dbtitle").textContent = `Who ${who} owes`;
-  const more = `<a class="pages-only" href="debt/">Full debt section →</a>`;
+  const more = `<a class="pages-only" href="debt/" target="_blank" rel="noopener" title="Opens in a new tab">Full debt section ↗</a>`;
   if(!b){
     el("dbbody").innerHTML = `<p class="db-none">The World Bank publishes no creditor breakdown for ${esc(who)}` +
       (DEBT.none.includes(iso) ? ": its government does not report to the Debtor Reporting System." : ".") + `</p>` +

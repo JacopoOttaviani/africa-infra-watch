@@ -50,7 +50,7 @@ only where it runs around the continent; the record builders themselves are
 shared with the map. Both pages use one status palette.
 **Lender profiles** are a third kind of page, one per lending country or
 bloc (twelve so far: Russia, Turkey, Italy, China, the EU, the United States, Germany, France, Spain, Japan, the Nordic countries and the Gulf states, under `docs/<slug>/`), reached from the
-**Lenders** menu, the first button of the top bar on every page; see "Lender profiles" below.
+**Deep dives** menu, the first button of the top bar on every page; see "Lender profiles" below.
 
 ## Sources
 
@@ -174,14 +174,22 @@ never filled) and every other record as a `Point`.
 ## Lender profiles
 
 One page per lending country or bloc, at `docs/<slug>/` (served at
-`…/africa-infra-watch/<slug>/`), reached from the **Lenders** menu, the first
-button of the top bar on the map, the dashboard and every profile. The menu
-opens a panel that lists the profiles, single countries apart from groups of
-countries (`DONOR_BLOCS`), with the comparison of the seven at its foot; on a
-profile the button names it ("Lenders · China") and the panel marks it. It is
-a `<details>`, so it opens without scripts; a small script only closes it on
-an outside click or Escape. One row stays one row: below 1200 px the map's
-and the dashboard's bar drops to icons, so it clears the map's own controls. A profile is a reading page in the site's frame, not a map
+`…/africa-infra-watch/<slug>/`), reached from the **Deep dives** menu, the first
+button of the top bar on the map, the dashboard and every reading page. It is
+named apart from the rail's Lenders filter on purpose: the filter narrows the
+map, the menu leaves it. Its panel lists the themes first (`DEEP_THEMES`: the
+debt section and the comparison of seven lenders), then the profiles, single
+countries apart from groups of countries (`DONOR_BLOCS`). On the map and the
+dashboard every entry opens in a new tab, and the panel says so, so the
+reader's filters and view stay put; on a reading page entries open in the same
+tab, the button names the page ("Deep dives · China") and the panel marks it.
+It is a `<details>`, so it opens without scripts; a small script only closes it
+on an outside click or Escape. The top bar is the menu and Methodology (plus
+the theme switch where the page has one); below 1000 px the map's and the
+dashboard's bar drops to icons so it clears the map's own controls. **Buy me a
+coffee** sits at the bottom right of the map, above the scale and the credits,
+and at the bottom right of the dashboard's map; the reading pages keep it in
+their top bar. A profile is a reading page in the site's frame, not a map
 layer: a lede, four headline figures, a small map of what can be placed, two
 charts, the tables behind them (rendered at build time, so crawlers read the
 substance), and a "How to read this page" section with the sources, licences,
@@ -192,7 +200,7 @@ other data files (`docs/data/donors/<slug>.json`) and listed in the sitemap and
 Three files make a profile, plus one list entry:
 
 - `shared.py` → `DONORS`: slug, name, the two-letter badge on the button,
-  title and description. The Lenders menu (`donor_nav`) is rendered from
+  title and description. The Deep dives menu (`donor_nav`) is rendered from
   this list into every template at the `<!--__DONORS__-->` marker, and its
   styles (`LMENU_CSS`) at `/*__LMENU_CSS__*/`, so adding an entry adds it to
   the menu everywhere on the next build. A profile appears only once its data
@@ -373,8 +381,8 @@ the `--dg-*` tokens defined in `sections/debt.html` and again in
 `dashboard.template.html`: the first six slots of a categorical order checked
 for colour-blind separation in both themes, and a grey. The page is the lender
 profiles' frame (`donor.template.html`) with `sections/debt.html` as its body;
-`build_debt.py` adds a **Debt** button beside Methodology there, and the map
-and dashboard templates carry the same button (site build only). The box
+it is the first theme in the top bar's **Deep dives** menu, which
+`build_debt.py` marks as current there (`brand_assets(page, donor="debt")`). The box
 follows the dashboard's country filter, and only that: it is country-year
 debt, not records, so it is never summed with the layers' money. The
 dashboard now reads and writes `#c=<ISO2>`, which is how the debt page's
