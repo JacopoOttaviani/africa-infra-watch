@@ -1,0 +1,628 @@
+<!-- Compare: the prose and section order of docs/compare/. Tokens (double-
+     underscore names) are filled by build_compare.py from the seven lender
+     packs and the debt pack, so every figure stated comes from the data and
+     cannot drift from the profiles. The maps and charts are drawn by the
+     script at the bottom from the payload inlined at the CMP marker, and redrawn
+     as the reader filters.
+     The --ld-* colours are the lenders', one categorical slot each, in the
+     palette's validated order (blue, orange, aqua, yellow, magenta, green,
+     violet; checked for colour-blind separation of neighbours in both themes).
+     China, the EU and the United States keep the hues the debt section gives
+     their creditor groups. Colour never carries identity alone: every mark is
+     labelled with the lender's name or badge. --seq is the single hue of the
+     sector and channel grids. -->
+<style>
+  :root{
+    --ld-italy:#2a78d6; --ld-turkey:#eb6834; --ld-china:#1baf7a; --ld-eu:#eda100;
+    --ld-russia:#e87ba4; --ld-usa:#008300; --ld-germany:#4a3aa7;
+    --seq:#2a78d6; --seq-lo:#86b6ef; --seq-hi:#104281; --neutral:#a9b3ad;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ld-italy:#3987e5; --ld-turkey:#d95926; --ld-china:#199e70; --ld-eu:#c98500;
+      --ld-russia:#d55181; --ld-usa:#008300; --ld-germany:#9085e9;
+      --seq:#3987e5; --seq-lo:#1c5cab; --seq-hi:#9ec5f4; --neutral:#56625b;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ld-italy:#3987e5; --ld-turkey:#d95926; --ld-china:#199e70; --ld-eu:#c98500;
+    --ld-russia:#d55181; --ld-usa:#008300; --ld-germany:#9085e9;
+    --seq:#3987e5; --seq-lo:#1c5cab; --seq-hi:#9ec5f4; --neutral:#56625b;
+  }
+
+  /* ---------- the filter row: one row, above everything it scopes ---------- */
+  .filters{position:sticky;top:var(--topH,62px);z-index:6;margin:26px -22px 0;padding:10px 22px 11px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);border-top:1px solid var(--rule)}
+  .frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+  .frow+.frow{margin-top:8px}
+  .fl{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px 0 8px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-size:11.5px;font-weight:700;white-space:nowrap;box-shadow:var(--shadow);transition:background .15s,opacity .15s}
+  .chip i{width:10px;height:10px;border-radius:50%;flex:none;background:var(--c)}
+  .chip .badge{font-family:var(--mono);font-size:9.5px;font-weight:600;color:var(--ink-3);letter-spacing:.04em}
+  .chip[aria-pressed="false"]{opacity:.55;background:var(--surface-3)}
+  .chip[aria-pressed="false"] i{background:transparent;border:2px solid var(--c);box-sizing:border-box}
+  .chip:hover{background:var(--surface-2)}
+  .mini{height:30px;padding:0 9px;border-radius:3px;border:1px solid var(--rule);background:var(--surface);font-size:11px;font-weight:600;color:var(--ink-2)}
+  .mini:hover{background:var(--surface-2)}
+  .seg{display:inline-flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+  .seg button{height:30px;padding:0 11px;font-size:11.5px;font-weight:600;color:var(--ink-2);border-right:1px solid var(--rule-soft);white-space:nowrap}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  .seg button:hover:not([aria-pressed="true"]){background:var(--surface-2)}
+  select.sel{height:30px;padding:0 8px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:11.5px;font-weight:600;box-shadow:var(--shadow);max-width:220px}
+  .yr{display:inline-flex;align-items:center;gap:8px}
+  .yr input{width:150px;accent-color:var(--accent);margin:0}
+  .yr output{font-family:var(--mono);font-size:12px;font-weight:600;min-width:34px}
+  .yr.off{display:none}
+  .fnote{font-size:11.5px;color:var(--ink-3)}
+
+  /* ---------- the maps ---------- */
+  .tabs{display:inline-flex;gap:6px;margin:14px 0 0}
+  .mmgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px;position:relative}
+  .mm{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:3px;overflow:hidden;min-width:0}
+  .mm figcaption{display:flex;align-items:baseline;gap:7px;padding:8px 10px 6px;font-size:12.5px;font-weight:700;line-height:1.25}
+  .mm figcaption i{width:9px;height:9px;border-radius:50%;flex:none;align-self:center;background:var(--c)}
+  .mm figcaption .sum{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:500;color:var(--ink-3);white-space:nowrap}
+  .mm svg{display:block;width:100%;height:auto;background:var(--sea)}
+  .mm .none{padding:0 10px 10px;font-size:12px;color:var(--ink-3)}
+  use.ctx{fill:var(--land-ctx);stroke:var(--border);stroke-width:.5}
+  use.c{fill:var(--land);stroke:var(--border);stroke-width:.6;cursor:pointer}
+  use.c.out{opacity:.3;cursor:default}
+  use.c.hov{stroke:var(--ink);stroke-width:1.6}
+  .mm .lbl{font:500 30px var(--display);fill:var(--ink);pointer-events:none;paint-order:stroke;stroke:var(--halo);stroke-width:8px;stroke-linejoin:round}
+  .lead .lbl{font:500 11px var(--display);fill:var(--ink);pointer-events:none;paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round}
+  .lead .bdg{font:700 9.5px var(--mono);fill:var(--ink);pointer-events:none;paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round;text-anchor:middle}
+  .leadkeys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:12px;color:var(--ink-2)}
+  .leadkeys .lk{margin-right:5px}
+  .leadkeys b{color:var(--ink)}
+  .hidden{display:none!important}
+
+  /* ---------- grids (sectors, channels): one hue, darker is more ---------- */
+  .heat{overflow-x:auto;margin-top:12px;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+  .heat table{font-size:12px}
+  .heat th{white-space:normal;line-height:1.25;vertical-align:bottom;min-width:64px}
+  .heat th.row{white-space:nowrap}
+  .heat td.cell{text-align:center;font-family:var(--mono);font-variant-numeric:tabular-nums;padding:7px 6px;border-left:2px solid var(--surface);border-bottom:2px solid var(--surface);color:var(--ink)}
+  .heat td.cell.dark{color:#fff}
+  .heat td.cell.nil{color:var(--ink-3)}
+  .heat td.name{white-space:nowrap}
+  .heat td.tot{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap}
+  .heat td.note{color:var(--ink-3);font-size:12px}
+
+  /* ---------- bar rows and mix bars ---------- */
+  .rows{margin-top:12px;display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:7px 12px;align-items:center;font-size:12.5px}
+  .rows .nm{font-weight:600;display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .rows .bar{height:14px;background:var(--surface-2);border-radius:2px;overflow:hidden;position:relative}
+  .rows .bar b{display:block;height:100%;background:var(--c);border-radius:2px;min-width:2px}
+  .rows .bar.mix{display:flex;gap:2px;background:transparent}
+  .rows .bar.mix b{border-radius:1px;min-width:0}
+  .rows .bar.mix b.g{background:var(--seq-lo)} .rows .bar.mix b.l{background:var(--seq-hi)} .rows .bar.mix b.o{background:var(--neutral)}
+  .rows .val{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap;text-align:right}
+  .rows .val b{color:var(--ink);font-weight:600}
+  .rows .dimrow{grid-column:2/4;color:var(--ink-3);font-size:12px}
+  .lk{display:inline-block;width:10px;height:10px;border-radius:2px;flex:none;background:var(--ink-3);vertical-align:-1px;margin-right:7px}
+  .lk-italy{background:var(--ld-italy)} .lk-turkey{background:var(--ld-turkey)} .lk-china{background:var(--ld-china)} .lk-eu{background:var(--ld-eu)}
+  .lk-russia{background:var(--ld-russia)} .lk-usa{background:var(--ld-usa)} .lk-germany{background:var(--ld-germany)}
+  .mixkeys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:12px;color:var(--ink-2)}
+  .mixkeys i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .charts3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+
+  /* ---------- lines ---------- */
+  .chart.wide svg{overflow:visible}
+  .ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .ln.dimmed{opacity:.25}
+  .endlbl{font:600 11px var(--display);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+  .endlbl i{font-style:normal}
+  .mark{stroke:var(--ink-3);stroke-dasharray:3 3}
+  .tip .row{display:flex;justify-content:space-between;gap:14px;white-space:nowrap}
+  .tip .row i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:6px;vertical-align:3px;background:var(--c)}
+  .tip .row b{display:inline;margin:0;font-family:var(--mono);font-weight:600}
+  .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:10px}
+
+  /* ---------- the summary table ---------- */
+  table.cmp td.name a{color:inherit;border:0;text-decoration:none}
+  table.cmp td.name a:hover{color:var(--accent)}
+
+  @media (max-width:1000px){.mmgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media (max-width:880px){.charts3{grid-template-columns:1fr}.rows{grid-template-columns:120px minmax(0,1fr) auto}}
+  @media (max-width:700px){.mmgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.mm .lbl{font-size:40px}}
+  @media (max-width:600px){.filters{margin:22px -22px 0}.yr input{width:110px}.rows{grid-template-columns:1fr;gap:3px 0}.rows .val{text-align:left}.rows .dimrow{grid-column:1}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><!--__LAND_DEFS__--></defs></svg>
+
+<div class="head">
+  <span class="kicker">Compare · the seven lender profiles</span>
+  <h1>Seven lenders, side by side</h1>
+  <p class="lede"><strong>__TOP_CREDITOR__ is owed USD __TOP_CREDITOR_BN__ bn by __TOP_CREDITOR_N__ African governments at the end of __DEBT_TO__</strong>, __TOP_CREDITOR_VS__. Among the __N_CRS__ lenders that report their aid to the OECD, __AID_TOP__ committed the most to African recipients over __AID_FROM__–__AID_TO__, USD __AID_TOP_BN__ bn in __AID_TOP_N__ countries, __AID_TOP_GRANT__% of it as grants; __AID_LEAST__ the least, USD __AID_LEAST_BN__ bn, __AID_LEAST_TOP_PCT__% of it to __AID_LEAST_TOP__.</p>
+  <p class="lede">The strategies differ more than the sums. __HARD_MAX__ puts the largest share of its aid into things that get built, __HARD_MAX_PCT__%; __HARD_MIN__ the smallest, __HARD_MIN_PCT__%. __FOCUS_MAX__ is the most concentrated, with __FOCUS_MAX_PCT__% of its aid in three countries, led by __FOCUS_MAX_TOP__; __FOCUS_MIN__ spreads widest, __FOCUS_MIN_PCT__%. China's USD __CHINA_AID_BN__ bn of infrastructure commitments over __CHINA_FROM__–__CHINA_TO__, __CHINA_LOAN_PCT__% of them loans, sit beside the others on their own scale; Russia reports no aid at all, so it appears only where debt is counted. Pick lenders, a region or a country, a year and a measure below: every map, chart and table follows.</p>
+  <p class="asof">World Bank International Debt Statistics to <b>__DEBT_TO__</b> (release of __IDS_UPDATED__) · OECD CRS <b>__AID_FROM__–__AID_TO__</b>, DAC2a to <b>__ODA_TO__</b>, FDI positions to <b>__FDI_TO__</b> · AidData <b>__CHINA_FROM__–__CHINA_TO__</b> · packs fetched __FETCHED__ · no creditor data for __MISSING__</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>USD __TOP_CREDITOR_BN__ bn</dt><dd><b>owed to __TOP_CREDITOR__</b> by __TOP_CREDITOR_N__ governments at the end of __DEBT_TO__; the largest of the seven creditors in __TOP_CREDITOR_LEAD__ countries</dd></div>
+  <div class="kpi"><dt>USD __AID_TOP_BN__ bn</dt><dd><b>committed by __AID_TOP__</b> to African recipients over __AID_FROM__–__AID_TO__, the most of the __N_CRS__ OECD reporters, across __AID_TOP_N__ countries</dd></div>
+  <div class="kpi"><dt>__HARD_MAX_PCT__%</dt><dd><b>of __HARD_MAX__'s aid builds something</b>, the largest share; __HARD_MIN__'s is __HARD_MIN_PCT__%</dd></div>
+  <div class="kpi"><dt>__FOCUS_MAX_PCT__%</dt><dd><b>of __FOCUS_MAX__'s aid goes to three countries</b>, the most concentrated; __FOCUS_MIN__ is the most spread, __FOCUS_MIN_PCT__%</dd></div>
+</dl>
+
+<div class="filters" id="filters" role="group" aria-label="Filters">
+  <div class="frow">
+    <span class="fl">Lenders</span>
+    <div class="chips" id="chips"></div>
+    <button class="mini" id="chips-all" type="button">All seven</button>
+  </div>
+  <div class="frow">
+    <label class="fl" for="scope">Scope</label>
+    <select class="sel" id="scope" aria-label="Region or country"></select>
+    <span class="fl">Measure</span>
+    <div class="seg" id="metric" role="group" aria-label="Measure"></div>
+    <span class="yr" id="yr"><label class="fl" for="year">Year</label><input type="range" id="year"><output id="yearv" for="year"></output></span>
+    <span class="fnote hidden" id="ynote"></span>
+    <span class="fl">Scale</span>
+    <div class="seg" id="scale" role="group" aria-label="Scale">
+      <button type="button" data-v="share" aria-pressed="true">Share of the lender's total</button>
+      <button type="button" data-v="usd" aria-pressed="false">USD, one scale</button>
+    </div>
+  </div>
+</div>
+
+<section id="where">
+  <h2>Where the money goes</h2>
+  <p class="lead">One small map per lender, the same measure on each. With <i>share of the lender's total</i>, the darkest country on every map is that lender's largest counterpart, so the maps compare priorities; with <i>USD, one scale</i>, they compare size, and a small lender's map goes pale. Switch to <i>who leads where</i> to colour each country by the lender with the largest figure there.</p>
+  <div class="tabs seg" id="view" role="group" aria-label="Map view">
+    <button type="button" data-v="grid" aria-pressed="true">Side by side</button>
+    <button type="button" data-v="lead" aria-pressed="false">Who leads where</button>
+  </div>
+  <div class="mmgrid" id="mmgrid"></div>
+  <div id="leadbox" class="hidden">
+    <div class="mapbox lead">
+      <svg id="leadmap" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa, each country coloured by the lender with the largest figure there"></svg>
+      <div class="tip" id="leadtip"></div>
+    </div>
+    <div class="leadkeys" id="leadkeys"></div>
+  </div>
+  <p class="mapnote" id="mapnote"></p>
+</section>
+
+<section id="focus">
+  <h2>Focused or spread</h2>
+  <p class="lead">How much of each lender's figure sits in its three largest counterparts, and how many countries it reaches at all. A high bar is a lender with a few favourites; a low one, a lender that is everywhere.</p>
+  <div class="rows" id="focusrows"></div>
+  <p class="note" id="focusnote"></p>
+</section>
+
+<section id="what">
+  <h2>What they fund</h2>
+  <p class="lead">Each row is one lender's aid commitments split by the DAC's sector headings, as a share of its total; darker is more. Read across a row for a lender's priorities, down a column for who cares about a sector. The sources do not split purposes by country, so this grid is Africa-wide whatever the scope above.</p>
+  <div class="ctl"><span class="fl">Share of</span><div class="seg" id="secbasis" role="group" aria-label="Basis"><button type="button" data-v="usd" aria-pressed="true">money</button><button type="button" data-v="n" aria-pressed="false">activities</button></div></div>
+  <div class="heat" id="secheat"></div>
+  <p class="note">Five lenders report every activity to the OECD's Creditor Reporting System; their packs keep the fourteen largest purposes, which cover __COVER_NOTE__ commitments, and the rest is the last column. China's row is AidData's record of official commitments to infrastructure, __CHINA_FROM__–__CHINA_TO__, in constant 2021 dollars, so it has no humanitarian, budget or debt-relief column by construction. Russia reports to neither.</p>
+</section>
+
+<section id="how">
+  <h2>How they lend</h2>
+  <p class="lead">Grants or loans, money that builds or money that pays for services, and who is paid to deliver it. These are each lender's whole African portfolio: the sources do not split them by country.</p>
+  <div class="charts3">
+    <div class="chart">
+      <h3>Grants, loans and the rest</h3>
+      <p class="sub">Share of each lender's aid. Loans are ODA loans; the rest is other official flows, equity and private-sector instruments.</p>
+      <div class="rows" id="mixrows"></div>
+      <div class="mixkeys"><span><i style="background:var(--seq-lo)"></i>Grants</span><span><i style="background:var(--seq-hi)"></i>Loans</span><span><i style="background:var(--neutral)"></i>Other official flows, equity</span></div>
+    </div>
+    <div class="chart">
+      <h3>Money that builds something</h3>
+      <p class="sub">Share of commitments on transport, energy, communications, water, and facilities, or whose title says construct, renovate, drill.</p>
+      <div class="rows" id="hardrows"></div>
+    </div>
+  </div>
+  <h3>Who delivers it</h3>
+  <p class="note">Share of each lender's activities by the channel that receives the money, from the six most common channels each pack keeps.</p>
+  <div class="heat" id="chanheat"></div>
+</section>
+
+<section id="time">
+  <h2>How it moved</h2>
+  <p class="lead">The stock each lender is owed by the governments in scope, year by year since __DEBT_FROM__, and the net aid the OECD reporters disbursed to them since __ODA_FROM__. Hover for every lender's figure in a year.</p>
+  <div class="chart wide">
+    <h3 id="debttitle">Owed to each lender</h3>
+    <p class="sub">Public and publicly guaranteed external debt, end of each year, current US dollars. World Bank International Debt Statistics.</p>
+    <div class="ctl"><div class="seg" id="debtmode" role="group" aria-label="Debt measure"><button type="button" data-v="usd" aria-pressed="true">USD</button><button type="button" data-v="share" aria-pressed="false">Share of everything owed abroad</button></div></div>
+    <svg id="c-debt" viewBox="0 0 1000 320" role="img" aria-label="Lines of the debt stock owed to each selected lender by year"></svg>
+  </div>
+  <div class="chart wide">
+    <h3 id="odatitle">Net ODA disbursed</h3>
+    <p class="sub">Net official development assistance by recipient, current prices, OECD DAC2a. With the whole continent in scope, the regional rows the OECD does not assign to a country are included.</p>
+    <svg id="c-oda" viewBox="0 0 1000 320" role="img" aria-label="Lines of net ODA disbursed by each selected lender by year"></svg>
+  </div>
+</section>
+
+<section id="table">
+  <h2>The seven in one table</h2>
+  <p class="lead">The figures behind the page for the scope and years chosen above. Each name opens the lender's profile, where the same data sits with its sources and tables.</p>
+  <div id="tbl">__TABLE__</div>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>What is compared</dt><dd>The seven lenders with a profile on this site, each on the measures its profile already holds. Nothing is fetched for this page: it re-cuts the profiles' packs and the debt pack, so a figure here is the same figure there. <b>Owed to the lender</b> is the World Bank's International Debt Statistics series by creditor (<code>DT.DOD.DPPG.CD</code>): every African government's public and publicly guaranteed external debt to that lending country, its government and its banks together, at the end of each year, __DEBT_FROM__–__DEBT_TO__. The European Union is the European Investment Bank plus the EU budget, the European Development Fund and the old EEC loans. __MISSING__ do not report to the World Bank and have no creditor figures.</dd>
+    <dt>Aid committed</dt><dd>For Italy, Turkey, Germany, the United States and the EU institutions: every activity with an African recipient in the OECD's Creditor Reporting System, __AID_FROM__–__AID_TO__, commitments in current dollars (disbursements where no commitment is stated). For China: AidData's Global Chinese Development Finance Dataset 3.0, official commitments to infrastructure projects only, __CHINA_FROM__–__CHINA_TO__, in constant 2021 dollars. The two are not the same thing and the page never adds them: with <i>USD, one scale</i> China's maps share a colour scale with the others only so their sizes can be seen together. Russia publishes no activity-level aid data.</dd>
+    <dt>Net ODA and FDI</dt><dd>OECD DAC2a net disbursements by recipient (measure 206, current prices), __ODA_FROM__–__ODA_TO__, for the five OECD reporters; OECD outward direct-investment positions by partner country (BMD4, immediate counterpart), __FDI_FROM__–__FDI_TO__, for Italy, Turkey, the United States and Germany. The EU institutions have no FDI reporter; China and Russia publish neither series in this form.</dd>
+    <dt>Share of the lender's total</dt><dd>On the maps, each country's figure divided by the lender's sum over the countries in scope, so every lender's largest counterpart is drawn at full strength. <i>USD, one scale</i> uses the largest single figure among the lenders shown instead. The sector and channel grids are always shares of a lender's whole African total: the sources do not break purposes or channels down by country.</dd>
+    <dt>Who leads where</dt><dd>Each country takes the colour and the badge of the lender, among those selected, with the largest figure there for the measure and year chosen. A country where none of the selected lenders has a figure above zero stays uncoloured.</dd>
+    <dt>Sectors</dt><dd>DAC purpose codes folded into the DAC's own headings by their leading digits: 11 education, 12 and 13 health and population, 14 water, 15 government and civil society, 16 other social, 21 transport, 22 communications, 23 energy, 24, 25 and 33 banking, business and trade, 31 agriculture, 32 industry and mining, 41 and 43 environment and multisector, 51 to 53 and 60 budget support, food aid and debt relief, 7 humanitarian. The packs keep each lender's fourteen largest purposes, which cover __COVER_NOTE__ commitments; the remainder is one column. AidData's own sector names are mapped onto the same headings for China.</dd>
+    <dt>Builds something</dt><dd>The share of a lender's commitments in the "hard" subset the profiles define: purpose codes 14, 21, 22 and 23 (water, transport, communications, energy) plus education facilities and basic health infrastructure, or a title or description that says construct, renovate, rehabilitate, drill, road, bridge, hospital, clinic, irrigation. AidData's dataset is infrastructure by definition, so China's share is not computed.</dd>
+    <dt>Grants and loans</dt><dd>Shares of each lender's aid by the OECD's measure (ODA grants, ODA loans, other official flows, equity and private-sector instruments). A pack fetched after October 2026 carries the money by measure and the share is of dollars; an older pack carries only the count of activities, and the row says so. China's split is AidData's loans and grants in dollars.</dd>
+    <dt>Colours</dt><dd>One hue per lender, fixed on every chart, from a categorical order checked for colour-blind separation of neighbours in both themes; China, the European Union and the United States keep the hues of the debt section's creditor groups. No mark relies on colour alone: every bar, line end and country carries the lender's name or badge, and the table restates everything. The grids use one hue, darker for more.</dd>
+    <dt>Reproduce</dt><dd><code>python3 build_compare.py</code> reads <code>data/donors/*.json</code> and <code>data/debt.json</code> and writes this page and <code>docs/data/compare.json</code>, the payload the page draws. The view is in the address bar (<code>#l=china,eu&amp;s=east&amp;m=debt&amp;y=2020</code>), so a view can be shared.</dd>
+  </dl>
+</section>
+
+<script>
+(() => {
+const CMP = /*__CMP__*/{};
+if (!CMP.lenders) return;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const NS = "http://www.w3.org/2000/svg";
+const sv = (t, a = {}, txt) => { const e = document.createElementNS(NS, t); for (const k in a) if (a[k] != null) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; };
+const h = (t, a = {}, ...kids) => {
+  const e = document.createElement(t);
+  for (const [k, v] of Object.entries(a)) { if (v == null) continue; if (k === "class") e.className = v; else if (k === "style") e.style.cssText = v; else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v); }
+  for (const k of kids.flat(Infinity)) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return e;
+};
+const L = CMP.lenders, LS = L.map(l => l.slug), BY = Object.fromEntries(L.map(l => [l.slug, l]));
+const C = CMP.countries, ALL = Object.keys(C), Y = CMP.years;
+const REG = Object.fromEntries(CMP.regions);
+const col = s => `var(--ld-${s})`;
+const MW = +$("#leadmap").getAttribute("viewBox").split(" ")[2], MH = +$("#leadmap").getAttribute("viewBox").split(" ")[3];
+const fmtM = m => Math.abs(m) >= 1000 ? (m / 1000).toFixed(Math.abs(m) >= 10000 ? 0 : 1) + " bn" : Math.abs(m) >= 10 ? Math.round(m).toLocaleString("en") + " m" : m.toFixed(1) + " m";
+const usd = m => "USD " + fmtM(m);
+const pct = v => v == null ? "–" : v >= 99.5 ? "100%" : v >= 10 ? v.toFixed(0) + "%" : v >= 1 ? v.toFixed(1) + "%" : v > 0 ? "<1%" : "0%";
+const nice = v => { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; };
+const sum = a => a.reduce((x, y) => x + (y || 0), 0);
+const the = n => (n === "European Union" || n === "United States") ? "the " + n : n;
+
+/* ---------- the measures ---------- */
+const METRICS = {
+  debt: {label: "Owed to the lender", years: Y.debt, has: () => true,
+         get: (s, iso, yi) => { const r = CMP.debt[s][iso]; return r ? r[yi] : null; },
+         what: y => `owed to the lender at the end of ${y}`},
+  aid:  {label: "Aid committed", years: null, has: s => !!CMP.aid[s],
+         get: (s, iso) => { const r = CMP.aid[s] && CMP.aid[s].countries[iso]; return r ? r.usd : null; },
+         what: () => "committed as aid over the source's window"},
+  oda:  {label: "Net ODA", years: Y.oda, has: s => !!CMP.oda[s],
+         get: (s, iso, yi) => { const r = CMP.oda[s] && CMP.oda[s][iso]; return r ? r[yi] : null; },
+         what: y => `disbursed as net ODA in ${y}`},
+  fdi:  {label: "FDI stock", years: Y.fdi, has: s => !!CMP.fdi[s],
+         get: (s, iso, yi) => { const r = CMP.fdi[s] && CMP.fdi[s][iso]; return r ? r[yi] : null; },
+         what: y => `of direct-investment stock at the end of ${y}`},
+};
+const state = {l: new Set(LS), scope: "all", m: "debt", y: {debt: Y.debt[Y.debt.length - 1], oda: Y.oda[Y.oda.length - 1], fdi: Y.fdi[Y.fdi.length - 1]},
+               sc: "share", view: "grid", dm: "usd", sb: "usd"};
+const yearOf = m => METRICS[m].years ? state.y[m] : null;
+const yiOf = m => METRICS[m].years ? METRICS[m].years.indexOf(state.y[m]) : 0;
+const scopeISOs = () => state.scope === "all" ? ALL : C[state.scope] ? [state.scope] : ALL.filter(i => C[i].r === state.scope);
+const scopeName = () => state.scope === "all" ? "Africa" : C[state.scope] ? C[state.scope].n : REG[state.scope];
+const active = () => LS.filter(s => state.l.has(s));
+const aidWindow = s => CMP.aid[s] ? `${CMP.aid[s].from}–${CMP.aid[s].to}` : "";
+
+/* per-country values of a measure for one lender in scope, largest first */
+function dist(s, m = state.m) {
+  const M = METRICS[m], i = yiOf(m), rows = []; let total = 0;
+  if (!M.has(s)) return {rows, total: 0, n: 0, has: false};
+  for (const iso of scopeISOs()) { const v = M.get(s, iso, i); if (v != null) { rows.push([iso, v]); total += v; } }
+  rows.sort((a, b) => b[1] - a[1]);
+  return {rows, total, n: rows.filter(r => r[1] > 0).length, has: true};
+}
+
+/* ---------- hash ---------- */
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  if (p.get("l")) { const ls = p.get("l").split(",").filter(s => BY[s]); if (ls.length) state.l = new Set(ls); }
+  if (p.get("s") && (p.get("s") === "all" || C[p.get("s")] || REG[p.get("s")])) state.scope = p.get("s");
+  if (p.get("m") && METRICS[p.get("m")]) state.m = p.get("m");
+  if (p.get("y")) { const y = +p.get("y"); for (const m of ["debt", "oda", "fdi"]) if (METRICS[m].years.includes(y)) state.y[m] = y; }
+  if (p.get("sc") === "usd") state.sc = "usd";
+  if (p.get("v") === "lead") state.view = "lead";
+  if (p.get("dm") === "share") state.dm = "share";
+}
+function writeHash() {
+  const p = new URLSearchParams();
+  if (state.l.size !== LS.length) p.set("l", active().join(","));
+  if (state.scope !== "all") p.set("s", state.scope);
+  if (state.m !== "debt") p.set("m", state.m);
+  if (METRICS[state.m].years && state.y[state.m] !== METRICS[state.m].years.at(-1)) p.set("y", state.y[state.m]);
+  if (state.sc !== "share") p.set("sc", state.sc);
+  if (state.view !== "grid") p.set("v", state.view);
+  if (state.dm !== "usd") p.set("dm", state.dm);
+  const s = p.toString();
+  history.replaceState(null, "", s ? "#" + s : location.pathname + location.search);
+}
+
+/* ---------- the filter row ---------- */
+function buildFilters() {
+  const chips = $("#chips");
+  for (const l of L) chips.appendChild(h("button", {class: "chip", type: "button", "data-s": l.slug, style: `--c:${col(l.slug)}`, "aria-pressed": "true",
+    onclick: () => { if (state.l.has(l.slug)) { if (state.l.size > 1) state.l.delete(l.slug); } else state.l.add(l.slug); render(); }},
+    h("i"), h("span", {class: "badge"}, l.badge), h("span", {}, l.name)));
+  $("#chips-all").onclick = () => { state.l = new Set(LS); render(); };
+  const sel = $("#scope");
+  sel.appendChild(h("option", {value: "all"}, "All of Africa"));
+  const og = h("optgroup", {label: "Regions"}); for (const [id, name] of CMP.regions) og.appendChild(h("option", {value: id}, name)); sel.appendChild(og);
+  const oc = h("optgroup", {label: "Countries"}); for (const iso of ALL.slice().sort((a, b) => C[a].n.localeCompare(C[b].n))) oc.appendChild(h("option", {value: iso}, C[iso].n)); sel.appendChild(oc);
+  sel.onchange = () => { state.scope = sel.value; render(); };
+  const seg = $("#metric");
+  for (const [k, M] of Object.entries(METRICS)) seg.appendChild(h("button", {type: "button", "data-v": k, "aria-pressed": "false", onclick: () => { state.m = k; render(); }}, M.label));
+  $$("#scale button").forEach(b => b.onclick = () => { state.sc = b.dataset.v; render(); });
+  $$("#view button").forEach(b => b.onclick = () => { state.view = b.dataset.v; render(); });
+  $$("#debtmode button").forEach(b => b.onclick = () => { state.dm = b.dataset.v; render(); });
+  $$("#secbasis button").forEach(b => b.onclick = () => { state.sb = b.dataset.v; render(); });
+  const yr = $("#year");
+  yr.oninput = () => { state.y[state.m] = +yr.value; render(); };
+  const setTop = () => document.documentElement.style.setProperty("--topH", $(".top").offsetHeight + "px");
+  setTop(); addEventListener("resize", setTop);
+}
+function syncFilters() {
+  $$("#chips .chip").forEach(b => b.setAttribute("aria-pressed", state.l.has(b.dataset.s) ? "true" : "false"));
+  $("#scope").value = state.scope;
+  $$("#metric button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.m ? "true" : "false"));
+  $$("#scale button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.sc ? "true" : "false"));
+  $$("#view button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.view ? "true" : "false"));
+  $$("#debtmode button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.dm ? "true" : "false"));
+  $$("#secbasis button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.sb ? "true" : "false"));
+  const M = METRICS[state.m], yr = $("#year");
+  if (M.years) { $("#yr").classList.remove("off"); $("#ynote").classList.add("hidden"); yr.min = M.years[0]; yr.max = M.years.at(-1); yr.step = 1; yr.value = state.y[state.m]; $("#yearv").value = state.y[state.m]; }
+  else { $("#yr").classList.add("off"); const n = $("#ynote"); n.classList.remove("hidden"); n.textContent = "over each source's window: " + active().filter(s => CMP.aid[s]).map(s => `${BY[s].name} ${aidWindow(s)}`).join(", "); }
+}
+
+/* ---------- tooltips ---------- */
+function tipFor(box) {
+  let tip = box.querySelector(":scope > .tip");
+  if (!tip) { tip = h("div", {class: "tip"}); box.appendChild(tip); }
+  return {
+    show(ev, node) { tip.replaceChildren(node); tip.style.display = "block"; this.move(ev); },
+    move(ev) { const r = box.getBoundingClientRect(); let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14; if (x + 290 > r.width) x -= 300; if (y + 140 > r.height) y -= 150; tip.style.left = Math.max(4, x) + "px"; tip.style.top = Math.max(4, y) + "px"; },
+    hide() { tip.style.display = "none"; },
+  };
+}
+const bindTip = (e, T, make) => { e.addEventListener("mousemove", ev => T.show(ev, make())); e.addEventListener("mouseleave", () => T.hide()); e.setAttribute("tabindex", "0"); e.addEventListener("focus", () => { T.show({clientX: 0, clientY: 0}, make()); }); e.addEventListener("blur", () => T.hide()); };
+const hover = iso => { $$(`use.c[data-iso="${iso}"]`).forEach(u => u.classList.add("hov")); };
+const unhover = () => { $$("use.c.hov").forEach(u => u.classList.remove("hov")); };
+
+/* ---------- the maps ---------- */
+function renderMaps() {
+  const grid = $("#mmgrid"), A = active(), M = METRICS[state.m], y = yearOf(state.m), inScope = new Set(scopeISOs());
+  $("#mmgrid").classList.toggle("hidden", state.view !== "grid");
+  $("#leadbox").classList.toggle("hidden", state.view !== "lead");
+  const D = Object.fromEntries(A.map(s => [s, dist(s)]));
+  const gmax = Math.max(0, ...A.flatMap(s => D[s].rows.map(r => r[1])));
+  if (state.view === "grid") {
+    grid.replaceChildren();
+    const T = tipFor(grid);
+    for (const s of A) {
+      const d = D[s], fig = h("figure", {class: "mm", style: `--c:${col(s)}`});
+      fig.appendChild(h("figcaption", {}, h("i"), h("span", {}, BY[s].name),
+        h("span", {class: "sum"}, d.has ? `${usd(d.total)} · ${d.n} ${d.n === 1 ? "country" : "countries"}` : "no data")));
+      if (!d.has) { fig.appendChild(h("p", {class: "none"}, state.m === "aid" ? "No activity-level aid data is published." : state.m === "oda" ? "Not a DAC reporter." : "No FDI reporter for this lender.")); grid.appendChild(fig); continue; }
+      const svg = sv("svg", {viewBox: `0 0 ${MW} ${MH}`, role: "img", "aria-label": `${BY[s].name}: ${M.label} by country`});
+      svg.appendChild(sv("use", {href: "#p-ctx", class: "ctx"}));
+      const vals = Object.fromEntries(d.rows), max = state.sc === "share" ? (d.rows[0] ? d.rows[0][1] : 0) : gmax;
+      const g = sv("g");
+      for (const iso of ALL) {
+        const v = vals[iso], u = sv("use", {href: `#p-${iso}`, class: "c" + (inScope.has(iso) ? "" : " out"), "data-iso": iso});
+        if (v != null && v > 0 && max > 0) { u.style.fill = col(s); u.style.fillOpacity = (0.14 + 0.86 * Math.sqrt(Math.min(v / max, 1))).toFixed(3); }
+        if (inScope.has(iso)) {
+          bindTip(u, T, () => h("div", {}, h("b", {}, C[iso].n), v == null ? "no figure for this lender" :
+            `${usd(v)} ${M.what(y)}` + (d.total > 0 && v > 0 ? ` · ${pct(100 * v / d.total)} of ${the(BY[s].name)}'s ${scopeName()} total` : "")));
+          u.addEventListener("mouseenter", () => hover(iso)); u.addEventListener("mouseleave", unhover);
+        }
+        g.appendChild(u);
+      }
+      svg.appendChild(g);
+      const lbl = sv("g");
+      d.rows.slice(0, 3).forEach(([iso, v]) => { if (v > 0) lbl.appendChild(sv("text", {x: C[iso].x, y: C[iso].y, class: "lbl", "text-anchor": "middle"}, C[iso].n)); });
+      svg.appendChild(lbl);
+      fig.appendChild(svg);
+      grid.appendChild(fig);
+    }
+  } else {
+    const svg = $("#leadmap"); svg.replaceChildren();
+    const T = tipFor($(".mapbox.lead"));
+    svg.appendChild(sv("rect", {width: MW, height: MH, fill: "var(--sea)"}));
+    svg.appendChild(sv("use", {href: "#p-ctx", class: "ctx"}));
+    const g = sv("g"), b = sv("g"), counts = Object.fromEntries(A.map(s => [s, 0]));
+    const i = yiOf(state.m);
+    for (const iso of ALL) {
+      const u = sv("use", {href: `#p-${iso}`, class: "c" + (inScope.has(iso) ? "" : " out"), "data-iso": iso});
+      if (inScope.has(iso)) {
+        const vals = A.map(s => [s, M.get(s, iso, i)]).filter(r => r[1] != null && r[1] > 0).sort((p, q) => q[1] - p[1]);
+        if (vals.length) {
+          const lead = vals[0][0]; counts[lead]++;
+          u.style.fill = col(lead); u.style.fillOpacity = ".82";
+          b.appendChild(sv("text", {x: C[iso].x, y: C[iso].y + 3.5, class: "bdg"}, BY[lead].badge));
+        }
+        bindTip(u, T, () => h("div", {}, h("b", {}, C[iso].n), vals.length ? vals.map(([s, v]) => h("div", {class: "row", style: `--c:${col(s)}`}, h("span", {}, h("i"), BY[s].name), h("b", {}, usd(v)))) : "none of the selected lenders has a figure here"));
+      }
+      g.appendChild(u);
+    }
+    svg.appendChild(g); svg.appendChild(b);
+    const keys = $("#leadkeys"); keys.replaceChildren();
+    A.slice().sort((p, q) => counts[q] - counts[p]).forEach(s => keys.appendChild(h("span", {}, h("i", {class: `lk lk-${s}`}), `${BY[s].badge} ${BY[s].name}: `, h("b", {}, counts[s]), counts[s] === 1 ? " country" : " countries")));
+  }
+  const yTxt = y ? ` in ${y}` : "";
+  $("#mapnote").textContent = state.view === "grid"
+    ? (state.sc === "share" ? `Each map's darkest country is that lender's largest counterpart in ${scopeName()}${yTxt}; the three largest are named. Hover a country for its figure and share.`
+                            : `All maps share one scale, topped by the largest single figure among the lenders shown (${usd(gmax)})${yTxt}; the three largest counterparts are named.`)
+    : `Each country takes the colour and badge of the selected lender with the largest ${M.label.toLowerCase()} there${yTxt}. Hover for every selected lender's figure.`;
+}
+
+/* ---------- focused or spread ---------- */
+function barRows(host, rows, {text}) {
+  host.replaceChildren();
+  for (const r of rows) {
+    host.appendChild(h("div", {class: "nm"}, h("i", {class: `lk lk-${r.s}`}), BY[r.s].name));
+    if (r.v == null) { host.appendChild(h("div", {class: "dimrow"}, r.note || "no data")); continue; }
+    host.appendChild(h("div", {class: "bar", style: `--c:${col(r.s)}`, title: text(r)}, h("b", {style: `width:${Math.max(0, Math.min(100, r.v))}%`})));
+    host.appendChild(h("div", {class: "val"}, r.val));
+  }
+}
+function renderFocus() {
+  const A = active(), M = METRICS[state.m], y = yearOf(state.m);
+  const rows = A.map(s => { const d = dist(s); if (!d.has || d.total <= 0) return {s, v: null, note: d.has ? "nothing in scope" : "no data"};
+    const top3 = sum(d.rows.slice(0, 3).filter(r => r[1] > 0).map(r => r[1])) / d.total * 100;
+    return {s, v: top3, n: d.n, top: d.rows[0][0], val: null, d}; });
+  rows.filter(r => r.v != null).forEach(r => r.val = h("span", {}, h("b", {}, pct(r.v)), ` in ${Math.min(3, r.n)} · ${r.n} ${r.n === 1 ? "country" : "countries"} · largest ${C[r.top].n} ${pct(100 * r.d.rows[0][1] / r.d.total)}`));
+  rows.sort((p, q) => (q.v ?? -1) - (p.v ?? -1));
+  barRows($("#focusrows"), rows, {text: r => `${BY[r.s].name}: ${pct(r.v)} of its ${M.label.toLowerCase()} in its three largest counterparts`});
+  $("#focusnote").textContent = `${M.label}${y ? " in " + y : ""}, ${scopeName()}: the share in each lender's three largest counterparts, then how many countries it reaches with a figure above zero and its single largest.` + (C[state.scope] ? " With one country in scope every lender is at 100%: widen the scope to compare." : "");
+}
+
+/* ---------- grids ---------- */
+function heat(host, {cols, rows, caption, head}) {
+  const max = Math.max(0, ...rows.flatMap(r => (r.cells || []).map(c => c && c.v != null ? c.v : 0)));
+  const tbl = h("table", {}, h("caption", {}, caption), h("thead", {}, h("tr", {}, h("th", {class: "row"}, head), ...cols.map(c => h("th", {}, c.label)), h("th", {}, "Total"))));
+  const tb = h("tbody");
+  for (const r of rows) {
+    const tr = h("tr", {}, h("td", {class: "name"}, h("i", {class: `lk lk-${r.s}`}), BY[r.s].name));
+    if (!r.cells) { tr.appendChild(h("td", {class: "note", colspan: cols.length + 1}, r.note)); tb.appendChild(tr); continue; }
+    r.cells.forEach(c => {
+      if (!c || c.v == null) { tr.appendChild(h("td", {class: "cell nil"}, "·")); return; }
+      const k = max > 0 ? c.v / max : 0, p = Math.round(6 + 94 * Math.sqrt(k));
+      tr.appendChild(h("td", {class: "cell" + (p > 58 ? " dark" : "") + (c.v < 0.05 ? " nil" : ""), style: `background:color-mix(in srgb,var(--seq) ${c.v > 0 ? p : 0}%,var(--surface))`, title: c.title}, pct(c.v)));
+    });
+    tr.appendChild(h("td", {class: "tot"}, r.total));
+    tb.appendChild(tr);
+  }
+  tbl.appendChild(tb);
+  host.replaceChildren(tbl);
+}
+function renderSectors() {
+  const S = CMP.sectors, A = active(), basis = state.sb;
+  const groups = S.groups.filter(([k]) => A.some(s => { const b = S.by[s]; return b && b[basis][k] && 100 * b[basis][k] / b["total_" + basis] >= 1; }));
+  const anyRest = A.some(s => S.by[s] && S.by[s]["rest_" + basis] > 0);
+  const cols = [...groups.map(([k, label]) => ({k, label})), ...(anyRest ? [{k: "rest", label: "Not among the 14 largest purposes"}] : [])];
+  const rows = A.map(s => {
+    const b = S.by[s];
+    if (!b) return {s, cells: null, note: "No activity-level aid data is published."};
+    const tot = b["total_" + basis];
+    const cells = cols.map(c => { const v = c.k === "rest" ? b["rest_" + basis] : (b[basis][c.k] || 0); return {v: tot ? 100 * v / tot : 0, title: `${BY[s].name}, ${c.label}: ${basis === "usd" ? usd(v) : v.toLocaleString("en") + " activities"} of ${basis === "usd" ? usd(tot) : tot.toLocaleString("en")}`}; });
+    return {s, cells, total: (basis === "usd" ? usd(tot) : tot.toLocaleString("en") + " acts") + ` · ${b.from}–${b.to}` + (b.src.startsWith("AidData") ? " · AidData" : "")};
+  });
+  heat($("#secheat"), {cols, rows, head: "Lender", caption: `Share of each lender's aid ${basis === "usd" ? "commitments (money)" : "activities (count)"} by sector heading, Africa-wide. Headings under 1% for every lender shown are left out.`});
+}
+function renderChannels() {
+  const Ch = CMP.channels, A = active();
+  const cols = [...Ch.kinds.map(([k, label]) => ({k, label})), {k: "rest", label: "Outside the six most common channels"}];
+  const rows = A.map(s => {
+    const b = Ch.by[s];
+    if (!b) return {s, cells: null, note: CMP.aid[s] ? "AidData does not record a delivery channel." : "No activity-level aid data is published."};
+    const cells = cols.map(c => { const v = c.k === "rest" ? b.rest : (b.n[c.k] || 0); return {v: b.total ? 100 * v / b.total : 0, title: `${BY[s].name}, ${c.label}: ${v.toLocaleString("en")} of ${b.total.toLocaleString("en")} activities`}; });
+    return {s, cells, total: b.total.toLocaleString("en") + " acts"};
+  });
+  heat($("#chanheat"), {cols, rows, head: "Lender", caption: "Share of each lender's aid activities by the kind of organisation that receives the money, Africa-wide."});
+}
+
+/* ---------- how they lend ---------- */
+function renderHow() {
+  const A = active(), host = $("#mixrows"); host.replaceChildren();
+  for (const s of A) {
+    const I = CMP.instruments[s];
+    host.appendChild(h("div", {class: "nm"}, h("i", {class: `lk lk-${s}`}), BY[s].name));
+    if (!I || !I.total) { host.appendChild(h("div", {class: "dimrow"}, "no data")); continue; }
+    const g = 100 * I.grant / I.total, l = 100 * I.loan / I.total, o = Math.max(0, 100 - g - l);
+    host.appendChild(h("div", {class: "bar mix", title: `${BY[s].name}: ${pct(g)} grants, ${pct(l)} loans, ${pct(o)} other, of ${I.basis === "usd" ? "money" : "activities"}`},
+      h("b", {class: "g", style: `width:${g}%`}), h("b", {class: "l", style: `width:${l}%`}), h("b", {class: "o", style: `width:${o}%`})));
+    host.appendChild(h("div", {class: "val"}, h("b", {}, pct(g)), ` grants · ${pct(l)} loans`, o >= 0.5 ? ` · ${pct(o)} other` : "", h("span", {class: "dim"}, I.basis === "usd" ? " of money" : " of activities")));
+  }
+  const rows = A.map(s => { const H = CMP.hard[s]; if (!H) return {s, v: null, note: "no data"}; if (H.pct == null) return {s, v: null, note: "all of it, by construction: an infrastructure-only dataset"}; return {s, v: H.pct, val: h("span", {}, h("b", {}, pct(H.pct)), ` · ${usd(H.usd)} in ${H.n.toLocaleString("en")} activities`)}; });
+  rows.sort((p, q) => (q.v ?? -1) - (p.v ?? -1));
+  barRows($("#hardrows"), rows, {text: r => `${BY[r.s].name}: ${pct(r.v)} of its aid commitments build something`});
+}
+
+/* ---------- lines ---------- */
+function lineChart(svg, {years, series, fmt, mark, unit}) {
+  svg.replaceChildren();
+  const W = 1000, H = 320, Lm = 64, R = 150, T = 16, B = 32;
+  const box = svg.parentNode, Tp = tipFor(box);
+  const has = series.filter(s => s.vals.some(v => v != null));
+  if (!has.length) { svg.appendChild(sv("text", {x: W / 2, y: H / 2, class: "ax", "text-anchor": "middle"}, "no data for the lenders and scope chosen")); return; }
+  const vmax = Math.max(0, ...has.flatMap(s => s.vals.filter(v => v != null)));
+  const step = nice(vmax / 4 || 1), top = step * Math.ceil((vmax || 1) / step - 1e-9);
+  const x = i => Lm + i / (years.length - 1) * (W - Lm - R), y = v => T + (1 - v / top) * (H - T - B);
+  const grid = sv("g", {class: "grid"});
+  for (let v = 0; v <= top + 1e-9; v += step) { grid.appendChild(sv("line", {x1: Lm, x2: W - R, y1: y(v), y2: y(v)})); svg.appendChild(sv("text", {x: Lm - 8, y: y(v) + 4, class: "ax", "text-anchor": "end"}, fmt(v))); }
+  svg.appendChild(grid);
+  years.forEach((yy, i) => { if (yy % 5 === 0 || i === 0 || i === years.length - 1) svg.appendChild(sv("text", {x: x(i), y: H - 10, class: "ax", "text-anchor": "middle"}, yy)); });
+  if (mark != null && years.includes(mark)) svg.appendChild(sv("line", {x1: x(years.indexOf(mark)), x2: x(years.indexOf(mark)), y1: T, y2: H - B, class: "mark"}));
+  for (const s of has) {
+    let d = "", pen = false;
+    s.vals.forEach((v, i) => { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1); pen = true; });
+    svg.appendChild(sv("path", {d, class: "ln", stroke: col(s.s)}));
+  }
+  /* direct labels at the right end, pushed apart so they never overlap */
+  const ends = has.map(s => { let i = s.vals.length - 1; while (i >= 0 && s.vals[i] == null) i--; return {s, i, v: s.vals[i]}; }).filter(e => e.i >= 0).sort((p, q) => q.v - p.v);
+  let last = -Infinity;
+  ends.forEach(e => { let yy = y(e.v); if (yy < last + 13) yy = last + 13; last = yy; e.y = yy; });
+  ends.forEach(e => svg.appendChild(sv("text", {x: x(e.i) + 8, y: e.y + 4, class: "endlbl"}, `${BY[e.s.s].name} ${fmt(e.v)}`)));
+  const hov = sv("rect", {x: Lm, y: T, width: W - Lm - R, height: H - T - B, fill: "transparent"}), ln = sv("line", {y1: T, y2: H - B, class: "mark", style: "display:none"});
+  svg.appendChild(ln); svg.appendChild(hov);
+  hov.addEventListener("mousemove", ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const i = Math.max(0, Math.min(years.length - 1, Math.round((p.x - Lm) / (W - Lm - R) * (years.length - 1))));
+    ln.setAttribute("x1", x(i)); ln.setAttribute("x2", x(i)); ln.style.display = "";
+    const rows = has.map(s => [s, s.vals[i]]).filter(r => r[1] != null).sort((a, b) => b[1] - a[1]);
+    Tp.show(ev, h("div", {}, h("b", {}, `${years[i]}${unit ? " · " + unit : ""}`), ...rows.map(([s, v]) => h("div", {class: "row", style: `--c:${col(s.s)}`}, h("span", {}, h("i"), BY[s.s].name), h("b", {}, fmt(v))))));
+  });
+  hov.addEventListener("mouseleave", () => { ln.style.display = "none"; Tp.hide(); });
+}
+function renderLines() {
+  const A = active(), isos = scopeISOs(), yd = Y.debt;
+  const totals = yd.map((_, i) => sum(isos.map(iso => (CMP.debt_total[iso] || [])[i])));
+  const debt = A.map(s => ({s, vals: yd.map((_, i) => { const v = sum(isos.map(iso => (CMP.debt[s][iso] || [])[i])); return state.dm === "share" ? (totals[i] > 0 ? 100 * v / totals[i] : null) : v; })}));
+  $("#debttitle").textContent = (state.dm === "share" ? "Share of everything owed abroad by " : "Owed to each lender by ") + (C[state.scope] ? C[state.scope].n : "the governments of " + scopeName());
+  lineChart($("#c-debt"), {years: yd, series: debt, mark: state.m === "debt" ? state.y.debt : null,
+    fmt: state.dm === "share" ? v => pct(v) : v => fmtM(v), unit: state.dm === "share" ? "share of the external public debt stock" : "USD, end of year"});
+  const yo = Y.oda;
+  const oda = A.filter(s => CMP.oda[s]).map(s => ({s, vals: yo.map((_, i) => sum(isos.map(iso => (CMP.oda[s][iso] || [])[i])) + (state.scope === "all" ? CMP.oda_regional[s][i] : 0))}));
+  $("#odatitle").textContent = "Net ODA disbursed to " + scopeName();
+  lineChart($("#c-oda"), {years: yo, series: oda, mark: state.m === "oda" ? state.y.oda : null, fmt: v => fmtM(v), unit: "USD, net disbursements"});
+}
+
+/* ---------- the table ---------- */
+function renderTable() {
+  const A = active(), isos = scopeISOs(), yD = state.y.debt, yO = state.y.oda, yF = state.y.fdi, iD = Y.debt.indexOf(yD), iO = Y.oda.indexOf(yO), iF = Y.fdi.indexOf(yF);
+  const lead = Object.fromEntries(A.map(s => [s, 0]));
+  for (const iso of isos) { let best = null, bv = 0; for (const s of A) { const v = (CMP.debt[s][iso] || [])[iD] || 0; if (v > bv) { best = s; bv = v; } } if (best) lead[best]++; }
+  const tdn = (...k) => h("td", {class: "num"}, ...k), dim = t => h("span", {class: "dim"}, t);
+  const rows = A.map(s => {
+    const d = dist(s, "debt"), a = dist(s, "aid"), aidAll = CMP.aid[s] ? a.total + (state.scope === "all" ? CMP.aid[s].regional.usd : 0) : null;
+    const H = CMP.hard[s], I = CMP.instruments[s], o = CMP.oda[s] ? sum(isos.map(iso => (CMP.oda[s][iso] || [])[iO])) + (state.scope === "all" ? CMP.oda_regional[s][iO] : 0) : null;
+    const f = CMP.fdi[s] ? sum(isos.map(iso => (CMP.fdi[s][iso] || [])[iF])) : null;
+    const dStock = sum(isos.map(iso => (CMP.debt[s][iso] || [])[iD]));
+    return h("tr", {},
+      h("td", {class: "name"}, h("i", {class: `lk lk-${s}`}), h("a", {href: BY[s].url}, BY[s].name)),
+      tdn((dStock / 1000).toFixed(1)), tdn(isos.filter(iso => ((CMP.debt[s][iso] || [])[iD] || 0) > 0).length), tdn(lead[s]),
+      tdn(aidAll != null ? [(aidAll / 1000).toFixed(aidAll < 1000 ? 2 : 1), " ", dim(aidWindow(s))] : dim("not reported")),
+      tdn(CMP.aid[s] ? a.n : "–"),
+      h("td", {}, a.rows[0] && a.rows[0][1] > 0 ? [C[a.rows[0][0]].n, " ", dim(pct(100 * a.rows[0][1] / a.total))] : "–"),
+      tdn(H ? (H.pct != null ? pct(H.pct) : dim("all, by construction")) : "–"),
+      tdn(I && I.total ? [pct(100 * I.grant / I.total), " ", dim(I.basis === "usd" ? "of money" : "of activities")] : "–"),
+      tdn(o != null ? (o / 1000).toFixed(o < 1000 ? 2 : 1) : "–"), tdn(f != null ? (f / 1000).toFixed(Math.abs(f) < 1000 ? 2 : 1) : "–"));
+  });
+  const th = (t, num) => h("th", {class: num ? "num" : null}, t);
+  $("#tbl").replaceChildren(h("div", {class: "tbl"}, h("table", {class: "cmp"},
+    h("caption", {}, `The lenders shown, ${scopeName()}. Debt at the end of ${yD}; aid commitments over each source's window; net ODA ${yO}; FDI stock ${yF}. USD bn.`),
+    h("thead", {}, h("tr", {}, th("Lender"), th(`Owed to it, ${yD}`, 1), th("Debtor states", 1), th("Largest creditor in", 1), th("Aid committed", 1), th("Recipient states", 1), th("Largest recipient"), th("Builds things", 1), th("Grants", 1), th(`Net ODA ${yO}`, 1), th(`FDI stock ${yF}`, 1))),
+    h("tbody", {}, rows))));
+}
+
+function render() { syncFilters(); renderMaps(); renderFocus(); renderSectors(); renderHow(); renderChannels(); renderLines(); renderTable(); writeHash(); }
+buildFilters();
+readHash();
+render();
+addEventListener("hashchange", () => { readHash(); render(); });
+})();
+</script>

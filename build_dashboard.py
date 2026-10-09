@@ -27,6 +27,8 @@ from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
 
 ROOT = pathlib.Path(__file__).parent
 DATA = ROOT / "data"
+
+from build_debt import dashboard_payload as debt_payload  # noqa: E402
 TEMPLATE = ROOT / "dashboard.template.html"
 OUT = ROOT / "dashboard.html"
 
@@ -740,6 +742,9 @@ def main():
         "china": china,
         "eu": eu,
         "mattei": mattei,
+        # country-year debt by creditor for the "Who it owes" box; None until
+        # fetch_debt.py has run (the box then hides itself)
+        "debt": debt_payload(),
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)

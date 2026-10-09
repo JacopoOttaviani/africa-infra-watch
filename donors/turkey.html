@@ -1,0 +1,105 @@
+<!-- Turkey: the prose and section order of docs/turkey/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/turkey.json, so every
+     figure on the page comes from the data pack and cannot drift from it. -->
+<div class="head">
+  <span class="kicker">Lender profile · Republic of Turkey</span>
+  <h1>Turkey</h1>
+  <p class="lede"><strong>There is no public register of Turkish investment or contracting in Africa.</strong> What is both official and granular is Turkey's <strong>aid</strong>: the OECD's Creditor Reporting System holds __CRS_N__ Turkish activities with an African recipient for __CRS_FROM__–__CRS_TO__, each with a country, a purpose code and a dollar figure, but with category labels for titles and no place names. Investment and lending exist only as country-by-year series: Turkish direct-investment stock by partner country, net aid by recipient, and what each African government owes Turkey. The works themselves exist only where a company or a lender describes them on its own pages, which, read one by one, give <strong>__N_WORKS__ placeable works</strong>.</p>
+  <p class="lede">Read together, the series say that Turkish money in Africa is grants in the tens of millions a year, one large investment stock (Algeria, __FDI_TOP_PCT__% of the USD __FDI_STOCK__ m Turkish stock on the continent at the end of __FDI_TO__), a few Eximbank buyer's credits to governments, and a contracting business that publishes totals rather than projects.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b>, DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> and FDI positions <b>__FDI_FROM__–__FDI_TO__</b>, fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · company and lender pages read <b>7 Oct 2026</b> · Global Energy Monitor power tracker as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>Turkish aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD__ m committed, __CRS_GRANT_PCT__% standard grants</dd></div>
+  <div class="kpi"><dt>__N_WORKS__</dt><dd><b>placed works</b>: __N_WORKS_HAND__ from Eximbank, Summa, Yapı Merkezi and Karpowership pages, __N_GEM__ Turkish-owned power units in GEM</dd></div>
+  <div class="kpi"><dt>USD __FDI_STOCK__ m</dt><dd><b>Turkish direct-investment stock</b> in Africa at the end of __FDI_TO__, __FDI_TOP__ __FDI_TOP_PCT__% of it</dd></div>
+  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to Turkey</b> by __IDS_N__ African governments at the end of __IDS_TO__</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Aid is drawn at each country's interior point, sized by ten years of commitments; the CRS names no town or site, so a country point is the honest place. The placed works sit where their publishers put them: the company's own coordinates where its page gives them, otherwise the named town, corridor or port. Power units carry Global Energy Monitor's coordinates and the map's status colours. Debt owed to Turkey is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-works" checked><span class="sw dia"></span>Placed works (company and lender pages)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw tri"></span>Power units with a Turkish owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to Turkey (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Turkish aid by country, placed Turkish works, Turkish-owned power units and debt owed to Turkey">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The works and the power units overlap where they are the same thing: Karpowership's Ghana, Senegal, Mozambique and Sudan vessels are both a company page and a GEM unit, and the Eximbank-financed Awash railway is also on Yapı Merkezi's page. Each row keeps its own source rather than being merged.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">Turkish CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of Turkish aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Turkish aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from Turkey to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a. The negative years are repayments of the central-bank deposits booked as loans to Egypt in 2012–13.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net Turkish ODA to Africa per year, with negative years"></svg></div>
+    <div class="chart"><h3>Turkish direct-investment stock by country, end __FDI_TO__</h3><p class="sub">USD million, OECD FDI positions, outward, immediate counterpart.</p><svg id="c-fdi" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Turkish FDI stock by African country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Turkish aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Turkish aid to Africa by recipient country"></svg></div>
+  </div>
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">Turkey reports its aid to the OECD at activity level, as DAC members do: every record carries the recipient, a five-digit purpose code, a channel, a finance type and the dollars committed and disbursed. The records are reliable where they are precise. Every one is reported by the central government, nearly all as a standard grant committed and disbursed in the same year; the largest single lines are budget support to Somalia, scholarships and the training of teachers and police. The "construction" lines are schools, clinics, wells and cultural buildings in the low hundreds of thousands of dollars.</p>
+  <p>What the records cannot say is where. The titles are a controlled vocabulary of __CRS_TITLES__ phrases for __CRS_N__ records, so two activities called "Construction of social, economic or cultural facilities" in the same country and year cannot be told apart, and __CRS_PLACED__ of them name a town or a site. The map's own lender filter does not carry Turkey for that reason: the records are country-year aid, not projects with a place, and are kept off the project map on purpose.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water, industry and basic health and education facilities, plus titles that mention building, renovating, drilling or equipping: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the ten years. Small by the standard of the map's other lenders, and the only part of the Turkish record that is infrastructure in the map's sense.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="works">
+  <h2>Placed works: the publishers' own pages</h2>
+  <p class="lead">No register exists, so the works are read one page at a time. Türk Eximbank publishes eight "sample transactions" with the loan and the project cost, and no loan list. Summa and Yapı Merkezi publish their project portfolios, Summa with coordinates on some pages. Karpowership publishes one page per country with the vessel's megawatts, start year and share of national demand. Global Energy Monitor's power tracker, which the map already draws, holds __N_GEM__ units with a Turkish owner. Well-known works without a company or lender page, such as Albayrak's Mogadishu port, Favori's Mogadishu airport, Tosyalı's Oran steelworks and Kalyon's Bamako bus corridor, are left out until they can be read the same way.</p>
+  __TABLE_WORKS__
+</section>
+
+<section id="series">
+  <h2>Country-year series: investment stock, net aid, debt</h2>
+  <p class="lead">Three official series describe Turkish money in Africa one country and one year at a time. The OECD's FDI positions give Turkey's outward direct-investment stock by partner country; Algeria carries it, with Tosyalı's steelworks and textile plants, and the latest year reads as a partial revision for several countries, so the previous year is often the safer one to quote. The DAC2a table gives net ODA by recipient, which matches TİKA's own annual report to the decimal. The World Bank's debt statistics give what each government owes Turkey: the Eximbank buyer's credits above, from Ethiopia's railway to Senegal's Diamniadio complex.</p>
+  <h3>Direct-investment stock by partner country</h3>
+  __TABLE_FDI__
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ Turkey's net ODA to Africa came to USD __ODA_SUM__ bn, of which Somalia alone took USD __ODA_SOM__ bn. The two negative years are real: about USD 1 bn of central-bank deposits to Egypt booked as concessional loans in 2012–13, repaid in 2016–17, and visible again below as debt owed to Turkey by Egypt from 2012 to 2017.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to Turkey</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics, bilateral creditor counterpart 055. Sovereign and sovereign-guaranteed borrowing only: lending to private borrowers, and to countries that do not report to the Debtor Reporting System (Libya, Somalia), is outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as Turkey reports it: one recipient, one purpose code, one year, with its commitment and disbursement. In the works table, <b>one entry on a publisher's page</b>: an Eximbank transaction, a Summa or Yapı Merkezi contract, a Karpowership deployment, a GEM power unit. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>Works carry the status their page states, mapped to the map's vocabulary: built and operating are <b>operating</b>, under way is <b>under construction</b>, planned is <b>announced</b>, a contract that has ended is drawn as <b>stalled</b> (grey) and labelled as ended. GEM units use the map's own mapping. Aid activities have no status: a Turkish grant is committed and disbursed in the same year.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported; the constant-price rows the OECD also publishes are left out. Net ODA is current prices. FDI stock is the OECD's net position, all resident units, immediate counterpart, converted at exchange rates by the OECD. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Location</dt><dd>Aid and the three series are drawn at the <b>country's interior point</b>, the same point the map uses for records placed no finer than the country. The works use the company's coordinates where its page gives them (ten of Summa's) and otherwise the named town, corridor or port, placed by hand and said so in each row.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>TİKA</b>, Turkey's development agency, publishes no project register, only news posts (645 on 25 African countries) and an annual report whose country table is the OECD's own; it is not an IATI publisher.</li>
+        <li><b>Türk Eximbank</b> publishes no loan list; its annual reports give country totals in prose. The eight showcase transactions here are the whole public record at project level.</li>
+        <li><b>The Turkish Contractors Association and the Ministry of Trade</b> publish shares and totals (12,478 projects and USD 534 bn abroad since 1972, Africa 18.1% of it); the project-level system behind those numbers is not public.</li>
+        <li><b>AidData</b> has no Turkey release; its old core data for Turkey were the OECD's own CRS rows.</li>
+        <li><b>Think-tank reports</b> (Atlantic Council, APRI, CeSPI, IEEE) cite the OECD, TurkStat and the press, and ship no data annex.</li>
+        <li><b>The OECD's bulk CRS files</b> sit behind a browser challenge; the page uses the SDMX microdata query instead, which returns the same rows.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>OECD, Creditor Reporting System</b>, Turkey as provider (DAC code 55), activity-level microdata through the SDMX API, dataflow DSD_CRS@DF_CRS; OECD terms of use, free reuse with attribution.</li>
+        <li><b>OECD, DAC2a</b>, net ODA disbursements by recipient (measure 206), current prices, dataflow DSD_DAC2@DF_DAC2A.</li>
+        <li><b>OECD, FDI positions by partner country</b> (Benchmark Definition, 4th edition), Turkey outward, dataflow DSD_FDI@DF_FDI_POS_CTRY.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 055, series DT.DOD.BLAT.CD, DT.COM.BLAT.CD and DT.DIS.BLAT.CD; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Türk Eximbank</b> sample transactions page; <b>Summa</b>, <b>Yapı Merkezi</b> and <b>Karpowership</b> project pages, read 7 October 2026, linked from each row.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker, as the map draws it; CC BY 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year and purpose, the three series per country and the works with their coordinates: <a href="__DATA_URL__">__DATA_FILE__</a>. The OECD and World Bank series are re-fetched with every data refresh; the works table lives in the fetcher's source and changes when a page is re-read.</dd>
+  </dl>
+</section>

@@ -1,0 +1,99 @@
+<!-- European Union: the prose and section order of docs/eu/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/eu.json. -->
+<div class="head">
+  <span class="kicker">Lender profile · European Union institutions</span>
+  <h1>European Union</h1>
+  <p class="lede"><strong>The European Union's own institutions publish their records, and the map already draws them.</strong> The European Commission's contracts and financing decisions and the European Investment Bank's operations come from the institutions' IATI files: __LAYER_N__ infrastructure records in the map's EU finance layer, EUR __LAYER_EUR_BN__ bn committed, __LAYER_EC_N__ of them the Commission's and __LAYER_EIB_N__ the Bank's. Behind the layer sits the OECD record of the EU institutions as an aid provider: __CRS_N__ activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, __CRS_TOP_COUNTRY__, __CRS_TOP2_COUNTRY__ and __CRS_TOP3_COUNTRY__ first.</p>
+  <p class="lede">What is not here is as telling: the member states' own agencies (AFD, KfW, Enabel, the Italian agency) are national and sit on their own pages, the EFSD+ guarantees that carry Global Gateway have no commitment transaction and leave no record, and the Union reports no investment stock because it is not an investor. The debt side is the Bank's: USD __IDS_EIB_BN__ bn owed to the EIB by __IDS_N__ governments at the end of __IDS_TO__, and USD __IDS_EU_BN__ bn owed to the EU budget and the European Development Fund, almost all of it Tunisia's and Egypt's macro-financial assistance.</p>
+  <p class="asof">EU finance layer from the Commission's (DG INTPA, DG NEAR) and the EIB's IATI files, as the map draws them · OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b> and DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> for the EU institutions (OECD code 4EU001), fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b></p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__LAYER_N__</dt><dd><b>EU infrastructure records</b> in the map's layer: __LAYER_CONTRACTS__ Commission contracts, __LAYER_DECISIONS__ decisions, __LAYER_OPERATIONS__ EIB operations; EUR __LAYER_EUR_BN__ bn</dd></div>
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> of the EU institutions in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ loans</dd></div>
+  <div class="kpi"><dt>USD __IDS_EIB_BN__ bn</dt><dd><b>owed to the European Investment Bank</b> by __IDS_N__ governments at the end of __IDS_TO__, __IDS_TOP__ first</dd></div>
+  <div class="kpi"><dt>USD __IDS_EU_BN__ bn</dt><dd><b>owed to the EU budget, the EDF and the former EEC</b> by __IDS_EU_N__ governments; net ODA to Africa USD __ODA_LATEST__ m in __ODA_TO__</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">The layer's commitments are summed at each country's interior point and sized; the 150 largest records are drawn as stars where the map places them, in its status colours, with every one of the __LAYER_N__ on the main map. The map's three placement tiers apply: a named place (__LAYER_NAMED__ records), the country's point (__LAYER_COUNTRY__) and the Commission's Africa-wide point in Chad for regional programmes (__LAYER_REGIONAL__). Debt owed to the EIB is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Layer commitments by country (IATI)</label>
+    <label><input type="checkbox" data-g="g-layer" checked><span class="sw star"></span>150 largest records (Commission and EIB)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to the EIB (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with EU infrastructure finance by country, the largest Commission and EIB records, and debt owed to the European Investment Bank">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The layer and the aid record overlap by design: the Commission's infrastructure contracts are a subset of what it reports to the OECD, and the EIB's operations are the Bank's own. The layer is what can be placed; the OECD record is everything the institutions spent. The two are shown side by side and never added.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Layer commitments by start year</h3><p class="sub">USD million, EUR converted at the stated rate; Commission contracts and decisions and EIB operations in the map's layer, from 2010.</p><svg id="c-layer-year" viewBox="0 0 520 240" role="img" aria-label="Column chart of EU infrastructure commitments by start year"></svg></div>
+    <div class="chart"><h3>Layer commitments by sector</h3><p class="sub">USD million with the number of records, the map's sector buckets from the DAC purpose codes.</p><svg id="c-layer-sect" viewBox="0 0 520 240" role="img" aria-label="Bar chart of EU infrastructure commitments by sector"></svg></div>
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">EU institutions' CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of EU aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of EU aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from the EU institutions to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net EU ODA to Africa per year"></svg></div>
+    <div class="chart"><h3>Who owes the EIB now</h3><p class="sub">Stock at the end of __IDS_TO__, USD million.</p><svg id="c-owe" viewBox="0 0 520 300" role="img" aria-label="Bar chart of debt owed to the European Investment Bank by country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of EU aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of EU aid to Africa by recipient country"></svg></div>
+    <div class="chart"><h3>Who reports the EU institutions' aid</h3><p class="sub">Activities __CRS_FROM__–__CRS_TO__ by reporting institution.</p><svg id="c-agency" viewBox="0 0 520 180" role="img" aria-label="Bar chart of EU aid activities by reporting institution"></svg></div>
+  </div>
+</section>
+
+<section id="layer">
+  <h2>The map's EU finance layer: the institutions' own records</h2>
+  <p class="lead">The Commission publishes two levels in one IATI file, financing decisions (the whole envelope) and the contracts under them; the layer keeps one record per contract and a decision only where none of its contracts is in the set, so a pipeline action is one announced record and no euro is counted twice. The EIB publishes one global file with no locations at all, which is why its operations sit at the country's interior point. The same infrastructure filter applies as for the African Development Bank and the World Bank: the DAC codes for transport, energy, communications, water, industry and trade. By money the layer's largest sector is __LAYER_TOP_SECTOR__, USD __LAYER_TOP_SECTOR_BN__ bn; the Commission's part is USD __LAYER_EC_USD_BN__ bn and the Bank's USD __LAYER_EIB_USD_BN__ bn.</p>
+  __TABLE_LAYER__
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">The OECD counts the Commission and the EIB together as "EU institutions", a provider in its own right beside the member states. __CRS_AGENCY_TOP_PCT__% of the activities are reported by the __CRS_AGENCY_TOP__. The largest purpose is __CRS_TOP_SECTOR__, USD __CRS_TOP_SECTOR_USD__ m; __CRS_TOP_COUNTRY__ received the most, USD __CRS_TOP_COUNTRY_USD__ m. __CRS_LOANS_N__ records are loans, the EIB's; __CRS_GRANT_PCT__% are grants.</p>
+  <p>The descriptions often name a town or a district (__CRS_PLACED__ records mention one), but the CRS carries no coordinates, so the aid is drawn at country points here; the placed records are the ones in the layer above.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="series">
+  <h2>Country-year series: net aid and debt</h2>
+  <p class="lead">Two official series describe EU money one country and one year at a time. The DAC2a table gives the institutions' net ODA by recipient. The World Bank's debt statistics give what each government owes the European Investment Bank, which lends on its own balance sheet, and, separately, what it owes the EU budget and the European Development Fund, which is the macro-financial assistance loans and the few EDF special loans still outstanding. There is no investment-stock series: the Union is not an investor and the member states' stocks are on their own pages.</p>
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ the EU institutions' net ODA to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to the EIB and to the EU</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics; all public and publicly guaranteed debt to each creditor (the Bank files the EIB as a multilateral creditor). Sovereign and sovereign-guaranteed borrowing only; the EIB's lending to private borrowers and to countries that do not report to the Debtor Reporting System is outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the layer table, <b>one Commission contract or financing decision, or one EIB operation</b>, as the map carries it. In the aid tables, <b>one CRS activity</b> as the EU institutions report it. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>Layer records use the map's mapping of IATI activity status: 1 announced, 2 under construction, 3 and 4 operating, 5 and 6 stalled; a Commission financing decision still in the pipeline is an announced record. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>Layer amounts are the institutions' euros, converted at the rate the map states and never added to the other lenders. CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. Debt is the World Bank's stock in current dollars. None is added to another.</dd>
+    <dt>Location</dt><dd>The layer's three tiers, stated on every card: a named place, the country's interior point, or the Commission's Africa-wide point in Chad for regional programmes. Aid and the series are drawn at the country's interior point.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>Global Gateway</b> is a label on existing instruments, not a dataset; its flagship list is a web page without amounts per project.</li>
+        <li><b>EFSD+ guarantees</b>, the main Global Gateway instrument, have no commitment transaction in the IATI files and leave no record here.</li>
+        <li><b>The member states' agencies</b> (AFD, KfW, Enabel, AICS and the others) are national providers and sit on their own pages where one exists.</li>
+        <li><b>Investment stock</b>: the OECD's FDI positions have no reporter for the Union as such.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>European Commission</b>, DG INTPA and DG NEAR IATI 2.03 activity files (CC BY 4.0) and <b>European Investment Bank</b>, IATI 2.02 global file (attribution required), as the map's layer.</li>
+        <li><b>OECD, Creditor Reporting System</b>, EU institutions as provider (code 4EU001), activity-level microdata through the SDMX API; OECD terms of use, free reuse with attribution. <b>OECD, DAC2a</b>, net ODA by recipient (measure 206), current prices.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart areas 919, 975, 918 and 917, series DT.DOD.DPPG.CD with its commitment and disbursement series; CC BY 4.0, release of __IDS_UPDATED__.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the layer's aggregates by country, year, sector and institution, the aid aggregates, the two debt series per country and the 150 largest records with their coordinates: <a href="__DATA_URL__">__DATA_FILE__</a>.</dd>
+  </dl>
+</section>

@@ -1,0 +1,101 @@
+<!-- Nordic countries: the prose and section order of docs/nordics/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/nordics.json. -->
+<div class="head">
+  <span class="kicker">Lender profile · Denmark, Finland, Iceland, Norway, Sweden</span>
+  <h1>Nordic countries</h1>
+  <p class="lede"><strong>Five providers, read as one: Denmark, Finland, Iceland, Norway and Sweden.</strong> __CRS_N__ activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, all of it grants (__CRS_LOANS_N__ loans); by provider, __PROVIDERS_USD__. The largest purpose is __CRS_TOP_SECTOR__, USD __CRS_TOP_SECTOR_USD__ m; __CRS_TOP_COUNTRY__, __CRS_TOP2_COUNTRY__ and __CRS_TOP3_COUNTRY__ receive the most.</p>
+  <p class="lede">The Nordic footprint on the ground is one company's: Scatec, the Norwegian developer, owns __N_GEM__ of the power units with a Nordic owner in the map's layer, solar and hydro from Egypt's Benban to South Africa, Rwanda and Mozambique, with Norfund, Finnfund, KLP and Denmark's Frontier Energy fund beside it, and Equinor in two pipeline segments. Direct-investment stock is USD __FDI_STOCK_BN__ bn where the five report it; Norway and Sweden publish no African partner. What African governments owe the five is USD __IDS_STOCK__ m at the end of __IDS_TO__.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b> and DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> and FDI positions <b>__FDI_FROM__–__FDI_TO__</b> (Denmark, Finland, Iceland), fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · Global Energy Monitor as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ loans</dd></div>
+  <div class="kpi"><dt>USD __CRS_HARD_USD__ m</dt><dd><b>of it for things that get built</b>, __CRS_HARD_N__ records over the seven years</dd></div>
+  <div class="kpi"><dt>USD __FDI_STOCK_BN__ bn</dt><dd><b>Nordic direct-investment stock</b> in Africa at the end of __FDI_TO__ where reported: Denmark, Finland and Iceland; Norway and Sweden publish no African partner</dd></div>
+  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to the Nordic countries</b> by __IDS_N__ governments at the end of __IDS_TO__, __IDS_TOP__ first; __N_GEM__ power units with a Nordic owner in the map's layers</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Aid is drawn at each country's interior point, sized by seven years of commitments; the CRS carries no coordinates, so a country point is the honest place. Power units with a Nordic owner sit at Global Energy Monitor's coordinates in the map's status colours. Debt owed to the Nordic countries is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with a Nordic owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw dia"></span>Power units with a Nordic owner (GEM)</label>
+    
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to the Nordic countries (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Nordic aid by country, energy assets with a Nordic owner, and debt owed to the Nordic countries">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The five providers are summed in the bubbles; the per-provider split is in the chart below. Norfund's and Swedfund's company investments, and Norway's and Sweden's investment stocks, have no country-level open series, so the ground footprint is what GEM's owner field holds.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">Nordic CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of Nordic aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Nordic aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from the Nordic countries to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net Nordic ODA to Africa per year"></svg></div>
+    <div class="chart"><h3>Nordic direct-investment stock by country, end __FDI_TO__</h3><p class="sub">USD million, OECD FDI positions, outward, immediate counterpart.</p><svg id="c-fdi" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Nordic FDI stock by African country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Nordic aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Nordic aid to Africa by recipient country"></svg></div>
+    <div class="chart"><h3>Who gives: the five providers</h3><p class="sub">USD million committed __CRS_FROM__–__CRS_TO__ with the number of activities, by provider.</p><svg id="c-prov" viewBox="0 0 520 180" role="img" aria-label="Bar chart of aid commitments by provider"></svg></div>
+  </div>
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">Each of the five reports to the OECD at activity level: Danida, the Finnish foreign ministry, Iceland's agency, Norad and the Norwegian foreign ministry, Sida. Together they give __CRS_TITLES__ distinct titles for __CRS_N__ records, grants to governments, multilateral trust funds and NGOs, with climate, energy access, governance and humanitarian aid the recurring purposes. Norway's and Sweden's records are the largest.</p>
+  <p>The purpose codes are the reliable part. The descriptions often name a region or a town (__CRS_PLACED__ records mention one), but the CRS carries no coordinates, so the aid is drawn at country points and kept off the project map.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="energy">
+  <h2>Power units with a Nordic owner</h2>
+  <p class="lead">The map's power layer carries an owner field; this table is those records filtered for a Nordic company. Scatec dominates: its solar plants under Egypt's and South Africa's procurement rounds, its hydro in Uganda, Rwanda and Mozambique, and a release-and-restart history that the status column shows. Norfund and Finnfund hold stakes beside it, KLP and Frontier Energy as investors, Wärtsilä as an engine supplier that kept a plant, and Equinor in two pipeline segments.</p>
+  __TABLE_ENERGY__
+</section>
+
+<section id="series">
+  <h2>Country-year series: investment stock, net aid, debt</h2>
+  <p class="lead">Three official series describe Nordic money in Africa one country and one year at a time, the first only in part. The OECD's FDI positions carry African partners for Denmark, Finland and Iceland; Norway and Sweden report none at this level, so their investors (Norfund, Scatec, Equinor, Swedfund) are visible only in the owner field. The DAC2a table gives net ODA by recipient, summed over the five. The World Bank's debt statistics give what each government owes the five, which is little: these are grant providers.</p>
+  <h3>Direct-investment stock by partner country</h3>
+  __TABLE_FDI__
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ net ODA from the Nordic countries to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to the Nordic countries</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics, bilateral creditor counterparts 003, 018, 020, 008 and 010, summed. Sovereign and sovereign-guaranteed borrowing only.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as each of the five reports it. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>, as the map carries them. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>GEM and TeleGeography records use the map's own mapping. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. FDI stock is the OECD's net position, immediate counterpart, summed over the reporters that publish African partners. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Location</dt><dd>Aid and the series are drawn at the <b>country's interior point</b>. Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>Norway's and Sweden's investment stocks</b> by African country are not published at the OECD's level; the national statistics publish Africa as a region.</li>
+        <li><b>Norfund's, Swedfund's, IFU's and Finnfund's portfolios</b> are published as company lists with amounts per investment on their own sites; the site does not read them yet. Norfund's is the largest and would add Globeleq's plants.</li>
+        <li><b>The five providers' IATI files</b> carry locations for many projects; the site does not read them yet.</li>
+        <li><b>Submarine cables</b>: the map's cable layer names no Nordic owner on an African landing.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>OECD, Creditor Reporting System</b>, Denmark, Finland, Iceland, Norway and Sweden as providers (DAC codes 3, 18, 20, 8, 10), pooled, activity-level microdata through the SDMX API; OECD terms of use, free reuse with attribution. <b>OECD, DAC2a</b>, net ODA by recipient (measure 206), current prices. <b>OECD, FDI positions by partner country</b> (BMD4), Denmark, Finland and Iceland outward, summed.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart areas 003, 018, 020, 008 and 010, summed; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year, purpose and agency, the series per country and the filtered energy records: <a href="__DATA_URL__">__DATA_FILE__</a>.</dd>
+  </dl>
+</section>

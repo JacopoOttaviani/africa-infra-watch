@@ -48,6 +48,9 @@ thinned harder for the dashboard and clipped to a window around its frame at
 build time (`LINE_WINDOW` in `build_dashboard.py`), so a cable to India is drawn
 only where it runs around the continent; the record builders themselves are
 shared with the map. Both pages use one status palette.
+**Lender profiles** are a third kind of page, one per lending country or
+bloc (twelve so far: Russia, Turkey, Italy, China, the EU, the United States, Germany, France, Spain, Japan, the Nordic countries and the Gulf states, under `docs/<slug>/`), reached from the
+**Lenders** menu, the first button of the top bar on every page; see "Lender profiles" below.
 
 ## Sources
 
@@ -168,6 +171,215 @@ is described. The layer's GeoJSON carries the simplified footprints as
 `MultiLineString` rings (a buffered road is a 2 m sliver, so rings are stroked,
 never filled) and every other record as a `Point`.
 
+## Lender profiles
+
+One page per lending country or bloc, at `docs/<slug>/` (served at
+`…/africa-infra-watch/<slug>/`), reached from the **Lenders** menu, the first
+button of the top bar on the map, the dashboard and every profile. The menu
+opens a panel that lists the profiles, single countries apart from groups of
+countries (`DONOR_BLOCS`), with the comparison of the seven at its foot; on a
+profile the button names it ("Lenders · China") and the panel marks it. It is
+a `<details>`, so it opens without scripts; a small script only closes it on
+an outside click or Escape. One row stays one row: below 1200 px the map's
+and the dashboard's bar drops to icons, so it clears the map's own controls. A profile is a reading page in the site's frame, not a map
+layer: a lede, four headline figures, a small map of what can be placed, two
+charts, the tables behind them (rendered at build time, so crawlers read the
+substance), and a "How to read this page" section with the sources, licences,
+status rules and what is absent and why. Its data pack is published beside the
+other data files (`docs/data/donors/<slug>.json`) and listed in the sitemap and
+`llms.txt`.
+
+Three files make a profile, plus one list entry:
+
+- `shared.py` → `DONORS`: slug, name, the two-letter badge on the button,
+  title and description. The Lenders menu (`donor_nav`) is rendered from
+  this list into every template at the `<!--__DONORS__-->` marker, and its
+  styles (`LMENU_CSS`) at `/*__LMENU_CSS__*/`, so adding an entry adds it to
+  the menu everywhere on the next build. A profile appears only once its data
+  pack exists in `data/donors/`.
+- `fetch_donors.py` → one `fetch_<slug>()` writing `data/donors/<slug>.json`:
+  a country-year backbone fetched from an open API, plus the hand-kept tables
+  that no API publishes, each with the source beside every row and a note
+  above the table saying when it was read.
+- `donors/<slug>.html`: the prose and section order, with `__TOKENS__` for
+  every figure stated, filled by the builder from the pack so nothing drifts.
+- `build_donors.py` → one `build_<slug>()` returning the tokens (figures and
+  rendered tables) and the payload the page draws (map points, series, bars).
+  The frame shared by all profiles is `donor.template.html`; `wrap_document`
+  makes every absolute site link relative to the profile's folder.
+
+**Russia** (`fetch_sources.py`-style notes in `fetch_donors.py`): there is no
+Russian counterpart to AidData, and Russia reports no project-level aid to the
+OECD and nothing to IATI, so the profile is built on what exists. The backbone
+is the World Bank's International Debt Statistics (API source 6): public and
+publicly guaranteed debt owed by each African government to the Russian
+Federation (counterpart-area `087`) and to the USSR (`078`) by year, stock,
+commitments and disbursements, CC BY 4.0, refreshed every December; the series
+starts in 1991 (before that the creditor is the USSR) and the flow series'
+projection years are dropped. Hand-kept, in the script: the four Global Energy
+Monitor records with a Russian vendor, owner or parent (El Dabaa is booked
+under Egypt's own authority, the Russian role is in the reactor model), the 15
+Rosatom agreements from the World Nuclear Association's "Emerging nuclear
+energy countries" page, the Bank of Russia's outward-investment table (updated
+May 2023, ends January 2022, key countries confidential) and ten corporate
+holdings from the press, which the page lists but does not draw unless
+switched on. What a loan paid for is only known where a public source says so
+(`RUSSIA_LOAN_PURPOSE`). Not used, and why, is stated on the page: GEM's Oil
+and Gas Extraction Tracker (request form only), GIGA's greenfield FDI dataset
+(login and licence), OECD development-finance statistics (no Russian records
+at recipient level).
+
+**Turkey**: no public register of Turkish investment or contracting in
+Africa exists either, so the profile rests on what is official. Fetched live:
+the OECD Creditor Reporting System's activity-level microdata for Turkey as
+provider (SDMX, dataflow `DSD_CRS@DF_CRS`, recipients keyed as ISO3 plus the
+`F*_X` "Africa unspecified" regions, `MD_DIM=DD` for microdata; one request for
+2018–2024, the years Turkey has reported at activity level, 10 MB in a few
+seconds), the OECD DAC2a net-ODA table by recipient (measure 206, current
+prices, 2010 on), the OECD FDI positions by partner country (BMD4, outward,
+net, all resident units, immediate counterpart) and the World Bank IDS for
+creditor `055`. Hand-kept, in the script: 58 placed works read from Türk
+Eximbank's "sample transactions" page and the project pages of Summa, Yapı
+Merkezi and Karpowership, with the company's coordinates where its page gives
+them and a hand-placed town, corridor or port otherwise; the 13 Turkish-owned
+power units come from the site's own GEM layer, matched on the owner field.
+Two things bite in the CRS feed: each activity arrives as four rows
+(commitment and disbursement, current and constant prices) and the commitment
+and disbursement rows carry *different* microdata ids, so activities are keyed
+on the OECD id they share (`OECD_ID`), and a handful of rows have no OECD id and
+are matched on their content; and the OECD's bulk CRS files sit behind a
+browser challenge, so the SDMX query is the route. The page says that no CRS
+record names a town, which is why the aid is drawn at country points and kept
+off the project map.
+
+**Italy**: the one lender with an official, placed project list, so the
+profile is mostly the site's own records filtered. From the map's layers:
+the Piano Mattei projects (`data/piano_mattei.geojson`), the power units,
+pipeline segments and cables whose owner field names an Italian company
+(`ITALIAN_OWNER` in `fetch_donors.py`: Eni, Enel, Snam, Edison, Building
+Energy, Renco, Sparkle, matched as whole words, so Perenco and Amarenco are
+not Renco), with the pipeline and cable routes thinned for the small map.
+Fetched live, through the same OECD and World Bank blocks as Turkey
+(`crs_activities`, `crs_block`, `oda_block`, `fdi_block`, `ids_pack`): the
+CRS microdata for Italy as provider, one year at a time because a year is
+8–12 MB (Italy reports about 1,400 African activities a year, 7,800 distinct
+titles over 2018–2024, a third of them under the tax-designation flows to
+NGOs and religious bodies), DAC2a net ODA, FDI positions (USD 29.9 bn in
+Africa at end-2024, Algeria and Egypt first) and the IDS for creditor `006`
+(40 debtors). The page says what the largest aid lines are (the 2021 HIPC
+cancellation of Somalia's debt, policy-based loans, the Climate Fund's bond
+subscriptions) and what is absent: Italy's IATI files (not read yet, the
+natural next layer), SACE's and CDP's books, GEM's extraction tracker.
+
+**China**: the project-level record is AidData's, already the map's layer,
+so the profile aggregates `data/aiddata_china_finance.geojson` (by year,
+country, sector, funder with co-financed commitments split evenly, the twenty
+largest records, the precision tiers, what the map's fetch left out from
+`meta.json`) and filters the power, pipeline and cable layers on
+`CHINESE_OWNER` (state and provincial companies, CNPC, CNOOC, Sinopec, the
+three carriers, PEACE Cable). The debt block is fetched twice: `ids_pack`
+takes a `kind`, and for China the headline series is `DPPG` (all public and
+publicly guaranteed debt owed to Chinese creditors, counterpart 730) with
+`BLAT` (bilateral official) beside it, because the IDS files Chinese
+commercial banks under private creditors and the bilateral series alone
+misses them (Angola: USD 2.6 bn bilateral, USD 14.4 bn all Chinese
+creditors at end-2024). Nothing from the OECD: China reports nothing there.
+The page names what is left out and why: AidData ends with 2021
+commitments; MOFCOM's bulletin is an aggregate PDF; CARI's spreadsheets and
+Boston University's loan database state no reuse licence; the extraction
+tracker is request-only.
+
+**The EU, the United States and Germany** follow the same blocks. The EU
+institutions are OECD provider `4EU001` (not `EUI`); the profile aggregates
+the map's own EU finance layer (`layer_block` over `iati_eu_finance.geojson`:
+by year, country, sector bucket from the DAC codes, institution and
+placement tier, the 150 largest records drawn as stars) and fetches the
+World Bank IDS for the EIB (counterpart `919`) and, summed, for the EU
+budget, the European Development Fund and the former EEC (`975`, `918`,
+`917`; `ids_series` takes a tuple of counterparts and adds them); there is no
+FDI series, the Union not being a reporter, and the shared builders tolerate
+`fdi=None`. The United States and Germany use the generic
+`build_oecd_profile` (OECD blocks + the filtered energy layers): providers
+`USA` (55 MB a year of CRS rows, 18,700 African activities in 2024, fetched
+one year at a time) and `DEU` (27 MB a year), creditors `302` and `005`,
+owner patterns `US_OWNER` (the oil majors, General Electric, Symbion,
+Google, Meta, AT&T; not Africa50 or Power Africa, which are not owners) and
+`GERMAN_OWNER` (juwi, ib vogt, BayWa, Siemens). What each page leaves out is
+stated on it: Global Gateway and EFSD+ guarantees leave no record; the US
+development finance corporation's project table has no download; Germany's
+IATI file, with KfW's and GIZ's locations, is the obvious next source.
+
+**France, Spain, Japan, the Nordics and the Gulf** are driven by one spec
+each in `PROFILES` (fetch) and one line each in `BUILDERS` (build), with
+nothing written by hand but the prose: `fetch_profile(slug)` pools one or
+several OECD providers (`crs_activities` keys activities by provider so
+Denmark's and Sweden's ids cannot collide; `oda_block_multi` and
+`fdi_block_multi` sum the series; `ids_series` sums a tuple of World Bank
+counterparts), then filters the map's layers on the lender's owner pattern.
+The Gulf profile (UAE, Saudi Arabia, Kuwait, Qatar: non-DAC providers that
+do report to the CRS) carries a second debt series for the Gulf-based funds
+(Arab Fund 921, OPEC Fund 951, Islamic Development Bank 976, BADEA 953, the
+Arab technical-assistance fund 980) and no FDI series; Japan reports an FDI
+figure for South Africa only; Norway and Sweden publish no African FDI
+partner, so the Nordic stock is Denmark, Finland and Iceland. The OECD's
+public endpoint answers bursts with HTTP 429; `_csv_rows` waits and retries.
+With twelve profiles the row on the map and the dashboard shows the badges
+only (the button title carries the name); the profiles show the names and wrap.
+
+```bash
+python3 fetch_donors.py russia    # World Bank IDS, a few seconds -> data/donors/russia.json
+python3 fetch_donors.py turkey    # OECD CRS, DAC2a, FDI + World Bank IDS, ~30 s -> data/donors/turkey.json
+python3 fetch_donors.py italy     # the same, CRS one year at a time, ~90 s; plus the map's own layers -> data/donors/italy.json
+python3 fetch_donors.py china     # the map's AidData layer + World Bank IDS (two series) + the map's own layers, seconds
+python3 fetch_donors.py eu        # CRS and DAC2a for the EU institutions, IDS for the EIB and the EU budget, the map's EU layer, ~1 min
+python3 fetch_donors.py germany   # CRS one year at a time (~27 MB a year), DAC2a, FDI, IDS, the map's power layer, ~2 min
+python3 fetch_donors.py usa       # CRS one year at a time (~55 MB a year), DAC2a, FDI, IDS, the map's layers, ~3 min
+python3 fetch_donors.py france    # likewise for france, spain, japan, nordics (five providers) and gulf (four providers)
+python3 fetch_donors.py           # every profile in shared.DONORS, about 20 minutes in all
+python3 build_donors.py           # -> docs/<slug>/index.html + docs/data/donors/<slug>.json for every profile
+```
+
+`refresh.py` runs both; a failed profile fetch keeps the previous pack and
+rebuilds from it. The buttons on the map and the dashboard come from their own
+builds, so after changing `DONORS` run `refresh.py --build` (or the two page
+builds) too.
+
+## Debt
+
+`docs/debt/` (**Who Africa owes**) and the dashboard's **Who it owes** box show
+what every African government owes abroad, creditor by creditor, from the
+World Bank's International Debt Statistics (API source 6, CC BY 4.0, refreshed
+every December). The series is `DT.DOD.DPPG.CD`, public and publicly
+guaranteed external debt outstanding by counterpart: every lending country
+(its government and its banks together, so "China" is China Eximbank, CDB and
+the commercial banks), every multilateral institution, bondholders as one
+anonymous creditor, and syndicated "multiple lenders". Use of IMF credit
+(`DT.DOD.DIMF.CD`, which also carries the 2009 and 2021 SDR allocations) is
+shown beside the creditors, never added to them. Libya, Namibia, Seychelles and
+South Sudan do not report to the Debtor Reporting System, so they have no
+creditor detail.
+
+```bash
+python3 fetch_debt.py     # -> data/debt.json (one API call per country, ~1 minute)
+python3 build_debt.py     # -> docs/debt/index.html + docs/data/debt.json
+python3 build_dashboard.py  # the box reads build_debt.dashboard_payload()
+```
+
+`fetch_debt.py` refuses a country whose creditors do not add up to the World
+Bank's own total. The pack keeps every creditor under its own name and a fine
+group; the page and the box fold them into seven groups (multilateral,
+bondholders, China, Europe, Gulf states, United States, other), coloured with
+the `--dg-*` tokens defined in `sections/debt.html` and again in
+`dashboard.template.html`: the first six slots of a categorical order checked
+for colour-blind separation in both themes, and a grey. The page is the lender
+profiles' frame (`donor.template.html`) with `sections/debt.html` as its body;
+`build_debt.py` adds a **Debt** button beside Methodology there, and the map
+and dashboard templates carry the same button (site build only). The box
+follows the dashboard's country filter, and only that: it is country-year
+debt, not records, so it is never summed with the layers' money. The
+dashboard now reads and writes `#c=<ISO2>`, which is how the debt page's
+country table links into it.
+
 ## Rebuild
 
 ```bash
@@ -183,6 +395,8 @@ python3 check_data.py             # refuse a snapshot that shrank or moved
 python3 build_social.py           # -> docs/social.png (link preview) + docs/icon-192.png, apple-touch-icon.png
 python3 build_dashboard.py        # -> dashboard.html  and  docs/dashboard.html
 python3 build_map.py              # -> map.html  and  docs/index.html + docs/data/ + sitemap.xml + llms.txt
+python3 fetch_donors.py           # lender-profile data -> data/donors/*.json (World Bank IDS, seconds)
+python3 build_donors.py           # -> docs/<slug>/index.html + docs/data/donors/
 ```
 
 Both builds inline the favicon and header mark from `brand/` (option A of the
@@ -263,9 +477,11 @@ Two things follow from that:
   in `shared.py` (or set `AIW_SITE_URL` when building) and rebuild.
 
 What `docs/` holds: `index.html` (the map, which loads `data/map.json` at
-runtime), `dashboard.html`, `data/` (the compiled payload, the nine raw
-GeoJSON layers, the basemap and `meta.json` — the site publishes its data,
-linked from the Methodology tab), `social.png`, `favicon.svg` and the two PNG
+runtime), `dashboard.html`, one folder per lender profile (`russia/`, `turkey/`, `italy/`, `china/`, `eu/`, `usa/`, `germany/`, `france/`, `spain/`, `japan/`, `nordics/`, `gulf/`),
+`data/` (the compiled payload, the nine raw
+GeoJSON layers, the basemap, `meta.json` and `donors/` with each profile's
+pack — the site publishes its data, linked from the Methodology tab and from
+each profile), `social.png`, `favicon.svg` and the two PNG
 icons, `sitemap.xml`, `llms.txt`, and `.nojekyll` so Pages serves the folder
 as-is. About 40 MB per snapshot.
 
@@ -303,7 +519,7 @@ data and `llms.txt` cannot drift from the map:
 - **`docs/llms.txt`** ([llmstxt.org](https://llmstxt.org/)): the site, the
   pages, the data files, the status vocabulary and the limits, in Markdown,
   for language-model assistants that look for it.
-- **`docs/sitemap.xml`**: both pages, `llms.txt` and the data files. Submit
+- **`docs/sitemap.xml`**: both pages, the lender profiles, `llms.txt` and the data files. Submit
   `https://jacopoottaviani.com/africa-infra-watch/sitemap.xml` once in Google
   Search Console (property: the `jacopoottaviani.com` domain or the URL
   prefix), and again after a data refresh to speed up re-crawling.

@@ -1,0 +1,103 @@
+<!-- Russia: the prose and section order of docs/russia/. Tokens (double-underscore names)
+     are filled by build_donors.py from data/donors/russia.json, so every figure
+     on the page comes from the data pack and cannot drift from it. -->
+<div class="head">
+  <span class="kicker">Lender profile · Russian Federation</span>
+  <h1>Russia</h1>
+  <p class="lede"><strong>There is no Russian counterpart to AidData's project-level record of Chinese finance.</strong> Russia reports totals, not projects, to the OECD, and nothing to IATI. What is on record is narrower, and this page holds all of it: what each African government owes the Russian Federation, year by year, from the World Bank's debt statistics; the four energy assets in Global Energy Monitor's trackers with a Russian vendor or shareholder; the __N_NUC__ countries with a Rosatom agreement; and the Bank of Russia's thin table of investment stocks, which blanks out the countries that matter. Everything else is press, and is listed as press.</p>
+  <p class="lede">The sources agree on one picture. Egypt's El Dabaa nuclear plant is almost the whole of Russian official money in Africa this decade: a USD 25 bn state export loan signed in 2015, drawing down since 2019. Soviet-era claims of about USD __STOCK_FIRST__ bn in __FIRST_YEAR__ were written down to USD __LOW__ bn by __LOW_YEAR__; the stock has climbed back to USD __STOCK_LATEST__ bn at the end of __DATA_TO__, and Egypt owes __EGY_SHARE__% of it.</p>
+  <p class="asof">World Bank International Debt Statistics to <b>__DATA_TO__</b>, release of <b>__IDS_UPDATED__</b>, fetched <b>__FETCHED__</b> · Global Energy Monitor trackers <b>2026-08</b> and <b>2025-11</b> · World Nuclear Association profile read <b>7 Oct 2026</b> · Bank of Russia table updated <b>17 May 2023</b></p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__N_COUNTRIES__</dt><dd>African governments with <b>debt to Russia or the USSR</b> on record, __FIRST_YEAR__–__DATA_TO__</dd></div>
+  <div class="kpi"><dt>USD __STOCK_LATEST__ bn</dt><dd><b>owed to Russia</b> at the end of __DATA_TO__, Egypt __EGY_SHARE__% of it</dd></div>
+  <div class="kpi"><dt>__N_COMMIT__</dt><dd><b>new Russian loans since 2000</b> to __N_COMMIT_COUNTRIES__ countries, USD __COMMIT_SUM__ bn, of which El Dabaa USD 25 bn</dd></div>
+  <div class="kpi"><dt>__N_GEM__ + __N_NUC__</dt><dd><b>energy assets</b> with a Russian role in GEM's trackers, and <b>countries with a Rosatom agreement</b></dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Sovereign debt is drawn at each country's interior point, sized by the latest stock owed to Russia; hover for the loans behind it. Energy assets sit at their GEM coordinates in the map's status colours. Nuclear agreements and corporate holdings are country-level only, and the holdings, which rest on press reports, are off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-loan,g-lbl" checked><span class="sw"></span>Sovereign debt to Russia (World Bank IDS)</label>
+    <label><input type="checkbox" data-g="g-asset" checked><span class="sw dia"></span>Energy assets with a Russian role (GEM)</label>
+    <label><input type="checkbox" data-g="g-nuc" checked><span class="sw ring"></span>Rosatom agreements (WNA)</label>
+    <label><input type="checkbox" data-g="g-corp"><span class="sw sq"></span>Corporate holdings (press, not a dataset)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with sovereign debt to Russia by country, energy assets with a Russian role, Rosatom agreements and corporate holdings">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">Countries whose last reported balance predates 2020 are drawn at that last figure. The map's own lender filter does not carry Russia: the records here are country-year balances and agreements, not projects, and are kept off the project map on purpose.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Africa's debt stock owed to Russia, __FIRST_YEAR__–__DATA_TO__</h3><p class="sub">Public and publicly guaranteed debt, current USD, summed over __N_COUNTRIES__ countries. World Bank International Debt Statistics, counterpart “Russian Federation”.</p><svg id="c-line" viewBox="0 0 520 240" role="img" aria-label="Line chart of Africa's debt stock owed to Russia by year"></svg></div>
+    <div class="chart"><h3>Who owes Russia now</h3><p class="sub">Stock at the latest reported year, USD million. Countries whose last report predates 2020 are marked with the year and drawn lighter.</p><svg id="c-bar" viewBox="0 0 520 300" role="img" aria-label="Bar chart of debt owed to Russia by country"></svg></div>
+  </div>
+</section>
+
+<section id="loans">
+  <h2>Sovereign loans: World Bank International Debt Statistics</h2>
+  <p class="lead">The IDS publishes every low- and middle-income borrower's external debt by individual creditor, from the borrowers' own reporting to the World Bank's Debtor Reporting System. The Russian Federation is counterpart 087; the USSR, for claims made before 1992, is 078. For each African country and year it gives the stock owed, new commitments, disbursements and repayments, from 1970 to __DATA_TO__. It is open (CC BY 4.0), machine-readable through the same World Bank API the map's other fetchers use, and refreshed every December.</p>
+  <p>What it cannot say is what a loan paid for. The purpose column below is filled only where a public source says so: El Dabaa, Angola's satellite. It also sees only sovereign and sovereign-guaranteed borrowing, so Rusal's mines, Lukoil's blocks and VTB's 2013 loans to Mozambican state companies are invisible here.</p>
+  __TABLE_IDS__
+  <p class="note">Stocks that end before __DATA_TO__ are countries that stopped reporting a Russian balance, usually after a write-off: Russia cancelled Soviet-era claims on Ethiopia (USD 5.5 bn, 2005), Algeria (2006), Libya and most of the heavily indebted poor countries. The IDS records a cancellation as the stock going to zero, not as a flow. The Soviet-era column is the peak stock owed to the USSR under counterpart 078.</p>
+</section>
+
+<section id="assets">
+  <h2>Energy assets with a Russian role: Global Energy Monitor</h2>
+  <p class="lead">Four records in GEM's trackers carry a Russian vendor, owner or parent. Two of them are already on the map, in the power and pipelines layers. The map's power layer takes GEM's Integrated Power Tracker; the Nuclear Power Tracker's August 2026 release adds the reactor model, which is how El Dabaa shows up as Russian at all: GEM books its owner as Egypt's Nuclear Power Plants Authority, and the Russian role is in the model (VVER-1200) and on the wiki page.</p>
+  <p>GEM's Oil and Gas Extraction Tracker would add the upstream stakes (Lukoil in Ghana, the Republic of the Congo, Egypt and Cameroon; Gazprom in Algeria; Rosneft in Mozambique and Egypt; Tatneft in Libya), but it is released only through a request form, not the open bucket the fetcher reads, so it is not here.</p>
+  __TABLE_GEM__
+</section>
+
+<section id="nuclear">
+  <h2>Nuclear agreements: World Nuclear Association</h2>
+  <p class="lead">The WNA's <a href="https://world-nuclear.org/information-library/country-profiles/others/emerging-nuclear-energy-countries" target="_blank" rel="noopener noreferrer">Emerging nuclear energy countries</a> profile is the one maintained, dated record of Rosatom's African agreements. It is a narrative page, not a dataset, and almost every entry is a memorandum with no money, no site and no date of works. Only Egypt has a contract and a construction site. Read as <em>announced</em> records at country level they are honest; read as investment they are not.</p>
+  __TABLE_NUC__
+</section>
+
+<section id="fdi">
+  <h2>Direct investment stock: Bank of Russia</h2>
+  <p class="lead">The central bank's table of outward direct investment positions by partner country is the only official Russian figure per African country. It was last updated in May 2023 and ends at 1 January 2022; the positions that matter, Algeria, Angola, the Republic of the Congo, Libya, Morocco and Mozambique, are suppressed as confidential. What remains is small: Egypt USD 62 m, Mauritius USD 45 m, South Africa USD 33 m. Shown here for the record, and never drawn.</p>
+  __TABLE_CBR__
+</section>
+
+<section id="corporate">
+  <h2>Corporate holdings: press and company statements</h2>
+  <p class="lead">The mining and oil stakes that make up most of the Russian private footprint have no open tracker. The list below is what the press and the companies name, with the source beside each line. It is a reading list, not data: several entries are exits rather than investments, and none is drawn on the map unless switched on above.</p>
+  __TABLE_CORP__
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the debt table, <b>one country</b> and its balance with the Russian Federation by year. In the assets table, <b>one GEM record</b> (a plant or a pipeline segment). In the agreements table, <b>one country's relationship with Rosatom</b>, however many memoranda it spans. In the holdings table, <b>one company stake</b> as a named source describes it.</dd>
+    <dt>Status</dt><dd>GEM assets use the map's five statuses, mapped as on the map. Rosatom agreements are <b>announced</b> records, whatever a memorandum calls itself; only El Dabaa is under construction. Debt balances have no status: a loan is approved when committed, disbursing while drawn, and then repaid, and the table shows the money rather than a label.</dd>
+    <dt>Money</dt><dd>Debt figures are the World Bank's, in <b>current US dollars</b>, bilateral public and publicly guaranteed debt only. They are balances, not project values, and are <b>never added to the map's lenders</b>: a debt stock is what is still owed, a commitment is what was signed, and the two are shown side by side rather than summed. Bank of Russia stocks are USD million, directional principle, as the Bank publishes them.</dd>
+    <dt>Location</dt><dd>Debt, agreements and holdings are drawn at the <b>country's interior point</b>, the same point the map uses for records it can place no finer than the country. GEM assets sit at GEM's coordinates (exact for El Dabaa and Lurio, approximate for Itu, a route for the pipeline).</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>GEM's Oil and Gas Extraction Tracker</b>, which holds the upstream stakes, is released through a request form only.</li>
+        <li><b>GIGA's greenfield FDI dataset</b> (11,233 projects in Africa 2013–2020 with investor origin) needs a GESIS login and a licence check before any row could be published.</li>
+        <li><b>OECD development-finance statistics</b> hold no Russian records at recipient level: the query for Russia as a provider returns nothing.</li>
+        <li><b>AidData and IATI</b> have no Russian dataset; Russia does not publish to IATI.</li>
+        <li><b>Think-tank reports</b> (IFRI, CSIS, GIS Reports) cite UNCTAD, SIPRI and fDi Markets totals, with no data annex; they put Russia under 1% of foreign direct investment in Africa.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>World Bank, International Debt Statistics</b> (<a href="https://data.worldbank.org/products/ids" target="_blank" rel="noopener noreferrer">data.worldbank.org</a>), source 6, series DT.DOD.BLAT.CD, DT.COM.BLAT.CD and DT.DIS.BLAT.CD by counterpart area; CC BY 4.0. Release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Nuclear Power Tracker (August 2026), Global Integrated Power Tracker (August 2026) and Global Gas Infrastructure Tracker (November 2025); CC BY 4.0.</li>
+        <li><b>World Nuclear Association</b>, Emerging nuclear energy countries, read 7 October 2026; a hand-kept table of __N_NUC__ rows.</li>
+        <li><b>Bank of Russia</b>, outward direct investment positions by partner country, table 16e-dir_inv.xlsx, updated 17 May 2023.</li>
+        <li><b>Press and company statements</b> for the corporate holdings, each row linked to its source.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the full year-by-year balances per country: <a href="__DATA_URL__">__DATA_FILE__</a>. The debt series are re-fetched from the World Bank API with every data refresh; the hand-kept tables live in the fetcher's source and change when a source is re-read.</dd>
+  </dl>
+</section>

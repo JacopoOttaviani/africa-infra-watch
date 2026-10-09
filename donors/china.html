@@ -1,0 +1,98 @@
+<!-- China: the prose and section order of docs/china/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/china.json, so every
+     figure on the page comes from the data pack and cannot drift from it. -->
+<div class="head">
+  <span class="kicker">Lender profile · People's Republic of China</span>
+  <h1>China</h1>
+  <p class="lede"><strong>China publishes no project list, no aid statistics by recipient and nothing to the OECD or IATI; what exists is a reconstruction.</strong> AidData's Global Chinese Development Finance Dataset rebuilds every Chinese official commitment from public records, project by project, and the map already draws its infrastructure subset as triangles: __AID_N__ commitments to __AID_COUNTRIES__ African countries between __AID_FROM__ and __AID_TO__, USD __AID_USD_BN__ bn in constant 2021 dollars, __AID_LOANS_N__ of them loans worth USD __AID_LOANS_BN__ bn and __AID_GRANTS_N__ grants worth USD __AID_GRANTS_BN__ bn. The China Export-Import Bank alone accounts for __AID_EXIM_PCT__% of the money; __AID_TOP_COUNTRY__ took USD __AID_TOP_COUNTRY_BN__ bn of it, more than any other country.</p>
+  <p class="lede">The other half of the record is what remains to be paid. The World Bank's debt statistics put public and publicly guaranteed debt owed to Chinese creditors at USD __IDS_ALL_BN__ bn at the end of __IDS_TO__, across __IDS_N__ governments, down from a peak of USD __IDS_PEAK_BN__ bn in __IDS_PEAK_YEAR__; USD __IDS_BL_BN__ bn of it is bilateral official lending, the rest Chinese commercial banks and other creditors. __IDS_TOP__ owes the most, USD __IDS_TOP_BN__ bn. The map's own layers add __N_GEM__ power units, __N_PIPES__ pipelines and __N_CABLES__ submarine cables with a Chinese owner.</p>
+  <p class="asof">AidData __AID_RELEASE__, commitments __AID_FROM__–__AID_TO__, as the map draws it · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b>, fetched <b>__FETCHED__</b> · Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>USD __AID_USD_BN__ bn</dt><dd><b>Chinese official commitments</b> to African infrastructure __AID_FROM__–__AID_TO__, 2021 dollars, __AID_N__ projects</dd></div>
+  <div class="kpi"><dt>USD __IDS_ALL_BN__ bn</dt><dd><b>owed to Chinese creditors</b> by __IDS_N__ governments at the end of __IDS_TO__, USD __IDS_BL_BN__ bn of it bilateral official</dd></div>
+  <div class="kpi"><dt>__AID_PRECISE_PCT__%</dt><dd><b>of the projects placed to a site or within 5 km</b>; __AID_FOOTPRINTS__ carry a footprint traced in OpenStreetMap</dd></div>
+  <div class="kpi"><dt>__N_GEM__ + __N_PIPES__ + __N_CABLES__</dt><dd><b>power units, pipelines and cables</b> with a Chinese owner in the map's layers; __GEM_MW__ MW operating</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Commitments are summed at each country's interior point, sized by the twenty-one years of money; the 150 largest projects are drawn where AidData places them, in the map's status colours, and every one of the __AID_N__ is on the main map. CNPC's and CNOOC's pipelines are drawn as routes, the cables with a Chinese carrier as dotted lines, power units with a Chinese owner as diamonds. Debt owed to Chinese creditors is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Commitments by country (AidData)</label>
+    <label><input type="checkbox" data-g="g-proj" checked><span class="sw tri"></span>150 largest projects (AidData)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with a Chinese owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw dia"></span>Power units with a Chinese owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-cables" checked><span class="sw bar cable"></span>Cables with a Chinese carrier (TeleGeography)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to Chinese creditors (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Chinese official commitments by country, the largest Chinese-financed projects, pipelines, power units and cables with a Chinese owner, and debt owed to Chinese creditors">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">A commitment and a debt are two views of the same money at different dates: the commitment is what was signed, in 2021 dollars; the debt is what is still owed, in current dollars, after drawdowns, repayments and restructurings. The two are shown side by side and never added. The 2Africa, SeaMeWe and PEACE cables run far beyond the frame and are cut at it.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Commitments per year, __AID_FROM__–__AID_TO__</h3><p class="sub">USD billion, constant 2021 prices, infrastructure commitments to African recipients; the dataset ends in 2021.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Chinese official commitments to African infrastructure per year"></svg></div>
+    <div class="chart"><h3>Projects per year</h3><p class="sub">Count of commitments, the same records.</p><svg id="c-n" viewBox="0 0 520 240" role="img" aria-label="Column chart of Chinese-financed projects per year"></svg></div>
+    <div class="chart"><h3>Africa's debt owed to Chinese creditors, 2000–__IDS_TO__</h3><p class="sub">Public and publicly guaranteed debt to all Chinese creditors, current USD, summed over the debtors on record. World Bank IDS, counterpart "China".</p><svg id="c-debt" viewBox="0 0 520 240" role="img" aria-label="Line chart of Africa's debt stock owed to Chinese creditors by year"></svg></div>
+    <div class="chart"><h3>Who owes Chinese creditors now</h3><p class="sub">Stock at the end of __IDS_TO__, all Chinese creditors.</p><svg id="c-owe" viewBox="0 0 520 300" role="img" aria-label="Bar chart of debt owed to Chinese creditors by country"></svg></div>
+    <div class="chart"><h3>Who lent: the funders</h3><p class="sub">USD billion of commitments by Chinese official lender or agency, 2021 prices; co-financed commitments split evenly.</p><svg id="c-fund" viewBox="0 0 520 260" role="img" aria-label="Bar chart of Chinese commitments by funder"></svg></div>
+    <div class="chart"><h3>What it paid for, by sector</h3><p class="sub">USD billion with the number of projects, AidData's sector buckets as the map uses them.</p><svg id="c-sect" viewBox="0 0 520 260" role="img" aria-label="Bar chart of Chinese commitments by sector"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD billion of commitments, __AID_FROM__–__AID_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Chinese commitments by recipient country"></svg></div>
+    <div class="chart"><h3>Where the projects stand</h3><p class="sub">Count of projects by the map's status, as AidData's implementation status maps to it.</p><svg id="c-status" viewBox="0 0 520 140" role="img" aria-label="Bar chart of Chinese-financed projects by status"></svg></div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>Projects: AidData's reconstruction</h2>
+  <p class="lead">AidData's method, Tracking Underreported Financial Flows, assembles each commitment from official documents, contracts, debt reports, press and company statements, and records what it could and could not establish: the lender, the implementer, the terms where known, the implementation status, and the amount, estimated where no figure was published (__AID_ESTIMATED__ of the __AID_N__ records). The map's layer keeps the infrastructure subset as AidData flags it, and leaves out the __AID_UMBRELLA__ umbrella agreements whose money reappears in the projects beneath them, the __AID_PLEDGES__ pledges and memoranda that AidData itself excludes from its totals, and the __AID_NOT_INFRA__ commitments that are not physical infrastructure, so no dollar is counted twice and the layer has no announced records.</p>
+  <p>__AID_ODA_LIKE__ of the commitments are ODA-like, __AID_OOF_LIKE__ other official flows at or near market terms; __AID_COFIN__ were co-financed with other lenders, and AidData flags __AID_DISTRESS__ as having gone into financial distress. By sector the largest is __AID_TOP_SECTOR__, USD __AID_TOP_SECTOR_BN__ bn. Status: __AID_OPERATING__ operating, __AID_BUILDING__ under construction, __AID_APPROVED__ approved, __AID_STALLED__ stalled.</p>
+  __TABLE_LARGE__
+  <h3>Who lent</h3>
+  __TABLE_FUNDERS__
+</section>
+
+<section id="debt">
+  <h2>Debt owed to Chinese creditors: World Bank International Debt Statistics</h2>
+  <p class="lead">The debtors report; the World Bank publishes, by creditor country. For China the bilateral series, the one the other profiles use, misses the part that matters: the loans of Chinese commercial banks and other non-official creditors are filed under private creditors, not under the bilateral heading. The table therefore leads with all public and publicly guaranteed debt owed to Chinese creditors, and shows the bilateral official part beside it. Africa's stock owed to Chinese creditors rose from USD __IDS_2000_BN__ bn in 2000 to a peak of USD __IDS_PEAK_BN__ bn in __IDS_PEAK_YEAR__ and stood at USD __IDS_ALL_BN__ bn at the end of __IDS_TO__.</p>
+  __TABLE_IDS__
+  <p class="note">Sovereign and sovereign-guaranteed borrowing only, as reported by the debtor; resource-backed loans to state companies outside the guarantee, and loans to countries that do not report to the Debtor Reporting System, are outside the series. A country whose last reported balance predates __IDS_TO__ is shown at that last figure.</p>
+</section>
+
+<section id="energy">
+  <h2>Pipelines, power units and cables with a Chinese owner</h2>
+  <p class="lead">The map's energy and connectivity layers carry an owner field; this table is those records filtered for a Chinese company. The pipelines are CNPC's: the Niger–Benin export line, the Greater Nile line in Sudan and South Sudan, the Mtwara line in Tanzania, with CNOOC in the East African Crude Oil Pipeline. The power units are mostly the hydro and coal projects of Gezhouba, Sinohydro, PowerChina and the provincial companies, many of them stalled. The cables are the ones in which China Mobile, China Telecom or China Unicom hold a share, 2Africa among them, and the PEACE cable from Pakistan to Marseille with its East African landings.</p>
+  __TABLE_ENERGY__
+  <p class="note">Ownership is not finance: a Chinese-built plant financed by China Eximbank and owned by the host utility is in the AidData table, not here, and the two tables overlap only where a Chinese company also kept a stake.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the projects table, <b>one official commitment</b> as AidData records it: one loan, grant or buyer's credit from one or more Chinese official lenders to one recipient; a railway financed in three tranches is three records. In the debt table, <b>one country and one year</b>. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>.</dd>
+    <dt>Status</dt><dd>AidData's implementation status maps as on the map: <b>Pipeline: Commitment</b> is approved, <b>Implementation</b> under construction, <b>Completion</b> operating, <b>Suspended</b> and <b>Cancelled</b> stalled; pledges are left out, so there are no announced records. Debt has no status.</dd>
+    <dt>Money</dt><dd>Commitments are AidData's figures in <b>constant 2021 US dollars</b>, estimated where marked. Debt is the World Bank's stock in <b>current US dollars</b>. The two describe the same money at different dates and are never added, to each other or to the map's other lenders.</dd>
+    <dt>Location</dt><dd>Country bubbles sit at the country's interior point. Projects use AidData's placement, stated in every tooltip: precise (on the OpenStreetMap feature), within 5 km, the centre of a named administrative area, or the country's interior point (__AID_COUNTRY_ONLY__ records). Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>Commitments after 2021.</b> AidData's 3.0 release ends with 2021 commitments; the page and the map say so wherever the layer is described, and the debt series is the only part of the record that reaches __IDS_TO__.</li>
+        <li><b>China's own statistics.</b> The Ministry of Commerce publishes outward investment and contracting by country in an annual PDF bulletin, with no project level; the OECD holds no Chinese records; China does not publish to IATI.</li>
+        <li><b>Collations without a licence.</b> The China Africa Research Initiative at Johns Hopkins redistributes the ministry's investment and contract-revenue figures as spreadsheets, and Boston University's Global Development Policy Center keeps a loan-by-loan database to 2023; neither states a reuse licence, so neither is on the site.</li>
+        <li><b>Oil and gas fields</b> with Chinese operators are in GEM's Oil and Gas Extraction Tracker, released through a request form only; the pipelines are the open part.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>AidData</b>, Global Chinese Development Finance Dataset 3.0 (ODC-By 1.0) with the Geospatial GCDF 3.0 footprints (ODbL, traced in OpenStreetMap), as the map's layer; release __AID_RELEASE__.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 730, series DT.DOD.DPPG.CD and DT.DOD.BLAT.CD with their commitment and disbursement series; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0. <b>TeleGeography</b>, Submarine Cable Map; CC BY-SA 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the commitments by country, year, sector and funder, the twenty largest records, the two debt series per country and the filtered energy records with their routes: <a href="__DATA_URL__">__DATA_FILE__</a>. The debt series are re-fetched with every data refresh; the project records follow the map's AidData fetch.</dd>
+  </dl>
+</section>

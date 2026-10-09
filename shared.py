@@ -125,6 +125,187 @@ SOURCE_INFO = {
 MAP_LAYERS = ("assets", "finance", "finance_wb", "ground", "pipelines", "cables", "china", "eu", "mattei")
 DASHBOARD_LAYERS = MAP_LAYERS
 
+# Lender profiles: one page per lending country or bloc, served at
+# docs/<slug>/ and built by build_donors.py from donor.template.html (the
+# frame every profile shares), donors/<slug>.html (that profile's prose) and
+# data/donors/<slug>.json (its data pack, from fetch_donors.py). Every page
+# links them from the row of buttons above the Methodology button. Adding a
+# profile is one entry here, one fetch function, one fragment.
+DONORS = [
+    {"slug": "russia", "name": "Russia", "badge": "RU",
+     "title": "Russia in Africa's infrastructure",
+     "description": "What the open data holds on Russian money in African infrastructure: "
+                    "sovereign debt owed to the Russian Federation by every African government "
+                    "(World Bank International Debt Statistics), the energy assets with a Russian "
+                    "vendor or shareholder (Global Energy Monitor), Rosatom's nuclear agreements "
+                    "and the Bank of Russia's investment stocks, country by country."},
+    {"slug": "turkey", "name": "Turkey", "badge": "TR",
+     "title": "Turkey in Africa's infrastructure",
+     "description": "What the open data holds on Turkish money in Africa: Turkey's aid activities "
+                    "country by country from the OECD's Creditor Reporting System, net ODA by recipient, "
+                    "Turkish direct-investment stock by African country, sovereign debt owed to Turkey "
+                    "(World Bank International Debt Statistics), the power units with a Turkish owner in "
+                    "Global Energy Monitor's tracker, and the works that Türk Eximbank, Summa, Yapı Merkezi "
+                    "and Karpowership place on the map themselves."},
+    {"slug": "italy", "name": "Italy", "badge": "IT",
+     "title": "Italy in Africa's infrastructure",
+     "description": "What the open data holds on Italian money in Africa: the Italian Government's "
+                    "Piano Mattei project list, Italy's aid activities country by country from the "
+                    "OECD's Creditor Reporting System, net ODA by recipient, Italian direct-investment "
+                    "stock by African country, sovereign debt owed to Italy (World Bank International "
+                    "Debt Statistics), and the power plants, pipelines and submarine cables with Eni, "
+                    "Enel, Snam or Sparkle among their owners in the map's own layers."},
+    {"slug": "china", "name": "China", "badge": "CN",
+     "title": "China in Africa's infrastructure",
+     "description": "What the open data holds on Chinese money in African infrastructure: AidData's "
+                    "project-level record of Chinese official commitments 2000–2021 country by country, "
+                    "lender by lender and sector by sector, what each African government owes Chinese "
+                    "creditors (World Bank International Debt Statistics), and the power plants, pipelines "
+                    "and submarine cables with a Chinese owner in the map's own layers."},
+    {"slug": "eu", "name": "European Union", "badge": "EU",
+     "title": "The European Union in Africa's infrastructure",
+     "description": "What the open data holds on EU money in African infrastructure: the European "
+                    "Commission's and the European Investment Bank's own records from IATI as the map draws "
+                    "them, the EU institutions' aid activities country by country from the OECD's Creditor "
+                    "Reporting System, net ODA by recipient, and what each African government owes the EIB "
+                    "and the EU budget (World Bank International Debt Statistics)."},
+    {"slug": "usa", "name": "United States", "badge": "US",
+     "title": "The United States in Africa's infrastructure",
+     "description": "What the open data holds on US money in Africa: the United States' aid activities "
+                    "country by country from the OECD's Creditor Reporting System, net ODA by recipient, US "
+                    "direct-investment stock by African country, sovereign debt owed to the United States "
+                    "(World Bank International Debt Statistics), and the pipelines, power units and cables "
+                    "with a US owner in the map's own layers."},
+    {"slug": "germany", "name": "Germany", "badge": "DE",
+     "title": "Germany in Africa's infrastructure",
+     "description": "What the open data holds on German money in Africa: Germany's aid activities country by "
+                    "country from the OECD's Creditor Reporting System, net ODA by recipient, German "
+                    "direct-investment stock by African country, sovereign debt owed to Germany (World Bank "
+                    "International Debt Statistics), and the power units with a German owner in the map's own layers."},
+    {"slug": "france", "name": "France", "badge": "FR",
+     "title": "France in Africa's infrastructure",
+     "description": "What the open data holds on French money in Africa: France's aid activities country by country "
+                    "from the OECD's Creditor Reporting System, net ODA by recipient, French direct-investment stock by "
+                    "African country, sovereign debt owed to France (World Bank International Debt Statistics), and the "
+                    "power plants, pipelines and cables with TotalEnergies, EDF, Engie or Orange among their owners."},
+    {"slug": "spain", "name": "Spain", "badge": "ES",
+     "title": "Spain in Africa's infrastructure",
+     "description": "What the open data holds on Spanish money in Africa: Spain's aid activities country by country "
+                    "from the OECD's Creditor Reporting System, net ODA by recipient, Spanish direct-investment stock by "
+                    "African country, sovereign debt owed to Spain (World Bank International Debt Statistics), and the "
+                    "power plants and pipelines with Acciona, Naturgy or Repsol among their owners."},
+    {"slug": "japan", "name": "Japan", "badge": "JP",
+     "title": "Japan in Africa's infrastructure",
+     "description": "What the open data holds on Japanese money in Africa: Japan's aid activities country by country "
+                    "from the OECD's Creditor Reporting System, JICA's loans among them, net ODA by recipient, Japanese "
+                    "direct-investment stock, sovereign debt owed to Japan (World Bank International Debt Statistics), and "
+                    "the power plants with a Japanese owner in the map's own layers."},
+    {"slug": "nordics", "name": "Nordic countries", "badge": "NORD",
+     "title": "The Nordic countries in Africa's infrastructure",
+     "description": "What the open data holds on Nordic money in Africa, Denmark, Finland, Iceland, Norway and Sweden "
+                    "together: their aid activities country by country from the OECD's Creditor Reporting System, net ODA "
+                    "by recipient, direct-investment stock, sovereign debt owed to the five (World Bank International Debt "
+                    "Statistics), and the power plants with Scatec, Norfund or Equinor among their owners."},
+    {"slug": "gulf", "name": "Gulf states", "badge": "GCC",
+     "title": "The Gulf states in Africa's infrastructure",
+     "description": "What the open data holds on Gulf money in Africa, the United Arab Emirates, Saudi Arabia, Kuwait and "
+                    "Qatar together: their aid activities country by country from the OECD's Creditor Reporting System, net "
+                    "ODA by recipient, sovereign debt owed to the four states and to the Gulf-based development funds (World "
+                    "Bank International Debt Statistics), and the power plants, pipelines and cables with ACWA Power, AMEA "
+                    "Power, Masdar, TAQA or the Gulf carriers among their owners."},
+]
+
+# A profile appears on the site once its data pack has been fetched; a listed
+# lender whose fetch has not run yet (or failed) gets no button and no page.
+DONORS = [d for d in DONORS if (DATA / "donors" / (d["slug"] + ".json")).exists()]
+
+
+# Lender profiles that are groups of countries rather than one state; the
+# menu lists them apart from the single countries.
+DONOR_BLOCS = ("eu", "gulf", "nordics")
+
+LENDERS_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6"/>'
+                '<path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 21h18M4 18h16"/></svg>')
+
+# The menu's look, in one place: brand_assets() fills /*__LMENU_CSS__*/ in
+# every template's stylesheet with it. It reuses the .methodbtn look for the
+# button and the site's tokens for the panel, so it follows each theme.
+LMENU_CSS = """
+  /* the Lenders menu (shared.donor_nav): one button in the top bar, the
+     profiles in a panel under it */
+  .lmenu{position:relative}
+  .lmenu>summary{list-style:none;cursor:pointer}
+  .lmenu>summary::-webkit-details-marker{display:none}
+  .lmenu>summary .lm-cur{font-weight:500;color:var(--ink-3)}
+  .lmenu>summary .lm-car{width:11px;height:11px;margin-left:1px;transition:transform .15s}
+  .lmenu[open]>summary{background:var(--surface-2)}
+  .lmenu[open]>summary .lm-car{transform:rotate(180deg)}
+  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:344px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
+  .lm-h{margin:0 2px 10px;font-size:12px;line-height:1.4;color:var(--ink-3);max-width:none}
+  .lm-h b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+  .lm-gl{display:block;margin:10px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .lm-item{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px 6px 6px;border-radius:3px;border:1px solid transparent;color:var(--ink);text-decoration:none;font-family:var(--display);font-size:12.5px;font-weight:600;line-height:1.2}
+  .lm-item:hover{background:var(--surface-2)}
+  .lm-item[aria-current="page"]{background:var(--ink);color:var(--paper)}
+  .lm-item[aria-current="page"] .lm-badge{background:transparent;border-color:color-mix(in srgb,var(--paper) 40%,transparent);color:var(--paper)}
+  .lm-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 4px;border:1px solid var(--rule);border-radius:2px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2);flex:none}
+  .lm-item>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lm-foot{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 8px 2px;border-top:1px solid var(--rule-soft);color:var(--accent);font-family:var(--display);font-size:12.5px;font-weight:700;text-decoration:none}
+  .lm-foot svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .lm-foot:hover span{text-decoration:underline}
+  .lm-foot[aria-current="page"]{color:var(--ink)}
+  .lm-foot em{font-style:normal;font-weight:500;color:var(--ink-3)}
+  @media (max-width:600px){
+    .lmenu>summary .lm-cur{display:none}
+    .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
+  }
+"""
+
+
+def donor_nav(current=None):
+    """The Lenders menu, the first button of the top bar on every page: a
+    <details> whose panel lists the lender profiles, single countries apart
+    from groups of countries, and the comparison of the seven. It opens
+    without scripts; the small script only closes it on an outside click or
+    Escape. Links are absolute, so they also work from an artifact;
+    wrap_document makes them relative for the Pages build. `current` is the
+    slug of the profile being viewed, or "compare": that entry is marked
+    aria-current and named on the button."""
+    if not DONORS:
+        return ""
+    esc = lambda x: html.escape(x, quote=True)
+
+    def item(d):
+        cur = ' aria-current="page"' if d["slug"] == current else ""
+        return (f'<a class="lm-item" href="{site_url(d["slug"] + "/")}"{cur} title="{esc(d["title"])}">'
+                f'<span class="lm-badge">{esc(d["badge"])}</span><span>{esc(d["name"])}</span></a>')
+    single = sorted((d for d in DONORS if d["slug"] not in DONOR_BLOCS), key=lambda d: d["name"])
+    blocs = sorted((d for d in DONORS if d["slug"] in DONOR_BLOCS), key=lambda d: d["name"])
+    here = next((d["name"] for d in DONORS if d["slug"] == current), "Compare" if current == "compare" else "")
+    groups = f'<span class="lm-gl">Countries</span><div class="lm-grid">{"".join(map(item, single))}</div>'
+    if blocs:
+        groups += f'<span class="lm-gl">Groups of countries</span><div class="lm-grid">{"".join(map(item, blocs))}</div>'
+    cmp_cur = ' aria-current="page"' if current == "compare" else ""
+    cur_html = f' <span class="lm-cur">· {esc(here)}</span>' if here else ""
+    return (
+        '<details class="lmenu" id="lmenu">'
+        '<summary class="methodbtn" aria-label="Lender profiles" title="Lender profiles: what the open data holds on each lender\'s money in Africa">'
+        f'{LENDERS_ICON}<span>Lenders{cur_html}</span>'
+        '<svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>'
+        '<nav class="lm-panel" aria-label="Lender profiles">'
+        f'<p class="lm-h"><b>Lender profiles</b>What the open data holds on each lender\'s money in Africa: '
+        f'{len(DONORS)} profiles.</p>{groups}'
+        f'<a class="lm-foot" href="{site_url("compare/")}"{cmp_cur}>'
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7v16H3zM14 4h7v16h-7z"/>'
+        '<path d="M5.5 9h2M5.5 12.5h2M16.5 9h2M16.5 12.5h2"/></svg>'
+        '<span>Compare seven lenders side by side</span></a>'
+        '</nav></details>'
+        '<script>(()=>{const d=document.getElementById("lmenu");if(!d)return;'
+        'document.addEventListener("click",e=>{if(d.open&&!d.contains(e.target))d.open=false;});'
+        'document.addEventListener("keydown",e=>{if(e.key==="Escape"&&d.open){d.open=false;d.querySelector("summary").focus();}});'
+        '})();</script>')
+
 
 # ------------------------------------------------------------------ meta.json
 
@@ -235,17 +416,21 @@ LOGO_MARK = re.sub(r"<svg ", '<svg class="mark" aria-hidden="true" focusable="fa
 SOURCE_LOGOS = {p.stem: p.read_text().strip() for p in sorted((BRAND / "sources").glob("*.svg"))}
 
 
-def brand_assets(page):
+def brand_assets(page, donor=None):
     """Fill the brand markers a template carries: the inline favicon link in
-    its head, the header mark next to each <h1>, the mark's home link and,
-    where the template asks for them, the data-source logos.
+    its head, the header mark next to each <h1>, the mark's home link, the
+    row of lender-profile buttons and, where the template asks for them, the
+    data-source logos.
     The home link is the absolute site URL so it also works from an artifact;
-    wrap_document makes it relative for the Pages build."""
+    wrap_document makes it relative for the Pages build. `donor` is the slug
+    of the profile being built, so its own button reads as the current page."""
     for marker in ("<!--__FAVICON__-->", "<!--__LOGO__-->", "__HOME_URL__"):
         if marker not in page:
             raise SystemExit(f"template missing the {marker} marker")
     return (page.replace("<!--__FAVICON__-->", f'<link rel="icon" href="{FAVICON}">')
                 .replace("<!--__LOGO__-->", LOGO_MARK)
+                .replace("<!--__DONORS__-->", donor_nav(donor))
+                .replace("/*__LMENU_CSS__*/", LMENU_CSS)
                 .replace("/*__SOURCE_LOGOS__*/{}", json.dumps(SOURCE_LOGOS, ensure_ascii=False))
                 .replace("__HOME_URL__", SITE_URL)
                 .replace("__COFFEE_URL__", COFFEE_URL)
@@ -552,11 +737,22 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
     frag = re.sub(r'<meta charset="utf-8">\s*', "", fragment)
     frag = re.sub(r'<meta name="viewport"[^>]*>\s*', "", frag)
     frag = re.sub(r"<title>.*?</title>\s*", "", frag, count=1, flags=re.S)
-    frag = frag.replace(f'class="home" href="{SITE_URL}"', 'class="home" href="index.html"')
+    # Every link into the site (the home link, the Methodology link, the
+    # lender-profile buttons) is absolute in the templates; here it becomes
+    # relative to this page's folder, so the pages also work at any other
+    # address. A profile lives one folder down (russia/index.html).
+    up = "../" * path.count("/")
+
+    def relative(m):
+        rest = m.group(1)
+        if not rest or rest.startswith("#"):
+            rest = "index.html" + rest
+        return f'href="{up}{rest}"'
+    frag = re.sub(r'href="' + re.escape(SITE_URL) + r'([^"]*)"', relative, frag)
     frag = re.sub(r'<link rel="icon" href="data:[^"]*">',
-                  '<link rel="icon" href="favicon.svg" type="image/svg+xml">\n'
-                  '<link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">\n'
-                  '<link rel="apple-touch-icon" href="apple-touch-icon.png">', frag, count=1)
+                  f'<link rel="icon" href="{up}favicon.svg" type="image/svg+xml">\n'
+                  f'<link rel="icon" href="{up}icon-192.png" type="image/png" sizes="192x192">\n'
+                  f'<link rel="apple-touch-icon" href="{up}apple-touch-icon.png">', frag, count=1)
     cut = frag.index("</style>") + len("</style>")
     head_part, body_part = frag[:cut], frag[cut:]
     q = lambda x: html.escape(x, quote=True)
@@ -624,6 +820,10 @@ def write_site_index(facts):
     domain root, which belongs to the user site."""
     day = facts["built"]
     urls = [("", "weekly", "1.0"), ("dashboard.html", "weekly", "0.9"),
+            *[(d["slug"] + "/", "monthly", "0.8") for d in DONORS],
+            *([("debt/", "monthly", "0.8"), ("data/debt.json", "monthly", "0.3")] if (DOCS / "debt" / "index.html").exists() else []),
+            *([("compare/", "monthly", "0.8"), ("data/compare.json", "monthly", "0.3")] if (DOCS / "compare" / "index.html").exists() else []),
+            *[("data/donors/" + d["slug"] + ".json", "monthly", "0.3") for d in DONORS],
             ("llms.txt", "monthly", "0.3"),
             ("data/meta.json", "monthly", "0.2"), ("data/map.json", "monthly", "0.2")]
     urls += [("data/" + f, "monthly", "0.4") for f in LAYER_FILE.values()]
@@ -635,6 +835,9 @@ def write_site_index(facts):
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + body + "</urlset>\n")
 
+    donor_pages = "".join(
+        f"- [{d['title']}]({site_url(d['slug'] + '/')}): {d['description']} "
+        f"Data: {site_url('data/donors/' + d['slug'] + '.json')}\n" for d in DONORS)
     src_lines = "\n".join(
         f"- [{s['name']}]({s['url']}): {s['detail']}. {facts[s['k']]:,} records, data as of "
         f"{s['fresh']}, licence {s['lic']}. GeoJSON: {site_url('data/' + LAYER_FILE[s['k']])}"
@@ -657,7 +860,7 @@ Site: {SITE_URL}
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
 - [Africa Infrastructure Map, dashboard view]({site_url('dashboard.html')}): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
-
+{donor_pages}{"- [Debt: who African governments owe, creditor by creditor](" + site_url("debt/") + "): World Bank International Debt Statistics by creditor, with a card on the dashboard. Data: " + site_url("data/debt.json") + chr(10) if (DOCS / "debt" / "index.html").exists() else ""}{"- [Compare the lenders](" + site_url("compare/") + "): the seven lender profiles side by side, with filters by lender, region or country, year and measure: where each one's money goes (small-multiple maps and a who-leads-where map), what it funds (sector mix), how it is lent (grants, loans, delivery channels, concentration) and how its exposure moved since 2000. Data: " + site_url("data/compare.json") + chr(10) if (DOCS / "compare" / "index.html").exists() else ""}
 ## Data
 
 The compiled payload the map draws, one JSON with column-wise layers:

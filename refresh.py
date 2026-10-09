@@ -42,6 +42,10 @@ def main():
         if run("Fetch the three sources", "fetch_sources.py") != 0:
             sys.exit("\nfetch failed — nothing was rebuilt. Retry the failing layer alone, "
                      "then `python3 refresh.py --build`.")
+        if run("Fetch the lender-profile data", "fetch_donors.py") != 0:
+            print("\nfetch_donors.py failed — the profiles are rebuilt from the data already in data/donors/", flush=True)
+        if run("Fetch debt by creditor (World Bank IDS)", "fetch_debt.py") != 0:
+            print("\nfetch_debt.py failed — the debt section is rebuilt from data/debt.json", flush=True)
 
     if "--basemap" in args or not BASEMAP.exists():
         if run("Build the Natural Earth basemap", "fetch_basemap.py") != 0:
@@ -62,7 +66,7 @@ def main():
     # must be the one they ship with.
     if run("Build the link-preview image", "build_social.py") != 0:
         print("\nbuild_social.py failed — the previous docs/social.png stays", flush=True)
-    for script in ("build_dashboard.py", "build_map.py"):
+    for script in ("build_dashboard.py", "build_map.py", "build_donors.py", "build_debt.py", "build_compare.py"):
         if run(f"Build {script}", script) != 0:
             sys.exit(f"\n{script} failed")
 

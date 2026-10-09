@@ -89,5 +89,137 @@
       15.278,
       6.807
     ]
+  },
+  "russia": {
+    "fetched": "2026-10-08",
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "countries": 32,
+    "gem": 4,
+    "nuclear": 15
+  },
+  "turkey": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 4298,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "works": 58,
+    "gem": 13
+  },
+  "italy": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 10068,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "mattei": 76,
+    "gem": 29,
+    "pipelines": 27,
+    "cables": 8
+  },
+  "china_profile": {
+    "fetched": "2026-10-08",
+    "projects": 2324,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 64,
+    "pipelines": 9,
+    "cables": 9
+  },
+  "debt": {
+    "fetched": "2026-10-08",
+    "fresh": "2025-12-03",
+    "data_to": 2024,
+    "records": 50,
+    "creditors": 137
+  },
+  "germany_profile": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 28650,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 12,
+    "pipelines": 0,
+    "cables": 1
+  },
+  "usa_profile": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 133146,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 10,
+    "pipelines": 33,
+    "cables": 11
+  },
+  "eu_profile": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 22114,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "layer_records": 1992
+  },
+  "france_profile": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 39097,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 96,
+    "pipelines": 24,
+    "cables": 15
+  },
+  "spain_profile": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 12494,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 13,
+    "pipelines": 6,
+    "cables": 1
+  },
+  "japan_profile": {
+    "fetched": "2026-10-08",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 32502,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 9,
+    "pipelines": 1,
+    "cables": 0
+  },
+  "gulf_profile": {
+    "fetched": "2026-10-09",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 6010,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 99,
+    "pipelines": 2,
+    "cables": 18
+  },
+  "nordics_profile": {
+    "fetched": "2026-10-09",
+    "crs_from": 2018,
+    "crs_to": 2024,
+    "crs_activities": 18216,
+    "ids_updated": "2025-12-03",
+    "data_to": 2024,
+    "gem": 65,
+    "pipelines": 2,
+    "cables": 0
   }
 }

@@ -1,0 +1,103 @@
+<!-- United States: the prose and section order of docs/usa/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/usa.json. -->
+<div class="head">
+  <span class="kicker">Lender profile · United States of America</span>
+  <h1>United States</h1>
+  <p class="lede"><strong>The United States is the largest single provider of aid to Africa in the OECD's record, and only a small part of it is infrastructure.</strong> __CRS_N__ activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, __CRS_GRANT_PCT__% of them grants; __CRS_AGENCY_TOP_PCT__% are reported by the __CRS_AGENCY_TOP__, and the largest purpose by far is __CRS_TOP_SECTOR__, USD __CRS_TOP_SECTOR_USD__ m. Only __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, build, renovate or drill something. The 2024 figures are the last full year before the agency was folded into the State Department in 2025.</p>
+  <p class="lede">The money that does build is private and corporate: US direct-investment stock in Africa stood at USD __FDI_STOCK_BN__ bn at the end of __FDI_TO__, __FDI_TOP__, __FDI_TOP2__ and __FDI_TOP3__ first, and the map's own layers carry __N_PIPES__ pipelines with Chevron, ExxonMobil, ConocoPhillips, Apache or Occidental among the owners, __N_GEM__ power units with a US owner, and __N_CABLES__ submarine cables owned by Google, Meta or AT&T. What African governments owe the United States is USD __IDS_STOCK__ m at the end of __IDS_TO__, what is left after the debt relief of the 2000s.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b>, DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> and FDI positions <b>__FDI_FROM__–__FDI_TO__</b>, fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_GRANT_PCT__% grants</dd></div>
+  <div class="kpi"><dt>USD __CRS_HARD_USD__ m</dt><dd><b>of it for things that get built</b>, __CRS_HARD_N__ records over the seven years</dd></div>
+  <div class="kpi"><dt>USD __FDI_STOCK_BN__ bn</dt><dd><b>US direct-investment stock</b> in Africa at the end of __FDI_TO__, __FDI_TOP__ __FDI_TOP_PCT__%, __FDI_TOP2__ __FDI_TOP2_PCT__%</dd></div>
+  <div class="kpi"><dt>__N_PIPES__ + __N_GEM__ + __N_CABLES__</dt><dd><b>pipelines, power units and cables</b> with a US owner in the map's layers; USD __IDS_STOCK__ m owed to the United States by __IDS_N__ governments</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Aid is drawn at each country's interior point, sized by seven years of commitments; the CRS names no coordinates, so a country point is the honest place. The oil majors' pipelines are drawn as routes, the platforms' cables as dotted lines, power units in the map's status colours. Debt owed to the United States is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with a US owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw dia"></span>Power units with a US owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-cables" checked><span class="sw bar cable"></span>Cables with a US owner (TeleGeography)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to the United States (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with US aid by country, pipelines, power units and cables with a US owner, and debt owed to the United States">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The pipelines, power units and cables are the map's own records with a US company among the owners, Chevron's share of the West African Gas Pipeline included; the profile does not add records, it filters. Routes that leave the continent, Google's Equiano to Portugal and Meta's lines to Europe and Asia, are cut at the frame.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">US CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of US aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of US aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from the United States to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net US ODA to Africa per year"></svg></div>
+    <div class="chart"><h3>US direct-investment stock by country, end __FDI_TO__</h3><p class="sub">USD million, OECD FDI positions, outward, immediate counterpart; Mauritius is a holding-company address.</p><svg id="c-fdi" viewBox="0 0 520 300" role="img" aria-label="Bar chart of US FDI stock by African country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of US aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of US aid to Africa by recipient country"></svg></div>
+    <div class="chart"><h3>Who reports US aid</h3><p class="sub">Activities __CRS_FROM__–__CRS_TO__ by reporting agency.</p><svg id="c-agency" viewBox="0 0 520 220" role="img" aria-label="Bar chart of US aid activities by reporting agency"></svg></div>
+  </div>
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">The United States reports to the OECD at activity level, with __CRS_TITLES__ distinct titles for __CRS_N__ records: USAID's programmes, the State Department's, PEPFAR through Health and Human Services, the Peace Corps, the Millennium Challenge Corporation's compacts, the African Development Foundation's grants. The record is health, humanitarian relief and governance; the compacts and a handful of energy and water programmes are the infrastructure, and the development finance corporation's loans and guarantees appear under private-sector instruments where they count as official flows.</p>
+  <p>The purpose codes are the reliable part. The descriptions name implementing partners more often than places (__CRS_PLACED__ records mention a town), and the CRS carries no coordinates, so the aid is drawn at country points and kept off the project map.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="energy">
+  <h2>Pipelines, power units and cables with a US owner</h2>
+  <p class="lead">The map's energy and connectivity layers carry an owner field; this table is those records filtered for a US company. The pipelines are the oil majors' export and field lines in Egypt, Libya, Nigeria and the Gulf of Guinea, with Chevron's stake in the West African Gas Pipeline; the power units include General Electric's and Symbion's stakes; the cables are Google's Equiano down the Atlantic coast and Meta's share of 2Africa, with AT&T in the older consortia.</p>
+  __TABLE_ENERGY__
+  <p class="note">The oil and gas fields themselves are in Global Energy Monitor's extraction tracker, released through a request form only; the pipelines are the open part.</p>
+</section>
+
+<section id="series">
+  <h2>Country-year series: investment stock, net aid, debt</h2>
+  <p class="lead">Three official series describe US money in Africa one country and one year at a time. The OECD's FDI positions, which for the United States are the Bureau of Economic Analysis's figures, give the outward direct-investment stock by partner country; Mauritius's place near the top is a holding-company address, not plants. The DAC2a table gives net ODA by recipient. The World Bank's debt statistics give what each government owes the United States, mostly old food-aid and Export-Import Bank claims that survived the debt relief of the 2000s.</p>
+  <h3>Direct-investment stock by partner country</h3>
+  __TABLE_FDI__
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ US net ODA to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to the United States</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics, bilateral creditor counterpart 302. Sovereign and sovereign-guaranteed borrowing only; the development finance corporation's loans to private borrowers are outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as the United States reports it. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>, as the map carries them. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>GEM and TeleGeography records use the map's own mapping. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. FDI stock is the OECD's net position, all resident units, immediate counterpart. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Location</dt><dd>Aid and the three series are drawn at the <b>country's interior point</b>. Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>The development finance corporation's active projects</b> are a web table updated quarterly, with no download; its IATI files are near-empty.</li>
+        <li><b>The Millennium Challenge Corporation</b> publishes its compacts' data on its own portal; the compacts appear here only as CRS records.</li>
+        <li><b>ForeignAssistance.gov</b> carries the same activities as the CRS with more detail and a bulk download; the OECD record is used so that every provider on the site is read the same way.</li>
+        <li><b>Power Africa's</b> transaction tracker is a programme list, not a register of owners, and is not read.</li>
+        <li><b>Oil and gas fields</b> with US operators are in GEM's extraction tracker, released through a request form only.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>OECD, Creditor Reporting System</b>, United States as provider (DAC code 302), activity-level microdata through the SDMX API, one year at a time; OECD terms of use, free reuse with attribution. <b>OECD, DAC2a</b>, net ODA by recipient (measure 206), current prices. <b>OECD, FDI positions by partner country</b> (BMD4), United States outward.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 302; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0. <b>TeleGeography</b>, Submarine Cable Map; CC BY-SA 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year, purpose and agency, the three series per country and the filtered energy records with their routes: <a href="__DATA_URL__">__DATA_FILE__</a>.</dd>
+  </dl>
+</section>

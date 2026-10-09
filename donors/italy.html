@@ -1,0 +1,115 @@
+<!-- Italy: the prose and section order of docs/italy/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/italy.json, so every
+     figure on the page comes from the data pack and cannot drift from it. -->
+<div class="head">
+  <span class="kicker">Lender profile · Italian Republic</span>
+  <h1>Italy</h1>
+  <p class="lede"><strong>Italy is the one lender on this site with an official, placed project list.</strong> The Piano Mattei portal names __MATTEI_N__ projects in __MATTEI_COUNTRIES__ countries, with a stage, an implementer and a stated figure for __MATTEI_WITH_AMOUNT__ of them, EUR __MATTEI_EUR_BN__ bn in all; the map already draws them as hexagons. Behind the plan sits a full aid record, reported to the OECD at activity level with real titles: __CRS_N__ Italian activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, most of them not the government's own but the projects of religious bodies, NGOs and universities funded through Italy's tax-designation schemes.</p>
+  <p class="lede">The money that dwarfs both is private. Italian direct-investment stock in Africa stood at USD __FDI_STOCK_BN__ bn at the end of __FDI_TO__, __FDI_TOP__ and __FDI_TOP2__ first, where Eni produces gas and oil; the map's own layers carry __N_PIPES__ pipelines with Eni, Snam or Edison among the owners, __N_GEM__ power units owned by Enel, Eni, Building Energy or Renco, and __N_CABLES__ submarine cables with Sparkle. What each African government owes Italy is small by comparison: USD __IDS_STOCK__ m at the end of __IDS_TO__.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b>, DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> and FDI positions <b>__FDI_FROM__–__FDI_TO__</b>, fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · Piano Mattei portal, Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__MATTEI_N__</dt><dd><b>Piano Mattei projects</b> in __MATTEI_COUNTRIES__ countries, EUR __MATTEI_EUR_BN__ bn stated by the portal</dd></div>
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_GRANT_PCT__% grants</dd></div>
+  <div class="kpi"><dt>USD __FDI_STOCK_BN__ bn</dt><dd><b>Italian direct-investment stock</b> in Africa at the end of __FDI_TO__, __FDI_TOP__ __FDI_TOP_PCT__%, __FDI_TOP2__ __FDI_TOP2_PCT__%</dd></div>
+  <div class="kpi"><dt>__N_PIPES__ + __N_GEM__ + __N_CABLES__</dt><dd><b>pipelines, power units and cables</b> with an Italian owner in the map's layers; USD __IDS_STOCK__ m owed to Italy by __IDS_N__ governments</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Piano Mattei projects sit where the map puts them: a named site or town where the portal's description gives one, otherwise the country's interior point, and one fixed point in the Central African Republic for programmes across several countries. Aid is drawn at each country's interior point, sized by seven years of commitments. Eni's pipelines are drawn as routes, Sparkle's cables as dotted lines, power units in the map's status colours. Debt owed to Italy is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-mattei" checked><span class="sw hex"></span>Piano Mattei projects</label>
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with an Italian owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw tri"></span>Power units with an Italian owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-cables" checked><span class="sw bar cable"></span>Cables with Sparkle (TeleGeography)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to Italy (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Piano Mattei projects, Italian aid by country, pipelines, power units and cables with an Italian owner, and debt owed to Italy">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The pipelines, power units and cables are the map's own records with an Italian name among the owners, Eni's share of a Nigerian or Libyan line included; the profile does not add records, it filters. Routes that leave the continent, the Trans-Mediterranean and Greenstream lines into Italy and the cables to the Gulf and India, are cut at the frame.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Piano Mattei by sector</h3><p class="sub">EUR million stated by the portal, with the number of projects; the sector follows a project's first directive.</p><svg id="c-mattei" viewBox="0 0 520 220" role="img" aria-label="Bar chart of Piano Mattei stated amounts by sector"></svg></div>
+    <div class="chart"><h3>Who reports Italy's aid</h3><p class="sub">Activities __CRS_FROM__–__CRS_TO__ by reporting agency: the tax-designation flows to religious bodies and NGOs, universities, the development agency, regions, the foreign ministry.</p><svg id="c-agency" viewBox="0 0 520 220" role="img" aria-label="Bar chart of Italian aid activities by reporting agency"></svg></div>
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">Italian CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of Italian aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Italian aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from Italy to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a; debt relief and loan repayments move the net figure.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net Italian ODA to Africa per year"></svg></div>
+    <div class="chart"><h3>Italian direct-investment stock by country, end __FDI_TO__</h3><p class="sub">USD million, OECD FDI positions, outward, immediate counterpart.</p><svg id="c-fdi" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Italian FDI stock by African country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Italian aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Italian aid to Africa by recipient country"></svg></div>
+  </div>
+</section>
+
+<section id="mattei">
+  <h2>Piano Mattei: the Government's own list</h2>
+  <p class="lead">The Presidency of the Council publishes one page per project, with the plan's directives, the objective, the countries, the implementing body, the partners, the funding source and a five-step progress bar. The map reads all of it and states, on every card, how precisely the project could be placed. __MATTEI_TOP_SECTOR_N__ of the __MATTEI_N__ projects are __MATTEI_TOP_SECTOR_BY_N__; by stated money the largest sector is __MATTEI_TOP_SECTOR__. Stages: __MATTEI_STAGES__.</p>
+  <p>The figures are the portal's own and are read as such: a stated amount may be the whole project's value, other funders' shares included, or Italy's contribution, and the portal does not say which. ELMED, the Tunisia–Sicily interconnector, carries EUR 1.4 bn that is mostly European and Tunisian money; a Climate Fund loan is Italy's alone. The amounts are therefore shown on a line of their own and never added to the lenders' commitments, here or on the map.</p>
+  __TABLE_MATTEI__
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">Italy reports its aid to the OECD at activity level, with __CRS_TITLES__ distinct titles for __CRS_N__ records over the seven years, descriptions that name partners and often towns, a purpose code, a channel and a finance type. What makes the record unusual is who reports it: __CRS_AGENCY_TOP_PCT__% of the activities come under "__CRS_AGENCY_TOP__", the tax-designation scheme through which taxpayers assign a share of their income tax, and a further large share from the NGO scheme and from public universities. The Agency for Development Cooperation, the regions and the foreign ministry report fewer, larger records. The biggest single lines are not projects at all: the 2021 cancellation of Somalia's debt under the HIPC initiative, the policy-based loans to Kenya and Rwanda, and the Italian Climate Fund's bond and equity subscriptions.</p>
+  <p>The purpose codes are the reliable part. The descriptions often name a town or a district (__CRS_PLACED__ of the records mention one), but the CRS carries no coordinates and no gazetteer could be trusted at this scale, so the aid is drawn at country points and kept off the project map, as for the other lenders. Italy's IATI files, which carry locations for the agency's projects, are the natural next step and are not read yet.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="energy">
+  <h2>Pipelines, power units and cables with an Italian owner</h2>
+  <p class="lead">The map's energy and connectivity layers carry an owner field; this table is those records filtered for an Italian name. Eni's position is the largest of any Italian company on the continent: the Trans-Mediterranean line from Algeria through Tunisia, Greenstream from Libya, the Wafa–Mellitah and Sharara lines in Libya, the Zohr and Damietta lines in Egypt, the Brass and Tebidaba oil network in the Niger Delta, and a solar plant with Sonatrach at Bir Rebaa. Enel Green Power owns __GEM_MW__ MW of operating wind and solar, most of it in South Africa. Sparkle, Telecom Italia's international arm, sits in the ownership of __N_CABLES__ cables that land in Africa.</p>
+  __TABLE_ENERGY__
+  <p class="note">Eni's and other companies' oil and gas fields are not here: Global Energy Monitor's extraction tracker is released through a request form, not the open bucket the map's fetcher reads. The pipelines are the part of the upstream footprint that is open data.</p>
+</section>
+
+<section id="series">
+  <h2>Country-year series: investment stock, net aid, debt</h2>
+  <p class="lead">Three official series describe Italian money in Africa one country and one year at a time. The OECD's FDI positions give Italy's outward direct-investment stock by partner country, which is where the oil and gas is: __FDI_TOP__, __FDI_TOP2__ and __FDI_TOP3__ lead. The DAC2a table gives net ODA by recipient. The World Bank's debt statistics give what each government owes Italy, which is what remains of decades of bilateral lending after the debt relief of the 2000s.</p>
+  <h3>Direct-investment stock by partner country</h3>
+  __TABLE_FDI__
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ Italy's net ODA to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most. Debt cancellation counts as ODA in the year it is granted, and loan repayments count against it, which is what moves the yearly figure.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to Italy</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics, bilateral creditor counterpart 006. Sovereign and sovereign-guaranteed borrowing only; SACE-insured export credits to private borrowers and Cassa Depositi e Prestiti's lending to non-sovereign borrowers are outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the Piano Mattei table, <b>one project page</b> on the Government's portal. In the aid tables, <b>one CRS activity</b> as Italy reports it. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>, as the map carries them. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>Piano Mattei stages map as on the map: identified and formulated are <b>announced</b>, approved is <b>approved</b>, ongoing is <b>under construction</b>, completed is <b>operating</b>. GEM and TeleGeography records use the map's own mapping. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>Piano Mattei amounts are the portal's figures in euros, shown as stated. CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. FDI stock is the OECD's net position, all resident units, immediate counterpart. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is added to the map's lenders, and none is added to the others.</dd>
+    <dt>Location</dt><dd>Piano Mattei projects use the map's placement: a site or town named in the description, a named administrative area, the country's interior point, or the plan's fixed continental point. Aid and the three series are drawn at the <b>country's interior point</b>. Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>Italy's IATI files</b> (the Agency for Development Cooperation and the foreign ministry publish them) carry locations and documents for the agency's projects; the site does not read them yet. They would be the richest addition.</li>
+        <li><b>SACE</b>, the export-credit agency, publishes no register of insured or guaranteed transactions; <b>Cassa Depositi e Prestiti</b> publishes no project list for its lending in Africa. Where either shows up, it is through the CRS loan records or the Piano Mattei pages.</li>
+        <li><b>Eni's and others' oil and gas fields</b> are in GEM's Oil and Gas Extraction Tracker, released through a request form only.</li>
+        <li><b>The OECD's bulk CRS files</b> sit behind a browser challenge; the page uses the SDMX microdata query, one year at a time.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>Italian Government, Piano Mattei per l'Africa project portal</b> (Presidency of the Council of Ministers), one page per project in Italian and English; CC BY 3.0 IT. Read as the map's layer.</li>
+        <li><b>OECD, Creditor Reporting System</b>, Italy as provider (DAC code 6), activity-level microdata through the SDMX API, dataflow DSD_CRS@DF_CRS; OECD terms of use, free reuse with attribution.</li>
+        <li><b>OECD, DAC2a</b>, net ODA disbursements by recipient (measure 206), current prices, dataflow DSD_DAC2@DF_DAC2A.</li>
+        <li><b>OECD, FDI positions by partner country</b> (Benchmark Definition, 4th edition), Italy outward, dataflow DSD_FDI@DF_FDI_POS_CTRY.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 006; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0. <b>TeleGeography</b>, Submarine Cable Map; CC BY-SA 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year, purpose and agency, the three series per country, the Piano Mattei list and the filtered energy records with their routes: <a href="__DATA_URL__">__DATA_FILE__</a>. The OECD and World Bank series are re-fetched with every data refresh; the Piano Mattei, GEM and TeleGeography records follow the map's own fetches.</dd>
+  </dl>
+</section>

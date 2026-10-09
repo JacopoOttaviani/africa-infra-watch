@@ -1,0 +1,101 @@
+<!-- Gulf states: the prose and section order of docs/gulf/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/gulf.json. -->
+<div class="head">
+  <span class="kicker">Lender profile · United Arab Emirates, Saudi Arabia, Kuwait, Qatar</span>
+  <h1>Gulf states</h1>
+  <p class="lede"><strong>Four providers, read as one: the United Arab Emirates, Saudi Arabia, Kuwait and Qatar, which report their aid to the OECD although none sits on its development committee.</strong> __CRS_N__ activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ of them loans, the Saudi Fund's and the Kuwait Fund's; by provider, __PROVIDERS_USD__. The largest purpose is __CRS_TOP_SECTOR__, USD __CRS_TOP_SECTOR_USD__ m; __CRS_TOP_COUNTRY__, __CRS_TOP2_COUNTRY__ and __CRS_TOP3_COUNTRY__ receive the most.</p>
+  <p class="lede">The ground footprint is the newest on this site. The map's power layer holds __N_GEM__ units owned by ACWA Power, AMEA Power, Masdar, TAQA, Phanes, Al Nowais or Alcazar, solar and wind from Egypt and Morocco to South Africa, Uganda and Togo, most of them built in the last five years; __N_PIPE_SEG__ pipeline segments carry Aramco or a Gulf company; and __N_CABLES__ cables land in Africa with a Gulf carrier among the owners. None of the four reports an investment stock to the OECD. What African governments owe the four states is USD __IDS_STATES_BN__ bn at the end of __IDS_TO__, and USD __IDS_FUNDS_BN__ bn more to the Gulf-based development funds.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b> and DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b>, fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ loans</dd></div>
+  <div class="kpi"><dt>USD __CRS_HARD_USD__ m</dt><dd><b>of it for things that get built</b>, __CRS_HARD_N__ records over the seven years</dd></div>
+  <div class="kpi"><dt>USD __IDS_FUNDS_BN__ bn</dt><dd><b>owed to the Gulf-based funds</b> (Arab Fund, OPEC Fund, Islamic Development Bank, BADEA) by __IDS_FUNDS_N__ governments at the end of __IDS_TO__</dd></div>
+  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to the Gulf states</b> by __IDS_N__ governments at the end of __IDS_TO__, __IDS_TOP__ first; __N_GEM__ power units with a Gulf owner in the map's layers</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Aid is drawn at each country's interior point, sized by seven years of commitments; the CRS carries no coordinates, so a country point is the honest place. Aramco's and the Gulf companies' pipelines are drawn as routes, the carriers' cables as dotted lines, power units in the map's status colours. Debt owed to the Gulf states is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with a Gulf owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw dia"></span>Power units with a Gulf owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-cables" checked><span class="sw bar cable"></span>Cables with a Gulf owner (TeleGeography)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to the Gulf states (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Gulf aid by country, energy assets with a Gulf owner, and debt owed to the Gulf states">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The four providers are summed in the bubbles; the per-provider split is in the chart below. The power units are the map's own records with a Gulf company among the owners; the profile does not add records, it filters. DP World's and AD Ports' terminals, the other large Gulf footprint, are not in any of the map's layers.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">Gulf CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of Gulf aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Gulf aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from the Gulf states to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net Gulf ODA to Africa per year"></svg></div>
+    
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Gulf aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Gulf aid to Africa by recipient country"></svg></div>
+    <div class="chart"><h3>Who gives: the four providers</h3><p class="sub">USD million committed __CRS_FROM__–__CRS_TO__ with the number of activities, by provider.</p><svg id="c-prov" viewBox="0 0 520 180" role="img" aria-label="Bar chart of aid commitments by provider"></svg></div>
+    <div class="chart"><h3>Who owes the Gulf-based funds now</h3><p class="sub">Stock at the end of __IDS_TO__, USD million, Arab Fund, OPEC Fund, Islamic Development Bank, BADEA and the Arab technical-assistance fund summed.</p><svg id="c-funds" viewBox="0 0 520 300" role="img" aria-label="Bar chart of debt owed to the Gulf-based development funds by country"></svg></div>
+  </div>
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">The four report to the OECD at activity level as non-DAC providers: the Emirates' ministry and its foundations, the Saudi Fund for Development and the King Salman centre, the Kuwait Fund for Arab Economic Development, the Qatar Fund for Development and Qatar Charity. Together they give __CRS_TITLES__ distinct titles for __CRS_N__ records. The loans are the Saudi and Kuwait funds' project lending for roads, dams, hospitals and power; the grants are budget support, humanitarian aid and the Emirates' and Qatar's charities' projects.</p>
+  <p>The purpose codes are the reliable part. The descriptions often name a region or a town (__CRS_PLACED__ records mention one), but the CRS carries no coordinates, so the aid is drawn at country points and kept off the project map.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="energy">
+  <h2>Pipelines, power units and cables with a Gulf owner</h2>
+  <p class="lead">The map's energy and connectivity layers carry an owner field; this table is those records filtered for a Gulf company. ACWA Power's wind and solar in Egypt, Morocco and South Africa and its share of the Benban park, AMEA Power's solar and wind from Egypt and Togo to Burkina Faso and Uganda, Masdar's and Abu Dhabi's funds' stakes, TAQA's Moroccan plants; the carriers in the cables are STC's center3, Mobily, du, Etisalat, Ooredoo and Zain.</p>
+  __TABLE_ENERGY__
+</section>
+
+<section id="series">
+  <h2>Country-year series: net aid and debt</h2>
+  <p class="lead">Two official series describe Gulf money in Africa one country and one year at a time, and the second comes twice. The DAC2a table gives net ODA by recipient, summed over the four. The World Bank's debt statistics give what each government owes the four states, and, separately, what it owes the Gulf-based funds, the Arab Fund, the OPEC Fund, the Islamic Development Bank and BADEA, which lend on the same terms from the same capitals. There is no investment-stock series: none of the four reports to the OECD's FDI collection.</p>
+  
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ net ODA from the Gulf states to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to the Gulf states</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics; the four states as bilateral creditors (counterparts 576, 566, 552, 561, summed) and the funds as multilateral creditors (921, 951, 976, 953, 980, summed), all public and publicly guaranteed debt. Sovereign and sovereign-guaranteed borrowing only; the Gulf sovereign funds' and companies' investments are outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as each of the four reports it. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>, as the map carries them. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>GEM and TeleGeography records use the map's own mapping. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Location</dt><dd>Aid and the series are drawn at the <b>country's interior point</b>. Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>Investment stock by African country</b>: none of the four reports to the OECD; the Emirates' and Saudi statistics publish Africa as a region, and the sovereign funds publish no portfolio by country.</li>
+        <li><b>DP World's and AD Ports' terminals</b>, the largest Gulf footprint on the continent's coasts, are in none of the map's layers; a port layer would be the way to show them.</li>
+        <li><b>The Arab Coordination Group's</b> project lists are the funds' own websites, one per fund, with no common machine-readable register.</li>
+        <li><b>Oil and gas fields</b> with Gulf operators are in GEM's extraction tracker, released through a request form only.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>OECD, Creditor Reporting System</b>, the United Arab Emirates, Saudi Arabia, Kuwait and Qatar as providers (non-DAC reporters), pooled, activity-level microdata through the SDMX API; OECD terms of use, free reuse with attribution. <b>OECD, DAC2a</b>, net ODA by recipient (measure 206), current prices.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart areas 576, 566, 552, 561 (the states) and 921, 951, 976, 953, 980 (the funds), each group summed; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0. <b>TeleGeography</b>, Submarine Cable Map; CC BY-SA 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year, purpose and agency, the series per country and the filtered energy records: <a href="__DATA_URL__">__DATA_FILE__</a>.</dd>
+  </dl>
+</section>

@@ -1,0 +1,101 @@
+<!-- Japan: the prose and section order of docs/japan/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/japan.json. -->
+<div class="head">
+  <span class="kicker">Lender profile · Japan</span>
+  <h1>Japan</h1>
+  <p class="lede"><strong>Japan is the lender that builds: JICA's yen loans for ports, roads, power and water are the spine of its record.</strong> __CRS_N__ activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ of them loans; __CRS_AGENCY_TOP_PCT__% of the activities are reported by the __CRS_AGENCY_TOP__. The largest purpose is __CRS_TOP_SECTOR__, USD __CRS_TOP_SECTOR_USD__ m; __CRS_TOP_COUNTRY__, __CRS_TOP2_COUNTRY__ and __CRS_TOP3_COUNTRY__ receive the most. __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, build, renovate or drill something, a larger share than for any other provider on this site.</p>
+  <p class="lede">The corporate footprint is thinner than the lending. Japan reports its direct-investment stock in Africa for South Africa alone, USD __FDI_STOCK_BN__ bn at the end of __FDI_TO__; the map's own layers carry __N_GEM__ power units owned by Eurus Energy, Toyota Tsusho or Sumitomo, wind and solar in Egypt, Kenya and South Africa, and __N_PIPE_SEG__ pipeline segment with Sojitz among the owners. What African governments owe Japan is USD __IDS_STOCK__ m at the end of __IDS_TO__, __IDS_TOP__ first: the yen loans themselves.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b> and DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> and FDI positions <b>__FDI_FROM__–__FDI_TO__</b>, fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · Global Energy Monitor as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ loans</dd></div>
+  <div class="kpi"><dt>USD __CRS_HARD_USD__ m</dt><dd><b>of it for things that get built</b>, __CRS_HARD_N__ records over the seven years</dd></div>
+  <div class="kpi"><dt>USD __FDI_STOCK_BN__ bn</dt><dd><b>Japanese direct-investment stock</b> reported for Africa at the end of __FDI_TO__, South Africa alone; Japan publishes no other African partner</dd></div>
+  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to Japan</b> by __IDS_N__ governments at the end of __IDS_TO__, __IDS_TOP__ first; __N_GEM__ power units with a Japanese owner in the map's layers</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Aid is drawn at each country's interior point, sized by seven years of commitments; the CRS carries no coordinates, so a country point is the honest place. Power units with a Japanese owner sit at Global Energy Monitor's coordinates in the map's status colours. Debt owed to Japan is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with a Japanese owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw dia"></span>Power units with a Japanese owner (GEM)</label>
+    
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to Japan (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Japanese aid by country, energy assets with a Japanese owner, and debt owed to Japan">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">JICA's own project map and its IATI files place the yen-loan projects; the site does not read them yet, so the loans sit at country points here and the works they paid for appear on the main map only where another source holds them.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">Japanese CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of Japanese aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Japanese aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from Japan to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net Japanese ODA to Africa per year"></svg></div>
+    <div class="chart"><h3>Japanese direct-investment stock by country, end __FDI_TO__</h3><p class="sub">USD million, OECD FDI positions, outward, immediate counterpart.</p><svg id="c-fdi" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Japanese FDI stock by African country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Japanese aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Japanese aid to Africa by recipient country"></svg></div>
+    <div class="chart"><h3>Who reports Japan's aid</h3><p class="sub">Activities __CRS_FROM__–__CRS_TO__ by reporting agency.</p><svg id="c-agency" viewBox="0 0 520 220" role="img" aria-label="Bar chart of Japanese aid activities by reporting agency"></svg></div>
+  </div>
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">Japan reports to the OECD at activity level, with __CRS_TITLES__ distinct titles for __CRS_N__ records: JICA's loans, grants and technical cooperation, the foreign ministry's grassroots grants, the ministries' and universities' smaller lines. The loans are the money: a port in Mombasa or Nacala, a bridge, a thermal or geothermal plant, a water system, each a single record of several hundred million dollars with the project named in the title. The grants are the count.</p>
+  <p>The purpose codes are the reliable part. The descriptions often name a region or a town (__CRS_PLACED__ records mention one), but the CRS carries no coordinates, so the aid is drawn at country points and kept off the project map.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="energy">
+  <h2>Power units with a Japanese owner</h2>
+  <p class="lead">The map's power layer carries an owner field; this table is those records filtered for a Japanese company. Eurus Energy's and Toyota Tsusho's wind and solar farms in Egypt's Gulf of Suez, Kenya and South Africa, Sumitomo's stake in Morocco's Safi plant, and a Sojitz stake in a pipeline. Japan's trading houses are more often contractors than owners, which the owner field does not show.</p>
+  __TABLE_ENERGY__
+</section>
+
+<section id="series">
+  <h2>Country-year series: net aid, debt and what Japan reports of investment</h2>
+  <p class="lead">Two official series describe Japanese money in Africa one country and one year at a time, and a third only in part. The DAC2a table gives net ODA by recipient. The World Bank's debt statistics give what each government owes Japan, which is the yen-loan portfolio country by country. The OECD's FDI positions carry a Japanese figure for South Africa only; Japan's own statistics publish Africa as one aggregate.</p>
+  <h3>Direct-investment stock by partner country</h3>
+  __TABLE_FDI__
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ net ODA from Japan to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to Japan</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics, bilateral creditor counterpart 701. Sovereign and sovereign-guaranteed borrowing only; JBIC's and NEXI-covered lending to private borrowers is outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as Japan reports it. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>, as the map carries them. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>GEM and TeleGeography records use the map's own mapping. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. FDI stock is the OECD's net position, immediate counterpart, where Japan reports it. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Location</dt><dd>Aid and the series are drawn at the <b>country's interior point</b>. Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>JICA's IATI files and project map</b> carry locations for the yen-loan and grant projects; the site does not read them yet. They would put Japanese aid on the project map more precisely than any other provider's.</li>
+        <li><b>JBIC's and NEXI's</b> export finance to private borrowers has no project register.</li>
+        <li><b>Japan's FDI by African country</b>: the Bank of Japan and JETRO publish Africa as one aggregate; the OECD holds a figure for South Africa only.</li>
+        <li><b>Submarine cables</b>: the map's cable layer names no Japanese owner on an African landing.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>OECD, Creditor Reporting System</b>, Japan as provider (DAC code 701), activity-level microdata through the SDMX API; OECD terms of use, free reuse with attribution. <b>OECD, DAC2a</b>, net ODA by recipient (measure 206), current prices. <b>OECD, FDI positions by partner country</b> (BMD4), Japan outward.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 701; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year, purpose and agency, the series per country and the filtered energy records: <a href="__DATA_URL__">__DATA_FILE__</a>.</dd>
+  </dl>
+</section>

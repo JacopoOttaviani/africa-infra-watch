@@ -1,0 +1,144 @@
+<!-- Debt: the prose and section order of docs/debt/. Tokens (double-underscore
+     names) are filled by build_debt.py from data/debt.json, so every figure on
+     the page comes from the data pack and cannot drift from it. The --dg-*
+     colours are the creditor groups'; dashboard.template.html carries the same
+     values for its "Who it owes" box. They are the first six slots of a
+     categorical order validated for colour-blind separation in both themes,
+     plus a grey for everything else. -->
+<style>
+  :root{
+    --dg-multi:#2a78d6; --dg-bonds:#eb6834; --dg-china:#1baf7a; --dg-europe:#eda100;
+    --dg-gulf:#e87ba4; --dg-us:#008300; --dg-other:#a9b3ad;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --dg-multi:#3987e5; --dg-bonds:#d95926; --dg-china:#199e70; --dg-europe:#c98500;
+      --dg-gulf:#d55181; --dg-us:#008300; --dg-other:#56625b;
+    }
+  }
+  :root[data-theme="dark"]{
+    --dg-multi:#3987e5; --dg-bonds:#d95926; --dg-china:#199e70; --dg-europe:#c98500;
+    --dg-gulf:#d55181; --dg-us:#008300; --dg-other:#56625b;
+  }
+  .chart.wide{margin-top:18px}
+  .chart.wide svg{overflow:visible}
+  #c-stack .gl{stroke:var(--rule-soft)}
+  #c-stack .seg{stroke:var(--surface);stroke-width:1}
+  #c-stack .hitcol{fill:transparent}
+  #c-stack .col:hover .seg{filter:brightness(.9)}
+  #c-stack .dl{font:600 11.5px var(--display);fill:var(--ink)}
+  #c-stack .dv{font:500 11px var(--mono);fill:var(--ink-2)}
+  .dkeys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 2px;font-size:12px;color:var(--ink-2)}
+  .dk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .dk i,.tip i.k{width:10px;height:10px;border-radius:2px;flex:none;display:inline-block}
+  .tip i.k{margin-right:5px;vertical-align:-1px}
+  .dchina{fill:var(--dg-china);fill-opacity:.85;stroke:var(--surface);stroke-width:1}
+  .dbonds{fill:var(--dg-bonds);fill-opacity:.85;stroke:var(--surface);stroke-width:1}
+  .dmulti{fill:var(--dg-multi);fill-opacity:.85;stroke:var(--surface);stroke-width:1}
+  .dring{fill:transparent;stroke:var(--ink-2);stroke-width:1.2}
+  .sw.dchina{background:var(--dg-china);opacity:1} .sw.dbonds{background:var(--dg-bonds);opacity:1}
+  .sw.dmulti{background:var(--dg-multi);opacity:1}
+  .sw.dring{background:transparent;border:1.5px solid var(--ink-2);opacity:1}
+  #c-china .bar{fill:var(--dg-china)} #c-bonds .bar{fill:var(--dg-bonds)}
+  .mix{display:flex;width:150px;height:10px;gap:1px;border-radius:2px;overflow:hidden;margin-top:3px;background:var(--surface)}
+  .mix i{display:block;height:100%;min-width:1px}
+  table.debt td:nth-child(3){padding-right:4px}
+  .debtbtn[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  /* the method notes quote API addresses; let them wrap on a phone */
+  #method .spec dd{min-width:0}
+  #method code{overflow-wrap:anywhere}
+</style>
+
+<div class="head">
+  <span class="kicker">Debt · World Bank International Debt Statistics</span>
+  <h1>Who Africa owes</h1>
+  <p class="lede"><strong>African governments owed USD __TOTAL__ bn abroad at the end of __DATA_TO__</strong>, three times the USD __TOTAL_FIRST__ bn of __FIRST_YEAR__. That is public and publicly guaranteed debt to foreign creditors, as __N_COUNTRIES__ of the continent's 54 states report it to the World Bank. __MULTI_SHARE__% of it is owed to multilateral lenders, led by the World Bank's concessional arm. __BONDS_SHARE__% is owed to bondholders, against __BONDS_SHARE_FIRST__% in __FIRST_YEAR__. __CHINA_SHARE__% is owed to Chinese lenders, the largest bilateral creditor in __N_CHINA_TOP__ countries.</p>
+  <p class="lede">The creditors have changed more than the total. In __FIRST_YEAR__ European governments and banks held __EUROPE_FIRST__% of the stock; now they hold __EUROPE__%. China's share rose through the 2010s and its stock peaked at USD __CHINA_PEAK__ bn in __CHINA_PEAK_YEAR__; it has since been repaid faster than new loans were signed, to USD __CHINA__ bn. The money that replaced both came from the bond market: Eurobonds took the stock owed to bondholders from USD __BONDS_FIRST__ bn to USD __BONDS__ bn.</p>
+  <p class="asof">World Bank International Debt Statistics to <b>__DATA_TO__</b>, release of <b>__IDS_UPDATED__</b>, fetched <b>__FETCHED__</b> · __N_CREDITORS__ creditors · no creditor data for __MISSING__</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>USD __TOTAL__ bn</dt><dd><b>owed abroad</b> by __N_COUNTRIES__ African governments at the end of __DATA_TO__, up from USD __TOTAL_FIRST__ bn in __FIRST_YEAR__</dd></div>
+  <div class="kpi"><dt>__BONDS_SHARE__%</dt><dd><b>owed to bondholders</b>, USD __BONDS__ bn; __BONDS_SHARE_FIRST__% in __FIRST_YEAR__</dd></div>
+  <div class="kpi"><dt>USD __CHINA__ bn</dt><dd><b>owed to China</b>, down from USD __CHINA_PEAK__ bn in __CHINA_PEAK_YEAR__; the largest bilateral creditor in __N_CHINA_TOP__ countries</dd></div>
+  <div class="kpi"><dt>USD __IMF__ bn</dt><dd><b>IMF credit</b> and SDR allocations on top, counted apart from the creditors</dd></div>
+</dl>
+
+<section id="time">
+  <h2>How the creditors changed, __FIRST_YEAR__–__DATA_TO__</h2>
+  <p class="lead">Each column is the stock owed at the end of a year, split by creditor. Three shifts are visible: Europe's share shrinking after the debt relief of the 2000s, China's loans growing through the 2010s, and bonds, almost absent in __FIRST_YEAR__, becoming the second-largest creditor.</p>
+  <div class="chart wide">
+    <h3>External public debt of African governments by creditor, USD bn</h3>
+    <p class="sub">Public and publicly guaranteed, end of each year, current US dollars, summed over __N_COUNTRIES__ countries. Hover a year for its split.</p>
+    __CHART_STACK__
+    <div class="dkeys">__LEGEND__</div>
+  </div>
+  <p class="note">“Other lenders” holds Japan and Korea, India, Russia, Turkey, other African states, every other lending country, and syndicated loans the World Bank books to “multiple lenders”. The tables below name them one by one. Amounts are in current dollars, not adjusted for inflation.</p>
+</section>
+
+<section id="map-section">
+  <h2>Where it is owed</h2>
+  <p class="lead">Each country's ring is sized by everything it owes abroad; the disc inside it, on the same scale, is the part owed to one creditor group. China is shown first; switch on bondholders or multilateral lenders to compare. Hover a country for its full split.</p>
+  <div class="legend" aria-label="Creditor groups on the map">
+    <label><input type="checkbox" data-g="g-total,g-lbl" checked><span class="sw dring"></span>Everything owed abroad</label>
+    <label><input type="checkbox" data-g="g-china" checked><span class="sw dchina"></span>Owed to China</label>
+    <label><input type="checkbox" data-g="g-bonds"><span class="sw dbonds"></span>Owed to bondholders</label>
+    <label><input type="checkbox" data-g="g-multi"><span class="sw dmulti"></span>Owed to multilateral lenders</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with each country's external public debt and the part owed to China, bondholders or multilateral lenders">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">Drawn at each country's interior point. China is the largest creditor group, ahead of the multilaterals, in __N_CHINA_LEAD__ countries: __CHINA_LEAD__. Bondholders are in __N_BONDS_LEAD__: __BONDS_LEAD__.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Owed to China, end of __DATA_TO__</h3><p class="sub">The twelve largest debtors, USD bn. Chinese policy banks and commercial banks together.</p><svg id="c-china" viewBox="0 0 520 300" role="img" aria-label="Bar chart of the twelve African governments owing most to China"></svg></div>
+    <div class="chart"><h3>Owed to bondholders, end of __DATA_TO__</h3><p class="sub">The twelve largest debtors, USD bn. Mostly dollar and euro Eurobonds; the holders are not named.</p><svg id="c-bonds" viewBox="0 0 520 300" role="img" aria-label="Bar chart of the twelve African governments owing most to bondholders"></svg></div>
+  </div>
+</section>
+
+<section id="countries">
+  <h2>Country by country</h2>
+  <p class="lead">Every reporting government, largest debt first. The bar is the creditor mix in the colours above; the largest bilateral creditor is the largest lending country, leaving out the multilaterals, bondholders and syndicates. Each name opens that country in the dashboard, where the same split sits in the “Who it owes” box.</p>
+  __TABLE_COUNTRIES__
+</section>
+
+<section id="creditors">
+  <h2>The creditors</h2>
+  <p class="lead">The same stock seen from the lenders' side. The World Bank's concessional arm, IDA, is the largest single creditor after the bond market; China is next. Where the site has a lender profile, the creditor's name links to it.</p>
+  __TABLE_CREDITORS__
+</section>
+
+<section id="method">
+  <h2>What these figures count</h2>
+  <dl class="spec">
+    <dt>Source</dt><dd>World Bank, <b>International Debt Statistics</b>, release of __IDS_UPDATED__: series <code>DT.DOD.DPPG.CD</code> (public and publicly guaranteed debt outstanding, current USD) by creditor, through the World Bank's API (source 6). The borrowing governments report it, loan by loan, to the Bank's Debtor Reporting System. Open under CC BY 4.0; refreshed every December.</dd>
+    <dt>What is counted</dt><dd>Long-term external debt owed or guaranteed by a government or a public body, at the end of each year. <b>Not counted:</b> private debt that no government guarantees, short-term debt, domestic debt, and arrears the IDS does not attribute to a creditor.</dd>
+    <dt>A creditor's country</dt><dd>A lending country stands for every lender resident there, public and private: “China” is China Eximbank, China Development Bank and the Chinese commercial banks together; “United Kingdom” includes London-booked bank loans. The official-bilateral series alone (<code>DT.DOD.BLAT.CD</code>) misses the commercial banks, which is why it is not used here.</dd>
+    <dt>Bondholders</dt><dd>One anonymous creditor in the IDS. Whoever holds a Eurobond, a pension fund in New York or a bank in Lagos, the World Bank cannot say.</dd>
+    <dt>Multiple lenders</dt><dd>Syndicated loans the World Bank books to several lenders at once. Shown inside “Other lenders”.</dd>
+    <dt>The IMF</dt><dd>Use of IMF credit is a separate series (<code>DT.DOD.DIMF.CD</code>) that also carries the SDR allocations of 2009 and 2021, which are reserve assets rather than loans. It is shown beside the creditors, never added to them.</dd>
+    <dt>Missing</dt><dd>__MISSING__ do not report to the Debtor Reporting System, so the World Bank publishes no creditor detail for them.</dd>
+    <dt>Reproduce</dt><dd><code>python3 fetch_debt.py</code> asks the API once per country, <code>api.worldbank.org/v2/sources/6/country/KEN/series/DT.DOD.DPPG.CD/counterpart-area/all/time/all</code>, and checks that the creditors add up to the World Bank's own total before writing <code>data/debt.json</code>.</dd>
+  </dl>
+</section>
+
+<script>
+/* the stacked chart's tooltip: each column carries its own, built at build time */
+{
+  const svg = document.getElementById("c-stack"), box = svg.parentNode, tip = document.createElement("div");
+  tip.className = "tip"; box.appendChild(tip);
+  svg.querySelectorAll(".col").forEach(g => {
+    g.addEventListener("mousemove", ev => {
+      tip.innerHTML = g.dataset.tip; tip.style.display = "block";
+      const r = box.getBoundingClientRect();
+      let x = ev.clientX - r.left + 14; if (x + 260 > r.width) x -= 280;
+      tip.style.left = x + "px"; tip.style.top = (ev.clientY - r.top + 12) + "px";
+    });
+    g.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+  });
+}
+</script>

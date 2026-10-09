@@ -1,0 +1,100 @@
+<!-- Spain: the prose and section order of docs/spain/. Tokens (double-underscore
+     names) are filled by build_donors.py from data/donors/spain.json. -->
+<div class="head">
+  <span class="kicker">Lender profile · Kingdom of Spain</span>
+  <h1>Spain</h1>
+  <p class="lede"><strong>Spain's record is small money in many hands.</strong> __CRS_N__ activities with an African recipient for __CRS_FROM__–__CRS_TO__, USD __CRS_USD_BN__ bn committed, __CRS_GRANT_PCT__% grants and only __CRS_LOANS_N__ loans; __CRS_AGENCY_TOP_PCT__% of the activities are reported by the __CRS_AGENCY_TOP__, the rest by the autonomous communities, the cities, the universities and the ministries. The largest purpose is __CRS_TOP_SECTOR__, USD __CRS_TOP_SECTOR_USD__ m; __CRS_TOP_COUNTRY__, __CRS_TOP2_COUNTRY__ and __CRS_TOP3_COUNTRY__ receive the most, the Maghreb and the Sahel first.</p>
+  <p class="lede">The capital is across the strait. Spanish direct-investment stock in Africa stood at USD __FDI_STOCK_BN__ bn at the end of __FDI_TO__, __FDI_TOP__ __FDI_TOP_PCT__% of it; the map's own layers carry __N_PIPES__ pipelines with Naturgy, Enagás or Repsol among the owners, the Medgaz line from Algeria and the Maghreb–Europe line through Morocco among them, and __N_GEM__ power units owned by Acciona, Sener, Elecnor, Abengoa or Cobra, mostly solar and wind in South Africa, Egypt and Morocco. What African governments owe Spain is USD __IDS_STOCK__ m at the end of __IDS_TO__.</p>
+  <p class="asof">OECD CRS activities <b>__CRS_FROM__–__CRS_TO__</b> and DAC2a net ODA <b>__ODA_FROM__–__ODA_TO__</b> and FDI positions <b>__FDI_FROM__–__FDI_TO__</b>, fetched <b>__FETCHED__</b> · World Bank International Debt Statistics to <b>__IDS_TO__</b>, release of <b>__IDS_UPDATED__</b> · Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__CRS_N__</dt><dd><b>aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD_BN__ bn committed, __CRS_LOANS_N__ loans</dd></div>
+  <div class="kpi"><dt>USD __CRS_HARD_USD__ m</dt><dd><b>of it for things that get built</b>, __CRS_HARD_N__ records over the seven years</dd></div>
+  <div class="kpi"><dt>USD __FDI_STOCK_BN__ bn</dt><dd><b>Spanish direct-investment stock</b> in Africa at the end of __FDI_TO__, __FDI_TOP__ __FDI_TOP_PCT__%, __FDI_TOP2__ __FDI_TOP2_PCT__%</dd></div>
+  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to Spain</b> by __IDS_N__ governments at the end of __IDS_TO__, __IDS_TOP__ first; __N_GEM__ power units with a Spanish owner in the map's layers</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where it is on record</h2>
+  <p class="lead">Aid is drawn at each country's interior point, sized by seven years of commitments; the CRS carries no coordinates, so a country point is the honest place. The gas lines to Spain are drawn as routes, power units in the map's status colours. Debt owed to Spain is off until switched on.</p>
+  <div class="legend" aria-label="Record types">
+    <label><input type="checkbox" data-g="g-aid,g-lbl" checked><span class="sw"></span>Aid activities by country (OECD CRS)</label>
+    <label><input type="checkbox" data-g="g-pipes" checked><span class="sw bar"></span>Pipelines with a Spanish owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-gem" checked><span class="sw dia"></span>Power units with a Spanish owner (GEM)</label>
+    <label><input type="checkbox" data-g="g-cables" checked><span class="sw bar cable"></span>Cables with a Spanish owner (TeleGeography)</label>
+    <label><input type="checkbox" data-g="g-debt"><span class="sw ring"></span>Debt owed to Spain (World Bank IDS)</label>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with Spanish aid by country, energy assets with a Spanish owner, and debt owed to Spain">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">The pipelines and power units are the map's own records with a Spanish company among the owners; the profile does not add records, it filters. The Medgaz and Maghreb–Europe lines are cut at the frame where they cross to Spain.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Aid activities per year</h3><p class="sub">Spanish CRS records with an African recipient, __CRS_FROM__–__CRS_TO__, count.</p><svg id="c-acts" viewBox="0 0 520 240" role="img" aria-label="Column chart of Spanish aid activities in Africa per year"></svg></div>
+    <div class="chart"><h3>Aid commitments per year</h3><p class="sub">USD million, current prices, the same records.</p><svg id="c-usd" viewBox="0 0 520 240" role="img" aria-label="Column chart of Spanish aid commitments to Africa per year"></svg></div>
+    <div class="chart"><h3>Net ODA from Spain to Africa, __ODA_FROM__–__ODA_TO__</h3><p class="sub">USD million, current prices, OECD DAC2a.</p><svg id="c-oda" viewBox="0 0 520 240" role="img" aria-label="Column chart of net Spanish ODA to Africa per year"></svg></div>
+    <div class="chart"><h3>Spanish direct-investment stock by country, end __FDI_TO__</h3><p class="sub">USD million, OECD FDI positions, outward, immediate counterpart.</p><svg id="c-fdi" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Spanish FDI stock by African country"></svg></div>
+    <div class="chart"><h3>Where the aid goes, by purpose</h3><p class="sub">Top purpose codes by USD committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-sect" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Spanish aid to Africa by purpose code"></svg></div>
+    <div class="chart"><h3>Top recipient countries</h3><p class="sub">USD million committed, __CRS_FROM__–__CRS_TO__.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of Spanish aid to Africa by recipient country"></svg></div>
+    <div class="chart"><h3>Who reports Spain's aid</h3><p class="sub">Activities __CRS_FROM__–__CRS_TO__ by reporting agency.</p><svg id="c-agency" viewBox="0 0 520 220" role="img" aria-label="Bar chart of Spanish aid activities by reporting agency"></svg></div>
+  </div>
+</section>
+
+<section id="aid">
+  <h2>Aid activities: OECD Creditor Reporting System</h2>
+  <p class="lead">Spain reports to the OECD at activity level, with __CRS_TITLES__ distinct titles for __CRS_N__ records, most of them the small grants of the cooperation agency, the regions and the municipalities to NGOs and to Morocco's, Senegal's and Mali's institutions. The few loans are the state's FONPRODE instruments. The record is one of many small things rather than works.</p>
+  <p>The purpose codes are the reliable part. The descriptions often name a region or a town (__CRS_PLACED__ records mention one), but the CRS carries no coordinates, so the aid is drawn at country points and kept off the project map.</p>
+  __TABLE_LARGE__
+  <h3>Records that build something</h3>
+  <p>Purpose codes for transport, energy, water and the facility codes of health and education, plus titles that mention building, renovating or drilling: __CRS_HARD_N__ records, USD __CRS_HARD_USD__ m, over the seven years.</p>
+  __TABLE_HARD__
+</section>
+
+<section id="energy">
+  <h2>Pipelines and power units with a Spanish owner</h2>
+  <p class="lead">The map's energy layers carry an owner field; this table is those records filtered for a Spanish company. The gas pipelines are Spain's own supply lines, Medgaz with Naturgy and Enagás among the owners and the Maghreb–Europe line, with Repsol's and Naturgy's stakes in Egypt's and Algeria's fields' export lines. The power units are the developers' solar and wind farms: Acciona's in South Africa and Egypt, Sener's and Abengoa's solar plants in Morocco and South Africa, Elecnor's and Cobra's EPC-owned plants.</p>
+  __TABLE_ENERGY__
+</section>
+
+<section id="series">
+  <h2>Country-year series: investment stock, net aid, debt</h2>
+  <p class="lead">Three official series describe Spanish money in Africa one country and one year at a time. The OECD's FDI positions give the outward direct-investment stock by partner country, Morocco far ahead, where Spanish manufacturers and banks sit. The DAC2a table gives net ODA by recipient. The World Bank's debt statistics give what each government owes Spain: the state's development loans and the old export credits that survived the debt relief of the 2000s.</p>
+  <h3>Direct-investment stock by partner country</h3>
+  __TABLE_FDI__
+  <h3>Net ODA by recipient</h3>
+  <p>Over __ODA_FROM__–__ODA_TO__ net ODA from Spain to Africa came to USD __ODA_SUM__ bn; __ODA_TOP__ received the most.</p>
+  __TABLE_ODA__
+  <h3>Debt owed to Spain</h3>
+  __TABLE_IDS__
+  <p class="note">World Bank International Debt Statistics, bilateral creditor counterpart 050. Sovereign and sovereign-guaranteed borrowing only; COFIDES's and CESCE-covered credits to private borrowers are outside the series.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as Spain reports it. In the energy table, <b>one GEM power unit, one pipeline</b> (its segments counted) <b>or one cable</b>, as the map carries them. In the series, <b>one country and one year</b>.</dd>
+    <dt>Status</dt><dd>GEM and TeleGeography records use the map's own mapping. Aid activities have no status.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported. Net ODA is current prices. FDI stock is the OECD's net position, all resident units, immediate counterpart. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Location</dt><dd>Aid and the series are drawn at the <b>country's interior point</b>. Pipelines and cables are the map's routes, thinned; power units carry GEM's coordinates.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>The cooperation agency's IATI files</b> carry the agency's projects with locations; the site does not read them yet.</li>
+        <li><b>CESCE export-credit cover and COFIDES's investments</b> have no project register; where they show up it is through the CRS loan records.</li>
+        <li><b>Oil and gas fields</b> with Spanish operators are in GEM's extraction tracker, released through a request form only.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>OECD, Creditor Reporting System</b>, Spain as provider (DAC code 50), activity-level microdata through the SDMX API; OECD terms of use, free reuse with attribution. <b>OECD, DAC2a</b>, net ODA by recipient (measure 206), current prices. <b>OECD, FDI positions by partner country</b> (BMD4), Spain outward.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 050; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker and Global Gas and Oil Infrastructure Trackers, as the map draws them; CC BY 4.0. <b>TeleGeography</b>, Submarine Cable Map; CC BY-SA 4.0.</li>
+      </ul>
+    </dd>
+    <dt>Download</dt><dd>Everything on this page, with the aid aggregates by country, year, purpose and agency, the series per country and the filtered energy records: <a href="__DATA_URL__">__DATA_FILE__</a>.</dd>
+  </dl>
+</section>

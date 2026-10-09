@@ -1,0 +1,377 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geopolitics of Africa: __TITLE__</title>
+<!--__FAVICON__-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* The lender-profile frame: the site's tokens (copied from map.template.html;
+     keep them identical), a sticky top bar with the same buttons as the map,
+     then one reading column. Prose is capped at 72ch; maps, charts and tables
+     may run to the column's full width. */
+  :root{
+    --paper:#EDF0EC; --surface:#FFFFFF; --surface-2:#E4E9E4; --surface-3:#F5F7F4;
+    --ink:#16211C; --ink-2:#495A50; --ink-3:#71827A;
+    --rule:#C6D0C8; --rule-soft:#DBE2DC;
+    --accent:#1F5F4B; --accent-soft:#DDEBE3; --accent-ink:#154236;
+    --sea:#D3DDDC; --land:#F8FAF6; --land-dim:#ECEFEA; --land-ctx:#E2E7E3;
+    --border:#AEB9B1; --admin:#D2DAD4; --lake:#BFCFCE; --river:#AFC3C2;
+    --label:#586760; --label-city:#3E4B44; --halo:#F8FAF6;
+    --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
+    --st-operating:#2B7A4C; --st-stalled:#7F8B86;
+    --copper:#B0642A; --tint:14%;
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --serif:"Source Serif 4",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --shadow:0 1px 2px rgba(22,33,28,.06),0 10px 26px -14px rgba(22,33,28,.22);
+    --shadow-lg:0 2px 4px rgba(22,33,28,.06),0 18px 40px -18px rgba(22,33,28,.3);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0F1512; --surface:#161D19; --surface-2:#1E2620; --surface-3:#131A16;
+      --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
+      --rule:#2B3630; --rule-soft:#212A24;
+      --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
+      --sea:#090E0C; --land:#1B231E; --land-dim:#151C18; --land-ctx:#121816;
+      --border:#3D4A43; --admin:#26302A; --lake:#0C1412; --river:#22302B;
+      --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
+      --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
+      --st-operating:#67C98B; --st-stalled:#6E7A75;
+      --copper:#D9935C; --tint:22%;
+      --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
+      --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1512; --surface:#161D19; --surface-2:#1E2620; --surface-3:#131A16;
+    --ink:#E6EBE6; --ink-2:#A8B4AC; --ink-3:#7E8C84;
+    --rule:#2B3630; --rule-soft:#212A24;
+    --accent:#5FB495; --accent-soft:#1B2C25; --accent-ink:#8FD3B9;
+    --sea:#090E0C; --land:#1B231E; --land-dim:#151C18; --land-ctx:#121816;
+    --border:#3D4A43; --admin:#26302A; --lake:#0C1412; --river:#22302B;
+    --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
+    --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
+    --st-operating:#67C98B; --st-stalled:#6E7A75;
+      --copper:#D9935C; --tint:22%;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
+    --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--display);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{margin:0;text-wrap:balance}
+  button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  a{color:var(--accent)}
+  .m{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+
+  /* ---------- top bar: brand on the left, the same buttons as the map on the right ---------- */
+  .top{position:sticky;top:0;z-index:8;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+  .bar{max-width:1140px;margin:0 auto;padding:10px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .home{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;border-radius:4px;padding:2px 0}
+  .home .mark{flex:none;font-size:34px;color:var(--accent);display:block}
+  .home:hover .mark{opacity:.75}
+  .home:hover b{color:var(--accent)}
+  .home .hb{display:flex;flex-direction:column;gap:2px;line-height:1.1}
+  .home b{font-size:15px;font-weight:800;letter-spacing:-.02em}
+  .topright{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .actions{display:flex;gap:6px;align-items:center}
+  /*__LMENU_CSS__*/
+  .methodbtn{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);transition:background .15s,color .15s}
+  .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .methodbtn:hover{background:var(--surface-2)}
+  .coffee{position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
+  .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
+  .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .coffee .cup{transform-box:fill-box;transform-origin:50% 100%}
+  .coffee .steam{opacity:0;transition:opacity .2s}
+  .coffee:hover,.coffee:focus-visible{background:#FFE733;transform:translateY(-2px) rotate(-2deg) scale(1.05);box-shadow:0 8px 22px -8px rgba(217,185,0,.85),0 2px 4px rgba(22,33,28,.12)}
+  .coffee:hover::before,.coffee:focus-visible::before{animation:cshine .75s ease-out forwards}
+  .coffee:hover .cup,.coffee:focus-visible .cup{animation:cwiggle .55s ease}
+  .coffee:hover .steam,.coffee:focus-visible .steam{opacity:1;animation:csteam 1.1s ease-in-out infinite}
+  .coffee:active{transform:translateY(0) scale(.98)}
+  @keyframes cshine{to{transform:translateX(130%)}}
+  @keyframes cwiggle{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}65%{transform:rotate(9deg)}}
+  @keyframes csteam{0%{transform:translateY(1px);opacity:0}35%{opacity:1}100%{transform:translateY(-3px);opacity:0}}
+  .ib{width:32px;height:32px;background:var(--surface);border:1px solid var(--rule);border-radius:3px;font-size:16px;font-weight:600;line-height:1;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+  .ib:hover{background:var(--surface-3)}
+  .ib svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ---------- the page ---------- */
+  .head{padding:36px 0 6px;max-width:76ch}
+  h1{font-size:clamp(32px,5vw,50px);font-weight:800;letter-spacing:-.028em;line-height:1.02;margin-top:8px}
+  .lede{font-family:var(--serif);font-size:17.5px;line-height:1.5;color:var(--ink-2);margin:18px 0 0;max-width:72ch}
+  .lede strong{color:var(--ink);font-weight:600}
+  .asof{margin:16px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
+  .asof b{font-weight:500;color:var(--ink-2)}
+  p{max-width:72ch;margin:10px 0 0}
+  section{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule)}
+  section h2{font-size:21px;font-weight:700;letter-spacing:-.015em}
+  section .lead{font-family:var(--serif);font-size:15px;color:var(--ink-2);margin-top:8px}
+  section h3{font-size:14px;font-weight:700;margin-top:22px}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);border-radius:3px;overflow:hidden;margin:28px 0 0}
+  .kpi{background:var(--surface);padding:14px 16px;min-width:0;margin:0}
+  .kpi dt{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+  .kpi dd{font-size:12px;color:var(--ink-2);margin:6px 0 0;line-height:1.4}
+  .kpi dd b{color:var(--ink);font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 10px;font-size:12.5px;font-weight:500}
+  .legend label{display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+  .legend input{accent-color:var(--accent);margin:0}
+  .sw{width:11px;height:11px;border-radius:50%;flex:none;background:var(--accent);opacity:.6}
+  .sw.dia{transform:rotate(45deg);border-radius:1px;opacity:1;background:var(--st-construction)}
+  .sw.ring{background:transparent;border:2px solid var(--st-announced);opacity:1}
+  .sw.sq{border-radius:1px;background:var(--ink-3);opacity:1}
+  .mapbox{position:relative;background:var(--sea);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+  .mapbox svg{display:block;width:100%;height:auto}
+  .land{fill:var(--land);stroke:var(--border);stroke-width:.6}
+  .loan{fill:var(--accent);fill-opacity:.22;stroke:var(--accent);stroke-width:1.2}
+  .asset{stroke:var(--surface);stroke-width:1.4}
+  .asset.announced{fill:var(--st-announced)} .asset.approved{fill:var(--st-approved)} .asset.under_construction{fill:var(--st-construction)}
+  .asset.operating{fill:var(--st-operating)} .asset.stalled{fill:none;stroke:var(--st-stalled);stroke-width:2}
+  .sw.tri{clip-path:polygon(50% 0,100% 100%,0 100%);border-radius:0;opacity:1;background:var(--st-operating)}
+  .ring{fill:none;stroke:var(--st-announced);stroke-width:2}
+  .pipe{fill:none;stroke:var(--copper);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+  .pipe.stalled,.pipe.announced{stroke-dasharray:4 3}
+  .pipe.under_construction{stroke-dasharray:6 3}
+  .cable{fill:none;stroke:var(--st-approved);stroke-width:1.4;stroke-dasharray:2 3;opacity:.8}
+  .sw.bar{width:14px;height:3px;border-radius:2px;background:var(--copper);opacity:1}
+  .sw.bar.cable{height:2px;background:var(--st-approved);border:0}
+  .sw.hex{clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);border-radius:0;opacity:1;background:var(--st-construction)}
+  .sw.star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);border-radius:0;opacity:1;background:var(--st-construction);width:13px;height:13px}
+  .corp{fill:var(--ink-3);stroke:var(--surface);stroke-width:1}
+  .lbl{font:500 10.5px var(--display);fill:var(--ink-2);pointer-events:none;paint-order:stroke;stroke:var(--land);stroke-width:3px;stroke-linejoin:round}
+  .hit{cursor:pointer}
+  .hit:hover{filter:brightness(.85)}
+  .tip{position:absolute;pointer-events:none;z-index:2;display:none;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:7px 10px;box-shadow:var(--shadow);max-width:280px;font-size:12px;line-height:1.4;color:var(--ink-2)}
+  .tip b{display:block;font-weight:600;color:var(--ink);margin-bottom:2px}
+  .mapnote{font-size:12px;color:var(--ink-3);margin-top:8px}
+  .charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+  .chart{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:14px 16px 10px;min-width:0;position:relative}
+  .chart h3{font-size:13.5px;font-weight:700;margin:0}
+  .chart .sub{font-size:12px;color:var(--ink-3);margin:3px 0 8px;max-width:none}
+  .chart svg{width:100%;height:auto;display:block;overflow:visible}
+  .grid line{stroke:var(--rule-soft)}
+  .ax{font:10.5px var(--mono);fill:var(--ink-3)}
+  .series{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+  .area{fill:var(--accent);fill-opacity:.08}
+  .bar{fill:var(--accent)}
+  .blab{font:11.5px var(--display);fill:var(--ink)}
+  .bval{font:10.5px var(--mono);fill:var(--ink-2)}
+  .note-pt{font:10.5px var(--display);fill:var(--ink-2)}
+  .tbl{overflow-x:auto;margin-top:14px;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  caption{text-align:left;padding:10px 10px 4px;font-size:12px;color:var(--ink-3)}
+  th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--rule-soft)}
+  th{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);background:var(--surface-3);white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{font-weight:600}
+  td .dim,.dim{color:var(--ink-3)}
+  td .m{font-size:12px}
+  td a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule)}
+  td a:hover{border-color:var(--accent)}
+  .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
+  .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
+  .st.under_construction i{background:var(--st-construction)} .st.operating i{background:var(--st-operating)}
+  .st.stalled i,.st.cancelled i,.st.exited i,.st.sold i{background:transparent;border:2px solid var(--st-stalled)}
+  .chip{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:2px;border:1px solid currentColor;white-space:nowrap;line-height:1.4}
+  .chip.ok{color:var(--st-operating)} .chip.warn{color:var(--st-announced)} .chip.bad{color:var(--st-construction)} .chip.mute{color:var(--ink-3)}
+  .spec{display:grid;grid-template-columns:168px 1fr;gap:0 18px;margin:14px 0 0}
+  .spec dt{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:11px 0;border-top:1px solid var(--rule-soft)}
+  .spec dd{margin:0;padding:11px 0;border-top:1px solid var(--rule-soft);color:var(--ink-2);max-width:76ch}
+  .spec dt:first-of-type,.spec dd:first-of-type{border-top:0}
+  .spec dd b{color:var(--ink);font-weight:600}
+  .spec dd p{margin:6px 0 0}
+  ul.tight{margin:10px 0 0;padding-left:18px;color:var(--ink-2);max-width:76ch}
+  ul.tight li{margin:5px 0}
+  ul.tight li b{color:var(--ink);font-weight:600}
+  .note{font-size:12px;color:var(--ink-3);margin-top:8px;max-width:76ch}
+  .foot{margin:60px auto 44px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.8}
+  .foot a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .foot a:hover{color:var(--accent);border-color:var(--accent)}
+  .foot .heart{color:var(--accent)}
+  @media (max-width:880px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .charts{grid-template-columns:1fr}
+    .spec{grid-template-columns:1fr}
+    .spec dd{border-top:0;padding-top:2px}
+    .spec dt:first-of-type{border-top:0}
+  }
+  @media (max-width:600px){
+    .bar{flex-direction:column;align-items:flex-start;gap:8px}
+    .topright{align-items:flex-start}
+    .coffee span,.methodbtn span{display:none}
+    .coffee,.methodbtn{padding:0 7px;gap:0}
+    .kpis{grid-template-columns:1fr}
+    .head{padding-top:26px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.coffee:hover{transform:none}html{scroll-behavior:auto}}
+</style>
+
+<header class="top">
+  <div class="bar">
+    <a class="home" href="__HOME_URL__" title="Back to the Africa Infrastructure Map"><!--__LOGO__--><span class="hb"><span class="kicker">Geopolitics of Africa</span><b>Africa Infrastructure Map</b></span></a>
+    <div class="topright">
+      <div class="actions">
+        <!--__DONORS__-->
+        <a class="methodbtn" href="__HOME_URL__debt/" title="Who African governments owe, creditor by creditor" aria-label="Debt">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          <span>Debt</span>
+        </a>
+        <a class="methodbtn" href="__HOME_URL__#t=m" title="Where the map's data comes from and how it is aligned" aria-label="Methodology">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
+          <span>Methodology</span>
+        </a>
+        <a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
+          <span>Buy me a coffee</span>
+        </a>
+        <button class="ib" id="theme" title="Switch light / dark" aria-label="Switch between light and dark theme">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+<!--__BODY__-->
+</main>
+
+<footer class="wrap foot">
+  made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="__WEB_URL__" target="_blank" rel="noopener noreferrer">Web</a>)
+  · <a href="__HOME_URL__">Map</a> · <a href="__HOME_URL__dashboard.html">Dashboard</a> · <a href="__HOME_URL__#t=m">Methodology</a>
+  · this page's data: <a href="__DATA_URL__">__DATA_FILE__</a> · built __BUILT__
+</footer>
+
+<script>
+const DATA = /*__PAYLOAD__*/;
+const $ = s => document.querySelector(s);
+const el = (t, a, txt) => { const e = document.createElementNS("http://www.w3.org/2000/svg", t); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STATUS = {announced:"announced", approved:"approved", under_construction:"under construction", operating:"operating", stalled:"stalled"};
+
+/* ================= theme ================= */
+{
+  let stored = null;
+  try { stored = localStorage.getItem("aiw-theme"); } catch { /* storage unavailable */ }
+  if (stored === "dark" || stored === "light") document.documentElement.dataset.theme = stored;
+  $("#theme").onclick = () => {
+    const cur = document.documentElement.dataset.theme;
+    const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme:dark)").matches;
+    const next = dark ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("aiw-theme", next); } catch { /* fine */ }
+  };
+}
+
+/* ================= map =================
+   DATA.map.groups: one <g> per record type, drawn in order, each item with a
+   prebuilt tooltip. kind: circle (r from the item), diamond, triangle, ring,
+   square. Legend checkboxes carry data-g="id,id" and toggle the groups. */
+if ($("#map") && DATA.map) {
+  const svg = $("#map"), tip = $("#tip"), box = $(".mapbox");
+  const show = (ev, html) => { tip.innerHTML = html; tip.style.display = "block"; move(ev); };
+  const move = ev => { const r = box.getBoundingClientRect(); let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14; if (x + 290 > r.width) x -= 300; if (y + 120 > r.height) y -= 130; tip.style.left = x + "px"; tip.style.top = y + "px"; };
+  const hide = () => { tip.style.display = "none"; };
+  const bind = (e, html) => { e.classList.add("hit"); e.setAttribute("tabindex", "0"); e.addEventListener("mousemove", ev => show(ev, html)); e.addEventListener("mouseleave", hide);
+    e.addEventListener("focus", () => { tip.innerHTML = html; tip.style.display = "block"; tip.style.left = "12px"; tip.style.top = "12px"; }); e.addEventListener("blur", hide); };
+  const lbl = el("g", {id: "g-lbl"});
+  (DATA.map.groups || []).forEach((grp, gi) => {
+    const g = el("g", {id: grp.id});
+    grp.items.forEach((it, i) => {
+      let e;
+      const cls = (grp.cls || "") + (it.cls ? " " + it.cls : "");
+      if (grp.kind === "circle") e = el("circle", {cx: it.x, cy: it.y, r: it.r || 5, class: cls || "loan"});
+      else if (grp.kind === "ring") e = el("circle", {cx: it.x, cy: it.y - (grp.dy || 0), r: it.r || 6, class: cls || "ring"});
+      else if (grp.kind === "diamond") e = el("path", {d: `M${it.x} ${it.y - 7} L${it.x + 7} ${it.y} L${it.x} ${it.y + 7} L${it.x - 7} ${it.y} Z`, class: "asset " + cls});
+      else if (grp.kind === "triangle") e = el("path", {d: `M${it.x} ${it.y - 8} L${it.x + 7} ${it.y + 5} L${it.x - 7} ${it.y + 5} Z`, class: "asset " + cls});
+      else if (grp.kind === "hex") { const r = 7, pts = [0, 1, 2, 3, 4, 5].map(k => { const a = Math.PI / 3 * k - Math.PI / 6; return (it.x + r * Math.cos(a)).toFixed(1) + " " + (it.y + r * Math.sin(a)).toFixed(1); }); e = el("path", {d: "M" + pts.join(" L") + " Z", class: "asset " + cls}); }
+      else if (grp.kind === "line") e = el("path", {d: it.d, class: (grp.cls || "pipe") + (it.cls ? " " + it.cls : "")});
+      else if (grp.kind === "star") { const R = 7.5, r = 3.2, pts = []; for (let k = 0; k < 10; k++) { const a = Math.PI / 5 * k - Math.PI / 2, rr = k % 2 ? r : R; pts.push((it.x + rr * Math.cos(a)).toFixed(1) + " " + (it.y + rr * Math.sin(a)).toFixed(1)); } e = el("path", {d: "M" + pts.join(" L") + " Z", class: "asset " + cls}); }
+      else e = el("rect", {x: it.x - 5 + (grp.spread ? (i % 3) * 9 - 9 : 0), y: it.y + (grp.dy || 0) - 5, width: 10, height: 10, class: cls || "corp"});
+      bind(e, it.tip);
+      g.appendChild(e);
+      if (it.label) lbl.appendChild(el("text", {x: it.x + (it.r || 5) + 3, y: it.y + 4, class: "lbl"}, it.label));
+    });
+    svg.appendChild(g);
+  });
+  svg.appendChild(lbl);
+  document.querySelectorAll(".legend input[data-g]").forEach(cb => {
+    const apply = () => { cb.dataset.g.split(",").forEach(id => { const grp = svg.querySelector("#" + id); if (grp) grp.style.display = cb.checked ? "" : "none"; }); };
+    cb.addEventListener("change", apply); apply();
+  });
+}
+
+/* ================= charts =================
+   DATA.charts: {svgId: spec}. type line (a series by year, with notes),
+   bars (horizontal, labelled rows) or columns (one per year, negatives
+   allowed). Values are plain numbers; fmt "usd" (default) or "n". */
+const fmtN = v => Math.abs(v) >= 1e9 ? (v / 1e9).toFixed(Math.abs(v) >= 1e10 ? 0 : 1) + " bn" : Math.abs(v) >= 1e6 ? (v / 1e6).toFixed(Math.abs(v) >= 1e8 ? 0 : 1) + " m" : Math.abs(v) >= 1e3 ? (v / 1e3).toFixed(0) + " k" : String(Math.round(v));
+const fmt = (v, f) => f === "n" ? v.toLocaleString("en") : "USD " + fmtN(v);
+const nice = v => { if (v <= 0) return 0; const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; const s = m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10; return s * p; };
+/* a round step (1, 2, 2.5, 5 × 10^k) and the axis top as a multiple of it */
+const scale = (max, n = 4) => { if (max <= 0) return {step: 1, top: 1}; const step = nice(max / n); return {step, top: step * Math.ceil(max / step - 1e-9)}; };
+const ticksOf = (top, step) => { const out = []; for (let v = 0; v <= top + 1e-9; v += step) out.push(v); return out; };
+const axisText = (v, f) => f === "n" ? v.toLocaleString("en") : fmtN(v);
+
+Object.entries(DATA.charts || {}).forEach(([id, c]) => {
+  const svg = document.getElementById(id);
+  if (!svg) return;
+  const W = 520, L = c.type === "bars" ? 172 : 52, R = c.type === "bars" ? 70 : 12, T = 14, B = 30;
+  if (c.type === "line") {
+    const H = 240;
+    const ys = Object.keys(c.series).map(Number), vs = ys.map(y => c.series[y]);
+    const x = y => L + (y - ys[0]) / (ys[ys.length - 1] - ys[0]) * (W - L - R);
+    const sc = scale(Math.max(...vs), 3), ymax = sc.top, y = v => T + (1 - v / ymax) * (H - T - B);
+    const grid = el("g", {class: "grid"});
+    ticksOf(ymax, sc.step).forEach(v => { grid.appendChild(el("line", {x1: L, x2: W - R, y1: y(v), y2: y(v)})); svg.appendChild(el("text", {x: L - 6, y: y(v) + 4, "text-anchor": "end", class: "ax"}, axisText(v, c.fmt))); });
+    svg.appendChild(grid);
+    const ticks = [ys[0], ...ys.filter(v => v % 10 === 0 && v > ys[0] && v < ys[ys.length - 1]), ys[ys.length - 1]];
+    ticks.forEach(yy => svg.appendChild(el("text", {x: x(yy), y: H - 8, "text-anchor": "middle", class: "ax"}, yy)));
+    const d = ys.map((yy, i) => (i ? "L" : "M") + x(yy).toFixed(1) + " " + y(vs[i]).toFixed(1)).join(" ");
+    svg.appendChild(el("path", {d: d + ` L${x(ys[ys.length - 1]).toFixed(1)} ${y(0)} L${x(ys[0]).toFixed(1)} ${y(0)} Z`, class: "area"}));
+    svg.appendChild(el("path", {d, class: "series"}));
+    (c.notes || []).forEach(n => { const v = c.series[n.year]; if (v == null) return; svg.appendChild(el("circle", {cx: x(n.year), cy: y(v), r: 3.5, fill: "var(--accent)"})); svg.appendChild(el("text", {x: x(n.year) + n.dx, y: y(v) + n.dy, class: "note-pt", "text-anchor": n.anchor}, n.text)); });
+    const hov = el("rect", {x: L, y: T, width: W - L - R, height: H - T - B, fill: "transparent"}); svg.appendChild(hov);
+    const ln = el("line", {y1: T, y2: H - B, stroke: "var(--ink-3)", "stroke-dasharray": "3 3", style: "display:none"}); svg.appendChild(ln);
+    const box = svg.parentNode, t2 = document.createElement("div"); t2.className = "tip"; box.appendChild(t2);
+    hov.addEventListener("mousemove", ev => { const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse()); const yy = Math.round(ys[0] + (p.x - L) / (W - L - R) * (ys[ys.length - 1] - ys[0])); if (!(yy in c.series)) return; ln.setAttribute("x1", x(yy)); ln.setAttribute("x2", x(yy)); ln.style.display = ""; t2.innerHTML = `<b>${yy}</b>${fmt(c.series[yy], c.fmt)} ${esc(c.label || "")}`; t2.style.display = "block"; const r = box.getBoundingClientRect(); t2.style.left = Math.min(ev.clientX - r.left + 12, r.width - 200) + "px"; t2.style.top = (ev.clientY - r.top + 12) + "px"; });
+    hov.addEventListener("mouseleave", () => { ln.style.display = "none"; t2.style.display = "none"; });
+  } else if (c.type === "bars") {
+    const rows = c.rows, rowH = 22, T2 = 6; svg.setAttribute("viewBox", `0 0 ${W} ${T2 + rows.length * rowH + 6}`);
+    const max = Math.max(...rows.map(r => Math.abs(r.value))) || 1, x = v => L + v / max * (W - L - R);
+    rows.forEach((r, i) => {
+      const yy = T2 + i * rowH;
+      svg.appendChild(el("text", {x: L - 8, y: yy + 15, "text-anchor": "end", class: "blab"}, r.label));
+      const b = el("rect", {x: L, y: yy + 4, width: Math.max(2, x(Math.abs(r.value)) - L).toFixed(1), height: rowH - 8, rx: 2, class: "bar"});
+      if (r.dim) b.setAttribute("fill-opacity", ".45");
+      b.appendChild(el("title", {}, `${r.label}: ${r.text}`));
+      svg.appendChild(b);
+      svg.appendChild(el("text", {x: x(Math.abs(r.value)) + 6, y: yy + 15, class: "bval"}, r.text));
+    });
+  } else if (c.type === "columns") {
+    const H = 240, rows = c.rows, n = rows.length, slot = (W - L - R) / n, bw = Math.min(slot * 0.68, 40);
+    const hi = Math.max(0, ...rows.map(r => r.value)), lo = Math.max(0, ...rows.map(r => -r.value));
+    const sc = scale(Math.max(hi, lo), lo > 0 ? 2 : 4), top = sc.step * Math.ceil(hi / sc.step - 1e-9), bot = -sc.step * Math.ceil(lo / sc.step - 1e-9);
+    const y = v => T + (top - v) / (top - bot) * (H - T - B);
+    const grid = el("g", {class: "grid"});
+    const steps = []; for (let v = bot; v <= top + 1e-9; v += sc.step) steps.push(v);
+    steps.forEach(v => { grid.appendChild(el("line", {x1: L, x2: W - R, y1: y(v), y2: y(v)})); svg.appendChild(el("text", {x: L - 6, y: y(v) + 4, "text-anchor": "end", class: "ax"}, axisText(v, c.fmt))); });
+    svg.appendChild(grid);
+    rows.forEach((r, i) => {
+      const cx = L + slot * (i + 0.5), h = Math.abs(y(r.value) - y(0));
+      const b = el("rect", {x: cx - bw / 2, y: Math.min(y(r.value), y(0)), width: bw, height: Math.max(h, 1).toFixed(1), rx: 2, class: "bar"});
+      if (r.value < 0) b.setAttribute("fill-opacity", ".55");
+      b.appendChild(el("title", {}, `${r.x}: ${r.text}`));
+      svg.appendChild(b);
+      if (n <= 16 || i % 2 === 0) svg.appendChild(el("text", {x: cx, y: H - 8, "text-anchor": "middle", class: "ax"}, r.x));
+      if (n <= 12) svg.appendChild(el("text", {x: cx, y: (r.value < 0 ? y(r.value) + 12 : y(r.value) - 5), "text-anchor": "middle", class: "bval"}, r.text));
+    });
+    svg.appendChild(el("line", {x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: "var(--ink-3)", "stroke-width": 1}));
+  }
+});
+</script>
