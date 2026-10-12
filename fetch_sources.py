@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate africa-infra-watch from the ten verified sources.
+Populate Africa Project Atlas from the ten verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
 `dash_status` vocabulary so a single filter works across every layer.
@@ -35,10 +35,10 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 from fetch_basemap import dp
-from shared import EUR_USD, today, update_meta
+from shared import EUR_USD, fmt_date, today, update_meta
 
 DATA = pathlib.Path(__file__).parent / "data"
-UA = {"User-Agent": "africa-infra-watch/0.1 (dataset evaluation)"}
+UA = {"User-Agent": "africa-project-atlas/0.1 (dataset evaluation)"}
 
 # The 54 ISO-3166-1 alpha-2 codes. Used to clip OSM (a bounding box pulls in
 # Turkey and Spain) and to filter World Bank results (region names are unstable).
@@ -120,17 +120,24 @@ def gem_latest_csv():
     listing = get(
         f"{GEM_BUCKET}/?list-type=2&prefix=Current_maps/integrated-power/"
         "&max-keys=1000", timeout=90).decode("utf-8", "replace")
-    keys = [k for k in re.findall(r"<Key>([^<]+)</Key>", listing)
-            if k.endswith(".csv")]
+    keys = {}
+    for c in re.findall(r"<Contents>(.*?)</Contents>", listing, re.S):
+        k = re.search(r"<Key>([^<]+)</Key>", c)
+        m = re.search(r"<LastModified>(\d{4}-\d\d-\d\d)", c)
+        if k and k.group(1).endswith(".csv"):
+            keys[k.group(1)] = m.group(1) if m else None
     if not keys:
         raise RuntimeError("no integrated-power CSV found in GEM bucket")
-    return f"{GEM_BUCKET}/{urllib.parse.quote(sorted(keys)[-1])}"
+    key = sorted(keys)[-1]
+    return f"{GEM_BUCKET}/{urllib.parse.quote(key)}", keys[key]
 
 
 def fetch_gem():
-    url = gem_latest_csv()
-    release = urllib.parse.unquote(url.rsplit('/', 1)[-1]).rsplit('.', 1)[0]
-    print(f"GEM  release: {release}")
+    url, uploaded = gem_latest_csv()
+    # the release is the folder (2026-08-v2); the file's upload day is when
+    # GEM published it, which is what "data as of" should say
+    release = urllib.parse.unquote(url).rsplit('/', 2)[-2]
+    print(f"GEM  release: {release}, published {uploaded}")
     raw = get(url, timeout=600).decode("utf-8", "replace")
 
     feats = []
@@ -165,7 +172,8 @@ def fetch_gem():
             },
         })
     out = write_layer("gem_power_assets", feats)
-    update_meta("assets", fetched=today(), fresh=None, release=release, records=len(feats))
+    update_meta("assets", fetched=today(), fresh=fmt_date(uploaded) if uploaded else None,
+                release=release, records=len(feats))
     return out
 
 
@@ -1606,7 +1614,7 @@ def fetch_eu():
 # a Senegal-Ghana-Mozambique programme, and reads as a place).
 MATTEI_SITE = "https://www.governo.it"
 MATTEI_LIST = "/{lang}/piano-mattei/progetti/"
-MATTEI_UA = {"User-Agent": "Mozilla/5.0 africa-infra-watch/0.1 (dataset build)"}
+MATTEI_UA = {"User-Agent": "Mozilla/5.0 africa-project-atlas/0.1 (dataset build)"}
 # the portal's progress bar; the active step is the one not drawn grey
 MATTEI_STAGE = {"Identificato": ("Identified", ANNOUNCED), "Formulato": ("Formulated", ANNOUNCED),
                 "Approvato": ("Approved", APPROVED), "In corso": ("Ongoing", BUILDING),

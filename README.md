@@ -1,7 +1,11 @@
-# africa-infra-watch
+# Africa Project Atlas
 
 An interactive map and dashboard of announced, approved and ongoing infrastructure
 in Africa, for investors, researchers and journalists.
+
+The project was first called Africa Infra Watch. The repository and the live
+site's address still use that slug, `africa-infra-watch`, so existing links keep
+working; the name shown on every page comes from `SITE_NAME` in `shared.py`.
 
 **Interactive map:** https://claude.ai/code/artifact/ba74ed91-3123-4fe5-9f01-43708f368104
 **Dashboard:** https://claude.ai/code/artifact/e4229926-b67c-4c7b-ac4a-5b21b03b83fa
@@ -65,9 +69,9 @@ as hexagons.
 | Layer | Source | Records | Answers |
 |---|---|---|---|
 | Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,274 power units | what asset is being built |
-| Finance | African Development Bank, IATI 2.03 activity files | 1,767 projects | who is paying, and how much |
-| Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 1,123 projects | the same, for the other big multilateral lender |
-| Ground truth | OpenStreetMap via Overpass | 3,586 works | what has physically broken ground |
+| Finance | African Development Bank, IATI 2.03 activity files | 1,710 projects | who is paying, and how much |
+| Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 1,121 projects | the same, for the other big multilateral lender |
+| Ground truth | OpenStreetMap via Overpass | 3,680 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 324 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
 | Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,324 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
@@ -192,7 +196,8 @@ and at the bottom right of the dashboard's map; the reading pages keep it in
 their top bar. A profile is a reading page in the site's frame, not a map
 layer: a lede, four headline figures, a small map of what can be placed, two
 charts, the tables behind them (rendered at build time, so crawlers read the
-substance), and a "How to read this page" section with the sources, licences,
+substance; in the browser every header sorts its column and a table longer than eight
+rows gets a filter box, from one script in the shared frame), and a "How to read this page" section with the sources, licences,
 status rules and what is absent and why. Its data pack is published beside the
 other data files (`docs/data/donors/<slug>.json`) and listed in the sitemap and
 `llms.txt`.
@@ -274,7 +279,7 @@ CRS microdata for Italy as provider, one year at a time because a year is
 titles over 2018–2024, a third of them under the tax-designation flows to
 NGOs and religious bodies), DAC2a net ODA, FDI positions (USD 29.9 bn in
 Africa at end-2024, Algeria and Egypt first) and the IDS for creditor `006`
-(40 debtors). The page says what the largest aid lines are (the 2021 HIPC
+(43 debtors). The page says what the largest aid lines are (the 2021 HIPC
 cancellation of Somalia's debt, policy-based loans, the Climate Fund's bond
 subscriptions) and what is absent: Italy's IATI files (not read yet, the
 natural next layer), SACE's and CDP's books, GEM's extraction tracker.
@@ -285,13 +290,16 @@ country, sector, funder with co-financed commitments split evenly, the twenty
 largest records, the precision tiers, what the map's fetch left out from
 `meta.json`) and filters the power, pipeline and cable layers on
 `CHINESE_OWNER` (state and provincial companies, CNPC, CNOOC, Sinopec, the
-three carriers, PEACE Cable). The debt block is fetched twice: `ids_pack`
-takes a `kind`, and for China the headline series is `DPPG` (all public and
-publicly guaranteed debt owed to Chinese creditors, counterpart 730) with
-`BLAT` (bilateral official) beside it, because the IDS files Chinese
-commercial banks under private creditors and the bilateral series alone
-misses them (Angola: USD 2.6 bn bilateral, USD 14.4 bn all Chinese
-creditors at end-2024). Nothing from the OECD: China reports nothing there.
+three carriers, PEACE Cable). The debt block is fetched twice, here as on
+every profile: `ids_pack` takes a `kind`, and the headline series is `DPPG`
+(all public and publicly guaranteed debt owed to creditors in the lending
+country, its government and its banks together; counterpart 730 for China),
+the series the debt section and the comparison use, so a profile's figure is
+the same figure there, with `BLAT` (bilateral official, the state's own
+claims) beside it as `ids_bilateral`. The IDS files Chinese commercial banks
+under private creditors, so the bilateral series alone misses them (Angola:
+USD 2.6 bn bilateral, USD 14.4 bn all Chinese creditors at end-2024); for the
+United States it is a sixth of the whole. Nothing from the OECD: China reports nothing there.
 The page names what is left out and why: AidData ends with 2021
 commitments; MOFCOM's bulletin is an aggregate PDF; CARI's spreadsheets and
 Boston University's loan database state no reuse licence; the extraction
@@ -368,7 +376,7 @@ South Sudan do not report to the Debtor Reporting System, so they have no
 creditor detail.
 
 ```bash
-python3 fetch_debt.py     # -> data/debt.json (one API call per country, ~1 minute)
+python3 fetch_debt.py     # -> data/debt.json (one API call per country, ~5 minutes)
 python3 build_debt.py     # -> docs/debt/index.html + docs/data/debt.json
 python3 build_dashboard.py  # the box reads build_debt.dashboard_payload()
 ```
@@ -405,6 +413,7 @@ python3 build_dashboard.py        # -> dashboard.html  and  docs/dashboard.html
 python3 build_map.py              # -> map.html  and  docs/index.html + docs/data/ + sitemap.xml + llms.txt
 python3 fetch_donors.py           # lender-profile data -> data/donors/*.json (World Bank IDS, seconds)
 python3 build_donors.py           # -> docs/<slug>/index.html + docs/data/donors/
+python3 check_numbers.py          # every stated number against the data and its other statements
 ```
 
 Both builds inline the favicon and header mark from `brand/` (option A of the
@@ -413,13 +422,14 @@ logo sheet: the continent traced from the basemap with a compass rose cut out).
 `brand/README.md`.
 
 `fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` / `china` / `eu` / `mattei` runs a single source.
-The eu pass reads 57 Commission files and the EIB's 6 MB file (about three minutes).
+The eu pass reads 57 Commission files and the EIB's 6 MB file (about a quarter of an hour).
 The mattei pass reads the portal's list page and 152 project pages, four at a
 time (about a minute); the gazetteer of named places is in the script, so no
 geocoder is called at fetch time.
-The OSM pass takes ~10 minutes: it walks latitude bands and sleeps between them
+The OSM pass takes 10 to 40 minutes (37 in October 2026), depending on how often the
+mirrors refuse: it walks latitude bands and sleeps between them
 to stay inside Overpass's slot budget. The cables pass reads one small JSON per
-cable system in the world (~700, a few minutes); the pipelines pass downloads two
+cable system in the world (~700, about a quarter of an hour); the pipelines pass downloads two
 GeoJSON files of ~70 MB each from GEM's bucket. The china pass downloads
 AidData's 28 MB zip, reads the Excel workbook with the standard library (zip +
 XML, about three seconds), then fetches ~1,900 per-project GeoJSONs from GitHub
@@ -443,8 +453,8 @@ Two outputs from one template, because they run in different places:
 
 - `map.html` / `dashboard.html` — **artifact builds**, payload inlined. The
   Claude publishing sandbox blocks runtime requests to any host, so there is no
-  tile server and no `fetch()`; everything ships inside the page (6.4 MB and
-  1.8 MB; the ceiling is 16 MB).
+  tile server and no `fetch()`; everything ships inside the page (9.2 MB and
+  4.5 MB; the ceiling is 16 MB).
 - `docs/` — the **site build** for GitHub Pages. `index.html` is a complete
   HTML document (doctype, head, favicon, social tags) that loads
   `data/map.json` at runtime via a module script with a loading state, so the
@@ -491,7 +501,7 @@ GeoJSON layers, the basemap, `meta.json` and `donors/` with each profile's
 pack — the site publishes its data, linked from the Methodology tab and from
 each profile), `social.png`, `favicon.svg` and the two PNG
 icons, `sitemap.xml`, `llms.txt`, and `.nojekyll` so Pages serves the folder
-as-is. About 40 MB per snapshot.
+as-is. About 50 MB per snapshot.
 
 ## Search engines, link previews and AI crawlers
 
@@ -543,10 +553,12 @@ none, so nothing is blocked. If one is ever added there, include
 python3 refresh.py
 ```
 
-This fetches the ten sources (about 25 minutes, most of it the
-OpenStreetMap pass), records the dates in `data/meta.json`, runs
-`check_data.py`, and rebuilds `docs/` and the artifact files, including the
-link-preview image and `llms.txt` with the new counts. Then look at it:
+This fetches the ten sources, the debt pack and the lender profiles (an hour
+and three quarters in October 2026: 80 minutes for the ten sources, most of it
+the OpenStreetMap pass, then 25 for debt and the profiles), records the dates in `data/meta.json`, runs
+`check_data.py`, rebuilds `docs/` and the artifact files, including the
+link-preview image and `llms.txt` with the new counts, and runs
+`check_numbers.py` on the result. Then look at it:
 
 ```bash
 python3 -m http.server 8791 --directory docs
@@ -569,6 +581,25 @@ half-empty layer must never be published as "current". Rerun the failing
 layer alone (`python3 fetch_sources.py osm`), then `python3 refresh.py --build`
 to rebuild from whatever is in `data/`; `--force` overrides the gate if you
 have looked and the drop is real.
+
+`check_numbers.py` is the second check, after the build: every number the
+site states against the data it was built from and against every other place
+it is stated. Most figures are computed from the payload and cannot drift;
+the ones it watches are those that can: the counts in this README, the
+hand-written proportions in the crawler text and the templates ("about a
+fifth" of the Chinese projects at a country point), the lender packs that the
+profiles, the comparison and the debt page each re-cut (a profile's debt must
+be the debt page's figure), the artifact builds beside the site build, and
+`meta.json` against the files it describes. It recomputes from `data/` and
+the shipped payloads rather than from `shared.site_facts`, so a builder bug
+shows up as a disagreement. A failure names the figure, what it says and what
+the data says; fix it where it is written and rerun `refresh.py --build`.
+Rounded figures ("about 1,400 a year", the file sizes) pass within a
+tolerance. When the README's wording changes, a check says "pattern not
+found" and its pattern in the script needs the new wording. `-v` lists all
+the checks (about 300), and a directory argument checks another checkout,
+for instance `git archive HEAD | tar -x -C /tmp/head` to audit what is
+published.
 
 When to run it: Global Energy Monitor releases the Integrated Power Tracker
 roughly every six months (the fetch prints the release name it found), which
@@ -613,7 +644,7 @@ These each cost real time to find. They are not in any of the upstream docs.
   attribute — they inherit the activity's `default-currency`, which is XDR
   (IMF SDR), converted here at a rate stated on the page.
 - **AfDB multinational activities have no country.** Their IATI identifiers
-  carry the `Z1` region code and an empty recipient country; 342 activities.
+  carry the `Z1` region code and an empty recipient country; 398 activities.
   They are labelled "Multinational" on the map and excluded from the country
   filter rather than dropped.
 - **`overpass-api.de` will block you** after a few dozen queries (429, then

@@ -1,9 +1,9 @@
-# Africa Infra Watch
+# Africa Project Atlas
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
 > Africa, for investors, researchers and journalists. Compiled from ten open datasets:
-> 4,274 power units tracked by Global Energy Monitor, 1,767 projects financed by the African Development Bank and 1,107 by the World Bank, 3,586 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,324 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2021, from AidData, and 1,992 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Together they describe about 1,090 GW of generating capacity across all statuses; USD 101.5 billion of AfDB commitments, converted at 1 SDR = 1.37 USD (IMF, Sep 2026), and USD 179.3 billion of World Bank commitments as published; USD 242.7 billion of Chinese official commitments to infrastructure over 2000–2021, in constant 2021 dollars as AidData publishes them; USD 37.8 billion of European Union commitments, Commission contracts and EIB loans, converted at 1 EUR = 1.1225 USD (ECB reference rate, 2 Oct 2026); EUR 4.35 billion of stated Piano Mattei project amounts, the figures the Italian Government's portal prints, which may include other funders' shares.
-> Snapshot built 9 Oct 2026; data is refreshed by hand about twice a year.
+> 4,274 power units tracked by Global Energy Monitor, 1,710 projects financed by the African Development Bank and 1,121 by the World Bank, 3,680 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,324 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2021, from AidData, and 1,992 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Together they describe about 1,090 GW of generating capacity across all statuses; USD 100.3 billion of AfDB commitments, converted at 1 SDR = 1.35 USD (IMF, 9 Oct 2026), and USD 183.6 billion of World Bank commitments as published; USD 242.7 billion of Chinese official commitments to infrastructure over 2000–2021, in constant 2021 dollars as AidData publishes them; USD 37.8 billion of European Union commitments, Commission contracts and EIB loans, converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026); EUR 4.35 billion of stated Piano Mattei project amounts, the figures the Italian Government's portal prints, which may include other funders' shares.
+> Snapshot built 12 Oct 2026; data is refreshed by hand about twice a year.
 
 Made by Jacopo Ottaviani (https://www.linkedin.com/in/jacopo-ottaviani/). Free to use; cite the underlying sources by name.
 Site: https://jacopoottaviani.com/africa-infra-watch/
@@ -38,14 +38,14 @@ https://jacopoottaviani.com/africa-infra-watch/data/map.json. Fetch dates, relea
 https://jacopoottaviani.com/africa-infra-watch/data/meta.json. The raw layers as GeoJSON:
 
 - [Global Energy Monitor](https://globalenergymonitor.org/projects/global-integrated-power-tracker/): Global Integrated Power Tracker, release 2026-08-v2. 4,274 records, data as of 24 Aug 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson
-- [African Development Bank](https://iatiregistry.org/publisher/afdb): IATI 2.03 activity files, 57 country datasets. 1,767 records, data as of 18 Sep 2026, licence Open, per publisher. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson
-- [World Bank](https://iatiregistry.org/publisher/worldbank): IATI 2.03 activity files, 52 African country and regional datasets. 1,107 records, data as of 18 Sep 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson
-- [OpenStreetMap](https://www.openstreetmap.org/copyright): Overpass API, significant road/rail/air classes. 3,586 records, data as of 7 Sep 2026, licence ODbL 1.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson
-- [Global Energy Monitor](https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/): Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07. 324 records, data as of 18 Sep 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson
-- [TeleGeography](https://www.submarinecablemap.com/): Submarine Cable Map, cables with an African landing point. 81 records, data as of 18 Sep 2026, licence CC BY-SA 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson
+- [African Development Bank](https://iatiregistry.org/publisher/afdb): IATI 2.03 activity files, 57 country datasets. 1,710 records, data as of 12 Oct 2026, licence Open, per publisher. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson
+- [World Bank](https://iatiregistry.org/publisher/worldbank): IATI 2.03 activity files, 52 African country and regional datasets. 1,121 records, data as of 12 Oct 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson
+- [OpenStreetMap](https://www.openstreetmap.org/copyright): Overpass API, significant road/rail/air classes. 3,680 records, data as of 12 Oct 2026, licence ODbL 1.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson
+- [Global Energy Monitor](https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/): Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07. 324 records, data as of 12 Oct 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson
+- [TeleGeography](https://www.submarinecablemap.com/): Submarine Cable Map, cables with an African landing point. 81 records, data as of 12 Oct 2026, licence CC BY-SA 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson
 - [AidData](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0): GCDF 3.0 · GeoGCDF v3.0.1, official commitments to infrastructure 2000–2021, footprints from OpenStreetMap. 2,324 records, data as of Nov 2023 · to 2021, licence ODC-By 1.0 (footprints ODbL). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/aiddata_china_finance.geojson
-- [European Union](https://iatiregistry.org/publisher/ec-intpa): IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, 57 African country and regional datasets) and the European Investment Bank's global file. 1,992 records, data as of 2 Oct 2026, licence CC BY 4.0 (Commission), attribution (EIB). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_eu_finance.geojson
-- [Italian Government](https://www.governo.it/en/piano-mattei/progetti/): Piano Mattei per l'Africa project portal (Presidency of the Council of Ministers), one page per project, read in its Italian and English versions. 76 records, data as of 7 Oct 2026, licence CC BY 3.0 IT (gazetteer ODbL). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/piano_mattei.geojson
+- [European Union](https://iatiregistry.org/publisher/ec-intpa): IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, 57 African country and regional datasets) and the European Investment Bank's global file. 1,992 records, data as of 12 Oct 2026, licence CC BY 4.0 (Commission), attribution (EIB). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_eu_finance.geojson
+- [Italian Government](https://www.governo.it/en/piano-mattei/progetti/): Piano Mattei per l'Africa project portal (Presidency of the Council of Ministers), one page per project, read in its Italian and English versions. 76 records, data as of 12 Oct 2026, licence CC BY 3.0 IT (gazetteer ODbL). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/piano_mattei.geojson
 
 Country outlines are Natural Earth (1:10m on the map, 1:110m on the dashboard). The
 satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off by default.
@@ -78,10 +78,10 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   contracts and decisions, EIB operations) sized by commitment, hexagons are Piano Mattei
   projects sized by the amount the Italian Government's portal states. Dashed lines are not yet built.
 - Amounts are commitments (IATI transaction type 2). AfDB publishes in SDR, converted at a
-  fixed, stated rate: 1 SDR = 1.37 USD (IMF, Sep 2026). The World Bank publishes in USD, taken as is. AidData's
+  fixed, stated rate: 1 SDR = 1.35 USD (IMF, 9 Oct 2026). The World Bank publishes in USD, taken as is. AidData's
   Chinese commitments are in constant 2021 US dollars, as published, and are never added to
   the IATI figures. The EU institutions publish in euros, converted at a fixed, stated rate:
-  1 EUR = 1.1225 USD (ECB reference rate, 2 Oct 2026); a Commission contract carries the contracted amount, a financing decision with
+  1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026); a Commission contract carries the contracted amount, a financing decision with
   no contract yet its whole envelope, an EIB operation the signed amount (the Bank's file
   repeats each commitment transaction per tranche record; the distinct ones are summed).
   Piano Mattei amounts are the figure the portal prints for each project, in euros as
@@ -112,7 +112,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 - The Chinese layer is a historical baseline: AidData's 3.0 release covers commitments
   made 2000-2021 and their implementation to 2023. It says where Chinese money went, not
   what China is financing now. Only projects AidData flags as physical infrastructure are
-  kept; about a quarter have no published location and sit at their country's centre.
+  kept; about a fifth have no published location and sit at their country's centre.
 - About two thirds of AfDB locations are approximate (a country or region centroid). The
   World Bank marks every location approximate and states its class: site, populated place
   or administrative region. The pages say which for each record.

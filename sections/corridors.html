@@ -1,0 +1,274 @@
+<!-- Africa's strategic corridors: the prose and section order of docs/corridors/.
+     Tokens (double-underscore names) are filled by build_corridors.py from the
+     register, data/corridors.json, so the counts the page states come from it.
+     The --cf-* colours are the backer groups': the site's validated eight-hue
+     categorical palette (the debt page's --dg-* and the Lobito page's --lf-*
+     slots, plus slots 7 and 8), stepped for each theme. Status keeps the
+     site's --st-* tokens. -->
+<style>
+  :root{
+    --cf-multi:#2a78d6; --cf-private:#eb6834; --cf-china:#1baf7a; --cf-europe:#eda100;
+    --cf-gulf:#e87ba4; --cf-us:#008300; --cf-gov:#4a3aa7; --cf-otherstate:#e34948; --cf-unknown:#a9b3ad;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --cf-multi:#3987e5; --cf-private:#d95926; --cf-china:#199e70; --cf-europe:#c98500;
+      --cf-gulf:#d55181; --cf-us:#008300; --cf-gov:#9085e9; --cf-otherstate:#e66767; --cf-unknown:#56625b;
+    }
+  }
+  :root[data-theme="dark"]{
+    --cf-multi:#3987e5; --cf-private:#d95926; --cf-china:#199e70; --cf-europe:#c98500;
+    --cf-gulf:#d55181; --cf-us:#008300; --cf-gov:#9085e9; --cf-otherstate:#e66767; --cf-unknown:#56625b;
+  }
+
+  /* ---- the map and its list */
+  .cwrap{display:grid;grid-template-columns:minmax(0,1fr) 236px;gap:16px;align-items:start;margin-top:6px}
+  .cwrap>*{min-width:0}
+  .mapscroll{position:relative}
+  #cmap .land.ctx{fill:var(--land-ctx)}
+  #cmap .lake{fill:var(--lake);stroke:none}
+  #cmap .ctry{font:700 7.5px var(--display);letter-spacing:.2em;fill:var(--ink-3);opacity:.6;pointer-events:none}
+  #cmap .sea{font:italic 11px var(--serif);fill:var(--ink-3);opacity:.85;pointer-events:none}
+  #cmap .case{fill:none;stroke:var(--halo);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+  #cmap .case.pipeline{stroke-width:5}
+  #cmap .seg{fill:none;stroke-linecap:round;stroke-linejoin:round;transition:opacity .12s}
+  #cmap .seg.rail{stroke-width:3.2}
+  #cmap .seg.road{stroke-width:3;stroke-dasharray:8 4;stroke-linecap:butt}
+  #cmap .seg.pipeline{stroke-width:2.8;stroke-dasharray:.1 5}
+  #cmap .seg.other{stroke-width:2.4;stroke-dasharray:2 3}
+  #cmap .seg.operating{stroke:var(--st-operating)} #cmap .seg.under_construction{stroke:var(--st-construction)}
+  #cmap .seg.approved{stroke:var(--st-approved)} #cmap .seg.announced{stroke:var(--st-announced)}
+  #cmap .seg.stalled{stroke:var(--st-stalled)}
+  #cmap .pt{stroke:var(--surface);stroke-width:1.6}
+  #cmap .pt.operating{fill:var(--st-operating)} #cmap .pt.under_construction{fill:var(--st-construction)}
+  #cmap .pt.approved{fill:var(--st-approved)} #cmap .pt.announced{fill:var(--st-announced)}
+  #cmap .pt.stalled{fill:var(--st-stalled)}
+  #cmap.by-backer .seg.b-china{stroke:var(--cf-china)} #cmap.by-backer .seg.b-us{stroke:var(--cf-us)}
+  #cmap.by-backer .seg.b-europe{stroke:var(--cf-europe)} #cmap.by-backer .seg.b-gulf{stroke:var(--cf-gulf)}
+  #cmap.by-backer .seg.b-otherstate{stroke:var(--cf-otherstate)} #cmap.by-backer .seg.b-multi{stroke:var(--cf-multi)}
+  #cmap.by-backer .seg.b-gov{stroke:var(--cf-gov)} #cmap.by-backer .seg.b-private{stroke:var(--cf-private)}
+  #cmap.by-backer .seg.b-unknown{stroke:var(--cf-unknown)}
+  #cmap.by-backer .pt.b-china{fill:var(--cf-china)} #cmap.by-backer .pt.b-us{fill:var(--cf-us)}
+  #cmap.by-backer .pt.b-europe{fill:var(--cf-europe)} #cmap.by-backer .pt.b-gulf{fill:var(--cf-gulf)}
+  #cmap.by-backer .pt.b-otherstate{fill:var(--cf-otherstate)} #cmap.by-backer .pt.b-multi{fill:var(--cf-multi)}
+  #cmap.by-backer .pt.b-gov{fill:var(--cf-gov)} #cmap.by-backer .pt.b-private{fill:var(--cf-private)}
+  #cmap.by-backer .pt.b-unknown{fill:var(--cf-unknown)}
+  #cmap .hitl{fill:none;stroke:transparent;stroke-width:13;pointer-events:stroke;cursor:pointer}
+  #cmap .pt{cursor:pointer}
+  #cmap .town{fill:var(--surface);stroke:var(--ink-2);stroke-width:1}
+  #cmap .tlbl{font:500 9.5px var(--display);fill:var(--label-city);paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+  #cmap .leader{fill:none;stroke:var(--ink-3);stroke-width:.9}
+  #cmap .mk{cursor:pointer;outline:none}
+  #cmap .mk circle{fill:var(--ink);stroke:var(--surface);stroke-width:1.6}
+  #cmap .mk text{font:700 10px var(--mono);fill:var(--surface);pointer-events:none}
+  #cmap .mk:focus-visible circle{stroke:var(--accent);stroke-width:3}
+  /* one corridor lit: the others fade */
+  #cmap.focus [data-c]:not(.on){opacity:.13}
+  #cmap.focus .mk.on circle{fill:var(--accent)}
+  #cmap.focus .seg.on{stroke-width:4.2}
+
+  .clist{list-style:none;margin:0;padding:0;font-size:12.5px;max-height:var(--mh,820px);overflow:auto;border:1px solid var(--rule-soft);border-radius:3px;background:var(--surface)}
+  .clist li.rg{padding:9px 10px 4px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);background:var(--surface-3);border-top:1px solid var(--rule-soft)}
+  .clist li.rg:first-child{border-top:0}
+  .clist a{display:flex;align-items:center;gap:2px;padding:5px 10px;color:var(--ink);text-decoration:none;line-height:1.3}
+  .clist a:hover,.clist a.on{background:var(--surface-2)}
+  .clist .nm{flex:1;min-width:0}
+  .sd{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+  .sd.operating{background:var(--st-operating)} .sd.under_construction{background:var(--st-construction)}
+  .sd.approved{background:var(--st-approved)} .sd.announced{background:var(--st-announced)}
+  .sd.stalled{box-shadow:inset 0 0 0 2px var(--st-stalled)}
+
+  .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:14px 0 8px}
+  .seg-btns{display:inline-flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+  .seg-btns button{font:500 12px var(--display);padding:5px 11px;border:0;background:var(--surface);color:var(--ink-2);cursor:pointer}
+  .seg-btns button+button{border-left:1px solid var(--rule)}
+  .seg-btns button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+  .keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 8px;font-size:12px;color:var(--ink-2)}
+  .keys .kl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-right:2px}
+  .keys[hidden]{display:none}
+  .dk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .sk{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+  .sk.announced{background:var(--st-announced)} .sk.approved{background:var(--st-approved)}
+  .sk.under_construction{background:var(--st-construction)} .sk.operating{background:var(--st-operating)}
+  .sk.stalled{border:2px solid var(--st-stalled)}
+  .sk.b-china{background:var(--cf-china)} .sk.b-us{background:var(--cf-us)} .sk.b-europe{background:var(--cf-europe)}
+  .sk.b-gulf{background:var(--cf-gulf)} .sk.b-otherstate{background:var(--cf-otherstate)} .sk.b-multi{background:var(--cf-multi)}
+  .sk.b-gov{background:var(--cf-gov)} .sk.b-private{background:var(--cf-private)} .sk.b-unknown{background:var(--cf-unknown)}
+  .dk i[class^="mk-"]{display:inline-block;width:22px;height:0;border-top:3px solid var(--ink-2)}
+  .dk i.mk-road{border-top-style:dashed}
+  .dk i.mk-pipeline{border-top:3px dotted var(--ink-2)}
+  .dk i.mk-port{width:10px;height:10px;border:0;border-radius:50%;background:var(--ink-2)}
+  .dk i.mk-other{border-top:2px dashed var(--ink-3)}
+  @media (max-width:900px){
+    .cwrap{grid-template-columns:1fr}
+    .clist{max-height:none;columns:2;column-gap:0}
+    .clist li{break-inside:avoid}
+  }
+  @media (max-width:760px){
+    .mapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:3px}
+    .mapscroll .mapbox{min-width:640px}
+    .clist{columns:1}
+  }
+
+  /* ---- the register */
+  .pn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 4px;margin-right:7px;border-radius:2px;background:var(--surface-2);font:600 10.5px var(--mono);color:var(--ink);vertical-align:1px;flex:none}
+  table.board td.nc{width:30px;padding-right:0}
+  table.board td.pname{min-width:250px;max-width:380px}
+  table.board td.pname b{font-weight:600;color:var(--ink);scroll-margin-top:80px}
+  table.board .pc{display:block;font-size:11.5px;margin-top:2px}
+  table.board .sum,table.board .why,table.board .cost{display:block;color:var(--ink-2);margin-top:6px;font-size:12px;line-height:1.45}
+  table.board .why b{font-weight:600;color:var(--ink)}
+  table.board .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+  table.board .tag{font-size:10.5px;padding:1px 6px;border-radius:2px;background:var(--accent-soft);color:var(--accent-ink);text-decoration:none;white-space:nowrap}
+  table.board .deep{display:inline-block;margin-top:7px;font-size:12px;font-weight:600}
+  table.board .srcs{display:block;margin-top:6px;font-size:11px}
+  table.board td.latest{min-width:280px;max-width:420px;color:var(--ink-2)}
+  table.board .snote{display:block;margin:4px 0 8px;font-size:12px;line-height:1.45}
+  table.board .m{margin-left:6px;font-size:11px}
+  ul.pieces{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed var(--rule-soft);display:grid;gap:6px}
+  ul.pieces li{display:flex;gap:7px;font-size:11.5px;line-height:1.4}
+  ul.pieces li .sd{margin-top:3px}
+  ul.pieces b{font-weight:600;color:var(--ink)}
+  ul.pieces .pnote{display:block;color:var(--ink-2)}
+  table.board td.who{min-width:220px;max-width:330px}
+  .fw{display:flex;align-items:flex-start;gap:6px;margin:3px 0;font-size:12px;line-height:1.35}
+  .gk{width:9px;height:9px;border-radius:2px;flex:none;display:inline-block;margin-top:3px}
+  .dk .gk{margin-top:0}
+  .kl2{display:block;margin:8px 0 2px;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+  .stage{display:flex;gap:2px;margin:3px 0 6px}
+  .stage i{width:16px;height:6px;border-radius:1px;background:var(--surface-2)}
+  .stage.announced i.on{background:var(--st-announced)} .stage.approved i.on{background:var(--st-approved)}
+  .stage.under_construction i.on{background:var(--st-construction)} .stage.operating i.on{background:var(--st-operating)}
+  .stage.stalled i{background:transparent;box-shadow:inset 0 0 0 1px var(--st-stalled)}
+  tr.grow td{background:var(--surface-3);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:7px 10px}
+
+  /* ---- who is behind which */
+  table.matrix td,table.matrix th{text-align:center;vertical-align:middle}
+  table.matrix td.name,table.matrix th:first-child{text-align:left;white-space:nowrap}
+  table.matrix th.mx-h{white-space:normal;min-width:64px;max-width:104px;letter-spacing:.04em;line-height:1.3;vertical-align:bottom}
+  table.matrix th.mx-h .sorter{white-space:normal;text-align:center;display:inline-block;max-width:100%}
+  table.matrix th.mx-h span{display:block}
+  table.matrix th.mx-h .gk{display:block;margin:0 auto 5px}
+  td.mx{padding:3px 6px;position:relative}   /* holds the .sr label inside the table's scroll box */
+  td.mx svg{display:block;margin:0 auto}
+  td.mx circle.sol{fill:var(--c);stroke:var(--surface);stroke-width:2}
+  td.mx circle.hol{fill:none;stroke:var(--c);stroke-width:2.2}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #method .spec dd{min-width:0}
+</style>
+
+<div class="head">
+  <span class="kicker">Deep dive · __N_COUNTRIES__ countries</span>
+  <h1>Africa's strategic corridors</h1>
+  <p class="lede"><strong>Africa's strategic corridors come in rival pairs.</strong> The United States and the European Union back the Lobito Corridor to take Zambian and Congolese copper west to the Atlantic; a Chinese state company holds a 30-year concession to rebuild TAZARA and take the same copper east to Dar es Salaam. Morocco and Algeria each have a pipeline to bring Nigeria's gas north to Europe. Kenya's and Tanzania's new railways compete for the trade of Uganda, Rwanda, Burundi and eastern DR Congo, and Ethiopia's can leave by a Chinese-built railway to Djibouti, an Emirati-run port at Berbera or, one day, Kenya's Lamu.</p>
+  <p class="lede"><strong>China lends for, owns or builds pieces of __N_CHINA__ of the __N_CORRIDORS__ corridors</strong> in this register, more than any other foreign power, and __CN_LEAD_PHRASE__ in service or being built. American money is in __N_US__, Lobito; European money or ownership in __N_EUROPE__. Across __N_COUNTRIES__ countries the register holds __N_SEGMENTS__ pieces: __S_OPERATING__ in service, __S_UNDER_CONSTRUCTION__ being built, __S_APPROVED__ approved, __S_ANNOUNCED__ only announced and __S_STALLED__ stalled.</p>
+  <p class="lede">The newest pieces are mostly on paper. The railway from Lobito into Zambia has a development bank's loan but no builder; Uganda's standard gauge line has its loans approved but a contract its army chief called cancelled; the Abidjan–Lagos highway has a treaty, an authority and studies but no money to build; the Atlantic gas pipeline has its West African agreement but not its investment decision.</p>
+  <p class="asof">Register compiled <b>__COMPILED__</b> · <b>__N_CORRIDORS__</b> corridors in <b>__N_SEGMENTS__</b> pieces · <b>__N_BACKERS__</b> funders, owners and builders · <b>__N_SOURCES__</b> sources, each linked</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__N_CORRIDORS__</dt><dd><b>corridors</b> across __N_COUNTRIES__ African countries: __C_OPERATING__ whose main line runs, __C_UNDER_CONSTRUCTION__ being built, __C_APPROVED__ approved, __C_ANNOUNCED__ only announced, __C_STALLED__ stalled</dd></div>
+  <div class="kpi"><dt>__S_OPERATING__</dt><dd><b>pieces in service</b> of the __N_SEGMENTS__ in the register: ports, railways, roads and pipelines</dd></div>
+  <div class="kpi"><dt>__S_UNDER_CONSTRUCTION__</dt><dd><b>pieces being built</b>, against __S_APPROVED__ approved and __S_ANNOUNCED__ only announced</dd></div>
+  <div class="kpi"><dt>__N_CHINA__</dt><dd><b>corridors with China</b> as a lender, owner or builder; __N_WEST__ have money or ownership from the United States or Europe</dd></div>
+</dl>
+
+<section id="map-s">
+  <h2>The map</h2>
+  <p class="lead">Each corridor is drawn piece by piece, coloured by how far each piece has got, or, at the switch, by who pays for it. Numbers match the list beside the map and the table below; hover a line, a port or a number for the detail, and a corridor lights up on its own.</p>
+  <div class="ctl">
+    <span class="seg-btns" role="group" aria-label="Colour the map by"><button type="button" data-by="stage" aria-pressed="true">Colour by stage</button><button type="button" data-by="backer" aria-pressed="false">Colour by who pays</button></span>
+  </div>
+  <div class="keys" id="k-stage"><span class="kl">Stage</span>__STATUS_KEY__</div>
+  <div class="keys" id="k-backer" hidden><span class="kl">Lead funder</span>__GROUP_KEY__</div>
+  <div class="keys"><span class="kl">Pieces</span>__MODE_KEY__</div>
+  <div class="cwrap">
+    <div class="mapscroll">
+      <div class="mapbox">
+        <svg id="cmap" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with __N_CORRIDORS__ strategic corridors drawn piece by piece and numbered, from the Lobito Corridor and TAZARA in the south to LAPSSET, the standard gauge railways and the Saharan gas pipelines in the north and east">
+__BASEMAP__
+__MARKS__
+<g id="g-nodes">__NODES__</g>
+        </svg>
+        <div class="tip" id="ctip"></div>
+      </div>
+    </div>
+    <ol class="clist" id="clist" aria-label="The corridors, by region">__SIDE_LIST__</ol>
+  </div>
+  <p class="mapnote">Pipelines are drawn from Global Energy Monitor's tracker and the Lobito Corridor's railway from OpenStreetMap; every other line is drawn through the towns it links, as published, not along a surveyed route. Borders, lakes and labels from Natural Earth. The map's colour is the piece's own stage; the list's dot is the corridor's.</p>
+</section>
+
+<section id="status">
+  <h2>Where each corridor stands</h2>
+  <p class="lead">Every corridor of the register, by region and from west to east, with the latest that could be confirmed, its pieces and who is behind them. "Why it matters" says whose project it is and what it competes with; the tags say which published priority lists name it.</p>
+  __STATUS_BOARD__
+</section>
+
+<section id="who">
+  <h2>Who is behind which corridor</h2>
+  <p class="lead">The same backers, by kind. China lends for, owns or builds __N_CHINA__ of the __N_CORRIDORS__ corridors; American or European money or ownership is in __N_WEST__. "Other states" here are __OTHER_STATES__.</p>
+  __MATRIX__
+</section>
+
+<section id="method">
+  <h2>How this page was made</h2>
+  <dl class="spec">
+    <dt>The register</dt><dd>A list kept by hand in <a href="__DATA_URL__">corridors.json</a>, compiled on __COMPILED__ from governments', development banks' and companies' own pages and the trade press. Every piece, status and backer carries the address it was read from. Anything that could not be sourced was left out.</dd>
+    <dt>What counts</dt><dd>A corridor is in the register when a published priority list names it (the European Union's twelve Global Gateway strategic corridors for Africa, October 2023; the African Union's PIDA Priority Action Plan 2021–2030; the G7's PGII flagships), or when it is one of the continent's large cross-border routes with a foreign state behind it. One railway built for a mine is in, Simandou's, because Guinea's Trans-Guinean line is designed to carry passengers and other freight too. Corridors that exist only as lines on a regional plan, with no piece funded, are not.</dd>
+    <dt>Pieces</dt><dd>Each corridor is cut into the few pieces that make it: a port, a railway, a road, a pipeline, a border post. A corridor's own stage is that of its main line; each piece has its own.</dd>
+    <dt>Stage</dt><dd>The site's five: announced (an intention, a memorandum, a study), approved (a board's approval, or an agreement between governments, a concession or a financing signed, with no works yet), under construction, operating, stalled (halted for a year or more, cancelled or suspended).</dd>
+    <dt>Backers</dt><dd>Who lends, gives, takes equity, owns or holds the concession, and who builds. A state-owned company or policy bank counts for its state: China Eximbank and CCECC for China, DP World for the United Arab Emirates. Private companies and commercial banks are a group of their own. The map's "who pays" colour is each piece's first-named funder; for a piece still on paper that can be whoever paid for its studies.</dd>
+    <dt>Money</dt><dd>Costs and amounts are kept as the source states them, in its currency and for what it covers. They differ in date and scope, from a feasibility estimate to a signed loan, so the page adds none of them up.</dd>
+    <dt>Map</dt><dd>Equirectangular, on Natural Earth's 1:10m borders. Pipelines from Global Energy Monitor's Global Oil and Gas Infrastructure Tracker (CC BY 4.0), as on the site's main map; the Lobito Corridor's railway from OpenStreetMap contributors (ODbL); every other line through the towns its builders name.</dd>
+  </dl>
+</section>
+
+<script>
+/* the corridors map: tooltips, the lit corridor and the colour switch */
+{
+  const svg = document.getElementById("cmap"), box = svg.closest(".mapbox"), tip = document.getElementById("ctip");
+  const list = document.getElementById("clist");
+  let pinned = null;
+  const light = id => {
+    svg.classList.toggle("focus", !!id);
+    svg.querySelectorAll("[data-c]").forEach(e => e.classList.toggle("on", e.dataset.c === id));
+    list.querySelectorAll("a[data-c]").forEach(a => a.classList.toggle("on", a.dataset.c === id));
+  };
+  const show = (ev, html) => {
+    tip.innerHTML = html; tip.style.display = "block";
+    const r = box.getBoundingClientRect();
+    let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14;
+    if (x + 290 > r.width) x -= 304;
+    if (y + 150 > r.height) y -= 160;
+    tip.style.left = Math.max(4, x) + "px"; tip.style.top = Math.max(4, y) + "px";
+  };
+  const hide = () => { tip.style.display = "none"; };
+  svg.querySelectorAll("[data-tip]").forEach(e => {
+    e.addEventListener("mousemove", ev => { show(ev, e.dataset.tip); if (!pinned) light(e.dataset.c); });
+    e.addEventListener("mouseleave", () => { hide(); if (!pinned) light(null); });
+    e.addEventListener("click", () => { pinned = pinned === e.dataset.c ? null : e.dataset.c; light(pinned || e.dataset.c); });
+  });
+  svg.querySelectorAll(".mk").forEach(m => {
+    m.addEventListener("focus", () => { light(m.dataset.c); tip.innerHTML = m.dataset.tip; tip.style.display = "block"; tip.style.left = "12px"; tip.style.top = "12px"; });
+    m.addEventListener("blur", () => { hide(); if (!pinned) light(null); });
+    m.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); location.hash = "c-" + m.dataset.c; } });
+  });
+  svg.addEventListener("click", ev => { if (ev.target === svg || ev.target.classList.contains("land")) { pinned = null; light(null); } });
+  list.querySelectorAll("a[data-c]").forEach(a => {
+    a.addEventListener("mouseenter", () => { if (!pinned) light(a.dataset.c); });
+    a.addEventListener("mouseleave", () => { if (!pinned) light(null); });
+    a.addEventListener("focus", () => light(a.dataset.c));
+    a.addEventListener("blur", () => { if (!pinned) light(null); });
+  });
+  /* the list is as tall as the map beside it */
+  const fit = () => { list.style.setProperty("--mh", box.getBoundingClientRect().height + "px"); };
+  fit(); addEventListener("resize", fit);
+  document.querySelectorAll(".seg-btns button").forEach(b => b.addEventListener("click", () => {
+    const by = b.dataset.by;
+    document.querySelectorAll(".seg-btns button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    svg.classList.toggle("by-backer", by === "backer");
+    document.getElementById("k-stage").hidden = by === "backer";
+    document.getElementById("k-backer").hidden = by !== "backer";
+  }));
+}
+</script>

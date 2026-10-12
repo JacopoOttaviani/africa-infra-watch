@@ -13,7 +13,7 @@
   <div class="kpi"><dt>__CRS_N__</dt><dd><b>Turkish aid activities</b> in Africa, __CRS_FROM__–__CRS_TO__: USD __CRS_USD__ m committed, __CRS_GRANT_PCT__% standard grants</dd></div>
   <div class="kpi"><dt>__N_WORKS__</dt><dd><b>placed works</b>: __N_WORKS_HAND__ from Eximbank, Summa, Yapı Merkezi and Karpowership pages, __N_GEM__ Turkish-owned power units in GEM</dd></div>
   <div class="kpi"><dt>USD __FDI_STOCK__ m</dt><dd><b>Turkish direct-investment stock</b> in Africa at the end of __FDI_TO__, __FDI_TOP__ __FDI_TOP_PCT__% of it</dd></div>
-  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to Turkey</b> by __IDS_N__ African governments at the end of __IDS_TO__</dd></div>
+  <div class="kpi"><dt>USD __IDS_STOCK__ m</dt><dd><b>owed to Turkish creditors</b> by __IDS_N__ African governments at the end of __IDS_TO__</dd></div>
 </dl>
 
 <section id="map-section">
@@ -62,7 +62,7 @@
 
 <section id="series">
   <h2>Country-year series: investment stock, net aid, debt</h2>
-  <p class="lead">Three official series describe Turkish money in Africa one country and one year at a time. The OECD's FDI positions give Turkey's outward direct-investment stock by partner country; Algeria carries it, with Tosyalı's steelworks and textile plants, and the latest year reads as a partial revision for several countries, so the previous year is often the safer one to quote. The DAC2a table gives net ODA by recipient, which matches TİKA's own annual report to the decimal. The World Bank's debt statistics give what each government owes Turkey: the Eximbank buyer's credits above, from Ethiopia's railway to Senegal's Diamniadio complex.</p>
+  <p class="lead">Three official series describe Turkish money in Africa one country and one year at a time. The OECD's FDI positions give Turkey's outward direct-investment stock by partner country; Algeria carries it, with Tosyalı's steelworks and textile plants, and the latest year reads as a partial revision for several countries, so the previous year is often the safer one to quote. The DAC2a table gives net ODA by recipient, which matches TİKA's own annual report to the decimal. The World Bank's debt statistics give what each government owes Turkish creditors: the Eximbank buyer's credits above, from Ethiopia's railway to Senegal's Diamniadio complex.</p>
   <h3>Direct-investment stock by partner country</h3>
   __TABLE_FDI__
   <h3>Net ODA by recipient</h3>
@@ -70,7 +70,7 @@
   __TABLE_ODA__
   <h3>Debt owed to Turkey</h3>
   __TABLE_IDS__
-  <p class="note">World Bank International Debt Statistics, bilateral creditor counterpart 055. Sovereign and sovereign-guaranteed borrowing only: lending to private borrowers, and to countries that do not report to the Debtor Reporting System (Libya, Somalia), is outside the series.</p>
+  <p class="note">World Bank International Debt Statistics, counterpart 055: all public and publicly guaranteed debt to creditors there, the state and its banks together (series DPPG, as on the debt page), with the bilateral official part beside it. Sovereign and sovereign-guaranteed borrowing only: lending to private borrowers, and to countries that do not report to the Debtor Reporting System (Libya, Somalia), is outside the series.</p>
 </section>
 
 <section id="method">
@@ -78,7 +78,7 @@
   <dl class="spec">
     <dt>One record is</dt><dd>In the aid tables, <b>one CRS activity</b> as Turkey reports it: one recipient, one purpose code, one year, with its commitment and disbursement. In the works table, <b>one entry on a publisher's page</b>: an Eximbank transaction, a Summa or Yapı Merkezi contract, a Karpowership deployment, a GEM power unit. In the series, <b>one country and one year</b>.</dd>
     <dt>Status</dt><dd>Works carry the status their page states, mapped to the map's vocabulary: built and operating are <b>operating</b>, under way is <b>under construction</b>, planned is <b>announced</b>, a contract that has ended is drawn as <b>stalled</b> (grey) and labelled as ended. GEM units use the map's own mapping. Aid activities have no status: a Turkish grant is committed and disbursed in the same year.</dd>
-    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported; the constant-price rows the OECD also publishes are left out. Net ODA is current prices. FDI stock is the OECD's net position, all resident units, immediate counterpart, converted at exchange rates by the OECD. Debt is the World Bank's bilateral public and publicly guaranteed stock. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
+    <dt>Money</dt><dd>CRS commitments and disbursements are in <b>current US dollars</b> as reported; the constant-price rows the OECD also publishes are left out. Net ODA is current prices. FDI stock is the OECD's net position, all resident units, immediate counterpart, converted at exchange rates by the OECD. Debt is the World Bank's public and publicly guaranteed stock owed to the lender's creditors, the state and its banks together, as the debt page counts it, with the bilateral official part, the state's own claims, beside it. None of these is a project value and <b>none is added to the map's lenders</b>.</dd>
     <dt>Location</dt><dd>Aid and the three series are drawn at the <b>country's interior point</b>, the same point the map uses for records placed no finer than the country. The works use the company's coordinates where its page gives them (ten of Summa's) and otherwise the named town, corridor or port, placed by hand and said so in each row.</dd>
     <dt>Not here, and why</dt><dd>
       <ul class="tight">
@@ -95,7 +95,7 @@
         <li><b>OECD, Creditor Reporting System</b>, Turkey as provider (DAC code 55), activity-level microdata through the SDMX API, dataflow DSD_CRS@DF_CRS; OECD terms of use, free reuse with attribution.</li>
         <li><b>OECD, DAC2a</b>, net ODA disbursements by recipient (measure 206), current prices, dataflow DSD_DAC2@DF_DAC2A.</li>
         <li><b>OECD, FDI positions by partner country</b> (Benchmark Definition, 4th edition), Turkey outward, dataflow DSD_FDI@DF_FDI_POS_CTRY.</li>
-        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 055, series DT.DOD.BLAT.CD, DT.COM.BLAT.CD and DT.DIS.BLAT.CD; CC BY 4.0, release of __IDS_UPDATED__.</li>
+        <li><b>World Bank, International Debt Statistics</b>, source 6, counterpart area 055, series DT.DOD.DPPG.CD, DT.COM.DPPG.CD and DT.DIS.DPPG.CD (all creditors in Turkey), with DT.DOD.BLAT.CD (bilateral official) beside them; CC BY 4.0, release of __IDS_UPDATED__.</li>
         <li><b>Türk Eximbank</b> sample transactions page; <b>Summa</b>, <b>Yapı Merkezi</b> and <b>Karpowership</b> project pages, read 7 October 2026, linked from each row.</li>
         <li><b>Global Energy Monitor</b>, Global Integrated Power Tracker, as the map draws it; CC BY 4.0.</li>
       </ul>

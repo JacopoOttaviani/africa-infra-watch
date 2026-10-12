@@ -1,0 +1,286 @@
+<!-- The Lobito Corridor: the prose and section order of docs/lobito/. Tokens
+     (double-underscore names) are filled by build_lobito.py from the register,
+     data/lobito.json, so the counts and sums the page states come from it.
+     The --lf-* colours are the funder groups': the debt page's --dg-* slots
+     (validated for colour-blind separation in both themes) under this page's
+     names. The --fm-* steps are one green ramp for how firm a financing line
+     is, dark = signed, light = pledged; validated as an ordinal ramp against
+     the surface of each theme. -->
+<style>
+  :root{
+    --lf-multi:#2a78d6; --lf-private:#eb6834; --lf-china:#1baf7a; --lf-europe:#eda100;
+    --lf-gov:#e87ba4; --lf-us:#008300; --lf-other:#a9b3ad;
+    --fm-signed:#1F5F4B; --fm-approved:#558F78; --fm-pledged:#93BFAD;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --lf-multi:#3987e5; --lf-private:#d95926; --lf-china:#199e70; --lf-europe:#c98500;
+      --lf-gov:#d55181; --lf-us:#008300; --lf-other:#56625b;
+      --fm-signed:#8FD3B9; --fm-approved:#4E9479; --fm-pledged:#2B5446;
+    }
+  }
+  :root[data-theme="dark"]{
+    --lf-multi:#3987e5; --lf-private:#d95926; --lf-china:#199e70; --lf-europe:#c98500;
+    --lf-gov:#d55181; --lf-us:#008300; --lf-other:#56625b;
+    --fm-signed:#8FD3B9; --fm-approved:#4E9479; --fm-pledged:#2B5446;
+  }
+
+  /* ---- the head: the lede beside a locator map of the continent */
+  .headgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(312px,420px);gap:8px 56px;align-items:center}
+  .locator{margin:0;padding-top:30px}
+  .locator svg{display:block;width:100%;height:auto;overflow:visible}
+  .locator figcaption{font-size:12px;line-height:1.45;color:var(--ink-3);margin-top:10px;max-width:42ch}
+  .loc .lc{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  .loc .lc.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:.8}
+  .loc .lwin{fill:none;stroke:var(--ink-2);stroke-width:.8;stroke-dasharray:3 2}
+  .loc .lrail{fill:none;stroke:var(--st-operating);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .loc .lplan{fill:none;stroke:var(--st-approved);stroke-width:1.8;stroke-dasharray:3 2;stroke-linecap:round}
+  .loc .ldot{fill:var(--ink);stroke:var(--paper);stroke-width:1.2}
+  .loc .llbl{font:600 10px var(--display);fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+  .loc .lctry{font:700 7.5px var(--display);letter-spacing:.18em;fill:var(--accent-ink)}
+  .loc .lsea{font:italic 9px var(--serif);fill:var(--ink-3)}
+  @media (max-width:960px){
+    .headgrid{grid-template-columns:1fr}
+    .locator{padding-top:6px;max-width:360px}
+  }
+
+  /* ---- the corridor map */
+  .mapscroll{position:relative}
+  #map .land.ctx{fill:var(--land-ctx)}
+  #map .adm{fill:none;stroke:var(--admin);stroke-width:.7}
+  #map .lake{fill:var(--lake);stroke:none}
+  #map .river{fill:none;stroke:var(--river);stroke-width:.9;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+  #map .ctry{font:700 11px var(--display);letter-spacing:.32em;fill:var(--ink-3);opacity:.75}
+  #map .town{fill:var(--surface);stroke:var(--ink-2);stroke-width:1.2}
+  #map .tlbl{font:500 10.5px var(--display);fill:var(--label-city);paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round}
+  #map .rail{fill:none;stroke-linecap:round;stroke-linejoin:round}
+  #map .rail.ctx{stroke:var(--ink-3);stroke-width:1.1;opacity:.5}
+  #map .rail.net{stroke:var(--ink-2);stroke-width:1.6;opacity:.75}
+  #map .rail.cfb,#map .rail.drc{stroke:var(--ink-2);stroke-width:3.4}
+  #map .rail.operating{stroke:var(--st-operating)} #map .rail.under_construction{stroke:var(--st-construction)}
+  #map .rail.approved{stroke:var(--st-approved)} #map .rail.announced{stroke:var(--st-announced)}
+  #map .rail.stalled{stroke:var(--st-stalled)}
+  #map .proj{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  #map .proj.announced{stroke:var(--st-announced);stroke-dasharray:7 5}
+  #map .proj.approved{stroke:var(--st-approved);stroke-dasharray:7 5}
+  #map .proj.under_construction{stroke:var(--st-construction);stroke-dasharray:12 3}
+  #map .proj.operating{stroke:var(--st-operating)}
+  #map .proj.stalled{stroke:var(--st-stalled);stroke-dasharray:3 4}
+  #map .leader{fill:none;stroke:var(--ink-3);stroke-width:.8;opacity:.8}
+  #map .hitline{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke}
+  #map .hitline.hit:hover{filter:none}
+  #map .asset{stroke:var(--surface);stroke-width:1.6}
+  #map .lbl{font:700 10px var(--mono);fill:var(--ink)}
+  .sw.seg-rail{border-radius:1px;background:var(--ink-3);opacity:1}
+  .sw.seg-road{transform:rotate(45deg) scale(.85);border-radius:1px;background:var(--ink-3);opacity:1}
+  .sw.seg-border{clip-path:polygon(50% 0,100% 100%,0 100%);border-radius:0;background:var(--ink-3);opacity:1}
+  .sw.seg-port{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);border-radius:0;background:var(--ink-3);opacity:1;width:13px;height:13px}
+  .sw.seg-energy{clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);border-radius:0;background:var(--ink-3);opacity:1}
+  .sw.seg-other{background:var(--ink-3);opacity:1}
+  .keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 10px;font-size:12px;color:var(--ink-2)}
+  .keys .kl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-right:2px}
+  .dk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .sk{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+  .sk.announced{background:var(--st-announced)} .sk.approved{background:var(--st-approved)}
+  .sk.under_construction{background:var(--st-construction)} .sk.operating{background:var(--st-operating)}
+  .sk.stalled{border:2px solid var(--st-stalled)}
+  .lk{width:18px;height:0;border-top:3px solid var(--st-operating);display:inline-block}
+  .lk.dash{border-top-style:dashed;border-color:var(--st-approved)}
+  .lk.net{border-top-width:2px;border-color:var(--ink-2);opacity:.75}
+  @media (max-width:760px){
+    .mapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:3px}
+    .mapscroll .mapbox{min-width:760px}
+    /* the funder bars keep a readable size on a phone and scroll sideways */
+    .fscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .fscroll #c-funders{min-width:640px}
+  }
+
+  /* ---- the status board */
+  .pn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 4px;margin-right:7px;border-radius:2px;background:var(--surface-2);font:600 10.5px var(--mono);color:var(--ink);vertical-align:1px}
+  table.board td.nc{width:30px;padding-right:0}
+  table.board td.pname{min-width:240px;max-width:380px}
+  table.board td.pname b{font-weight:600;color:var(--ink)}
+  table.board .pc{display:block;font-size:11.5px;margin-top:2px}
+  table.board .sum{display:block;color:var(--ink-2);margin-top:5px;font-size:12px;line-height:1.45}
+  table.board td.latest{min-width:220px;max-width:340px;color:var(--ink-2)}
+  table.board .srcs{display:block;margin-top:5px;font-size:11px}
+  table.board td.who{min-width:230px}
+  /* the "Funded by" cell: a donut of shares where two or more funders put in money, and the list */
+  .fund{display:flex;flex-direction:column;gap:8px}
+  .donut{display:block;flex:none}
+  .donut .ds{stroke:var(--surface);stroke-width:1.5;stroke-linejoin:round}
+  .donut .ds.pl{fill-opacity:.38}
+  .donut .ds:hover{filter:brightness(.88)}
+  .donut .dt1{font:500 7.5px var(--mono);fill:var(--ink-3);letter-spacing:.06em}
+  .donut .dt2{font:600 10px var(--mono);fill:var(--ink)}
+  .flist{display:flex;flex-direction:column;gap:3px}
+  .fr{display:grid;grid-template-columns:9px minmax(0,1fr) auto 30px;gap:0 7px;align-items:baseline;font-size:12px;line-height:1.35}
+  .fr .fk{margin:0;align-self:center}
+  .fr.pl .fk{opacity:.38}
+  .fr .fn{color:var(--ink)}
+  .fr .fn em{font-style:normal;font-size:11px;color:var(--ink-3)}
+  .fr .fv,.fr .fp{font:500 11px var(--mono);color:var(--ink-2);text-align:right;white-space:nowrap}
+  .fr .fp{color:var(--ink-3)}
+  .fr.nd .fn,.fr.nd .fv{color:var(--ink-3)}
+  .fr.nd .fv{font-family:var(--display);font-size:11px}
+  table.board .area{display:block;margin-top:5px;font-size:11.5px;color:var(--ink-3);font-style:italic}
+  .nis{display:block;font-family:var(--display);font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+  tr.grow td{background:var(--surface-3);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:7px 10px}
+  .stage{display:flex;gap:2px;margin:3px 0 6px}
+  .stage i{width:16px;height:6px;border-radius:1px;background:var(--surface-2)}
+  .stage.announced i.on{background:var(--st-announced)} .stage.approved i.on{background:var(--st-approved)}
+  .stage.under_construction i.on{background:var(--st-construction)} .stage.operating i.on{background:var(--st-operating)}
+  .stage.stalled i{background:transparent;box-shadow:inset 0 0 0 1px var(--st-stalled)}
+  .fw{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:12px}
+  .fk{width:9px;height:9px;border-radius:2px;flex:none;display:inline-block;margin-right:6px;vertical-align:0}
+  .fw .fk{margin-right:0}
+
+  /* ---- who is paying */
+  .chart.wide{margin-top:16px}
+  #c-funders .gl{stroke:var(--rule-soft)}
+  #c-funders .fseg{cursor:default}
+  #c-funders .fseg:hover{filter:brightness(.9)}
+  .fseg.f-signed,.fz.f-signed,.firm.f-signed i{fill:var(--fm-signed);background:var(--fm-signed)}
+  .fseg.f-approved,.fz.f-approved,.firm.f-approved i{fill:var(--fm-approved);background:var(--fm-approved)}
+  .fseg.f-pledged,.fz.f-pledged,.firm.f-pledged i{fill:var(--fm-pledged);background:var(--fm-pledged)}
+  .fz{width:14px;height:10px;border-radius:2px;display:inline-block;flex:none}
+  .firm{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .firm i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .tip i.fk{margin-right:5px}
+  table.matrix td,table.matrix th{text-align:center;vertical-align:middle}
+  table.matrix td.name,table.matrix th:first-child{text-align:left;white-space:nowrap}
+  table.matrix th.mx-h{white-space:normal;min-width:84px;letter-spacing:.06em;line-height:1.3}
+  table.matrix th.mx-h span{display:inline-flex;align-items:center;gap:0}
+  td.mx{padding:4px 6px}
+  td.mx svg{display:block;margin:0 auto}
+  td.mx .mxv{display:block;font:500 10.5px var(--mono);color:var(--ink-2);margin-top:1px}
+  td.mx circle.sol{fill:var(--c);stroke:var(--surface);stroke-width:2}
+  td.mx circle.hol{fill:none;stroke:var(--c);stroke-width:2}
+  table.deals td.dnote,table.pledges td.dnote{min-width:200px;color:var(--ink-2)}
+  table.deals td{font-size:12px}
+  table.pledges .pc{display:block;font-size:11.5px;margin-top:3px}
+
+  /* ---- timeline */
+  ol.tl{list-style:none;margin:14px 0 0;padding:0;max-width:86ch;border-left:2px solid var(--rule);}
+  ol.tl li{display:grid;grid-template-columns:104px 1fr;gap:12px;padding:6px 0 6px 14px;position:relative;color:var(--ink-2)}
+  ol.tl li::before{content:"";position:absolute;left:-6px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+  ol.tl li .m{font-size:11.5px;color:var(--ink);padding-top:1px}
+  ol.tl a,.spec a{white-space:nowrap}
+  @media (max-width:600px){ol.tl li{grid-template-columns:1fr;gap:2px}}
+  #method .spec dd{min-width:0}
+  #method code{overflow-wrap:anywhere}
+</style>
+
+<div class="headgrid">
+<div class="head">
+  <span class="kicker">Deep dive · Angola, DR Congo, Zambia</span>
+  <h1>The Lobito Corridor</h1>
+  <p class="lede"><strong>The Lobito Corridor is a railway, and so far only the old line carries its freight.</strong> The Benguela line runs 1,289 km from Angola's Atlantic port of Lobito to Luau on the Congolese border; since January 2024 a concession of Trafigura, Mota-Engil and Vecturis has run it, and from 2024 its trains have gone on along the DR Congo's own line to the copper and cobalt mines of Kolwezi. Around it, Washington, Brussels, Rome and the development banks have gathered roads, border posts, farms, power and studies under the corridor's name. This register holds __N_PROJECTS__ of them: __N_OPERATING__ in service, __N_BUILDING__ being built or carried out, __N_APPROVED__ approved, __N_ANNOUNCED__ only announced.</p>
+  <p class="lede"><strong>__SIGNED__ is signed or being paid out</strong> for those projects, __APPROVED__ has a board's approval and __PLEDGED__ is promised. The largest signed loan is the US Development Finance Corporation's USD 553 m to the railway, announced by Joe Biden and signed under Donald Trump. The headline figures are of another order: more than USD 4 bn of US investment, more than EUR 2 bn from Team Europe. They count private money and each other, and __ELSEWHERE__ of what the United States listed under the corridor's name pays for things away from it, mostly solar power elsewhere in Angola: __ELSEWHERE_CMP__ everything signed for the corridor's own projects.</p>
+  <p class="lede">The next pieces are on paper. The DR Congo signed its line from Dilolo to Sakania to Mota-Engil in August 2026, with no loan yet for the works. The new railway into Zambia has the African Development Bank's approval but no builder, and its developer, the Africa Finance Corporation, aims to close its financing at the end of 2027.</p>
+  <p class="asof">Register compiled <b>__COMPILED__</b> · <b>__N_PROJECTS__</b> projects · <b>__N_DEALS__</b> financing lines from <b>__N_FUNDERS__</b> funders · <b>__N_SOURCES__</b> sources, each linked · railways from OpenStreetMap, fetched <b>__RAIL_FETCHED__</b></p>
+</div>
+<figure class="locator">
+  __LOCATOR__
+  <figcaption>From Lobito on the Atlantic to the copper and cobalt mines of DR Congo and Zambia. Green is the railway in service, dashed blue the line planned into Zambia; the box is the map further down.</figcaption>
+</figure>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__N_PROJECTS__</dt><dd><b>projects</b> on the corridor: __N_OPERATING__ in service, __N_BUILDING__ being built, __N_APPROVED__ approved, __N_ANNOUNCED__ announced</dd></div>
+  <div class="kpi"><dt>__SIGNED__</dt><dd><b>signed or disbursing</b>: loans, grants and equity with an agreement behind them</dd></div>
+  <div class="kpi"><dt>__APPROVED__</dt><dd><b>approved by a board</b> but not yet signed</dd></div>
+  <div class="kpi"><dt>__PLEDGED__</dt><dd><b>pledged or announced</b> for named projects; __N_UNDISCLOSED__ more lines carry no amount</dd></div>
+</dl>
+
+<section id="map-s">
+  <h2>Along the line</h2>
+  <p class="lead">The corridor from the Atlantic to the Copperbelt. The railway in green carries the corridor's trains today; dashed lines are planned. Markers are numbered as in the table below and coloured by status; where several projects share a place they are set out in a row above it. Programmes that cover whole provinces are in the table, not on the map.</p>
+  <div class="legend" aria-label="Show or hide kinds of project">__SEG_LEGEND__</div>
+  <div class="keys"><span class="kl">Status</span>__STATUS_KEY__</div>
+  <div class="keys"><span class="kl">Lines</span><span class="dk"><i class="lk"></i>Railway in service, the corridor</span><span class="dk"><i class="lk dash"></i>Planned railway or road, dashed until built</span><span class="dk"><i class="lk net"></i>Rest of the rail network</span></div>
+  <div class="mapscroll">
+    <div class="mapbox">
+      <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of the Lobito Corridor from the port of Lobito in Angola through DR Congo's Lualaba and Haut-Katanga provinces to Zambia's Copperbelt, with the railways and every project of the register, numbered and coloured by status">
+__BASEMAP__
+      </svg>
+      <div class="tip" id="tip"></div>
+    </div>
+  </div>
+  <p class="mapnote">Hover a line or a marker for the project; the numbers match the table below. Railways from OpenStreetMap; borders, provinces, rivers and towns from Natural Earth. Planned lines are drawn through the towns they are meant to serve, not on a surveyed alignment.</p>
+</section>
+
+<section id="status">
+  <h2>Where each project stands</h2>
+  <p class="lead">Every project of the register, by kind of work and from the Atlantic eastwards, with the latest that could be confirmed and its source. "Under construction" is kept for works on the ground; programmes, studies and plans being carried out are "under way".</p>
+  __STATUS_BOARD__
+</section>
+
+<section id="money">
+  <h2>Who is paying</h2>
+  <p class="lead">What each funder has put on the corridor's projects, and how firmly. A pledge is not a loan, so the bars split what is signed from what a board has approved and what is only promised. The largest promise is a letter of interest: the DFC said the DR Congo's railway "may seek up to $1 billion" from it.</p>
+  <div class="chart wide">
+    <h3>Money committed to the corridor's projects, by funder</h3>
+    <p class="sub">USD, every financing line in the register summed by funder and by how firm it is. Euros converted at __EUR_NOTE__. Hover a bar for the deals in it.</p>
+    <div class="keys">__FIRM_KEY__</div>
+    <div class="keys"><span class="kl">Funder</span>__FUNDER_KEY__</div>
+    <div class="fscroll">__CHART_FUNDERS__</div>
+  </div>
+  <h3>Who funds what</h3>
+  __MATRIX__
+  <h3>Every financing line</h3>
+  __TABLE_DEALS__
+</section>
+
+<section id="headline">
+  <h2>The headline numbers</h2>
+  <p class="lead">The figures of summits and communiqués. They mix loans with hoped-for private investment, Angola-wide programmes with the corridor, and contain one another, so the page shows them as stated and adds none of them up.</p>
+  __TABLE_PLEDGES__
+  <h3>Counted under the corridor's name, but not on it</h3>
+  <p class="note">__N_ELSEWHERE__ financings, __ELSEWHERE__ in loans and grants, that their funder or the White House listed under the Lobito Corridor but that pay for things elsewhere in Angola or the region, or name no place on the corridor.</p>
+  __TABLE_ELSEWHERE__
+</section>
+
+<section id="timeline">
+  <h2>How it got here</h2>
+  <ol class="tl">__TIMELINE__</ol>
+  <h3>Who runs it</h3>
+  <dl class="spec">__GOVERNANCE__</dl>
+</section>
+
+<section id="site">
+  <h2>Already on the map</h2>
+  <p class="lead">The site's own datasets, from the AfDB, the World Bank, the European Union, Italy's Piano Mattei, AidData's Chinese finance and OpenStreetMap, already hold records of the corridor. They come with each source's own status and amounts, which can differ from the register's.</p>
+  __SITE_RECORDS__
+</section>
+
+<section id="method">
+  <h2>How this page was made</h2>
+  <dl class="spec">
+    <dt>The register</dt><dd>A list kept by hand in <a href="__DATA_URL__">lobito.json</a>, compiled on __COMPILED__ from funders' and governments' own pages, company statements and the trade press. Every project, status and financing line carries the address it was read from. Anything that could not be sourced was left out.</dd>
+    <dt>What counts</dt><dd>A project is in the register when its funder or developer names the Lobito Corridor, or when it sits on the corridor's spine: the Benguela Railway from Lobito to Luau, the line on to Kolwezi, the planned line into Zambia and the roads and border posts that feed them. Mines are in only where a funder has put money into them under the corridor's name; otherwise they are the freight it was built for, not its projects.</dd>
+    <dt>Status</dt><dd>The site's five: announced, approved, under construction, operating, stalled. A project's status is its stage on the ground, not its money's.</dd>
+    <dt>Firmness</dt><dd>Kept apart from status, for each financing line: <b>pledged</b> (an announcement or a memorandum), <b>approved</b> (a board decision), <b>signed</b> (a loan, grant or concession agreement), <b>disbursing</b> (money flowing). The charts fold signed and disbursing together.</dd>
+    <dt>Not added up</dt><dd>The umbrella commitments (the United States' and the European Union's corridor-wide totals, Italy's pledge) are listed apart and never summed with the project lines. They overlap them, count private money their makers hope to attract and are restated from one summit to the next.</dd>
+    <dt>Lengths</dt><dd>As the concessionaires and governments state them: 1,289 km for the Benguela line (Lobito Atlantic Railway, MIGA), where older sources, the AidData record among them, give 1,344 km; about 1,000 km for the DR Congo line (the government), 1,037 km by Mota-Engil's count.</dd>
+    <dt>Currency</dt><dd>Amounts are kept in the currency the source states. Euros are converted to US dollars only to draw the charts, at __EUR_NOTE__.</dd>
+    <dt>Map</dt><dd>Railways from OpenStreetMap contributors (ODbL), fetched __RAIL_FETCHED__ through the Overpass API; borders, provinces, lakes, rivers and towns from Natural Earth 1:10m. A planned line is drawn through the places it is meant to link, as published, not along a surveyed route.</dd>
+  </dl>
+</section>
+
+<script>
+/* the funder chart's tooltip: each bar segment carries its own, built at build time */
+{
+  const svg = document.getElementById("c-funders"), box = svg.closest(".chart"), tip = document.createElement("div");
+  tip.className = "tip"; box.appendChild(tip);
+  svg.querySelectorAll("[data-tip]").forEach(g => {
+    g.addEventListener("mousemove", ev => {
+      tip.innerHTML = g.dataset.tip; tip.style.display = "block";
+      const r = box.getBoundingClientRect();
+      let x = ev.clientX - r.left + 14; if (x + 300 > r.width) x -= 320;
+      tip.style.left = Math.max(4, x) + "px"; tip.style.top = (ev.clientY - r.top + 12) + "px";
+    });
+    g.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+  });
+}
+</script>

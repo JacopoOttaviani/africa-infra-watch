@@ -37,7 +37,7 @@ sys.path.insert(0, str(ROOT))
 
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
 from build_dashboard import build_china, build_eu, build_lookup, build_mattei  # noqa: E402
-from shared import BRAND, DATA, DOCS, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W  # noqa: E402
+from shared import BRAND, DATA, DOCS, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W  # noqa: E402
 
 W, H = SOCIAL_W, SOCIAL_H
 OUT = DOCS / SOCIAL_IMAGE
@@ -223,7 +223,7 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     mark = mark.replace('width="1em" height="1em"', 'width="46" height="46" x="64" y="52"', 1)
     mark = mark.replace('id="aiw-cut"', 'id="soc-cut"').replace('url(#aiw-cut)', 'url(#soc-cut)')
     out.append(f'<g color="{C["accent"]}">{mark}</g>')
-    out.append(f'<text x="124" y="83" class="kicker">Africa Infra Watch</text>')
+    out.append(f'<text x="124" y="83" class="kicker">{SITE_NAME}</text>')
 
     out.append(f'<text x="62" y="200" class="title">Africa</text>')
     out.append(f'<text x="62" y="276" class="title">Infrastructure</text>')

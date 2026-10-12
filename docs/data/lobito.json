@@ -1,0 +1,2228 @@
+{
+ "about": "The Lobito Corridor register of Africa Project Atlas: projects financed under the corridor's name or on its rail and road spine, with their status and every financing line, each with its source. Kept by hand; see build_lobito.py for the rules.",
+ "compiled": "2026-10-12",
+ "projects": [
+  {
+   "id": "lar",
+   "name": "Lobito Atlantic Railway: the Benguela Railway and Lobito's mineral terminal",
+   "short": "Lobito Atlantic Railway",
+   "segment": "rail",
+   "rail_line": "cfb",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Lobito",
+    "lon": 13.56,
+    "lat": -12.34
+   },
+   "status": "operating",
+   "status_note": "Running since January 2024. Its USD 753 m debt package reached financial close in July 2026, about USD 300 m of it drawn in June. Floods cut the line between Lobito and Huambo for about two months from April 2026, and July 2026 was a record month for international cargo.",
+   "status_date": "2026-07",
+   "summary": "A 30-year concession, signed in November 2022, to run, maintain and rehabilitate the 1,289 km Benguela Railway from Lobito to Luau on the DR Congo border, and the port's mineral terminal. Owned by Trafigura, Mota-Engil and Vecturis; about 265,000 tonnes carried in 2025, 400,000 expected in 2026.",
+   "developer": "Lobito Atlantic Railway (Trafigura, Mota-Engil, Vecturis)",
+   "length_km": 1289,
+   "cost": {
+    "amount": 455000000,
+    "currency": "USD",
+    "note": "Investment planned in Angola at the 2023 handover, plus up to USD 100 m for the DR Congo section",
+    "source": "https://www.trafigura.com/news-and-insights/press-releases/2023/concession-for-railway-services-transferred-to-lobito-atlantic-railway-in-angola/"
+   },
+   "finance": [
+    {
+     "funder": "US International Development Finance Corporation (DFC)",
+     "funder_country": "US",
+     "instrument": "loan",
+     "amount": 553000000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "signed",
+     "note": "Announced Dec 2024, signed 17 Dec 2025; financial close of the DFC and DBSA package in July 2026, about USD 300 m drawn in June (split between lenders not disclosed).",
+     "source": "https://www.africafc.org/news-and-insights/news/afc-achieves-financial-close-on-landmark-us-753-mm-lobito-corridor-railway-project-marking-a-major-milestone-for-regional-integration-and-economic-transformation",
+     "source_date": "2026-07-03"
+    },
+    {
+     "funder": "Development Bank of Southern Africa (DBSA)",
+     "funder_country": "DBSA",
+     "instrument": "loan",
+     "amount": 200000000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "signed",
+     "note": "Signed with the DFC loan in Dec 2025; part of the USD 753 m package closed in July 2026.",
+     "source": "https://www.africafc.org/news-and-insights/news/afc-achieves-financial-close-on-landmark-us-753-mm-lobito-corridor-railway-project-marking-a-major-milestone-for-regional-integration-and-economic-transformation",
+     "source_date": "2026-07-03"
+    },
+    {
+     "funder": "Afreximbank",
+     "funder_country": "Afreximbank",
+     "instrument": "loan",
+     "amount": 175000000,
+     "currency": "EUR",
+     "year": 2023,
+     "firmness": "signed",
+     "note": "To the sponsor Mota-Engil Africa, not to LAR, for its LAR investment obligations; may overlap the sponsors' equity.",
+     "source": "https://en.amwalalghad.com/?p=145038",
+     "source_date": "2023-11-12"
+    },
+    {
+     "funder": "Multilateral Investment Guarantee Agency (MIGA)",
+     "funder_country": "MIGA",
+     "instrument": "guarantee",
+     "amount": 180000000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "pledged",
+     "note": "Proposed cover of Mota-Engil's and Trafigura's equity and shareholder loans for up to 20 years; MIGA lists it as proposed.",
+     "source": "https://www.miga.org/project/lobito-luau-railway-corridor-project-0",
+     "source_date": "2024-11-18"
+    }
+   ],
+   "sources": [
+    {
+     "title": "AFC achieves financial close on US$753 MM Lobito Corridor Railway Project",
+     "publisher": "AFC",
+     "date": "2026-07-03",
+     "url": "https://www.africafc.org/news-and-insights/news/afc-achieves-financial-close-on-landmark-us-753-mm-lobito-corridor-railway-project-marking-a-major-milestone-for-regional-integration-and-economic-transformation"
+    },
+    {
+     "title": "Lobito Atlantic Railway resumes freight traffic with first copper train from the DRC",
+     "publisher": "LAR",
+     "date": "2026-06-15",
+     "url": "https://www.lobitoatlantic.com/news-resources/news/lobito-atlantic-railway-resumes-freight-traffic-on-the-lobito-corridor-with-first-copper-train-from-the-drc/"
+    },
+    {
+     "title": "Lobito Corridor freight volumes set to rise 51% in 2026",
+     "publisher": "Trends n Africa",
+     "date": "2026-10-01",
+     "url": "https://trendsnafrica.com/lobito-corridor-freight-volumes-set-to-rise-51-in-2026-as-rail-operations-expand/"
+    },
+    {
+     "title": "Concession for railway services transferred to Lobito Atlantic Railway",
+     "publisher": "Trafigura",
+     "date": "2023-07-04",
+     "url": "https://www.trafigura.com/news-and-insights/press-releases/2023/concession-for-railway-services-transferred-to-lobito-atlantic-railway-in-angola/"
+    }
+   ]
+  },
+  {
+   "id": "drc-rail",
+   "name": "DR Congo railway, Dilolo to Kolwezi, Lubumbashi and Sakania",
+   "short": "DR Congo railway concession",
+   "segment": "rail",
+   "rail_line": "drc",
+   "line_status": "operating",
+   "countries": [
+    "CD"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Kolwezi",
+    "lon": 25.47,
+    "lat": -10.72
+   },
+   "status": "approved",
+   "status_note": "The DR Congo signed a 30-year concession for the whole line with Mota-Engil Africa on 26 August 2026, after the Council of Ministers approved the partnership in July. No loan for the works had been announced. Lobito Atlantic Railway already runs trains from Dilolo to Kolwezi under a track-access deal with the state railway, SNCC.",
+   "status_date": "2026-08",
+   "summary": "The DR Congo half of the corridor: about 1,000 km of SNCC line from the Angolan border to the Zambian one. EU and US experts priced the Dilolo–Kolwezi–Tenke rehabilitation at USD 400–410 m in 2025; the government's indicative cost for the whole concession is USD 1.26 bn, Mota-Engil's about USD 1.8 bn over 30 years.",
+   "developer": "Mota-Engil Africa (concessionaire), SNCC",
+   "length_km": 1004.5,
+   "cost": {
+    "amount": 1258000000,
+    "currency": "USD",
+    "note": "The Presidency's indicative investment, July 2026",
+    "source": "https://logistafrica.com/en/logistic/drc-mota-engil-secures-a-30-year-concession-to-modernize-the-lobito-corridor-railway/"
+   },
+   "finance": [
+    {
+     "funder": "US International Development Finance Corporation (DFC)",
+     "funder_country": "US",
+     "instrument": "unspecified",
+     "amount": 1000000000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "pledged",
+     "note": "Letter of interest with Mota-Engil: the project 'may seek up to $1 billion' from DFC after full review.",
+     "source": "https://www.dfc.gov/media/press-releases/dfc-strengthens-strategic-partnerships-democratic-republic-congo-and-rwanda",
+     "source_date": "2025-12-05"
+    },
+    {
+     "funder": "Mota-Engil Africa",
+     "funder_country": "private",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "signed",
+     "note": "Concession signed 26 Aug 2026; the concessionaire carries financing and traffic risk, with no sovereign guarantee.",
+     "source": "https://news.metal.com/newscontent/104083327-drc-signs-30-year-dilolo%E2%80%93sakania-railway-concession-to-advance-lobito-corridor",
+     "source_date": "2026-08-27"
+    },
+    {
+     "funder": "Lobito Atlantic Railway (Trafigura, Mota-Engil, Vecturis)",
+     "funder_country": "private",
+     "instrument": "unspecified",
+     "amount": 100000000,
+     "currency": "USD",
+     "year": 2023,
+     "firmness": "pledged",
+     "note": "'Up to' USD 100 m planned for the DR Congo section at the 2023 handover of the Angolan concession.",
+     "source": "https://www.trafigura.com/news-and-insights/press-releases/2023/concession-for-railway-services-transferred-to-lobito-atlantic-railway-in-angola/",
+     "source_date": "2023-07-04"
+    },
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "technical assistance",
+     "amount": null,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "disbursing",
+     "note": "Feasibility studies of the Dilolo–Kolwezi–Tenke rehabilitation, presented with US experts in Sept 2025; amount not disclosed.",
+     "source": "https://bankable.africa/fr/actualites/1209-1673-corridor-de-lobito-plus-400-millions-pour-rehabiliter-la-ligne-dilolo-kolwezi-tenke",
+     "source_date": "2025-09-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "DRC grants Mota-Engil 30-year rail concession",
+     "publisher": "Ecofin",
+     "date": "2026-08-27",
+     "url": "https://www.ecofinagency.com/news-infrastructures/2708-58372-drc-grants-mota-engil-30-year-rail-concession-with-1-25-billion-investment"
+    },
+    {
+     "title": "Corridor de Lobito : plus 400 millions $ pour réhabiliter la ligne Dilolo–Kolwezi–Tenke",
+     "publisher": "Bankable",
+     "date": "2025-09-12",
+     "url": "https://bankable.africa/fr/actualites/1209-1673-corridor-de-lobito-plus-400-millions-pour-rehabiliter-la-ligne-dilolo-kolwezi-tenke"
+    },
+    {
+     "title": "Lobito Atlantic Railway (450 km DRC section under track access with SNCC)",
+     "publisher": "LAR",
+     "date": "2026-10-12",
+     "url": "https://www.lobitoatlantic.com/"
+    }
+   ]
+  },
+  {
+   "id": "zambia-lobito-rail",
+   "name": "Zambia–Lobito railway, Luacano to Chingola (new line)",
+   "short": "Zambia–Lobito railway",
+   "segment": "rail",
+   "countries": [
+    "AO",
+    "ZM"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Luacano",
+      21.64,
+      -11.22
+     ],
+     [
+      "Jimbe",
+      24.02,
+      -11.12
+     ],
+     [
+      "Mwinilunga",
+      24.43,
+      -11.74
+     ],
+     [
+      "Solwezi",
+      26.39,
+      -12.17
+     ],
+     [
+      "Chingola",
+      27.85,
+      -12.53
+     ]
+    ]
+   },
+   "status": "approved",
+   "status_note": "The AfDB approved a USD 255 m loan and a USD 10 m grant for Zambia's section in August 2026. Bids for the civil works were due in May 2026; no contract award or groundbreaking had been reported by early October, and AFC targets financial close in the last quarter of 2027.",
+   "status_date": "2026-08",
+   "summary": "A new line of about 830 km from the Benguela Railway at Luacano, in Angola, to Zambia Railways' railhead at Chingola, some 550 km of it in Zambia. The Africa Finance Corporation holds concessions from both governments (September 2024) to finance, build, own and run it; it aims to finish in 2030. Cost estimates run from USD 1.6 bn to more than USD 5 bn.",
+   "developer": "Africa Finance Corporation",
+   "length_km": 830,
+   "cost": {
+    "amount": 1600000000,
+    "currency": "USD",
+    "note": "The multinational programme the AfDB joined in 2023; later estimates run to USD 5 bn and more",
+    "source": "https://constructafrica.com/news/afdb-signs-on-for-lobito-corridor-project"
+   },
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": 255000000,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "approved",
+     "note": "First tranche, approved Aug 2026; also pays for the Mwinilunga–Jimbe road and trade facilitation. Up to USD 500 m envisaged in later phases.",
+     "source": "https://allafrica.com/stories/202608070250.html",
+     "source_date": "2026-08-06"
+    },
+    {
+     "funder": "Rome Process / Mattei Plan Financing Facility (Italy, at the AfDB)",
+     "funder_country": "IT",
+     "instrument": "grant",
+     "amount": 10000000,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "approved",
+     "note": "Approved with the AfDB loan.",
+     "source": "https://allafrica.com/stories/202608070250.html",
+     "source_date": "2026-08-06"
+    },
+    {
+     "funder": "Cassa Depositi e Prestiti (CDP), guaranteed by SACE",
+     "funder_country": "IT",
+     "instrument": "loan",
+     "amount": 250000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "signed",
+     "note": "Ten-year loan to AFC for the line, signed in Rome on 20 June 2025, 80% guaranteed by SACE; the only identified vehicle of Italy's EUR 320 m pledge so far.",
+     "source": "https://www.africafc.org/news-and-insights/news/cassa-depositi-e-prestiti-and-sace-provide-eur250-million-to-africa-finance-corporation",
+     "source_date": "2025-06-20"
+    },
+    {
+     "funder": "Africa Finance Corporation (AFC)",
+     "funder_country": "AFC",
+     "instrument": "unspecified",
+     "amount": 500000000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "pledged",
+     "note": "Up to USD 500 m to anchor and mobilise the financing, restated in April 2026; fundraising due to start in Q3 2026.",
+     "source": "https://www.africafc.org/news-and-insights/news/afc-led-zambia-lobito-rail-project-receives-boost-from-biden-visit-to-angola",
+     "source_date": "2024-12-04"
+    },
+    {
+     "funder": "Africa Finance Corporation (AFC)",
+     "funder_country": "AFC",
+     "instrument": "technical assistance",
+     "amount": 5000000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "disbursing",
+     "note": "Initial USD 5 m for feasibility and development; may be part of the USD 500 m, so left out of the sums.",
+     "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+     "source_date": "2024-12-03",
+     "in_total": false
+    },
+    {
+     "funder": "US Trade and Development Agency (USTDA)",
+     "funder_country": "US",
+     "instrument": "grant",
+     "amount": 2000000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "signed",
+     "note": "For the environmental and social impact assessment; signed with AFC's concessions in Sept 2024.",
+     "source": "https://ustda.gov/ustda-advances-lobito-corridor-development-in-southern-africa/",
+     "source_date": "2024-09-24"
+    },
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "technical assistance",
+     "amount": 2000000,
+     "currency": "EUR",
+     "year": 2023,
+     "firmness": "disbursing",
+     "note": "EUR 2 m contribution to the feasibility study.",
+     "source": "https://international-partnerships.ec.europa.eu/lobito-corridor-building-future-together_en",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Zambia: AfDB Group approves $255m loan and $10m grant to advance the Lobito Economic Corridor",
+     "publisher": "AfDB via allAfrica",
+     "date": "2026-08-06",
+     "url": "https://allafrica.com/stories/202608070250.html"
+    },
+    {
+     "title": "Financing backs Zambia's participation in the Lobito Corridor programme",
+     "publisher": "Railway Gazette",
+     "date": "2026-08-17",
+     "url": "https://www.railwaygazette.com/zambia/2026/08/17/financing-backs-zambias-participation-in-the-lobito-corridor-programme/"
+    },
+    {
+     "title": "Lobito Corridor project advances to construction bidding phase",
+     "publisher": "Business Report",
+     "date": "2026-04-28",
+     "url": "https://dailynews.co.za/business-report/companies/2026-04-28-lobito-corridor-project-advances-to-construction-bidding-phase-as-financing-builds-momentum/"
+    },
+    {
+     "title": "AFC signs concession agreements with governments of Angola and Zambia",
+     "publisher": "AFC",
+     "date": "2024-09-25",
+     "url": "https://www.africafc.org/news-and-insights/news/afc-signs-concession-agreements-with-governments-of-angola-and-zambia-to-advance-zambia-lobito-rail-project"
+    }
+   ]
+  },
+  {
+   "id": "mwinilunga-jimbe",
+   "name": "Mwinilunga–Jimbe road (T5) upgrade",
+   "short": "Mwinilunga–Jimbe road",
+   "segment": "road",
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Mwinilunga",
+      24.429,
+      -11.717
+     ],
+     [
+      "Ikelenge",
+      24.2,
+      -11.233
+     ],
+     [
+      "Kalene Hill",
+      24.183,
+      -11.167
+     ],
+     [
+      "Jimbe",
+      24.021,
+      -11.109
+     ]
+    ]
+   },
+   "status": "approved",
+   "status_note": "Paid for by the AfDB package approved in August 2026. Bids to supervise the works, in two lots, closed on 9 October 2026; no works contract had been reported.",
+   "status_date": "2026-10",
+   "summary": "About 105 km of the T5 road from Mwinilunga to the Angolan border at Jimbe, to be paved: the road half of the AfDB's Lobito Integrated Economic Corridor Development Project in Zambia.",
+   "developer": "Road Development Agency (Zambia)",
+   "length_km": 105,
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "approved",
+     "note": "Part of the USD 255 m loan counted under the Zambia–Lobito railway, which also covers this road, the Jimbe border post and trade facilitation; the road's share is not published.",
+     "source": "https://allafrica.com/stories/202608070250.html",
+     "source_date": "2026-08-06"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Zambia: AfDB Group approves $255m loan and $10m grant",
+     "publisher": "AfDB via allAfrica",
+     "date": "2026-08-06",
+     "url": "https://allafrica.com/stories/202608070250.html"
+    },
+    {
+     "title": "Sambia: Lobito-Korridor Ausschreibungen",
+     "publisher": "WKO",
+     "date": "2026-09-30",
+     "url": "https://www.wko.at/aussenwirtschaft/sambia-lobito-korridor-ausschreibungen"
+    }
+   ]
+  },
+  {
+   "id": "en250",
+   "name": "EN250 road paving, Luau to Luacano and Cameia (Angola)",
+   "short": "EN250 Luau–Cameia road",
+   "segment": "road",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Luau",
+      22.182,
+      -10.734
+     ],
+     [
+      "Luacano",
+      21.65,
+      -11.217
+     ]
+    ]
+   },
+   "status": "under_construction",
+   "status_note": "95 km of the 156 km paved by May 2026, according to ANGOP; another report that week gave 62 km on the Luau–Luacano stretch.",
+   "status_date": "2026-05",
+   "summary": "State-funded paving of 156 km of the national road that runs west from Luau, on the DR Congo border, beside the Benguela Railway to Cameia. Only the Luau–Luacano part is drawn: Cameia could not be placed reliably.",
+   "developer": "Government of Angola",
+   "length_km": 156,
+   "finance": [
+    {
+     "funder": "Government of Angola",
+     "funder_country": "AO",
+     "instrument": "unspecified",
+     "amount": 183490210000,
+     "currency": "AOA",
+     "year": 2026,
+     "firmness": "disbursing",
+     "note": "State investment, in kwanza as stated (not converted, so not in the sums).",
+     "source": "https://allafrica.com/stories/202605070143.html",
+     "source_date": "2026-05-06"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Queen Nhakatolo Ngambo highlights ongoing actions in Moxico-Leste",
+     "publisher": "ANGOP via allAfrica",
+     "date": "2026-05-06",
+     "url": "https://allafrica.com/stories/202605070143.html"
+    }
+   ]
+  },
+  {
+   "id": "bie-luau-road",
+   "name": "Road from Bié to Luau beside the Benguela Railway (Angola)",
+   "short": "Bié–Luau road",
+   "segment": "road",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Kuito",
+      16.933,
+      -12.383
+     ],
+     [
+      "Camacupa",
+      17.469,
+      -12.026
+     ],
+     [
+      "Munhango",
+      18.55,
+      -12.167
+     ],
+     [
+      "Luena",
+      19.92,
+      -11.79
+     ],
+     [
+      "Luau",
+      22.182,
+      -10.734
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "President João Lourenço said in May 2026 that the government is working on it; no financing or start date was given.",
+   "status_date": "2026-05",
+   "summary": "A planned road along the railway from Bié province through Camacupa, Cuemba and Munhango to Luau, meant in the end to run from Lobito. Works are to follow 'according to the state's financial resources'.",
+   "developer": "Government of Angola",
+   "finance": [],
+   "sources": [
+    {
+     "title": "Angolan government plans road construction linking Bié to Eastern Moxico",
+     "publisher": "ANGOP via allAfrica",
+     "date": "2026-05-04",
+     "url": "https://allafrica.com/stories/202605050053.html"
+    }
+   ]
+  },
+  {
+   "id": "rn39-bridges",
+   "name": "Kanzenze and Balula bridges on the RN39, Kolwezi–Dilolo road (DR Congo)",
+   "short": "RN39 bridges near Kolwezi",
+   "segment": "road",
+   "countries": [
+    "CD"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "RN39 about 55 km west of Kolwezi (approximate)",
+    "lon": 24.98,
+    "lat": -10.69
+   },
+   "status": "operating",
+   "status_note": "Both bridges opened to traffic on 1 July 2026.",
+   "status_date": "2026-07",
+   "summary": "Two bridges on the national road beside the railway from Kolwezi towards Dilolo and Angola, built so it stays open in the rains. The road runs along the corridor; the source does not use its name.",
+   "developer": "Office des Routes (DR Congo)",
+   "finance": [
+    {
+     "funder": "Fonds National d'Entretien Routier (FONER)",
+     "funder_country": "CD",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "disbursing",
+     "note": "The DR Congo's road maintenance fund paid for both; amount not stated.",
+     "source": "https://www.congoquotidien.com/2026/07/04/ponts-rn39-kolwezi-inaugures/",
+     "source_date": "2026-07-04"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Lualaba : deux ponts inaugurés sur la RN39 près de Kolwezi",
+     "publisher": "Congo Quotidien",
+     "date": "2026-07-04",
+     "url": "https://www.congoquotidien.com/2026/07/04/ponts-rn39-kolwezi-inaugures/"
+    }
+   ]
+  },
+  {
+   "id": "mcc-zambia",
+   "name": "Millennium Challenge Corporation compact with Zambia, realigned to the corridor",
+   "short": "MCC Zambia compact",
+   "segment": "road",
+   "soft": true,
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "North-Western and Copperbelt provinces; road segments not published",
+    "lon": 26.6,
+    "lat": -12.5
+   },
+   "status": "approved",
+   "status_note": "Signed in 2024 for farm-to-market roads; an amendment of 18–19 June 2026 aimed its priority road segments and its farming money at the Lobito Corridor. Segments not published.",
+   "status_date": "2026-06",
+   "summary": "The US grant compact, USD 458 m plus USD 33 m from Zambia, now targets roads, agriculture and critical minerals along the corridor in North-Western and Copperbelt provinces. The money was already committed; it was redirected, not added.",
+   "developer": "Millennium Challenge Account Zambia",
+   "finance": [
+    {
+     "funder": "Millennium Challenge Corporation (MCC)",
+     "funder_country": "US",
+     "instrument": "grant",
+     "amount": 458000000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "signed",
+     "note": "The whole compact, signed Oct 2024 and realigned to the corridor in June 2026; the road share is not published.",
+     "source": "https://www.zambiamonitor.com/zambia-us-realign-491-million-mcc-compact-to-target-lobito-corridor-growth/",
+     "source_date": "2026-06-19"
+    },
+    {
+     "funder": "Government of Zambia",
+     "funder_country": "ZM",
+     "instrument": "unspecified",
+     "amount": 33000000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "signed",
+     "note": "Zambia's contribution to the compact.",
+     "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+     "source_date": "2024-12-03"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Zambia, US realign $491 million MCC compact to target Lobito Corridor growth",
+     "publisher": "Zambia Monitor",
+     "date": "2026-06-19",
+     "url": "https://www.zambiamonitor.com/zambia-us-realign-491-million-mcc-compact-to-target-lobito-corridor-growth/"
+    },
+    {
+     "title": "Zambia's US grant expands to critical minerals infrastructure",
+     "publisher": "Business Day (Reuters)",
+     "date": "2026-06-19",
+     "url": "https://www.businessday.co.za/world/africa/2026-06-19-zambias-us-grant-expands-to-critical-minerals-infrastructure/"
+    }
+   ]
+  },
+  {
+   "id": "jimbe-osbp",
+   "name": "Jimbe one-stop border post (Zambia–Angola)",
+   "short": "Jimbe border post",
+   "segment": "border",
+   "countries": [
+    "ZM",
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Jimbe",
+    "lon": 24.021,
+    "lat": -11.109
+   },
+   "status": "approved",
+   "status_note": "A component of the AfDB package approved in August 2026; no construction contract by October. The EU is preparing a programme that would also build and run it.",
+   "status_date": "2026-10",
+   "summary": "The small crossing between Zambia's North-Western Province and Angola's Moxico, at the end of the Mwinilunga road, to become a one-stop border post where the new railway will cross.",
+   "developer": "Ministry of Commerce, Trade and Industry (Zambia)",
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "approved",
+     "note": "Part of the USD 255 m loan counted under the Zambia–Lobito railway.",
+     "source": "https://allafrica.com/stories/202608070250.html",
+     "source_date": "2026-08-06"
+    },
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": null,
+     "currency": "EUR",
+     "year": null,
+     "firmness": "pledged",
+     "note": "Pipeline programme 'Zambia Lobito Economic Corridor: Transport, Trade Facilitation and Energy', which would build and run the border post and fund transmission lines for the Copperbelt and North-Western; no amount published.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63560",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Zambia - Lobito Integrated Economic Corridor Development Project",
+     "publisher": "Early Warning System",
+     "date": null,
+     "url": "https://ewsdata.rightsindevelopment.org/projects/p-z1-dc0-048-zambia-lobito-integrated-economic-corridor-devel/"
+    },
+    {
+     "title": "IATI activity XI-IATI-EC_INTPA-2021-ACT-63560",
+     "publisher": "EU via IATI",
+     "date": "2026-10-12",
+     "url": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63560"
+    }
+   ]
+  },
+  {
+   "id": "luau-dilolo-osbp",
+   "name": "Luau–Dilolo one-stop border post (Angola–DR Congo)",
+   "short": "Luau–Dilolo border post",
+   "segment": "border",
+   "countries": [
+    "AO",
+    "CD"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Luau, opposite Dilolo",
+    "lon": 22.182,
+    "lat": -10.734
+   },
+   "status": "announced",
+   "status_note": "At the corridor's coordination meeting in Lusaka on 5 October 2026, Angola's transport minister committed to work with the DR Congo to run it as a one-stop post. No works or contract reported.",
+   "status_date": "2026-10",
+   "summary": "Where the Benguela Railway and the road cross into the DR Congo. The World Bank's Diversifica Mais loan to Angola lists border-post works at Luau among its uses.",
+   "developer": "Governments of Angola and DR Congo",
+   "finance": [
+    {
+     "funder": "World Bank (Diversifica Mais project)",
+     "funder_country": "WB",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": null,
+     "firmness": "approved",
+     "note": "The USD 300 m Angola loan (P178035) lists border-post buildings, inspection space, power and internet at Luau; amount for Luau not given.",
+     "source": "https://documents1.worldbank.org/curated/en/099081125064038004/pdf/P178035-1e2d9452-c99d-46cd-8a0c-9faa6d1ec493.pdf",
+     "source_date": null
+    }
+   ],
+   "sources": [
+    {
+     "title": "Angola reaffirms commitment to Atlantic Platform",
+     "publisher": "ANGOP via allAfrica",
+     "date": "2026-10-06",
+     "url": "https://allafrica.com/stories/202610060222.html"
+    }
+   ]
+  },
+  {
+   "id": "trade-drc-angola",
+   "name": "Trade facilitation between DR Congo and Angola (EU, TradeMark Africa)",
+   "short": "DRC–Angola trade facilitation",
+   "segment": "border",
+   "soft": true,
+   "countries": [
+    "CD",
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "customs and trade rules between DR Congo and Angola, along the corridor",
+    "lon": 22.2,
+    "lat": -10.7
+   },
+   "status": "under_construction",
+   "status_note": "Under way since December 2025, with EUR 0.78 m paid out that month; planned to end in December 2028.",
+   "status_date": "2025-12",
+   "summary": "An EU grant to TradeMark Africa for technical help and training to simplify and align customs procedures and trade rules between the DR Congo and Angola along the corridor.",
+   "developer": "TradeMark Africa",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 6000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "disbursing",
+     "note": "Committed 13 Dec 2025; EUR 781,712 paid 19 Dec 2025.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2025-PC-54060",
+     "source_date": "2025-12-19"
+    }
+   ],
+   "sources": [
+    {
+     "title": "IATI activity XI-IATI-EC_INTPA-2025-PC-54060",
+     "publisher": "EU via IATI",
+     "date": "2026-10-12",
+     "url": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2025-PC-54060"
+    },
+    {
+     "title": "Global Gateway: EU scales up the European engagement in the Lobito Corridor",
+     "publisher": "European Commission",
+     "date": "2025-10-10",
+     "url": "https://global-gateway-forum.ec.europa.eu/news/global-gateway-eu-scales-european-engagement-lobito-corridor-2025-10-10_en"
+    }
+   ]
+  },
+  {
+   "id": "caala",
+   "name": "Caála Logistics Platform (Huambo, Angola)",
+   "short": "Caála Logistics Platform",
+   "segment": "border",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Caála",
+    "lon": 15.561,
+    "lat": -12.853
+   },
+   "status": "under_construction",
+   "status_note": "A first, interim cold-chain unit opened on 5 October 2026; the rail branch, access road and substation are due to be handed over between December 2026 and February 2027.",
+   "status_date": "2026-10",
+   "summary": "A freight hub beside the Benguela Railway for farm produce, light industry and minerals, developed by Angola's cargo regulator ARCCLA with Dutch partners under the EU's Global Gateway. Cost estimates range from USD 35 m to much more, for different scopes.",
+   "developer": "ARCCLA, with a Dutch consortium; Invest International for Team Europe",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 7000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "disbursing",
+     "note": "'From Transport to Trade: Lobito Corridor Catalyst'; committed Nov 2025, EUR 2.17 m paid Feb 2026.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2025-PC-48068",
+     "source_date": "2026-02-11"
+    },
+    {
+     "funder": "Netherlands",
+     "funder_country": "NL",
+     "instrument": "grant",
+     "amount": 1000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "pledged",
+     "note": "Dutch share of the EUR 8 m Catalyst grant.",
+     "source": "https://global-gateway-forum.ec.europa.eu/news/eu-angola-partnership-advanced-through-major-investments-lobito-corridor-2025-10-09_en",
+     "source_date": "2025-10-09"
+    },
+    {
+     "funder": "Invest International",
+     "funder_country": "NL",
+     "instrument": "unspecified",
+     "amount": 15000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "signed",
+     "note": "Financing presented at the Global Gateway Forum, Brussels, 9 Oct 2025, for the platform's Dutch-led developers.",
+     "source": "https://allafrica.com/stories/202510130573.html",
+     "source_date": "2025-10-10"
+    },
+    {
+     "funder": "World Bank (Diversifica Mais project)",
+     "funder_country": "WB",
+     "instrument": "loan",
+     "amount": 1500000,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "disbursing",
+     "note": "For the USD 2.5 m interim cold-chain unit.",
+     "source": "https://diversificamais.ao/huambo-municipio-da-caala-ganha-cadeia-de-frio-que-antecipa-a-plataforma-logistica/",
+     "source_date": "2026-10-06"
+    },
+    {
+     "funder": "ARCCLA (Government of Angola)",
+     "funder_country": "AO",
+     "instrument": "unspecified",
+     "amount": 1000000,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "disbursing",
+     "note": "The state's share of the cold-chain unit.",
+     "source": "https://diversificamais.ao/huambo-municipio-da-caala-ganha-cadeia-de-frio-que-antecipa-a-plataforma-logistica/",
+     "source_date": "2026-10-06"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Huambo: município da Caála ganha cadeia de frio que antecipa a plataforma logística",
+     "publisher": "Diversifica Mais",
+     "date": "2026-10-06",
+     "url": "https://diversificamais.ao/huambo-municipio-da-caala-ganha-cadeia-de-frio-que-antecipa-a-plataforma-logistica/"
+    },
+    {
+     "title": "EU–Angola partnership advanced through major investments in the Lobito Corridor",
+     "publisher": "European Commission",
+     "date": "2025-10-09",
+     "url": "https://global-gateway-forum.ec.europa.eu/news/eu-angola-partnership-advanced-through-major-investments-lobito-corridor-2025-10-09_en"
+    },
+    {
+     "title": "Dutch company secures 15mln euros in financing for Lobito Corridor",
+     "publisher": "ANGOP via allAfrica",
+     "date": "2025-10-10",
+     "url": "https://allafrica.com/stories/202510130573.html"
+    }
+   ]
+  },
+  {
+   "id": "luau-platform",
+   "name": "Luau multimodal logistics platform (Angola)",
+   "short": "Luau logistics platform",
+   "segment": "border",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Luau",
+    "lon": 22.182,
+    "lat": -10.734
+   },
+   "status": "announced",
+   "status_note": "Presented in August 2026 by the consultants drafting the corridor's master plan; a 30-year concession is to be tendered once the plan is done.",
+   "status_date": "2026-08",
+   "summary": "A planned hub at the DR Congo border with warehouses, fuel and mineral terminals and industrial plots for grain milling and precast concrete, linked to road and rail. No cost or financier named.",
+   "developer": "To be tendered as a concession",
+   "finance": [],
+   "sources": [
+    {
+     "title": "Angola plans new logistics hub to strengthen Lobito Corridor",
+     "publisher": "Ecofin",
+     "date": "2026-08-24",
+     "url": "https://www.ecofinagency.com/news-infrastructures/2408-58269-angola-plans-new-logistics-hub-to-strengthen-lobito-corridor"
+    }
+   ]
+  },
+  {
+   "id": "agl-terminal",
+   "name": "Lobito multipurpose and container terminal concession (Africa Global Logistics)",
+   "short": "Lobito container terminal (AGL)",
+   "segment": "port",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Port of Lobito",
+    "lon": 13.548,
+    "lat": -12.338
+   },
+   "status": "approved",
+   "status_note": "Concession signed on 11 December 2023, due to start at the end of the first quarter of 2024; the handover could not be confirmed.",
+   "status_date": "2023-12",
+   "summary": "MSC's Africa Global Logistics took the concession of the port's multipurpose and container terminal: 1,200 m of quay and storage for 12,000 containers. The mineral terminal is part of the railway's concession.",
+   "developer": "Africa Global Logistics (MSC), Porto do Lobito",
+   "finance": [
+    {
+     "funder": "Africa Global Logistics (MSC)",
+     "funder_country": "private",
+     "instrument": "unspecified",
+     "amount": 100000000,
+     "currency": "EUR",
+     "year": 2023,
+     "firmness": "signed",
+     "note": "'Nearly' EUR 100 m committed by the concessionaire.",
+     "source": "https://maritimafrica.com/en/agl-signs-concession-contract-for-multipurpose-and-container-terminal-at-port-of-lobito-angola/",
+     "source_date": "2023-12-11"
+    }
+   ],
+   "sources": [
+    {
+     "title": "AGL signs concession contract for multipurpose and container terminal at Port of Lobito",
+     "publisher": "Maritimafrica",
+     "date": "2023-12-11",
+     "url": "https://maritimafrica.com/en/agl-signs-concession-contract-for-multipurpose-and-container-terminal-at-port-of-lobito-angola/"
+    }
+   ]
+  },
+  {
+   "id": "belgium-port",
+   "name": "Team Belgium support to the Port of Lobito (EU)",
+   "short": "Team Belgium port support",
+   "segment": "port",
+   "soft": true,
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Port of Lobito",
+    "lon": 13.544,
+    "lat": -12.345
+   },
+   "status": "announced",
+   "status_note": "An EU action under preparation, planned for November 2026 to November 2029; no amount or implementer published.",
+   "status_date": "2026-10",
+   "summary": "A pipeline action of the Commission's trade and transport facilitation programme for African corridors, with Belgium.",
+   "developer": "European Commission, with Belgium",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": null,
+     "currency": "EUR",
+     "year": 2026,
+     "firmness": "pledged",
+     "note": "Pipeline record, no budget published.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2026-PC-87559",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "IATI activity XI-IATI-EC_INTPA-2026-PC-87559",
+     "publisher": "EU via IATI",
+     "date": "2026-10-12",
+     "url": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2026-PC-87559"
+    }
+   ]
+  },
+  {
+   "id": "eu-electricity",
+   "name": "Enhanced access to electricity services, Lobito Corridor enabler (EU, Angola)",
+   "short": "EU electricity grid, Angola",
+   "segment": "energy",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "distribution grids in Benguela, Huambo, Bié and Luanda",
+    "lon": 15.0,
+    "lat": -12.6
+   },
+   "status": "announced",
+   "status_note": "An EU action under preparation, with no start date or committed budget as of October 2026.",
+   "status_date": "2026-10",
+   "summary": "A planned EUR 20 m blended grant to upgrade Angola's distribution grid, cut losses and strengthen the utility ENDE and the regulator, expected to draw at least EUR 100 m of public investment.",
+   "developer": "ENDE (Angola's distribution utility)",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 20000000,
+     "currency": "EUR",
+     "year": null,
+     "firmness": "pledged",
+     "note": "Blending grant stated in the description; no commitment recorded.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63570",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "IATI activity XI-IATI-EC_INTPA-2021-ACT-63570",
+     "publisher": "EU via IATI",
+     "date": "2026-10-12",
+     "url": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63570"
+    }
+   ]
+  },
+  {
+   "id": "newza",
+   "name": "Nexus Energy Water in Zambia 2.0 (NEWZA 2.0)",
+   "short": "NEWZA 2.0, Zambian water utilities",
+   "segment": "energy",
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "water utilities of Solwezi, Ndola and Chingola",
+    "lon": 27.0,
+    "lat": -12.6
+   },
+   "status": "approved",
+   "status_note": "EU commitment recorded in September 2025 and announced at the EU–Zambia Lobito Corridor Business Forum in November.",
+   "status_date": "2025-11",
+   "summary": "Solar power and energy savings for three commercial water utilities in the corridor's Zambian provinces. A Team Europe programme: EUR 20 m from the EU, EUR 80 m announced from Germany and the EIB.",
+   "developer": "Zambian commercial water utilities",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 20000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "Commitment recorded 12 Sep 2025.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63065",
+     "source_date": "2025-09-12"
+    },
+    {
+     "funder": "Germany and the European Investment Bank",
+     "funder_country": "DE",
+     "instrument": "unspecified",
+     "amount": 80000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "pledged",
+     "note": "'Additional' EUR 80 m announced; split not given.",
+     "source": "https://www.eeas.europa.eu/delegations/zambia/commissioner-s%C3%ADkela-announces-over-%E2%82%AC200-million-team-europe-investments-boost-zambia%E2%80%99s-industrial_en",
+     "source_date": "2025-11-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Commissioner Síkela announces over €200 million in Team Europe investments in Zambia",
+     "publisher": "EU Delegation to Zambia",
+     "date": "2025-11-12",
+     "url": "https://www.eeas.europa.eu/delegations/zambia/commissioner-s%C3%ADkela-announces-over-%E2%82%AC200-million-team-europe-investments-boost-zambia%E2%80%99s-industrial_en"
+    }
+   ]
+  },
+  {
+   "id": "anzana",
+   "name": "Power for the corridor: hydropower and distribution study, Lualaba and North-Western Zambia (USTDA)",
+   "short": "USTDA power study (Anzana)",
+   "segment": "energy",
+   "soft": true,
+   "countries": [
+    "CD",
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lualaba (DR Congo) and North-Western Zambia",
+    "lon": 25.0,
+    "lat": -11.5
+   },
+   "status": "announced",
+   "status_note": "Grant signed with Anzana Electric Group in September 2026 for a feasibility study.",
+   "status_date": "2026-09",
+   "summary": "A US-funded feasibility study of hydropower and power distribution for the mining provinces at the corridor's eastern end.",
+   "developer": "Anzana Electric Group",
+   "finance": [
+    {
+     "funder": "US Trade and Development Agency (USTDA)",
+     "funder_country": "US",
+     "instrument": "grant",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "signed",
+     "note": "Amount not on the release; USTDA listings give USD 3 m or USD 1.87 m.",
+     "source": "https://ustda.gov/ustda-supports-reliable-power-for-africas-lobito-corridor/",
+     "source_date": "2026-09-22"
+    }
+   ],
+   "sources": [
+    {
+     "title": "USTDA supports reliable power for Africa's Lobito Corridor",
+     "publisher": "USTDA",
+     "date": "2026-09-22",
+     "url": "https://ustda.gov/ustda-supports-reliable-power-for-africas-lobito-corridor/"
+    }
+   ]
+  },
+  {
+   "id": "eravcdp",
+   "name": "Eastern Region Agricultural Value Chain Development Project (Angola)",
+   "short": "Eastern Angola farming (ERAVCDP)",
+   "segment": "agriculture",
+   "soft": true,
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lunda Norte, Lunda Sul, Moxico, Moxico Leste, Cuando and Cubango",
+    "lon": 20.5,
+    "lat": -11.0
+   },
+   "status": "approved",
+   "status_note": "Approved by the AfDB in November 2025; to run from 2026 to 2031.",
+   "status_date": "2025-11",
+   "summary": "400 km of farm access roads, six mechanisation centres, food processing and training in Angola's six eastern provinces. Italy calls it the first AfDB–Italy partnership in the Lobito Corridor.",
+   "developer": "Ministry of Agriculture and Forestry (Angola)",
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": 190400000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "",
+     "source": "https://www.governo.it/en/piano-mattei/progetti/progetto/progetto-eastern-region-agricultural-value-chain-development-project-eravcdp/",
+     "source_date": "2026-10-12"
+    },
+    {
+     "funder": "Rome Process / Mattei Plan Financing Facility (Italy, at the AfDB)",
+     "funder_country": "IT",
+     "instrument": "loan",
+     "amount": 17000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "Concessional loan.",
+     "source": "https://www.governo.it/en/piano-mattei/progetti/progetto/progetto-eastern-region-agricultural-value-chain-development-project-eravcdp/",
+     "source_date": "2026-10-12"
+    },
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "grant",
+     "amount": 1000000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "Transition Support Facility.",
+     "source": "https://www.governo.it/en/piano-mattei/progetti/progetto/progetto-eastern-region-agricultural-value-chain-development-project-eravcdp/",
+     "source_date": "2026-10-12"
+    },
+    {
+     "funder": "Government of Angola",
+     "funder_country": "AO",
+     "instrument": "unspecified",
+     "amount": 100000000,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "Parallel financing.",
+     "source": "https://www.governo.it/en/piano-mattei/progetti/progetto/progetto-eastern-region-agricultural-value-chain-development-project-eravcdp/",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Eastern Region Agricultural Value Chain Development Project (ERAVCDP)",
+     "publisher": "Italian Government, Piano Mattei",
+     "date": "2026-10-12",
+     "url": "https://www.governo.it/en/piano-mattei/progetti/progetto/progetto-eastern-region-agricultural-value-chain-development-project-eravcdp/"
+    }
+   ]
+  },
+  {
+   "id": "eu-agri-angola",
+   "name": "EU agricultural value chains along the Lobito Corridor (Angola)",
+   "short": "EU farm value chains, Angola",
+   "segment": "agriculture",
+   "soft": true,
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Angola's corridor provinces; no sites named",
+    "lon": 16.0,
+    "lat": -12.5
+   },
+   "status": "approved",
+   "status_note": "Envelope adopted by the Commission and announced at the Global Gateway Forum, October 2025; no implementer named.",
+   "status_date": "2025-10",
+   "summary": "A EUR 50 m envelope for farm production, distribution and investment along the corridor, smallholders among the beneficiaries.",
+   "developer": "European Commission",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 50000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "Envelope adopted.",
+     "source": "https://global-gateway-forum.ec.europa.eu/news/global-gateway-eu-scales-european-engagement-lobito-corridor-2025-10-10_en",
+     "source_date": "2025-10-10"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Global Gateway: EU scales up the European engagement in the Lobito Corridor",
+     "publisher": "European Commission",
+     "date": "2025-10-10",
+     "url": "https://global-gateway-forum.ec.europa.eu/news/global-gateway-eu-scales-european-engagement-lobito-corridor-2025-10-10_en"
+    }
+   ]
+  },
+  {
+   "id": "carrinho",
+   "name": "Carrinho group: grain storage and food processing (Angola)",
+   "short": "Carrinho grain and food",
+   "segment": "agriculture",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Carrinho industrial complex, Benguela province (approximate)",
+    "lon": 13.6,
+    "lat": -12.4
+   },
+   "status": "approved",
+   "status_note": "IFC approved a loan of up to USD 40 m on 17 June 2026, not yet disbursed in September. DFC's 2024 letter of interest has no reported follow-up.",
+   "status_date": "2026-06",
+   "summary": "Angola's largest food company, at the Lobito end of the corridor, plans silos along it. IFC's loan goes to a USD 52 m programme: a flour mill, a Benguela warehouse, trucks.",
+   "developer": "Carrinho Empreendimentos",
+   "finance": [
+    {
+     "funder": "International Finance Corporation (IFC)",
+     "funder_country": "IFC",
+     "instrument": "loan",
+     "amount": 40000000,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "approved",
+     "note": "Senior loan of up to USD 40 m.",
+     "source": "https://disclosures.ifc.org/project-detail/SII/45735/carrinho-loan",
+     "source_date": "2026-05-08"
+    },
+    {
+     "funder": "US International Development Finance Corporation (DFC)",
+     "funder_country": "US",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "pledged",
+     "note": "Non-binding letter of interest, Nov 2024, for silos, warehouses and dryers.",
+     "source": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor",
+     "source_date": "2024-12-04"
+    }
+   ],
+   "sources": [
+    {
+     "title": "45735 - Carrinho Loan",
+     "publisher": "IFC",
+     "date": "2026-05-08",
+     "url": "https://disclosures.ifc.org/project-detail/SII/45735/carrinho-loan"
+    },
+    {
+     "title": "The Lobito Corridor at the heart of the Carrinho Group's expansion strategy",
+     "publisher": "Angola Chronicle",
+     "date": "2026-05-15",
+     "url": "https://angolachronicle.com/the-lobito-corridor-at-the-heart-of-the-carrinho-groups-expansion-strategy/"
+    }
+   ]
+  },
+  {
+   "id": "amercon-silos",
+   "name": "Silo terminals along the corridor (Amer-Con memorandum)",
+   "short": "Amer-Con silos",
+   "segment": "agriculture",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "along the corridor in Angola; no sites named",
+    "lon": 17.0,
+    "lat": -12.4
+   },
+   "status": "announced",
+   "status_note": "Memorandum signed with Angola's corridor regulator ARCCLA in October 2024.",
+   "status_date": "2024-10",
+   "summary": "A US consortium led by Amer-Con would build and run silo terminals and collection points along the corridor. No amount, financier or sites published.",
+   "developer": "Amer-Con Corporation",
+   "finance": [],
+   "sources": [
+    {
+     "title": "Fact sheet: PGI in the Lobito Trans-Africa Corridor",
+     "publisher": "The White House (archived)",
+     "date": "2024-12-03",
+     "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor"
+    }
+   ]
+  },
+  {
+   "id": "enterprise-zambia",
+   "name": "ENTERPRISE Zambia 2.0: legume and horticulture value chains",
+   "short": "ENTERPRISE Zambia 2.0",
+   "segment": "agriculture",
+   "soft": true,
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Zambia's corridor provinces",
+    "lon": 27.2,
+    "lat": -12.7
+   },
+   "status": "approved",
+   "status_note": "Signed at the EU–Zambia Lobito Corridor Business Forum, 12 November 2025.",
+   "status_date": "2025-11",
+   "summary": "Links smallholders to legume and horticulture markets, run by GIZ. Sources differ on whether the EUR 36 m total includes Germany's EUR 8 m; this register takes the reading that it does.",
+   "developer": "GIZ",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 28000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "signed",
+     "note": "EU share of the EUR 36 m programme.",
+     "source": "https://www.eeas.europa.eu/delegations/zambia/commissioner-s%C3%ADkela-announces-over-%E2%82%AC200-million-team-europe-investments-boost-zambia%E2%80%99s-industrial_en",
+     "source_date": "2025-11-12"
+    },
+    {
+     "funder": "Germany (BMZ)",
+     "funder_country": "DE",
+     "instrument": "grant",
+     "amount": 8000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "signed",
+     "note": "Germany's co-financing.",
+     "source": "https://www.eeas.europa.eu/delegations/zambia/commissioner-s%C3%ADkela-announces-over-%E2%82%AC200-million-team-europe-investments-boost-zambia%E2%80%99s-industrial_en",
+     "source_date": "2025-11-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Commissioner Síkela announces over €200 million in Team Europe investments in Zambia",
+     "publisher": "EU Delegation to Zambia",
+     "date": "2025-11-12",
+     "url": "https://www.eeas.europa.eu/delegations/zambia/commissioner-s%C3%ADkela-announces-over-%E2%82%AC200-million-team-europe-investments-boost-zambia%E2%80%99s-industrial_en"
+    }
+   ]
+  },
+  {
+   "id": "gocongo",
+   "name": "Farm value chains and ecological restoration in south-east DR Congo (EU)",
+   "short": "EU farming, south-east DR Congo",
+   "segment": "agriculture",
+   "soft": true,
+   "countries": [
+    "CD"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "south-east DR Congo; no sites named",
+    "lon": 26.5,
+    "lat": -11.0
+   },
+   "status": "approved",
+   "status_note": "Announced at the Global Gateway Forum, October 2025, in the EU's Lobito Corridor package.",
+   "status_date": "2025-10",
+   "summary": "A EUR 10 m action run by GoCongo for farm value chains, food sovereignty and restoration: one of the few non-transport items under the corridor's name on the Congolese side.",
+   "developer": "GoCongo",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 10000000,
+     "currency": "EUR",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "",
+     "source": "https://global-gateway-forum.ec.europa.eu/news/global-gateway-eu-scales-european-engagement-lobito-corridor-2025-10-10_en",
+     "source_date": "2025-10-10"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Global Gateway: EU scales up the European engagement in the Lobito Corridor",
+     "publisher": "European Commission",
+     "date": "2025-10-10",
+     "url": "https://global-gateway-forum.ec.europa.eu/news/global-gateway-eu-scales-european-engagement-lobito-corridor-2025-10-10_en"
+    }
+   ]
+  },
+  {
+   "id": "forest-zambia",
+   "name": "Sustainable forest management in Zambia's Lobito Corridor (EU)",
+   "short": "EU forests, Zambia",
+   "segment": "environment",
+   "soft": true,
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "North-Western and Copperbelt provinces",
+    "lon": 25.8,
+    "lat": -12.6
+   },
+   "status": "announced",
+   "status_note": "An EU action under preparation; no amount or implementer published.",
+   "status_date": "2026-10",
+   "summary": "Forest value chains, protected areas and forest law in the two provinces the corridor crosses in Zambia.",
+   "developer": "Government of Zambia",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": null,
+     "currency": "EUR",
+     "year": null,
+     "firmness": "pledged",
+     "note": "No amount published.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63581",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "IATI activity XI-IATI-EC_INTPA-2021-ACT-63581",
+     "publisher": "EU via IATI",
+     "date": "2026-10-12",
+     "url": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2021-ACT-63581"
+    }
+   ]
+  },
+  {
+   "id": "miombo",
+   "name": "Restoring degraded Miombo woodland in the corridor's Zambian provinces (Italy)",
+   "short": "Miombo restoration (Italy)",
+   "segment": "environment",
+   "soft": true,
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "North-Western and Copperbelt provinces",
+    "lon": 26.2,
+    "lat": -12.8
+   },
+   "status": "under_construction",
+   "status_note": "Under way since 27 August 2026; EUR 2 m of EUR 6 m used in 2026. To end in December 2028.",
+   "status_date": "2026-08",
+   "summary": "Run by Bioversity International: woodland restoration, the causes of deforestation and livelihoods such as legumes and honey.",
+   "developer": "Bioversity International",
+   "finance": [
+    {
+     "funder": "Italian Agency for Development Cooperation (AICS)",
+     "funder_country": "IT",
+     "instrument": "grant",
+     "amount": 6000000,
+     "currency": "EUR",
+     "year": 2026,
+     "firmness": "disbursing",
+     "note": "EUR 2 m used in 2026.",
+     "source": "https://openaid.aics.gov.it/en/iati-activity/XM-DAC-6-4-013387-01-0",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Restoring the biodiversity of degraded ecosystems in North-Western and Copperbelt Provinces (Lobito Corridor)",
+     "publisher": "AICS OpenAid",
+     "date": "2026-10-12",
+     "url": "https://openaid.aics.gov.it/en/iati-activity/XM-DAC-6-4-013387-01-0"
+    }
+   ]
+  },
+  {
+   "id": "sea-zambia",
+   "name": "Strategic environmental assessment of the corridor in Zambia (EU)",
+   "short": "Environmental assessment, Zambia",
+   "segment": "environment",
+   "soft": true,
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "the corridor in Zambia",
+    "lon": 26.0,
+    "lat": -12.2
+   },
+   "status": "under_construction",
+   "status_note": "Contract with NTU International started on 1 June 2026, to end in April 2027.",
+   "status_date": "2026-06",
+   "summary": "A study of the environmental, climate, social and economic risks of developing the corridor in Zambia: water, biodiversity, environmental governance.",
+   "developer": "NTU International",
+   "finance": [
+    {
+     "funder": "European Commission",
+     "funder_country": "EU",
+     "instrument": "technical assistance",
+     "amount": 503690,
+     "currency": "EUR",
+     "year": 2026,
+     "firmness": "disbursing",
+     "note": "EUR 201,476 paid 13 May 2026.",
+     "source": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2026-PC-81339",
+     "source_date": "2026-05-13"
+    }
+   ],
+   "sources": [
+    {
+     "title": "IATI activity XI-IATI-EC_INTPA-2026-PC-81339",
+     "publisher": "EU via IATI",
+     "date": "2026-10-12",
+     "url": "https://d-portal.org/q.json?aid=XI-IATI-EC_INTPA-2026-PC-81339"
+    },
+    {
+     "title": "NTU awarded a new project",
+     "publisher": "NTU International",
+     "date": "2026-05-12",
+     "url": "https://ntu.eu/news/ntu-awarded-a-new-project/"
+    }
+   ]
+  },
+  {
+   "id": "fibre-study",
+   "name": "Land fibre from inland sites to Atlantic subsea cables (USTDA study)",
+   "short": "Fibre study (Javilian)",
+   "segment": "digital",
+   "soft": true,
+   "countries": [
+    "AO",
+    "CD"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Angola, DR Congo and Namibia; route not published",
+    "lon": 14.0,
+    "lat": -12.0
+   },
+   "status": "announced",
+   "status_note": "Feasibility-study grant awarded in November 2024; no construction reported.",
+   "status_date": "2024-11",
+   "summary": "A study by South Africa's Javilian Civils of land fibre linking inland sites to the Atlantic cables, listed under the US corridor programme.",
+   "developer": "Javilian Civils",
+   "finance": [
+    {
+     "funder": "US Trade and Development Agency (USTDA)",
+     "funder_country": "US",
+     "instrument": "grant",
+     "amount": null,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "signed",
+     "note": "Amount not stated.",
+     "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+     "source_date": "2024-12-03"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Fact sheet: PGI in the Lobito Trans-Africa Corridor",
+     "publisher": "The White House (archived)",
+     "date": "2024-12-03",
+     "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor"
+    }
+   ]
+  },
+  {
+   "id": "benguela-cable",
+   "name": "Submarine cable landing at Benguela",
+   "short": "Benguela cable landing",
+   "segment": "digital",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Benguela coast",
+    "lon": 13.41,
+    "lat": -12.58
+   },
+   "status": "announced",
+   "status_note": "Announced on 2 September 2026 by the telecoms minister, at the opening of a data centre in Lobito; in preparation.",
+   "status_date": "2026-09",
+   "summary": "Angola is preparing a submarine cable landing on the Benguela coast to feed land fibre along the corridor. No cost, funder or cable named.",
+   "developer": "Ministry of Telecommunications (Angola)",
+   "finance": [],
+   "sources": [
+    {
+     "title": "Benguela vai receber amarração de cabo submarino para reforçar conectividade do Corredor do Lobito",
+     "publisher": "Menos Fios",
+     "date": "2026-09-03",
+     "url": "https://www.menosfios.com/benguela-vai-receber-amarracao-de-cabo-submarino-para-reforcar-conectividade-do-corredor-do-lobito/"
+    }
+   ]
+  },
+  {
+   "id": "pensana",
+   "name": "Longonjo rare earths mine and refinery, feasibility (Pensana)",
+   "short": "Longonjo rare earths",
+   "segment": "mining",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Longonjo, Huambo province (approximate)",
+    "lon": 15.25,
+    "lat": -12.91
+   },
+   "status": "approved",
+   "status_note": "DFC announced the technical-assistance grant in December 2024; the mine's progress was not checked.",
+   "status_date": "2024-12",
+   "summary": "DFC paid for feasibility studies of a rare earths mine and refinery on the railway west of Huambo, presented as a Lobito Corridor investment.",
+   "developer": "Pensana",
+   "finance": [
+    {
+     "funder": "US International Development Finance Corporation (DFC)",
+     "funder_country": "US",
+     "instrument": "technical assistance",
+     "amount": 3400000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "approved",
+     "note": "Feasibility grant.",
+     "source": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor",
+     "source_date": "2024-12-04"
+    }
+   ],
+   "sources": [
+    {
+     "title": "DFC announces investments supporting development along Lobito Corridor",
+     "publisher": "DFC",
+     "date": "2024-12-04",
+     "url": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor"
+    }
+   ]
+  },
+  {
+   "id": "chillerton",
+   "name": "Kakosa green copper project (Chillerton)",
+   "short": "Kakosa copper (Chillerton)",
+   "segment": "mining",
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Kakosa, Zambia; site not verified",
+    "lon": 27.9,
+    "lat": -12.4
+   },
+   "status": "approved",
+   "status_note": "DFC announced the technical-assistance grant in December 2024.",
+   "status_date": "2024-12",
+   "summary": "DFC technical assistance to develop a copper mine in Zambia, listed among its corridor investments.",
+   "developer": "Chillerton",
+   "finance": [
+    {
+     "funder": "US International Development Finance Corporation (DFC)",
+     "funder_country": "US",
+     "instrument": "technical assistance",
+     "amount": 3200000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "approved",
+     "note": "",
+     "source": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor",
+     "source_date": "2024-12-04"
+    }
+   ],
+   "sources": [
+    {
+     "title": "DFC announces investments supporting development along Lobito Corridor",
+     "publisher": "DFC",
+     "date": "2024-12-04",
+     "url": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor"
+    }
+   ]
+  },
+  {
+   "id": "mingomba",
+   "name": "Mingomba copper project (KoBold Metals)",
+   "short": "Mingomba copper (KoBold)",
+   "segment": "mining",
+   "countries": [
+    "ZM"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Mingomba, Copperbelt (approximate)",
+    "lon": 27.83,
+    "lat": -12.37
+   },
+   "status": "announced",
+   "status_note": "Memorandum with the Africa Finance Corporation, October 2024; the form of funding was left open.",
+   "status_date": "2024-10",
+   "summary": "A Copperbelt project aiming at more than 300,000 tonnes of copper a year; the White House listed its memorandum with AFC, the corridor's rail developer, under Lobito.",
+   "developer": "KoBold Metals",
+   "finance": [
+    {
+     "funder": "Africa Finance Corporation (AFC)",
+     "funder_country": "AFC",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "pledged",
+     "note": "Memorandum; development funding, equity or debt.",
+     "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+     "source_date": "2024-12-03"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Fact sheet: PGI in the Lobito Trans-Africa Corridor",
+     "publisher": "The White House (archived)",
+     "date": "2024-12-03",
+     "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor"
+    }
+   ]
+  },
+  {
+   "id": "master-plan",
+   "name": "Lobito Corridor Master Plan (Angola)",
+   "short": "Corridor master plan",
+   "segment": "study",
+   "soft": true,
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Angola's five corridor provinces",
+    "lon": 17.5,
+    "lat": -12.2
+   },
+   "status": "under_construction",
+   "status_note": "Still being drafted: public consultations in five provinces in August 2026; on 5 October Angola reported 144 project opportunities in ten sectors, over USD 12 bn of indicative investment.",
+   "status_date": "2026-10",
+   "summary": "Prepared by the IDOM–Globaltec consortium and paid for by the World Bank-backed Diversifica Mais project. In May 2026 it named 73 opportunities, among them industrial poles at Caála, Cunje and Luena.",
+   "developer": "ARCCLA; consultants IDOM–Globaltec",
+   "finance": [
+    {
+     "funder": "World Bank (Diversifica Mais project)",
+     "funder_country": "WB",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": null,
+     "firmness": "signed",
+     "note": "The plan's cost is not stated.",
+     "source": "https://diversificamais.ao/plano-director-do-corredor-do-lobito-pode-redesenhar-a-economia-nacional-e-o-comercio-africano/",
+     "source_date": "2026-05-26"
+    }
+   ],
+   "sources": [
+    {
+     "title": "Plano Director do Corredor do Lobito pode redesenhar a economia nacional",
+     "publisher": "Diversifica Mais",
+     "date": "2026-05-26",
+     "url": "https://diversificamais.ao/plano-director-do-corredor-do-lobito-pode-redesenhar-a-economia-nacional-e-o-comercio-africano/"
+    },
+    {
+     "title": "Angola apresenta em Lusaka avanços na execução do Corredor do Lobito",
+     "publisher": "Rádio Nacional de Angola",
+     "date": "2026-10-05",
+     "url": "https://rna.ao/rna.ao/2026/10/05/angola-apresenta-em-lusaka-avancos-na-execucao-do-corredor-do-lobito/"
+    }
+   ]
+  },
+  {
+   "id": "industrial-poles",
+   "name": "Industrial poles at Caála, Cunje and Luena (master plan proposals)",
+   "short": "Industrial poles (proposed)",
+   "segment": "industry",
+   "countries": [
+    "AO"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Caála, Cunje (Bié) and Luena",
+    "lon": 17.5,
+    "lat": -12.3
+   },
+   "status": "announced",
+   "status_note": "Named in May 2026 among the master plan's opportunities; no funding or timetable.",
+   "status_date": "2026-05",
+   "summary": "Three industrial zones on the railway proposed by the draft master plan. No cost, developer or financier published.",
+   "developer": "Government of Angola (proposal)",
+   "finance": [],
+   "sources": [
+    {
+     "title": "Plano Director do Corredor do Lobito pode redesenhar a economia nacional",
+     "publisher": "Diversifica Mais",
+     "date": "2026-05-26",
+     "url": "https://diversificamais.ao/plano-director-do-corredor-do-lobito-pode-redesenhar-a-economia-nacional-e-o-comercio-africano/"
+    }
+   ]
+  }
+ ],
+ "pledges": [
+  {
+   "funder": "African Development Bank",
+   "funder_country": "AfDB",
+   "what": "About USD 500 m, sovereign and private, towards a USD 1.6 bn programme: 550 km of rail in Zambia and 260 km of feeder roads.",
+   "amount": 500000000,
+   "currency": "USD",
+   "firmness": "intention",
+   "date": "2023-10-27",
+   "source": "https://maisafrika.com/en/Outros/finances/bad-raises-funds-for-lobito-corridor/",
+   "note": "Its first tranche, USD 255 m, was approved in August 2026."
+  },
+  {
+   "funder": "Italy",
+   "funder_country": "IT",
+   "what": "Up to 320 m for the corridor's railway and side projects, pledged by Giorgia Meloni.",
+   "amount": 320000000,
+   "currency": "EUR",
+   "firmness": "pledge",
+   "date": "2024-06-20",
+   "source": "https://www.internazionale.it/notizie/francesca-sibani/2024/07/05/ferrovia-angola-stati-uniti-cina",
+   "note": "The G7 statement of 13 June said USD. The only vehicle found so far is CDP's EUR 250 m loan to AFC."
+  },
+  {
+   "funder": "United States",
+   "funder_country": "US",
+   "what": "More than USD 4 bn of US investment along the corridor, after the Benguela summit.",
+   "amount": 4000000000,
+   "currency": "USD",
+   "firmness": "mobilised, incl. private",
+   "date": "2024-12-03",
+   "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+   "note": "Not itemised. It includes EXIM's 'over USD 2.4 bn' for Sun Africa's solar plants across Angola (see below)."
+  },
+  {
+   "funder": "G7 partners and development banks",
+   "funder_country": "other",
+   "what": "More than USD 6 bn of public and private investment mobilised along the corridor.",
+   "amount": 6000000000,
+   "currency": "USD",
+   "firmness": "mobilised, incl. private",
+   "date": "2024-12-03",
+   "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+   "note": "A White House figure; it contains the US USD 4 bn and overlaps the EU's."
+  },
+  {
+   "funder": "United States",
+   "funder_country": "US",
+   "what": "More than USD 560 m of new funding announced by Joe Biden in Benguela.",
+   "amount": 560000000,
+   "currency": "USD",
+   "firmness": "pledge",
+   "date": "2024-12-04",
+   "source": "https://www.presidency.ucsb.edu/node/375329",
+   "note": "Part of the USD 4 bn, not on top of it."
+  },
+  {
+   "funder": "African Development Bank",
+   "funder_country": "AfDB",
+   "what": "USD 370 m for three farming projects along the corridor.",
+   "amount": 370000000,
+   "currency": "USD",
+   "firmness": "intention",
+   "date": "2024-12-03",
+   "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor",
+   "note": "From the US fact sheet; projects not named."
+  },
+  {
+   "funder": "European Commission",
+   "funder_country": "EU",
+   "what": "EUR 76.5 m for Angola: trade and investment, vocational training, natural heritage, 'integrally linked' to the corridor.",
+   "amount": 76500000,
+   "currency": "EUR",
+   "firmness": "pledge",
+   "date": "2025-01-17",
+   "source": "https://international-partnerships.ec.europa.eu/news-and-events/news/global-gateway-eu-strengthens-partnership-angola-and-bolsters-lobito-corridor-investments-2025-01-17_en",
+   "note": "Angola-wide money presented as corridor support."
+  },
+  {
+   "funder": "European Investment Bank",
+   "funder_country": "EU",
+   "what": "USD 52.5 m into AFC's USD 750 m climate-resilient infrastructure fund, whose pipeline names the corridor.",
+   "amount": 52480000,
+   "currency": "USD",
+   "firmness": "approved",
+   "date": "2025-02-27",
+   "source": "https://www.eib.org/en/press/all/2025-106-eib-backs-africa-finance-corporation-usd750-million-climate-resilient-infrastructure-fund",
+   "note": "Not earmarked for Lobito."
+  },
+  {
+   "funder": "Team Europe",
+   "funder_country": "EU",
+   "what": "Over EUR 2 bn invested in the corridor by the EU institutions and member states.",
+   "amount": 2000000000,
+   "currency": "EUR",
+   "firmness": "mobilised, incl. private",
+   "date": "2025-10-09",
+   "source": "https://global-gateway-forum.ec.europa.eu/news/eu-angola-partnership-advanced-through-major-investments-lobito-corridor-2025-10-09_en",
+   "note": "The EU ambassador in Luanda put the public development money in it at about EUR 730 m, the rest private loans and investment."
+  },
+  {
+   "funder": "European Union and Zambia",
+   "funder_country": "EU",
+   "what": "Ten agreements worth EUR 200 m signed in Lusaka, among them EUR 50 m for Zambia's railways.",
+   "amount": 200000000,
+   "currency": "EUR",
+   "firmness": "signed",
+   "date": "2025-11-12",
+   "source": "https://www.aa.com.tr/en/europe/eu-mobilizes-23b-to-fund-works-on-transport-corridor-linking-zambia-angola-dr-congo/3742226",
+   "note": "Not every agreement is for the corridor; some are in the register's projects."
+  }
+ ],
+ "elsewhere": [
+  {
+   "funder": "Export-Import Bank of the United States (EXIM)",
+   "funder_country": "US",
+   "what": "Direct loan for two Sun Africa solar plants, over 500 MW.",
+   "where": "Angola; plant sites not disclosed",
+   "amount": 900000000,
+   "currency": "USD",
+   "firmness": "signed",
+   "note": "'More than USD 900 m', approved 2023, finalised May 2024. EXIM's releases do not mention Lobito; the press and the White House grouped it under the corridor.",
+   "source": "https://www.exim.gov/news/export-import-bank-united-states-approves-more-900m-for-solar-energy-project-angola"
+  },
+  {
+   "funder": "Export-Import Bank of the United States (EXIM)",
+   "funder_country": "US",
+   "what": "Direct loan for 65 Sun Africa solar mini-grids powering water supply.",
+   "where": "four southern provinces of Angola, off the corridor",
+   "amount": 1600000000,
+   "currency": "USD",
+   "firmness": "approved",
+   "note": "Approved July 2024; listed under the corridor in the Dec 2024 fact sheet.",
+   "source": "https://www.exim.gov/news/export-import-bank-united-states-board-directors-approves-historic-16-billion-rural-solar"
+  },
+  {
+   "funder": "US International Development Finance Corporation (DFC)",
+   "funder_country": "US",
+   "what": "Political risk insurance for water treatment plants.",
+   "where": "southern Angola",
+   "amount": 150000000,
+   "currency": "USD",
+   "instrument": "insurance",
+   "firmness": "approved",
+   "note": "'Up to' USD 150 m; insurance, not a loan.",
+   "source": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor"
+  },
+  {
+   "funder": "Export-Import Bank of the United States (EXIM)",
+   "funder_country": "US",
+   "what": "Africell's wireless network in Angola and equipment in the DR Congo.",
+   "where": "national networks",
+   "amount": 100000000,
+   "currency": "USD",
+   "firmness": "pledged",
+   "note": "Non-binding preliminary commitment.",
+   "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/12/03/fact-sheet-partnership-for-global-infrastructure-and-investment-in-the-lobito-trans-africa-corridor"
+  },
+  {
+   "funder": "US International Development Finance Corporation (DFC)",
+   "funder_country": "US",
+   "what": "Liquidity facility backing Africa GreenCo's payments to renewable power producers.",
+   "where": "Southern African Power Pool; no corridor site",
+   "amount": 40000000,
+   "currency": "USD",
+   "firmness": "approved",
+   "note": "Listed by DFC under the corridor.",
+   "source": "https://www.dfc.gov/media/press-releases/dfc-announces-investments-supporting-development-along-lobito-corridor"
+  },
+  {
+   "funder": "US International Development Finance Corporation (DFC)",
+   "funder_country": "US",
+   "what": "Loan to Seba Foods Zambia for food production and storage.",
+   "where": "Zambia; site not stated",
+   "amount": 10000000,
+   "currency": "USD",
+   "firmness": "approved",
+   "note": "DFC called it its first food and agriculture investment along the corridor.",
+   "source": "https://www.dfc.gov/media/press-releases/dfc-announces-new-us-financing-africas-lobito-corridor"
+  }
+ ],
+ "timeline": [
+  {
+   "date": "2022-11-04",
+   "event": "Angola signs the 30-year concession of the Benguela Railway and Lobito's mineral terminal with the Lobito Atlantic Railway consortium of Trafigura, Mota-Engil and Vecturis; it takes over in January 2024.",
+   "source": "https://www.engineeringnews.co.za/article/lobito-corridor-railway-project-angola-update-2026-08-07"
+  },
+  {
+   "date": "2023-01-27",
+   "event": "Angola, the DR Congo and Zambia sign the agreement creating the Lobito Corridor Transit Transport Facilitation Agency, at Lobito.",
+   "source": "https://sadc.int/latest-news/angola-drc-and-zambia-sign-lobito-corridor-transit-transport-facilitation-agency"
+  },
+  {
+   "date": "2023-09-09",
+   "event": "At the G20 in New Delhi the United States and the EU back the corridor and studies of a new railway into Zambia.",
+   "source": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/09/09/joint-statement-from-the-united-states-and-the-european-union-on-support-for-angola-zambia-and-the-democratic-republic-of-the-congos-commitment-to-further-develop-the-lobito-corridor-and-the/"
+  },
+  {
+   "date": "2023-10-26",
+   "event": "In Brussels the US, the EU, the three countries, the AfDB and the AFC sign a memorandum on the corridor; the AFC is named developer of the Zambian railway.",
+   "source": "https://www.africafc.org/news-and-insights/news/africa-finance-corporation-to-lead-us-backed-development-of-the-lobito-corridor-and-zambia-lobito-rail-line"
+  },
+  {
+   "date": "2024-06-20",
+   "event": "Giorgia Meloni pledges up to EUR 320 m for the corridor under the Mattei Plan, a week after the G7 summit in Apulia.",
+   "source": "https://www.internazionale.it/notizie/francesca-sibani/2024/07/05/ferrovia-angola-stati-uniti-cina"
+  },
+  {
+   "date": "2024-09-24",
+   "event": "The AFC signs concessions with Angola and Zambia to finance, build and run the new line from Luacano to Chingola.",
+   "source": "https://www.africafc.org/news-and-insights/news/afc-signs-concession-agreements-with-governments-of-angola-and-zambia-to-advance-zambia-lobito-rail-project"
+  },
+  {
+   "date": "2024-12-04",
+   "event": "Joe Biden visits Lobito and co-hosts a corridor summit in Benguela; the White House puts US investment along the corridor above USD 4 bn.",
+   "source": "https://www.presidency.ucsb.edu/node/375329"
+  },
+  {
+   "date": "2025-04-03",
+   "event": "After USAID's closure, the US ambassador in Luanda says Washington remains committed and the DFC and EXIM projects stand.",
+   "source": "https://cnbc.africa/2025/us-committed-to-funding-angolas-lobito-rail-corridor-despite-spending-cuts-diplomat-says"
+  },
+  {
+   "date": "2025-06-20",
+   "event": "In Rome, Italy's CDP and SACE sign a EUR 250 m loan to the AFC for the Zambian railway.",
+   "source": "https://www.africaeaffari.it/piano-mattei-cdp-sace-250-mln-per-corridoio-lobito/"
+  },
+  {
+   "date": "2025-09-09",
+   "event": "EU and US experts present studies pricing the rehabilitation of the Dilolo–Kolwezi–Tenke line at USD 400–410 m.",
+   "source": "https://bankable.africa/fr/actualites/1209-1673-corridor-de-lobito-plus-400-millions-pour-rehabiliter-la-ligne-dilolo-kolwezi-tenke"
+  },
+  {
+   "date": "2025-10-09",
+   "event": "At the Global Gateway Forum the EU says Team Europe has invested over EUR 2 bn in the corridor.",
+   "source": "https://global-gateway-forum.ec.europa.eu/news/eu-angola-partnership-advanced-through-major-investments-lobito-corridor-2025-10-09_en"
+  },
+  {
+   "date": "2025-11-12",
+   "event": "At the EU–Zambia Lobito Corridor Business Forum in Lusaka, the EU and Zambia sign ten agreements worth EUR 200 m.",
+   "source": "https://www.aa.com.tr/en/europe/eu-mobilizes-23b-to-fund-works-on-transport-corridor-linking-zambia-angola-dr-congo/3742226"
+  },
+  {
+   "date": "2025-11-20",
+   "event": "China, Tanzania and Zambia sign a USD 1.4 bn deal to modernise the TAZARA railway, the Copperbelt's route east to Dar es Salaam.",
+   "source": "https://www.thestandard.com.hk/world/article/317436/China-signs-agreement-to-revamp-TAZARA-railway-in-Zambia"
+  },
+  {
+   "date": "2025-12-05",
+   "event": "The DFC signs a letter of interest with Mota-Engil: the DR Congo line may seek up to USD 1 bn from it.",
+   "source": "https://www.dfc.gov/media/press-releases/dfc-strengthens-strategic-partnerships-democratic-republic-congo-and-rwanda"
+  },
+  {
+   "date": "2025-12-17",
+   "event": "The DFC signs its USD 553 m loan to the Lobito Atlantic Railway, the Biden-era pledge, with USD 200 m from the DBSA; the DFC is reauthorised the next day.",
+   "source": "https://dfc.gov/media/press-releases/dfc-ceo-ben-black-signs-loan-agreement-lobito-atlantic-railway-securing"
+  },
+  {
+   "date": "2026-01-28",
+   "event": "Angola's Council of Ministers reviews the decree creating the Lobito Corridor Development Company (SDCL).",
+   "source": "https://suica.mirex.gov.ao/web/noticias/criada-sociedade-de-desenvolvimento-do-corredor-do-lobito"
+  },
+  {
+   "date": "2026-02-05",
+   "event": "Angola and the World Bank hold the first regional coordination meeting on the corridor in Luanda.",
+   "source": "https://governo.gov.ao/noticias/2646/economia/desenvolvimento-acelerado/governo-e-banco-mundial-lancam-novo-mecanismo-de-coordenacao-para-o-corredor-do-lobito"
+  },
+  {
+   "date": "2026-03-10",
+   "event": "The DR Congo and Zambia join Italy's Mattei Plan, which reaches 18 countries.",
+   "source": "https://www.stampaparlamento.it/2026/03/10/piano-mattei-a-palazzo-chigi-la-quinta-riunione-della-cabina-di-regia/"
+  },
+  {
+   "date": "2026-06-15",
+   "event": "The Lobito Atlantic Railway resumes freight with a copper train from the DR Congo, after floods cut the line between Lobito and Huambo for about two months.",
+   "source": "https://www.lobitoatlantic.com/news-resources/news/lobito-atlantic-railway-resumes-freight-traffic-on-the-lobito-corridor-with-first-copper-train-from-the-drc/"
+  },
+  {
+   "date": "2026-06-18",
+   "event": "Zambia and the United States realign the USD 491 m MCC compact to the corridor.",
+   "source": "https://www.zambiamonitor.com/zambia-us-realign-491-million-mcc-compact-to-target-lobito-corridor-growth/"
+  },
+  {
+   "date": "2026-07-03",
+   "event": "Financial close of the USD 753 m DFC and DBSA loans to the Lobito Atlantic Railway.",
+   "source": "https://www.africafc.org/news-and-insights/news/afc-achieves-financial-close-on-landmark-us-753-mm-lobito-corridor-railway-project-marking-a-major-milestone-for-regional-integration-and-economic-transformation"
+  },
+  {
+   "date": "2026-08-06",
+   "event": "The AfDB approves USD 255 m and a USD 10 m Mattei Plan grant for Zambia's part of the corridor: the railway, the Mwinilunga–Jimbe road, the Jimbe border post.",
+   "source": "https://allafrica.com/stories/202608070250.html"
+  },
+  {
+   "date": "2026-08-26",
+   "event": "The DR Congo signs a 30-year concession of the Dilolo–Sakania railway with Mota-Engil Africa.",
+   "source": "https://www.ecofinagency.com/news-infrastructures/2708-58372-drc-grants-mota-engil-30-year-rail-concession-with-1-25-billion-investment"
+  },
+  {
+   "date": "2026-10-05",
+   "event": "At the second corridor coordination meeting, in Lusaka, Angola reports 144 project opportunities in its master plan and commits to a one-stop border post at Luau–Dilolo.",
+   "source": "https://rna.ao/rna.ao/2026/10/05/angola-apresenta-em-lusaka-avancos-na-execucao-do-corredor-do-lobito/"
+  }
+ ],
+ "governance": [
+  {
+   "name": "Lobito Corridor Transit Transport Facilitation Agency (LCTTFA)",
+   "what": "The three governments' agency, under SADC, to align transit and border rules along the corridor. The AfDB's 2026 package pays to get it working.",
+   "since": "January 2023",
+   "source": "https://sadc.int/latest-news/angola-drc-and-zambia-sign-lobito-corridor-transit-transport-facilitation-agency"
+  },
+  {
+   "name": "The 2023 memorandum",
+   "what": "The US, the EU, Angola, the DR Congo, Zambia, the AfDB and the AFC set out who does what on the corridor and the Zambian railway; the Commission also lists Italy.",
+   "since": "October 2023",
+   "source": "https://international-partnerships.ec.europa.eu/policies/global-gateway/lobito-corridor-connecting-democratic-republic-congo-and-zambia-global-markets-angola_en"
+  },
+  {
+   "name": "Lobito Atlantic Railway (LAR)",
+   "what": "Trafigura, Mota-Engil and Vecturis: holds the Angolan railway and the mineral terminal for 30 years, runs trains into the DR Congo, borrows from the DFC and the DBSA.",
+   "since": "November 2022",
+   "source": "https://www.engineeringnews.co.za/article/lobito-corridor-railway-project-angola-update-2026-08-07"
+  },
+  {
+   "name": "Africa Finance Corporation (AFC)",
+   "what": "Developer of the new Zambian railway, with concessions from Angola and Zambia to finance, build, own and run it.",
+   "since": "October 2023",
+   "source": "https://www.africafc.org/news-and-insights/news/afc-signs-concession-agreements-with-governments-of-angola-and-zambia-to-advance-zambia-lobito-rail-project"
+  },
+  {
+   "name": "Mota-Engil Africa, in the DR Congo",
+   "what": "Concessionaire of the Dilolo–Sakania railway for 30 years, the state keeping at least 10%; the Congolese railway SNCC keeps passenger rights.",
+   "since": "August 2026",
+   "source": "https://logistafrica.com/en/logistic/drc-mota-engil-secures-a-30-year-concession-to-modernize-the-lobito-corridor-railway/"
+  },
+  {
+   "name": "Lobito Corridor Development Company (SDCL)",
+   "what": "Angolan state company in Lobito to coordinate and promote investment along the corridor.",
+   "since": "January 2026",
+   "source": "https://suica.mirex.gov.ao/web/noticias/criada-sociedade-de-desenvolvimento-do-corredor-do-lobito"
+  },
+  {
+   "name": "Regional coordination meeting",
+   "what": "The three governments and their funders, convened by Angola with the World Bank; first in Luanda, second in Lusaka on 5 October 2026.",
+   "since": "February 2026",
+   "source": "https://governo.gov.ao/noticias/2646/economia/desenvolvimento-acelerado/governo-e-banco-mundial-lancam-novo-mecanismo-de-coordenacao-para-o-corredor-do-lobito"
+  }
+ ]
+}

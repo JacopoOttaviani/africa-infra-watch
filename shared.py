@@ -52,11 +52,11 @@ def inline_vendor(page):
 
 # AfDB publishes in SDR. One place, stated on both pages, so the figure is
 # auditable rather than an invented conversion.
-SDR_USD = 1.37
-SDR_NOTE = "1 SDR = 1.37 USD (IMF, Sep 2026)"
+SDR_USD = 1.35
+SDR_NOTE = "1 SDR = 1.35 USD (IMF, 9 Oct 2026)"
 # The EU institutions publish in euros; one fixed, stated rate, like the SDR one.
-EUR_USD = 1.1225
-EUR_NOTE = "1 EUR = 1.1225 USD (ECB reference rate, 2 Oct 2026)"
+EUR_USD = 1.1206
+EUR_NOTE = "1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026)"
 
 # Where the site lives. Canonical and social-preview URLs point here; the pages
 # themselves use only relative links, so they also work at any other address.
@@ -67,7 +67,7 @@ AUTHOR_URL = os.environ.get("AIW_AUTHOR_URL", "https://www.linkedin.com/in/jacop
 WEB_URL = os.environ.get("AIW_WEB_URL", "https://jacopoottaviani.com/")
 
 # What the site is called in search results, link previews and structured data.
-SITE_NAME = "Africa Infra Watch"
+SITE_NAME = "Africa Project Atlas"
 AUTHOR_NAME = "Jacopo Ottaviani"
 # The link-preview image, docs/social.png, drawn by build_social.py.
 SOCIAL_IMAGE = "social.png"
@@ -464,7 +464,8 @@ def brand_assets(page, donor=None):
                 .replace("__HOME_URL__", SITE_URL)
                 .replace("__COFFEE_URL__", COFFEE_URL)
                 .replace("__AUTHOR_URL__", AUTHOR_URL)
-                .replace("__WEB_URL__", WEB_URL))
+                .replace("__WEB_URL__", WEB_URL)
+                .replace("__SITE_NAME__", SITE_NAME))
 
 
 def site_url(path=""):
@@ -740,7 +741,7 @@ Italy's share; the Chinese layer ends with commitments made in 2021, so totals a
 exposure, never summed and not investment in Africa; about two thirds of AfDB locations sit on a
 country or region centroid, the World Bank marks every location approximate, the EIB and the
 Piano Mattei portal publish no locations at all, so their records sit on a place the record names
-or at their country's point, and about a quarter of the Chinese-financed
+or at their country's point, and about a fifth of the Chinese-financed
 projects have no published location and sit at their country's centre; OpenStreetMap presence is mapper-driven,
 so absence is not evidence; energy and connectivity are over-represented because no comparable
 open tracker exists for ports, water or electricity transmission.</p>
@@ -963,7 +964,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 - The Chinese layer is a historical baseline: AidData's 3.0 release covers commitments
   made 2000-2021 and their implementation to 2023. It says where Chinese money went, not
   what China is financing now. Only projects AidData flags as physical infrastructure are
-  kept; about a quarter have no published location and sit at their country's centre.
+  kept; about a fifth have no published location and sit at their country's centre.
 - About two thirds of AfDB locations are approximate (a country or region centroid). The
   World Bank marks every location approximate and states its class: site, populated place
   or administrative region. The pages say which for each record.

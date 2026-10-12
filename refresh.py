@@ -2,7 +2,7 @@
 """
 The twice-a-year update, as one command.
 
-    python3 refresh.py             fetch all three sources, gate, rebuild docs/
+    python3 refresh.py             fetch every source, gate, rebuild docs/, cross-check the numbers
     python3 refresh.py --build     rebuild docs/ from the data already in data/
     python3 refresh.py --basemap   also rebuild the Natural Earth basemap
     python3 refresh.py --force     build even if check_data.py objects
@@ -13,8 +13,10 @@ Afterwards, look at the result locally
 
 then commit and push; GitHub Pages redeploys main:/docs within a minute or two.
 
-The fetch takes ~15 minutes, most of it the OpenStreetMap pass, which walks
-the continent in latitude bands to stay inside Overpass's rate limits. If one
+The fetch takes well over an hour (1 h 45 min in October 2026: 80 minutes for
+the ten map sources, then 25 for debt and the lender profiles), most of it the
+OpenStreetMap pass, which walks the continent in latitude bands to stay inside
+Overpass's rate limits. If one
 source fails, fix or retry that layer alone (`python3 fetch_sources.py osm`)
 and rerun with --build.
 """
@@ -39,7 +41,7 @@ def main():
         sys.exit(f"unknown option(s): {' '.join(sorted(unknown))}\n{__doc__}")
 
     if "--build" not in args:
-        if run("Fetch the three sources", "fetch_sources.py") != 0:
+        if run("Fetch the ten map sources", "fetch_sources.py") != 0:
             sys.exit("\nfetch failed — nothing was rebuilt. Retry the failing layer alone, "
                      "then `python3 refresh.py --build`.")
         if run("Fetch the lender-profile data", "fetch_donors.py") != 0:
@@ -69,6 +71,15 @@ def main():
     for script in ("build_dashboard.py", "build_map.py", "build_donors.py", "build_debt.py", "build_compare.py"):
         if run(f"Build {script}", script) != 0:
             sys.exit(f"\n{script} failed")
+
+    # Every number the pages state, checked against the data and against every
+    # other place it is stated: the README, the hand-written proportions, the
+    # profiles, the comparison and the debt page. A disagreement unbuilds
+    # nothing, but the snapshot is not ready to publish.
+    if run("Cross-check the numbers", "check_numbers.py") != 0:
+        sys.exit("\ncheck_numbers.py found figures that disagree (listed above). The pages are built but not "
+                 "ready to publish: fix each figure where it is written (README.md, donors/, sections/ or a "
+                 "template), then `python3 refresh.py --build`.")
 
     print("""
 === Done. Next:

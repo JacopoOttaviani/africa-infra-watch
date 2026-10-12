@@ -230,13 +230,16 @@ RUSSIA_CORP = [
 ]
 
 
-def ids_pack(cp, name, purposes=None, old_cp=None, old_name=None, from_year=None, since=2000, kind="BLAT"):
-    """The debt block of a profile: for one bilateral creditor, every African
+def ids_pack(cp, name, purposes=None, old_cp=None, old_name=None, from_year=None, since=2000, kind="DPPG"):
+    """The debt block of a profile: for one creditor, every African
     debtor's stock, peak, new commitments since `since` (with a purpose where a
     public source states one) and disbursements, plus the continent-wide stock
     by year. `old_cp` is a predecessor creditor (the USSR for Russia) whose
     stock is reported separately; `from_year` trims reporting artefacts before
-    the creditor existed."""
+    the creditor existed. `kind` is the IDS series: DPPG, all public and
+    publicly guaranteed debt to the creditor country's government and banks
+    together, as the debt section and the comparison count it, or BLAT, the
+    bilateral official part, which each profile shows beside it."""
     stock, updated = ids_series(f"DT.DOD.{kind}.CD", cp)
     commit, _ = ids_series(f"DT.COM.{kind}.CD", cp)
     disb, _ = ids_series(f"DT.DIS.{kind}.CD", cp)
@@ -297,6 +300,8 @@ def fetch_russia():
     pack = {
         "slug": "russia", "fetched": today(),
         "ids": ids,
+        "ids_bilateral": ids_pack("087", "Russian Federation", RUSSIA_LOAN_PURPOSE, old_cp="078", old_name="USSR",
+                                  from_year=1991, kind="BLAT"),
         "gem": place([dict(r) for r in RUSSIA_GEM]),
         "nuclear": place([{**r, "country": NAME[r["iso"]]} for r in RUSSIA_NUCLEAR]),
         "cbr": place([{**r, "country": NAME[r["iso"]]} for r in RUSSIA_CBR]),
@@ -728,6 +733,7 @@ def fetch_turkey():
     pack = {
         "slug": "turkey", "fetched": today(),
         "crs": crs, "oda": oda, "fdi": fdi, "ids": ids, "gem": gem, "works": works,
+        "ids_bilateral": ids_pack("055", "Turkey", since=2010, kind="BLAT"),
         "context": {
             # Turkish Contractors Association / Ministry of Trade statistics, 2025 edition: totals only
             "tmb": {"all_usd_bn": 534.4, "all_projects": 12478, "africa_share_pct": 18.1, "period": "1972–2024",
@@ -818,7 +824,7 @@ def fetch_italy():
     print(f"   cables: {len(cables)} with Sparkle among the owners")
 
     pack = {"slug": "italy", "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
-            "mattei": mattei, "gem": gem, "pipelines": pipes, "cables": cables}
+            "ids_bilateral": ids_pack("006", "Italy", since=2000, kind="BLAT"), "mattei": mattei, "gem": gem, "pipelines": pipes, "cables": cables}
     update_meta("italy", fetched=today(), crs_from=y0, crs_to=y1, crs_activities=len(acts),
                 ids_updated=ids["updated"], data_to=ids["data_to"], mattei=len(mattei), gem=len(gem),
                 pipelines=len(pipes), cables=len(cables))
@@ -1064,6 +1070,7 @@ def fetch_usa():
     cables = _cables_owned(US_OWNER)
     print(f"   GEM {len(gem)} power units, {len(pipes)} pipeline segments, {len(cables)} cables with a US owner")
     pack = {"slug": "usa", "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
+            "ids_bilateral": ids_pack("302", "United States", since=2000, kind="BLAT"),
             "gem": gem, "pipelines": pipes, "cables": cables}
     update_meta("usa_profile", fetched=today(), crs_from=y0, crs_to=y1, crs_activities=len(acts),
                 ids_updated=ids["updated"], data_to=ids["data_to"], gem=len(gem), pipelines=len(pipes), cables=len(cables))
@@ -1091,6 +1098,7 @@ def fetch_germany():
     cables = _cables_owned(GERMAN_OWNER)
     print(f"   GEM {len(gem)} power units, {len(pipes)} pipeline segments, {len(cables)} cables with a German owner")
     pack = {"slug": "germany", "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
+            "ids_bilateral": ids_pack("005", "Germany", since=2000, kind="BLAT"),
             "gem": gem, "pipelines": pipes, "cables": cables}
     update_meta("germany_profile", fetched=today(), crs_from=y0, crs_to=y1, crs_activities=len(acts),
                 ids_updated=ids["updated"], data_to=ids["data_to"], gem=len(gem), pipelines=len(pipes), cables=len(cables))
@@ -1174,6 +1182,7 @@ def fetch_profile(slug):
     ids = ids_pack(spec["cp"], label, since=spec["since"])
     print(f"   IDS: {len(ids['countries'])} debtors, data to {ids['data_to']}, stock {ids['continent'].get(str(ids['data_to']), 0) / 1e6:,.0f} m")
     pack = {"slug": slug, "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
+            "ids_bilateral": ids_pack(spec["cp"], label, since=spec["since"], kind="BLAT"),
             "gem": gem_owned(spec["gem"]), "pipelines": _pipes_owned(spec["gem"]), "cables": _cables_owned(spec["cables"])}
     if spec.get("funds"):
         pack["ids_funds"] = ids_pack(spec["funds"], "the Gulf-based development funds", since=spec["since"], kind="DPPG")

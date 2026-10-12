@@ -102,14 +102,19 @@ def build_russia(pack):
 
     # ---- tables
     order = sorted(cs, key=lambda c: (-c["latest_stock"], c["name"]))
+    idb = pack.get("ids_bilateral")
+    bl = _bilateral_at(idb)
+    bl_latest = idb["continent"].get(str(data_to), 0) if idb else stock_latest
     rows = []
     for c in order:
         com = "<br>".join(
             f'<span class="m">{k["year"]} · USD {m(k["usd"])} m</span>: {esc(k["purpose"])}' for k in c["commitments"]
         ) or '<span class="dim">none</span>'
+        b = bl.get(c["iso"], {}).get(str(c["latest_year"]), 0) if c["latest_year"] else 0
         rows.append([
             td(esc(c["name"]), "name"),
             td(m(c["latest_stock"]) if c["latest_stock"] else "–", "num"),
+        ] + ([td(m(b) if b else "–", "num")] if idb else []) + [
             td(c["latest_year"] or "–", "num"),
             td(m(c["peak_stock"]) if c["peak_stock"] else "–", "num"),
             td(c["peak_year"] or "–", "num"),
@@ -117,10 +122,14 @@ def build_russia(pack):
             td(m(c["ussr_peak"], 0) if c["ussr_peak"] else "–", "num"),
         ])
     t_ids = table(
-        f"Debt owed to the Russian Federation by African governments, USD million, latest reported year; "
-        f"{len(cs)} countries. World Bank International Debt Statistics, release of {fmt_date(ids['updated'])}.",
-        ["Country", "#Owed to Russia, latest", "#Year", "#Peak stock", "#Peak year",
-         "Russian loans since 2000 and what is known of their purpose", "#Soviet-era claim, peak"], rows)
+        f"Public and publicly guaranteed debt owed by African governments to creditors in the Russian Federation, the "
+        f"government and its banks together (series DPPG, as on the debt page)"
+        f"{', and, beside it, the part owed to the state itself (bilateral official, series BLAT)' if idb else ''}, "
+        f"USD million, latest reported year; {len(cs)} countries. World Bank International Debt Statistics, "
+        f"counterparts 087 and 078 (USSR), release of {fmt_date(ids['updated'])}.",
+        ["Country", "#Owed to Russia, latest"] + (["#of which bilateral official"] if idb else [])
+        + ["#Year", "#Peak stock", "#Peak year",
+           "Russian loans since 2000 and what is known of their purpose", "#Soviet-era claim, peak"], rows)
 
     rows = []
     for g in pack["gem"]:
@@ -168,6 +177,7 @@ def build_russia(pack):
         "__FIRST_YEAR__": str(first_year),
         "__STOCK_FIRST__": f"{cont[first_year] / 1e9:.1f}",
         "__STOCK_LATEST__": f"{stock_latest / 1e9:.2f}",
+        "__IDS_BL_BN__": f"{bl_latest / 1e9:.2f}",
         "__EGY_SHARE__": f"{egy / stock_latest * 100:.0f}",
         "__LOW__": f"{cont[low_year] / 1e9:.2f}",
         "__LOW_YEAR__": str(low_year),
@@ -271,7 +281,22 @@ def _crs_row(a):
             td(f'{esc(a["sector"])} <span class="dim m">{esc(a["code"])}</span>'), td(d), td(f'<span class="m dim">{esc(a["id"])}</span>')]
 
 
-def _oecd_tables(crs, oda, fdi, ids, lender):
+def _bilateral_at(idb):
+    """iso -> {year: stock} of the bilateral official series, to set beside
+    the all-creditor figure for the same year."""
+    return {c["iso"]: c["stock"] for c in (idb or {}).get("countries", [])}
+
+
+def _ids_caption(ids, idb, lender):
+    cps = list(ids["counterparts"])
+    cp = ("counterpart " + cps[0]) if len(cps) == 1 else ("counterparts " + ", ".join(cps) + ", summed")
+    beside = (", and, beside it, the part owed to the state itself (bilateral official, series BLAT)" if idb else "")
+    return (f"Public and publicly guaranteed debt owed by African governments to creditors in {lender}, the government and "
+            f"its banks together (series DPPG, as on the debt page){beside}, USD million. World Bank International Debt "
+            f"Statistics, {cp}, release of {fmt_date(ids['updated'])}.")
+
+
+def _oecd_tables(crs, oda, fdi, ids, lender, idb=None):
     """The tables every OECD-backed profile carries: largest aid records, the
     records that build something, FDI stock, net ODA, debt owed."""
     t_large = table(f"Largest {lender} CRS activities in Africa, {crs['from']}–{crs['to']}, commitments in USD million (current prices).",
@@ -283,19 +308,22 @@ def _oecd_tables(crs, oda, fdi, ids, lender):
                    [_crs_row(a) for a in crs["hard"]["rows"][:12]])
 
     cs = ids["countries"]
+    bl = _bilateral_at(idb)
     rows = []
     for c in sorted(cs, key=lambda c: (-c["latest_stock"], c["name"])):
         com = "<br>".join(f'<span class="m">{k["year"]} · USD {m(k["usd"])} m</span>' for k in c["commitments"][-6:]) or '<span class="dim">none</span>'
         if len(c["commitments"]) > 6:
             com = f'<span class="dim">{len(c["commitments"]) - 6} earlier, then</span><br>' + com
         ld = c.get("largest_disbursement")
-        rows.append([td(esc(c["name"]), "name"), td(m(c["latest_stock"]) if c["latest_stock"] else "–", "num"),
-                     td(c["latest_year"] or "–", "num"), td(m(c["peak_stock"]), "num"), td(c["peak_year"] or "–", "num"),
-                     td(m(ld["usd"]) if ld else "–", "num"), td(ld["year"] if ld else "–", "num"), td(com)])
-    t_ids = table(f"Debt owed to {lender} by African governments, USD million. World Bank International Debt Statistics, "
-                  f"counterpart {list(ids['counterparts'])[0]}, release of {fmt_date(ids['updated'])}.",
-                  ["Debtor", "#Owed, latest", "#Year", "#Peak stock", "#Peak year", "#Largest annual disbursement", "#Year",
-                   f"New loans since {ids['since']}"], rows)
+        b = bl.get(c["iso"], {}).get(str(c["latest_year"]), 0) if c["latest_year"] else 0
+        rows.append([td(esc(c["name"]), "name"), td(m(c["latest_stock"]) if c["latest_stock"] else "–", "num")]
+                    + ([td(m(b) if b else "–", "num")] if idb else [])
+                    + [td(c["latest_year"] or "–", "num"), td(m(c["peak_stock"]), "num"), td(c["peak_year"] or "–", "num"),
+                       td(m(ld["usd"]) if ld else "–", "num"), td(ld["year"] if ld else "–", "num"), td(com)])
+    t_ids = table(_ids_caption(ids, idb, lender),
+                  ["Debtor", "#Owed, latest"] + (["#of which bilateral official"] if idb else [])
+                  + ["#Year", "#Peak stock", "#Peak year", "#Largest annual disbursement", "#Year",
+                     f"New loans since {ids['since']}"], rows)
 
     t_fdi = ""
     if fdi:
@@ -323,6 +351,8 @@ def _oecd_tokens(pack, crs, oda, fdi, ids):
     cs = ids["countries"]
     data_to = ids["data_to"]
     stock_latest = ids["continent"].get(str(data_to), 0)
+    idb = pack.get("ids_bilateral")
+    bl_latest = idb["continent"].get(str(data_to), 0) if idb else stock_latest
     fdi = fdi or {"to": 0, "from": 0, "countries": {}}
     fdi_to = str(fdi["to"])
     fdi_latest = {iso: s.get(fdi_to) for iso, s in fdi["countries"].items() if s.get(fdi_to) is not None}
@@ -353,6 +383,8 @@ def _oecd_tokens(pack, crs, oda, fdi, ids):
         "__IDS_STOCK__": f"{stock_latest / 1e6:,.0f}", "__IDS_STOCK_BN__": f"{stock_latest / 1e9:,.2f}", "__IDS_TO__": str(data_to),
         "__IDS_N__": str(sum(1 for c in cs if c["latest_year"] == data_to and c["latest_stock"] > 0)),
         "__IDS_N_ALL__": str(len(cs)), "__IDS_UPDATED__": fmt_date(ids["updated"]), "__IDS_SINCE__": str(ids["since"]),
+        "__IDS_BL_STOCK__": f"{bl_latest / 1e6:,.0f}", "__IDS_BL_BN__": f"{bl_latest / 1e9:,.2f}",
+        "__IDS_BL_PCT__": f"{100 * bl_latest / stock_latest:.0f}" if stock_latest else "–",
         "__IDS_TOP__": max(cs, key=lambda c: c["latest_stock"] if c["latest_year"] == data_to else 0)["name"] if cs else "–",
         "__FDI_STOCK__": f"{fdi_total:,.0f}", "__FDI_STOCK_BN__": f"{fdi_total / 1000:,.1f}", "__FDI_TO__": fdi_to, "__FDI_FROM__": str(fdi["from"]),
         "__FDI_TOP__": _name(fdi_top[0][0]) if fdi_top else "–",
@@ -452,7 +484,7 @@ def build_turkey(pack):
                     ["Source", "Work", "Country", "Kind", "#Year", "Status", "Detail", "Link"], rows)
 
     tokens = _oecd_tokens(pack, crs, oda, fdi, ids)
-    tokens.update(_oecd_tables(crs, oda, fdi, ids, "Turkey"))
+    tokens.update(_oecd_tables(crs, oda, fdi, ids, "Turkey", pack.get("ids_bilateral")))
     tokens.update({"__N_WORKS__": str(n_works), "__N_WORKS_HAND__": str(len(works)), "__N_GEM__": str(len(gem)),
                    "__TABLE_WORKS__": t_works})
     payload = {
@@ -564,7 +596,7 @@ def build_italy(pack):
         "power units and pipeline segments (Eni, Enel, Snam, Edison, Building Energy, Renco), TeleGeography's cables (Sparkle).")
     groups = _pipe_groups(pipes)
     tokens = _oecd_tokens(pack, crs, oda, fdi, ids)
-    tokens.update(_oecd_tables(crs, oda, fdi, ids, "Italy"))
+    tokens.update(_oecd_tables(crs, oda, fdi, ids, "Italy", pack.get("ids_bilateral")))
     tokens.update({
         "__MATTEI_N__": str(len(mattei)), "__MATTEI_EUR_BN__": f"{eur_total / 1e9:,.2f}", "__MATTEI_WITH_AMOUNT__": str(with_amount),
         "__MATTEI_COUNTRIES__": str(len(countries)),
@@ -753,7 +785,7 @@ def build_oecd_profile(pack, lender, adj, energy_caption):
     crs, oda, fdi, ids = pack["crs"], pack["oda"], pack.get("fdi"), pack["ids"]
     gem, pipes, cables = pack.get("gem") or [], pack.get("pipelines") or [], pack.get("cables") or []
     tokens = _oecd_tokens(pack, crs, oda, fdi, ids)
-    tokens.update(_oecd_tables(crs, oda, fdi, ids, lender))
+    tokens.update(_oecd_tables(crs, oda, fdi, ids, lender, pack.get("ids_bilateral")))
     tokens.update({"__N_GEM__": str(len(gem)), "__N_PIPE_SEG__": str(len(pipes)), "__N_PIPES__": str(len(_pipe_groups(pipes))),
                    "__N_CABLES__": str(len(cables)),
                    "__GEM_MW__": f"{sum(g['mw'] or 0 for g in gem if g['status'] == 'operating'):,.0f}",
@@ -915,9 +947,11 @@ def build_gulf(pack):
     tokens["__IDS_FUNDS_BN__"] = f"{funds['continent'].get(str(data_to), 0) / 1e9:,.2f}"
     tokens["__IDS_FUNDS_N__"] = str(sum(1 for c in funds["countries"] if c["latest_year"] == data_to and c["latest_stock"] > 0))
     tokens["__IDS_STATES_BN__"] = f"{ids['continent'].get(str(data_to), 0) / 1e9:,.2f}"
+    idb = pack.get("ids_bilateral")
+    tokens["__IDS_STATES_BL_BN__"] = f"{(idb or ids)['continent'].get(str(data_to), 0) / 1e9:,.2f}"
     tokens["__TABLE_IDS__"] = _two_series_ids_table(ids, funds, "the four states", "the Gulf-based funds",
-        f"Public and publicly guaranteed debt owed by African governments to the United Arab Emirates, Saudi Arabia, Kuwait and Qatar "
-        f"(counterparts 576, 566, 552, 561, summed) and to the Gulf-based development funds (the Arab Fund for Economic and Social "
+        f"Public and publicly guaranteed debt owed by African governments to creditors in the United Arab Emirates, Saudi Arabia, Kuwait and Qatar, "
+        f"the governments and their banks together (series DPPG, as on the debt page; counterparts 576, 566, 552, 561, summed) and to the Gulf-based development funds (the Arab Fund for Economic and Social "
         f"Development, the OPEC Fund, the Islamic Development Bank, BADEA and the Arab technical-assistance fund for Africa: 921, 951, 976, 953, 980), "
         f"USD million. World Bank International Debt Statistics, release of {fmt_date(ids['updated'])}.")
     payload["charts"]["c-prov"] = {"type": "bars", "rows": [{"label": k, "value": u * 1e6, "text": f"{u:,.0f} ({n:,})"} for k, n, u in sorted(prov, key=lambda r: -r[2])]}

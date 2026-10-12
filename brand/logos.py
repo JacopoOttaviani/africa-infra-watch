@@ -124,7 +124,7 @@ open('brand/favicon.svg','w').write(fav)
 # ---------- Preview sheet ----------
 def inline(k,w=220):
     return opts[k].replace('width="1000" height="1000"',f'width="{w}" height="{w}"',1)
-def lockup(k,color,name='Africa Infra Watch',sub='Infrastructure, mapped from open data'):
+def lockup(k,color,name='Africa Project Atlas',sub='Infrastructure, mapped from open data'):
     return f'''<div class="lockup"><div class="mark">{inline(k,96)}</div>
 <div><div class="wm" style="color:{color}">{name}</div><div class="sub" style="color:{color};opacity:.6">{sub}</div></div></div>'''
 
@@ -138,7 +138,7 @@ card=lambda title,desc,light,dark,lk_l,lk_d: f'''
   </div>
 </section>'''
 
-html=f'''<!doctype html><html><head><meta charset="utf-8"><title>Africa Infra Watch logo options</title>
+html=f'''<!doctype html><html><head><meta charset="utf-8"><title>Africa Project Atlas logo options</title>
 <style>
 :root{{--paper:#EDF0EC;--ink:#16211C;--rule:#C6D0C8;--display:"Archivo","Helvetica Neue",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--display);padding:40px 24px}}
@@ -151,7 +151,7 @@ h2{{font-size:16px;margin:0 0 4px;font-family:var(--mono);font-weight:500}} .car
 .small{{flex-direction:row;align-items:flex-end;gap:20px;flex-wrap:wrap}} .small span{{font-family:var(--mono);font-size:11px;color:#586760;width:100%;text-align:center}}
 .lockup{{display:flex;align-items:center;gap:14px}} .wm{{font-weight:700;font-size:20px;letter-spacing:-.01em}} .sub{{font-size:12px;font-family:var(--mono)}}
 </style></head><body>
-<h1>Africa Infra Watch — logo options</h1>
+<h1>Africa Project Atlas — logo options</h1>
 <p class="lead">Compass inside the African continent. The outline is traced from the project's own Natural Earth basemap; the compass sits at the largest circle that fits inside the mainland. Three directions, each shown on light and dark, with wordmark lockup and small-size check.</p>
 {card('A — Cut-out compass rose','Solid continent in the project green with an eight-point compass rose cut out as negative space. One colour, one shape: works as a favicon, a stamp, or a knocked-out mark on photos.','option-a-cutout-rose','option-a-cutout-rose-inverse','option-a-cutout-rose','option-a-cutout-rose-inverse')}
 {card('B — Outline with two-tone needle','Continent drawn as a thick outline, with a bezel ring and a needle inside. North needle in green, south in grey. Lighter, more editorial; reads as a map instrument rather than a badge.','option-b-outline-needle','option-b-outline-needle-inverse','option-b-outline-needle','option-b-outline-needle-inverse')}

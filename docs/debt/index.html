@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geopolitics of Africa: Who Africa owes · Africa Infra Watch</title>
+<title>Geopolitics of Africa: Who Africa owes · Africa Project Atlas</title>
 <meta name="description" content="What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank&#x27;s International Debt Statistics, with the IMF&#x27;s credit beside it.">
 <meta name="keywords" content="Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, World Bank projects Africa, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, Chinese investment Africa, China Africa infrastructure, AidData, Chinese loans Africa, Belt and Road Africa, EU investment Africa, Global Gateway Africa, European Investment Bank Africa, European Commission Africa infrastructure, Piano Mattei, Mattei Plan Africa, Italy Africa investment, Italian cooperation Africa, open data Africa, infrastructure investment Africa, interactive map">
 <meta name="author" content="Jacopo Ottaviani">
@@ -12,13 +12,13 @@
 <link rel="canonical" href="https://jacopoottaviani.com/africa-infra-watch/debt/index.html">
 <link rel="author" href="https://www.linkedin.com/in/jacopo-ottaviani/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Africa Infra Watch">
+<meta property="og:site_name" content="Africa Project Atlas">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="https://jacopoottaviani.com/africa-infra-watch/debt/index.html">
 <meta property="og:title" content="Who Africa owes">
 <meta property="og:description" content="What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank&#x27;s International Debt Statistics, with the IMF&#x27;s credit beside it.">
-<meta property="og:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=99f637570c">
-<meta property="og:image:secure_url" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=99f637570c">
+<meta property="og:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=69d822955c">
+<meta property="og:image:secure_url" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=69d822955c">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Who Africa owes">
 <meta name="twitter:description" content="What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank&#x27;s International Debt Statistics, with the IMF&#x27;s credit beside it.">
-<meta name="twitter:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=99f637570c">
+<meta name="twitter:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=69d822955c">
 <meta name="twitter:image:alt" content="Who Africa owes: Africa with every tracked power unit, AfDB project and construction work drawn in its status colour, and the site&#x27;s title.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -237,6 +237,22 @@
   td .m{font-size:12px}
   td a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule)}
   td a:hover{border-color:var(--accent)}
+  /* every table sorts on a header click and, when it is long, filters as you type (script at the end) */
+  th .sorter{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;display:inline-flex;align-items:center;gap:5px;text-align:inherit;white-space:nowrap}
+  th .sorter::after{content:"";flex:none;border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.3}
+  th .sorter:hover{color:var(--ink)} th .sorter:hover::after{opacity:.7}
+  th .sorter:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  th[aria-sort=descending] .sorter,th[aria-sort=ascending] .sorter{color:var(--ink)}
+  th[aria-sort=descending] .sorter::after{border-top-color:var(--accent);opacity:1}
+  th[aria-sort=ascending] .sorter::after{border-top-color:transparent;border-bottom-color:var(--accent);margin:-4px 0 0;opacity:1}
+  tr[hidden]{display:none}
+  .tfilter{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:14px}
+  .tfilter + .tbl,.tfilter + table{margin-top:6px}
+  .tfilter input{flex:0 1 300px;min-width:0;font:13px var(--display);color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:6px 9px}
+  .tfilter input::placeholder{color:var(--ink-3)}
+  .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
+  @media print{.tfilter{display:none} th .sorter::after{display:none}}
   .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
   .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
@@ -275,7 +291,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.coffee:hover{transform:none}html{scroll-behavior:auto}}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://jacopoottaviani.com/africa-infra-watch/debt/index.html","url":"https://jacopoottaviani.com/africa-infra-watch/debt/index.html","name":"Who Africa owes","description":"What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank's International Debt Statistics, with the IMF's credit beside it.","inLanguage":"en","isPartOf":{"@type":"WebSite","@id":"https://jacopoottaviani.com/africa-infra-watch/#website","name":"Africa Infra Watch","url":"https://jacopoottaviani.com/africa-infra-watch/"},"author":{"@type":"Person","name":"Jacopo Ottaviani","url":"https://jacopoottaviani.com/","sameAs":["https://www.linkedin.com/in/jacopo-ottaviani/"]},"about":{"@type":"Place","name":"Africa"},"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Africa Infra Watch","item":"https://jacopoottaviani.com/africa-infra-watch/"},{"@type":"ListItem","position":2,"name":"Who Africa owes","item":"https://jacopoottaviani.com/africa-infra-watch/debt/index.html"}]}},{"@type":"Dataset","name":"External debt of African governments by creditor","description":"What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank's International Debt Statistics, with the IMF's credit beside it.","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@type":"Organization","name":"World Bank"},"distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/debt.json"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://jacopoottaviani.com/africa-infra-watch/debt/index.html","url":"https://jacopoottaviani.com/africa-infra-watch/debt/index.html","name":"Who Africa owes","description":"What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank's International Debt Statistics, with the IMF's credit beside it.","inLanguage":"en","isPartOf":{"@type":"WebSite","@id":"https://jacopoottaviani.com/africa-infra-watch/#website","name":"Africa Project Atlas","url":"https://jacopoottaviani.com/africa-infra-watch/"},"author":{"@type":"Person","name":"Jacopo Ottaviani","url":"https://jacopoottaviani.com/","sameAs":["https://www.linkedin.com/in/jacopo-ottaviani/"]},"about":{"@type":"Place","name":"Africa"},"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Africa Project Atlas","item":"https://jacopoottaviani.com/africa-infra-watch/"},{"@type":"ListItem","position":2,"name":"Who Africa owes","item":"https://jacopoottaviani.com/africa-infra-watch/debt/index.html"}]}},{"@type":"Dataset","name":"External debt of African governments by creditor","description":"What every African government owes abroad, creditor by creditor, 2000 to the latest year: multilateral lenders, bondholders, China, Europe, the Gulf states, the United States and every other lending country, from the World Bank's International Debt Statistics, with the IMF's credit beside it.","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@type":"Organization","name":"World Bank"},"distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/debt.json"}}]}</script>
 <script data-goatcounter="https://jacopo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -370,7 +386,7 @@
   <h1>Who Africa owes</h1>
   <p class="lede"><strong>African governments owed USD 708 bn abroad at the end of 2024</strong>, three times the USD 238 bn of 2000. That is public and publicly guaranteed debt to foreign creditors, as 50 of the continent's 54 states report it to the World Bank. 38% of it is owed to multilateral lenders, led by the World Bank's concessional arm. 27% is owed to bondholders, against 5% in 2000. 12% is owed to Chinese lenders, the largest bilateral creditor in 28 countries.</p>
   <p class="lede">The creditors have changed more than the total. In 2000 European governments and banks held 28% of the stock; now they hold 10%. China's share rose through the 2010s and its stock peaked at USD 91.9 bn in 2021; it has since been repaid faster than new loans were signed, to USD 82.2 bn. The money that replaced both came from the bond market: Eurobonds took the stock owed to bondholders from USD 12 bn to USD 193 bn.</p>
-  <p class="asof">World Bank International Debt Statistics to <b>2024</b>, release of <b>3 Dec 2025</b>, fetched <b>8 Oct 2026</b> · 137 creditors · no creditor data for Libya, Namibia, Seychelles, South Sudan</p>
+  <p class="asof">World Bank International Debt Statistics to <b>2024</b>, release of <b>3 Dec 2025</b>, fetched <b>12 Oct 2026</b> · 137 creditors · no creditor data for Libya, Namibia, Seychelles, South Sudan</p>
 </div>
 
 <dl class="kpis">
@@ -512,9 +528,9 @@
 </main>
 
 <footer class="wrap foot">
-  made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
+  Africa Project Atlas · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
   · <a href="../index.html">Map</a> · <a href="../dashboard.html">Dashboard</a> · <a href="../index.html#t=m">Methodology</a>
-  · this page's data: <a href="../data/debt.json">debt.json</a> · built 9 Oct 2026
+  · this page's data: <a href="../data/debt.json">debt.json</a> · built 12 Oct 2026
 </footer>
 
 <script>
@@ -644,6 +660,113 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
     svg.appendChild(el("line", {x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: "var(--ink-3)", "stroke-width": 1}));
   }
 });
+
+/* ================= tables: sort on a header click, filter as you type =================
+   Every table on a reading page: a header is a button that sorts by its column, largest
+   first for figures and A to Z for words, then the other way, then back to the page's own
+   order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
+   gets a box above it that keeps the rows containing every word typed. A row of class
+   "grow" is a group heading: rows sort within their group, and a filter that names the
+   group keeps it whole. Tables a page draws or redraws later (the comparison's) are
+   picked up as they appear, and keep their sort and filter across redraws. */
+{
+  const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
+  const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
+  const NUMLIKE = /^[<>~≈]?\s*[-−]?[\d,]*\.?\d+\s*(%|×|bn|m)?$/;
+  const state = new Map();
+  const keyOf = t => {
+    const host = t.parentElement.closest("[id]");
+    return (host ? host.id : "") + ":" + [...(host || document).querySelectorAll("table")].indexOf(t);
+  };
+
+  function enhance(t) {
+    if (t.dataset.tt || !t.tHead || !t.tBodies[0]) return;
+    t.dataset.tt = "1";
+    const head = t.tHead.rows[t.tHead.rows.length - 1], body = t.tBodies[0];
+    const all = [...body.rows], isGroup = r => r.classList.contains("grow");
+    const data = all.filter(r => !isGroup(r));
+    if (data.length < 2) return;
+    const val = (r, c) => { const s = r.cells.length > c && r.cells[c].colSpan === 1 ? r.cells[c].textContent.trim() : ""; return MISSING.test(s) ? null : s; };
+    const filled = [...head.cells].map((th, c) => data.map(r => val(r, c)).filter(v => v != null));
+    const cols = [...head.cells].map((th, c) =>
+      th.classList.contains("num") || (filled[c].length > 0 && filled[c].every(v => NUMLIKE.test(v))));
+    let group = null;
+    all.forEach((r, i) => { r.dataset.i = i; if (isGroup(r)) group = r; r._t = fold((group && !isGroup(r) ? group.textContent + " " : "") + r.textContent); });
+    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: ""};
+    state.set(key, st);
+
+    let input = null, count = null;
+    if (data.length > 8) {
+      const bar = document.createElement("div");
+      bar.className = "tfilter";
+      input = document.createElement("input");
+      input.type = "search";
+      input.placeholder = `Filter these ${data.length} rows`;
+      input.setAttribute("aria-label", "Filter the rows of: " + (t.caption ? t.caption.textContent.trim().slice(0, 90) : "this table"));
+      input.value = st.q;
+      count = document.createElement("span");
+      count.className = "tcount";
+      count.setAttribute("aria-live", "polite");
+      bar.append(input, count);
+      const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
+      box.before(bar);
+      input.addEventListener("input", () => { st.q = input.value; apply(); });
+    }
+
+    [...head.cells].forEach((th, c) => {
+      if (!filled[c].length) return;       // a column of bars or icons has nothing to sort by
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "sorter";
+      while (th.firstChild) b.appendChild(th.firstChild);
+      th.appendChild(b);
+      b.addEventListener("click", () => {
+        const first = cols[c] ? -1 : 1;     // figures largest first, words A to Z
+        if (st.col !== c) { st.col = c; st.dir = first; }
+        else if (st.dir === first) st.dir = -first;
+        else { st.col = -1; st.dir = 0; }
+        apply();
+      });
+    });
+
+    function apply() {
+      const groups = [{head: null, rows: []}];
+      for (const r of all) { if (isGroup(r)) groups.push({head: r, rows: []}); else groups[groups.length - 1].rows.push(r); }
+      if (st.col >= 0) {
+        const c = st.col, num = cols[c];
+        const cmp = (a, b) => {
+          const x = val(a, c), y = val(b, c);
+          if (x == null || y == null) return (x == null) - (y == null) || a.dataset.i - b.dataset.i;
+          const d = num ? (numOf(x) ?? 0) - (numOf(y) ?? 0) : x.localeCompare(y, undefined, {numeric: true, sensitivity: "base"});
+          return st.dir * d || a.dataset.i - b.dataset.i;
+        };
+        groups.forEach(g => g.rows.sort(cmp));
+      }
+      const words = fold(st.q).split(/\s+/).filter(Boolean);
+      let shown = 0;
+      const frag = document.createDocumentFragment();
+      for (const g of groups) {
+        let any = false;
+        for (const r of g.rows) { r.hidden = !words.every(w => r._t.includes(w)); if (!r.hidden) { shown++; any = true; } }
+        if (g.head) { g.head.hidden = !any; frag.append(g.head); }
+        frag.append(...g.rows);
+      }
+      body.append(frag);
+      [...head.cells].forEach((th, c) => { if (filled[c].length) th.setAttribute("aria-sort", c !== st.col ? "none" : st.dir > 0 ? "ascending" : "descending"); });
+      if (count) count.textContent = !words.length ? "" : shown ? `${shown.toLocaleString("en")} of ${data.length.toLocaleString("en")} rows` : "no row matches";
+    }
+    apply();
+  }
+
+  document.querySelectorAll("table").forEach(enhance);
+  new MutationObserver(ms => {
+    for (const m of ms) for (const n of m.addedNodes) {
+      if (n.nodeType !== 1 || n.nodeName === "TR") continue;
+      if (n.nodeName === "TABLE") enhance(n); else n.querySelectorAll("table").forEach(enhance);
+    }
+  }).observe(document.body, {childList: true, subtree: true});
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,4239 @@
+{
+ "about": "The LAPSSET Corridor register of Africa Project Atlas: the parts of Kenya's Lamu Port–South Sudan–Ethiopia Transport corridor, with their status and every financing line, each with its source. Kept by hand; see build_lapsset.py for the rules.",
+ "compiled": "2026-10-12",
+ "fx": {
+  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF?locations=KE",
+  "note": "indicator PA.NUS.FCRF, annual averages to 2025, read on 12 October 2026; 2026 lines use the 2025 rate",
+  "rates": {
+   "KES": {
+    "2008": 69.18,
+    "2009": 77.35,
+    "2010": 79.23,
+    "2011": 88.81,
+    "2012": 84.53,
+    "2013": 86.12,
+    "2014": 87.92,
+    "2015": 98.18,
+    "2016": 101.5,
+    "2017": 103.41,
+    "2018": 101.3,
+    "2019": 101.99,
+    "2020": 106.45,
+    "2021": 109.64,
+    "2022": 117.87,
+    "2023": 139.85,
+    "2024": 134.82,
+    "2025": 129.3
+   },
+   "ETB": {
+    "2010": 14.41,
+    "2011": 16.9,
+    "2012": 17.7,
+    "2013": 18.63,
+    "2014": 19.59,
+    "2015": 20.58,
+    "2016": 21.73,
+    "2017": 23.87,
+    "2018": 27.43,
+    "2019": 29.07,
+    "2020": 34.93,
+    "2021": 43.73,
+    "2022": 51.76,
+    "2023": 54.6,
+    "2024": 82.6
+   }
+  }
+ },
+ "projects": [
+  {
+   "id": "lamu-port-berths-1-3",
+   "name": "Lamu Port Phase 1: berths 1-3 at Manda Bay (Kililana), with yards and auxiliary facilities",
+   "short": "Lamu Port, berths 1–3",
+   "segment": "port",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Lamu Port, Kililana, on Manda Bay",
+    "lon": 40.86,
+    "lat": -2.19
+   },
+   "status": "operating",
+   "status_note": "All three berths are in use. Transport CS Davis Chirchir declared the port fully operational in February 2026. On 3 October 2026 the 366 m MV Hamouna discharged about 5,200 TEU for transshipment, the largest single-ship discharge at any Kenyan port. Traffic rose from 74,380 t in 2024 to 799,161 t and 55,687 TEU in 2025, much of it diverted by the Gulf conflict.",
+   "status_date": "2026-10",
+   "summary": "The first three 400 m berths (17.5 m draught) of a port planned at 32 berths, now 23 on LCDA's site. China Communications Construction Company (CCCC) won the contract in August 2014 for USD 478.9 m. Dredging began in October 2016. Berth 1 was commissioned on 20 May 2021, and berths 2 and 3 were complete by December 2021 and fully operational by June 2022. The Government of Kenya paid through the national budget. Kenya Ports Authority owns and operates the port.",
+   "developer": "Kenya Ports Authority (owner/operator); LAPSSET Corridor Development Authority (coordination); contractor China Communications Construction Company (CCCC)",
+   "cost": {
+    "amount": 478900000,
+    "currency": "USD",
+    "note": "CCCC contract value, August 2014 (Sh49.7 bn at the time). The same Star reporting puts the whole first three berths at USD 689 m. LCDA's 2016 brief and its 2017 status report give Sh48 bn (USD 412 m in 2017). The Star reported 'about Sh40 bn' at completion in December 2021, and Eastleigh Voice (Aug 2024) gave USD 354 m. None of these figures reconcile.",
+    "source": "https://www.the-star.co.ke/business/kenya/2020-01-17-terrorism-fears-late-payment-delay-lamu-port-construction"
+   },
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 2000000000,
+     "currency": "KES",
+     "year": 2014,
+     "firmness": "disbursing",
+     "note": "National Treasury. FY2014/15 contractor cash flow, released once compensation was completed and the contractor took over the site (LCDA cash-flow table).",
+     "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "source_date": "2016-07"
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 2000000000,
+     "currency": "KES",
+     "year": 2015,
+     "firmness": "disbursing",
+     "note": "National Treasury. FY2015/16 Treasury commitment, already released and transmitted to the contractor (LCDA July 2016).",
+     "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "source_date": "2016-07"
+    },
+    {
+     "funder": "Kenya Ports Authority",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 1400000000,
+     "currency": "KES",
+     "year": 2015,
+     "firmness": "disbursing",
+     "note": "KPA committed Sh2 bn for FY2015/16 and had released Sh1.4 bn to the contractor by July 2016, with Sh600 m outstanding. These are KPA's own funds.",
+     "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "source_date": "2016-07"
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 31000000000,
+     "currency": "KES",
+     "year": 2016,
+     "firmness": "disbursing",
+     "note": "National Treasury. Cumulative Treasury allocation to LAPSSET/LCDA for FY2016/17 to FY2019/20, overwhelmingly for the Lamu port contractor: Sh10 bn (2016/17), about Sh10 bn (2017/18), nothing major in 2018/19, Sh11 bn (2019/20). Of the 2016/17 Sh10 bn, LCDA's 2016 cash-flow table earmarks Sh9.2 bn for the contractor and proposes the rest for transaction advisory, corridor pillars and planning. Releases were inconsistent and slowed works. It does not overlap the FY2014/15 and FY2015/16 lines.",
+     "source": "https://www.the-star.co.ke/business/kenya/2020-01-17-terrorism-fears-late-payment-delay-lamu-port-construction",
+     "source_date": "2020-01-16"
+    },
+    {
+     "funder": "Kenya Ports Authority",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 31000000,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "disbursing",
+     "note": "KPA spent USD 31 m on three ZPMC ship-to-shore gantry cranes delivered to Lamu in April 2024. The source does not say whether this was internal funds or borrowing.",
+     "source": "https://maritime-executive.com/article/kenya-tries-to-jump-start-new-seaport-with-better-equipment-lower-fees",
+     "source_date": "2024-04-21"
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 1700000000,
+     "currency": "KES",
+     "year": 2025,
+     "firmness": "approved",
+     "note": "Sh1.7 bn set aside to compensate fisherfolk displaced by port construction, announced by President Ruto in Lamu. The High Court had ordered Sh1.76 bn for 4,600 fishermen in May 2018. This is compensation, not construction.",
+     "source": "https://capitalfm.africa/ethiopia-to-use-lamu-port-to-move-imports-president-ruto-says/",
+     "source_date": "2025-02-28"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/lamu-port/",
+     "publisher": "LCDA (undated page, accessed 2026-10-12)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA brief, via Kenya Vision 2030",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report, via AUDA-NEPAD AID",
+     "date": "2017-09"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2019-07-30-dredging-financing-slows-lamu-port-construction",
+     "publisher": "The Star",
+     "date": "2019-07-29"
+    },
+    {
+     "url": "https://www.the-star.co.ke/business/kenya/2020-01-17-terrorism-fears-late-payment-delay-lamu-port-construction",
+     "publisher": "The Star",
+     "date": "2020-01-16"
+    },
+    {
+     "url": "https://www.dredgingtoday.com/2021/06/28/new-lamu-port-officially-commissioned/",
+     "publisher": "Dredging Today",
+     "date": "2021-06-28"
+    },
+    {
+     "url": "https://www.the-star.co.ke/sports/football/2021-12-22-boost-for-lamu-port-as-two-more-berths-completed",
+     "publisher": "The Star",
+     "date": "2021-12-22"
+    },
+    {
+     "url": "https://www.the-star.co.ke/business/kenya/2022-06-21-phase-1-of-lamu-port-complete-as-second-third-berths-opened",
+     "publisher": "The Star",
+     "date": "2022-06-21"
+    },
+    {
+     "url": "https://maritime-executive.com/article/kenya-tries-to-jump-start-new-seaport-with-better-equipment-lower-fees",
+     "publisher": "Maritime Executive",
+     "date": "2024-04-21"
+    },
+    {
+     "url": "https://maritime-executive.com/article/kenya-s-white-elephant-port-begins-to-receive-large-boxships-at-last",
+     "publisher": "Maritime Executive",
+     "date": "2025-08-10"
+    },
+    {
+     "url": "https://capitalfm.africa/lamu-port-now-operational-as-kenya-advances-lapsset-vision/",
+     "publisher": "Capital FM",
+     "date": "2026-02-15"
+    },
+    {
+     "url": "https://maritime-executive.com/article/lamu-port-s-cargo-throughput-jumps-by-900-buoyed-by-shipping-disruption",
+     "publisher": "Maritime Executive",
+     "date": "2026-03-22"
+    },
+    {
+     "url": "https://www.kbc.co.ke/state-working-on-new-master-plan-for-lamu-port/",
+     "publisher": "KBC",
+     "date": "2026-09-30"
+    },
+    {
+     "url": "https://capitalfm.africa/lamu-port-handles-5200-teus-from-single-vessel/",
+     "publisher": "Capital FM",
+     "date": "2026-10-04"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lamu-port-ppp-concession",
+   "name": "Lamu Container Terminal (berths 1-3) and Lamu Special Economic Zone: integrated PPP concession and transaction advisory",
+   "short": "Lamu terminal concession",
+   "segment": "port",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Lamu Port, Kililana, on Manda Bay",
+    "lon": 40.86,
+    "lat": -2.19
+   },
+   "status": "approved",
+   "soft": true,
+   "status_note": "On 27 August 2026 Kenya's PPP Committee approved feasibility studies for the Lamu Container Terminal and the Lamu SEZ, to be offered as a single landlord-model concession. This is one of three Phase 1 port transactions, alongside Mombasa Berths 11-14 and Mombasa Container Terminal 1. Investor engagement was due to begin in September 2026, and no bidder has been named.",
+   "status_date": "2026-08",
+   "summary": "Kenya has tried since 2016 to hand Lamu's operations and remaining berths to private operators. AfDB's NEPAD-IPPF grant paid for transaction advisory to LCDA from 2017, and the adviser was Maritime & Transport Business Solutions (MTBS). A 2022 DP World concession proposal lapsed, and a 2023 KPA PPP tender was suspended by the High Court in November 2023 before a consent order in early 2024. Feasibility work restarted in October 2025 under the National Treasury and KPA.",
+   "developer": "National Treasury PPP Directorate and Kenya Ports Authority (contracting authority); LCDA (earlier transaction-advisory client)",
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "grant",
+     "amount": 1936560,
+     "currency": "USD",
+     "year": 2016,
+     "firmness": "disbursing",
+     "note": "NEPAD Infrastructure Project Preparation Facility Special Fund. Grant 5150155002451 (UA 1,428,067.87) to LCDA for transaction advisory and technical assistance on Lamu Port development. Approved 24 Nov 2016, signed 16 Mar 2017, 57.27% disbursed by Jan 2025, closing date 31 Dec 2025. The main component was suspended over USD 64,938.85 in late-payment interest claimed by MTBS. Four financial models were delivered (first 3 container berths, liquid bulk, agribulk, Lamu SEZ). The same AfDB operation (P-Z1-DD0-010) is listed elsewhere as a USD 1.25 m multinational 'LAPSSET – Lamu Port South Sudan Ethiopia' operation; the bank's own progress report, used here, gives this amount.",
+     "source": "https://www.afdb.org/sites/default/files/documents/projects-and-operations/multinational_-_lapsset-_lamu_port_south_sudan_ethiopia_-_p-z1-dd0-010_-_ipr_january_2025.pdf",
+     "source_date": "2025-02-21"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.afdb.org/sites/default/files/documents/projects-and-operations/multinational_-_lapsset-_lamu_port_south_sudan_ethiopia_-_p-z1-dd0-010_-_ipr_january_2025.pdf",
+     "publisher": "AfDB (IPR, desk supervision Jan 2025)",
+     "date": "2025-02-21"
+    },
+    {
+     "url": "https://www.afdb.org/en/documents/eoi-kenya-consultancy-services-aimed-enhancing-development-lamu-port-and-lamu-special-economic-zone",
+     "publisher": "AfDB (EOI notice)",
+     "date": "2021-12-08"
+    },
+    {
+     "url": "https://kbctv.co.ke/blog/2017/03/08/lapsset-corridor-development-authority-receives-ksh-193-7m-grant/",
+     "publisher": "KBC",
+     "date": "2017-03-08"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/economy/Nairobi-targets-investors-in-27-more-Lamu-port-berths/3946234-4670332-14mn7n1/index.html",
+     "publisher": "Business Daily",
+     "date": "2018-07-18"
+    },
+    {
+     "url": "https://maritime-executive.com/article/a-kenyan-port-deal-could-increase-dp-world-s-presence-in-east-africa",
+     "publisher": "Maritime Executive",
+     "date": "2022-07-22"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2023-11-28-privatisation-of-mombasa-lamu-ports-halted",
+     "publisher": "The Star",
+     "date": "2023-11-28"
+    },
+    {
+     "url": "https://mjengohub.co.ke/articles/finance/legal-hurdles-clear-for-privatization-of-lamu-and-mombasa-port-berths",
+     "publisher": "Mjengo Hub",
+     "date": "2026-03-09"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/111077-govt-unveils-expansion-plans-ports-lamu-mombasa-under-ppp",
+     "publisher": "Kenyans.co.ke",
+     "date": "2025-04-15"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/126555-kenya-moves-key-mombasa-lamu-port-assets-ppp-procurement",
+     "publisher": "Kenyans.co.ke",
+     "date": "2026-08-27"
+    },
+    {
+     "url": "https://mjengohub.co.ke/articles/infrastructure/kenya-advances-mombasa-and-lamu-port-assets-to-private-procurement",
+     "publisher": "Mjengo Hub",
+     "date": "2026-08-28"
+    },
+    {
+     "url": "https://uchumi360.com/r/e/kenya-approves-billion-port",
+     "publisher": "Uchumi360",
+     "date": "2026-09-05"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lamu-port-further-berths",
+   "name": "Lamu Port expansion beyond berth 3: remaining berths (to 23, earlier 32), liquid-bulk and agri-bulk terminals, offshore crude/product berths",
+   "short": "Lamu Port, further berths",
+   "segment": "port",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Lamu Port, Kililana, on Manda Bay",
+    "lon": 40.86,
+    "lat": -2.19
+   },
+   "status": "announced",
+   "status_note": "On 30 September 2026 Transport CS Chirchir said plans are under way for six more berths. He also described six berths built out in the sea to receive crude and export refined products for the Dangote refinery. He gave no financing, contractor or timetable. LCDA says future terminals will include a liquid-bulk and an agri-bulk terminal.",
+   "status_date": "2026-09",
+   "summary": "Only berths 1-3 exist. The remaining berths were always meant to be built and run by private investors under PPPs, first 29 of a 32-berth plan and now 20 of 23 on LCDA's site. LCDA's 2016 brief costed the full 32-berth port at about USD 3.1 bn. The AfDB-funded transaction advisory produced financial models and transaction plans for an oil (liquid-bulk) terminal, an agribulk terminal and the SEZ.",
+   "developer": "Kenya Ports Authority / National Treasury PPP Directorate (private concessionaires envisaged)",
+   "cost": {
+    "amount": 3100000000,
+    "currency": "USD",
+    "note": "LCDA estimate for the whole 32-berth port, including berths 1-3 (\"Lamu Port alone with its 32 berths will cost approximately US$ 3.1 Billion\"). The Star (Jul 2019) gives the same figure as Sh321.9 bn. Business Daily (Jul 2018) called the port project 'worth Sh500 billion'.",
+    "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/lamu-port/",
+     "publisher": "LCDA (undated page, accessed 2026-10-12)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA brief, via Kenya Vision 2030",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2019-07-30-dredging-financing-slows-lamu-port-construction",
+     "publisher": "The Star",
+     "date": "2019-07-29"
+    },
+    {
+     "url": "https://www.afdb.org/sites/default/files/documents/projects-and-operations/multinational_-_lapsset-_lamu_port_south_sudan_ethiopia_-_p-z1-dd0-010_-_ipr_january_2025.pdf",
+     "publisher": "AfDB (IPR)",
+     "date": "2025-02-21"
+    },
+    {
+     "url": "https://www.kbc.co.ke/state-working-on-new-master-plan-for-lamu-port/",
+     "publisher": "KBC",
+     "date": "2026-09-30"
+    },
+    {
+     "url": "https://mjengohub.co.ke/articles/finance/legal-hurdles-clear-for-privatization-of-lamu-and-mombasa-port-berths",
+     "publisher": "Mjengo Hub",
+     "date": "2026-03-09"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lamu-port-sez",
+   "name": "Lamu Port Special Economic Zone (Lamu Port City SEZ)",
+   "short": "Lamu free zone (SEZ)",
+   "segment": "sez",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lamu Port City SEZ, Lamu County (around Manda Bay / Hindi-Magogoni)",
+    "lon": 40.86,
+    "lat": -2.24
+   },
+   "status": "approved",
+   "status_note": "On 27 August 2026 the PPP Committee cleared the SEZ for procurement, bundled with the Lamu Container Terminal concession. On 30 September 2026 Dangote broke ground on a 700,000 bpd refinery that the government says sits on public land inside the Lamu SEZ. A Malindi court has ordered the status quo kept on one disputed parcel (LR 13061) until a hearing on 14 October 2026.",
+   "status_date": "2026-09",
+   "summary": "The SEZ is LCDA's industrial and logistics zone behind Lamu Port. LCDA says its preliminary planning, investment framework and integrated master plan are complete. In May 2024 LCDA tendered for a consultant to produce detailed master plans and prototypes for about 5,200 acres. Construction Review's factsheet gives 820 ha and an estimated investment cost of USD 491 m, figures it does not reconcile. The 7,000-acre Dangote refinery and petrochemicals complex is the first anchor investor (separate entry).",
+   "developer": "LCDA (planning); Kenya Ports Authority / PPP Directorate (concession); private developers",
+   "cost": {
+    "amount": 491000000,
+    "currency": "USD",
+    "note": "'Estimated investment cost' in Construction Review's Lamu SEZ factsheet; not an LCDA or Treasury figure. Excludes the Dangote refinery.",
+    "source": "https://constructionreviewonline.com/lapsset-corridor-development-authority-in-search-of-a-consultant-for-lamu-special-economic-zone-development-in-kenya/"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/special-economic-zones/",
+     "publisher": "LCDA (undated page, accessed 2026-10-12)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://constructionreviewonline.com/lapsset-corridor-development-authority-in-search-of-a-consultant-for-lamu-special-economic-zone-development-in-kenya/",
+     "publisher": "Construction Review (updated)",
+     "date": "2025-09-19"
+    },
+    {
+     "url": "https://www.afdb.org/sites/default/files/documents/projects-and-operations/multinational_-_lapsset-_lamu_port_south_sudan_ethiopia_-_p-z1-dd0-010_-_ipr_january_2025.pdf",
+     "publisher": "AfDB (IPR)",
+     "date": "2025-02-21"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/126555-kenya-moves-key-mombasa-lamu-port-assets-ppp-procurement",
+     "publisher": "Kenyans.co.ke",
+     "date": "2026-08-27"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/127534-cofek-seeks-details-kenyas-ksh65b-stake-dangote-refinery",
+     "publisher": "Kenyans.co.ke",
+     "date": "2026-10-02"
+    },
+    {
+     "url": "https://citizen.digital/article/thousands-of-residents-from-the-magogoni-area-in-lamu-are-asking-the-government-to-provide-them-with-n391376",
+     "publisher": "Citizen Digital",
+     "date": "2026-10-03"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "et-lamu-port-land",
+   "name": "Ethiopian land and logistics facility at Lamu Port",
+   "short": "Ethiopia's land at Lamu",
+   "segment": "sez",
+   "countries": [
+    "KE",
+    "ET"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lamu Port; no plot, title or facility identified",
+    "lon": 40.86,
+    "lat": -2.19
+   },
+   "status": "announced",
+   "status_note": "Land at Lamu Port was 'given' to Ethiopia in the 7 May 2018 Kenyatta–Abiy communiqué, with Kenya to facilitate formal acquisition and Ethiopia to develop it for logistics; no title deed, acreage or Ethiopian facility was confirmed. Ethiopia's first transit cargo, 60,000 t of fertiliser on the Ethiopian vessel MV Abbay II, docked at Lamu in May 2024, and President Ruto said on 27 February 2025 that Kenya and Ethiopia had agreed that Ethiopia would start using Lamu.",
+   "status_date": "2025-02",
+   "summary": "Kenya's offer of land at Lamu Port for an Ethiopian logistics office and facility, intended to reduce Ethiopia's dependence on Djibouti. Ethiopian use of the port so far is one documented bulk shipment (May 2024), which floods on the Lamu–Witu–Garsen road forced onto an alternative route.",
+   "developer": "Government of Ethiopia (land user); Kenya Ports Authority (port)",
+   "sources": [
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/ethiopia-gets-lamu-land-to-cut-reliance-on-port-of-djibouti-2201396",
+     "publisher": "Business Daily",
+     "date": "2018-05-08"
+    },
+    {
+     "url": "https://www.transport.go.ke/cs-tours-lamu-port-landmark-ethiopian-cargo-vessel-docks",
+     "publisher": "Kenya State Department for Transport",
+     "date": "2024-05-15"
+    },
+    {
+     "url": "https://capitalfm.africa/ethiopia-to-use-lamu-port-to-move-imports-president-ruto-says/",
+     "publisher": "Capital FM (PSCU)",
+     "date": "2025-02-28"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "garsen-witu-lamu-road",
+   "name": "Garsen–Witu–Lamu (C112) road with Mpeketoni loop and Lamu Port access road",
+   "short": "Garsen–Witu–Lamu road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Garsen",
+      40.12,
+      -2.27
+     ],
+     [
+      "Witu",
+      40.44,
+      -2.39
+     ],
+     [
+      "Mpeketoni",
+      40.7,
+      -2.39
+     ],
+     [
+      "Lamu (Mokowe)",
+      40.85,
+      -2.24
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "KeNHA's October 2023 list of completed projects includes the Garsen–Witu–Lamu road (135 km). In May 2024 the Roads CS said money would be set aside to repair it after floods cut it off.",
+   "status_date": "2023-10",
+   "summary": "Upgrade to bitumen of the 113.5-km Garsen–Witu–Lamu road and the 19-km Mpeketoni loop. Per KeNHA, the scope also included a 10-km access road to Lamu Port. Works started in early 2017 (January per the contractor, February per The Star) and were delayed by insecurity. The contract was worth about KES 10.8bn, and the contractor was H-Young East Africa, with GIBB Africa.",
+   "developer": "Kenya National Highways Authority (contractor: H-Young East Africa Ltd; supervising engineer GIBB Africa)",
+   "length_km": 113,
+   "cost": {
+    "amount": 10868627394,
+    "currency": "KES",
+    "note": "Contract sum given by the contractor, H-Young. The Star (July 2020) gave KES 10.8bn.",
+    "source": "https://hyoung.com/portfolio/construction-of-garsen-witu-lamu-c112-road/"
+   },
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 10868627394,
+     "currency": "KES",
+     "year": 2017,
+     "firmness": "disbursing",
+     "note": "KeNHA's project page states the project is funded by the Government of Kenya. The amount is the contract sum per the contractor.",
+     "source": "https://kenha.co.ke/garsen-witu-lamu/",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://kenha.co.ke/garsen-witu-lamu/",
+     "publisher": "KeNHA project page (accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/realtime/2020-07-06-shabaab-attacks-delay-completion-of-sh108bn-lamu-garsen-road",
+     "publisher": "The Star",
+     "date": "2020-07-06"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/realtime/2021-03-22-garsen-witu-lamu-road-to-be-completed-in-two-months",
+     "publisher": "The Star",
+     "date": "2021-03-22"
+    },
+    {
+     "url": "https://hyoung.com/portfolio/construction-of-garsen-witu-lamu-c112-road/",
+     "publisher": "H-Young (contractor) (undated, accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2023/10/Directorate-of-Development-Completed-Projects.pdf",
+     "publisher": "KeNHA (completed projects list)",
+     "date": "2023-10"
+    },
+    {
+     "url": "https://www.kenyanews.go.ke/lamu-garissa-highway-set-for-completion-by-february-2025-to-boost-lapsset-corridor/",
+     "publisher": "Kenya News Agency",
+     "date": "2024-05-17"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/highways/",
+     "publisher": "LCDA (accessed)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a7"
+  },
+  {
+   "id": "lamu-ijara-garissa-road",
+   "name": "Lamu–Ijara–Garissa (A10) LAPSSET road, 257 km main section",
+   "short": "Lamu–Ijara–Garissa road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Lamu (Mokowe)",
+      40.85,
+      -2.24
+     ],
+     [
+      "Hindi",
+      40.82,
+      -2.18
+     ],
+     [
+      "Bodhei",
+      40.72,
+      -1.85
+     ],
+     [
+      "Ijara",
+      40.52,
+      -1.6
+     ],
+     [
+      "Garissa",
+      39.65,
+      -0.45
+     ]
+    ]
+   },
+   "status": "under_construction",
+   "status_note": "In November 2025 the State Department for Roads put the 453-km Lamu–Ijara–Garissa (A10) package at 52.19% complete. On 2 June 2026 President Ruto inspected the Garissa–Ijara works; trade press reported the 257-km section due for completion in early 2027. Works stalled in 2022–2024 after al-Shabaab attacks: the contractor was off site in February 2024, when Nation reported KES 9.8bn spent.",
+   "status_date": "2026-06",
+   "summary": "First leg of the Lamu–Garissa–Isiolo LAPSSET highway, from the Lamu/Mokowe area through the Boni forest fringe and Ijara to Garissa. KeNHA signed the KES 17.9bn contract on 19 April 2021 with China Communications Construction Company (CCCC), and works started that month, for a 453-km package: this 257-km road, the 113-km Hindi–Bodhei–Basuba–Kiunga road and the 83-km Ijara–Sangailu–Hulugho road. The contract was for an all-weather gravel standard; in 2023 President Ruto ordered an upgrade to bitumen, and in May 2024 the Roads CS put the total cost at bitumen standard at KES 60bn. OpenStreetMap maps the alignment as ways tagged ref=LAPSSET (highway=construction, construction=trunk) from Hindi through Bodhei and Ijara to Garissa, including the ways near Ijara at lon 40.39–40.46, lat −1.55 to −1.49.",
+   "developer": "Kenya National Highways Authority (contractor: China Communications Construction Company in JV with Territorial Works (K) Ltd)",
+   "length_km": 257,
+   "cost": {
+    "amount": 17900000000,
+    "currency": "KES",
+    "note": "Contract value KeNHA announced in April 2021 for the whole 453-km package (three roads) at all-weather gravel standard. KeNHA's own Q4 FY2020/21 tender-award list records the same award (tender KeNHA/SPP/2380/2021) at KES 27,292,998,371.14. The two figures are not reconciled. No revised contract sum for the bitumen upgrade was found.",
+    "source": "https://www.constructionkenya.com/9003/lamu-ijara-garissa-road-project/"
+   },
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 17900000000,
+     "currency": "KES",
+     "year": 2021,
+     "firmness": "disbursing",
+     "note": "Development Vote funding of the CCCC contract for the whole 453-km package (also covers the Hindi–Kiunga and Ijara–Hulugho roads, recorded there without an amount). Business Daily reported KES 2.87bn allocated in FY2022/23 and KES 75m in FY2023/24; Nation reported KES 9.8bn spent by Feb 2024.",
+     "source": "https://www.constructionkenya.com/9003/lamu-ijara-garissa-road-project/",
+     "source_date": "2021-04-21"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.the-star.co.ke/news/2021-04-19-kenha-signs-sh17-billion-deal-with-chinese-company/",
+     "publisher": "The Star",
+     "date": "2021-04-19"
+    },
+    {
+     "url": "https://www.constructionkenya.com/9003/lamu-ijara-garissa-road-project/",
+     "publisher": "Construction Kenya",
+     "date": "2021-04-21"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2022/03/TENDER-AWARDS-FOR-4TH-QTR-FY-2020-2021.pdf",
+     "publisher": "KeNHA (tender awards Q4 FY2020/21)",
+     "date": "2022-03"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/world/2022-04-29-works-on-lamu-terror-target-road-resume-next-week",
+     "publisher": "The Star",
+     "date": "2022-04-29"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/president-ruto-cuts-lamu-garissa-road-cash-that-g--4249978",
+     "publisher": "Business Daily",
+     "date": "2023-05-28"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2023/10/Directorate-of-Development-Ongoing-Projects.pdf",
+     "publisher": "KeNHA (ongoing projects list)",
+     "date": "2023-10"
+    },
+    {
+     "url": "https://nation.africa/kenya/news/al-shabaab-ghosts-haunt-sh17-9bn-lapsset-project-4528782",
+     "publisher": "Nation",
+     "date": "2024-02-18"
+    },
+    {
+     "url": "https://www.kenyanews.go.ke/lamu-garissa-highway-set-for-completion-by-february-2025-to-boost-lapsset-corridor/",
+     "publisher": "Kenya News Agency",
+     "date": "2024-05-17"
+    },
+    {
+     "url": "https://www.mod.go.ke/news/enhanced-security-and-community-engagement-for-the-lapsset-project/",
+     "publisher": "Kenya Ministry of Defence",
+     "date": "2025-01-14"
+    },
+    {
+     "url": "https://x.com/Roads_KE/status/1985941737676947973",
+     "publisher": "State Department for Roads (X post, read via search result)",
+     "date": "2025-11-05"
+    },
+    {
+     "url": "https://capitalfm.africa/ruto-ends-northern-kenya-tour-with-major-infrastructure-power-and-water-projects-push/",
+     "publisher": "Capital FM",
+     "date": "2026-06-02"
+    },
+    {
+     "url": "https://mjengohub.co.ke/articles/infrastructure/ruto-inspects-257km-lamu-ijara-garissa-road-progress-as-northern-kenya-tour-ends",
+     "publisher": "Mjengo Hub",
+     "date": "2026-06-02"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/gathungu-says-lapsset-link-delays-stall-lamu-port-gains-5424656",
+     "publisher": "Business Daily",
+     "date": "2026-04-15"
+    },
+    {
+     "url": "https://www.openstreetmap.org/way/1285252980",
+     "publisher": "OpenStreetMap (way tagged ref=LAPSSET)",
+     "date": "2026-06-01"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/highways/",
+     "publisher": "LCDA (accessed)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a10"
+  },
+  {
+   "id": "hindi-bodhei-basuba-kiunga-road",
+   "name": "Hindi–Bodhei–Basuba–Kiunga (A11) road, Lamu County",
+   "short": "Hindi–Kiunga road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Hindi",
+      40.82,
+      -2.18
+     ],
+     [
+      "Bodhei",
+      40.72,
+      -1.85
+     ],
+     [
+      "Basuba",
+      41.04,
+      -1.78
+     ],
+     [
+      "Kiunga",
+      41.49,
+      -1.75
+     ]
+    ]
+   },
+   "status": "stalled",
+   "status_note": "No 2025–2026 progress report found. KeNHA's October 2023 list gave Sections II and III of the 453-km package at 3.94% and 5.00% (the list does not name the sections). In February 2024 Nation reported the whole package stalled with the contractor off site. In July 2025 a parliamentary visit found Basuba roads still in poor condition.",
+   "status_date": "2024-02",
+   "summary": "113-km security and access road through the Boni forest area of Lamu East, built to all-weather gravel standard as the second part of KeNHA's April 2021 LAPSSET road package with CCCC. The area has seen repeated al-Shabaab attacks, including the burning of eight CCCC vehicles near Bodhei Junction in January 2022.",
+   "developer": "Kenya National Highways Authority (contractor: China Communications Construction Company)",
+   "length_km": 113,
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "KES",
+     "year": 2021,
+     "firmness": "disbursing",
+     "note": "Funded within the KES 17.9bn Development Vote contract for the 453-km package, recorded under the Lamu–Ijara–Garissa road. No separate amount for this road.",
+     "source": "https://www.constructionkenya.com/9003/lamu-ijara-garissa-road-project/",
+     "source_date": "2021-04-21",
+     "in_total": false
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.the-star.co.ke/news/2021-04-19-kenha-signs-sh17-billion-deal-with-chinese-company/",
+     "publisher": "The Star",
+     "date": "2021-04-19"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/president-ruto-cuts-lamu-garissa-road-cash-that-g--4249978",
+     "publisher": "Business Daily",
+     "date": "2023-05-28"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2023/10/Directorate-of-Development-Ongoing-Projects.pdf",
+     "publisher": "KeNHA (ongoing projects list)",
+     "date": "2023-10"
+    },
+    {
+     "url": "https://nation.africa/kenya/news/al-shabaab-ghosts-haunt-sh17-9bn-lapsset-project-4528782",
+     "publisher": "Nation",
+     "date": "2024-02-18"
+    },
+    {
+     "url": "https://eastleighvoice.co.ke/news/252696/basuba-residents-in-lamu-east-face-decades-of-abandonment-mps-say",
+     "publisher": "The Eastleigh Voice (read via search result)",
+     "date": "2025-07"
+    }
+   ],
+   "lcda_component": false
+  },
+  {
+   "id": "ijara-sangailu-hulugho-road",
+   "name": "Ijara–Sangailu–Hulugho road (LAPSSET package spur), Garissa County",
+   "short": "Ijara–Hulugho road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Ijara",
+      40.52,
+      -1.6
+     ],
+     [
+      "Sangailu",
+      40.73,
+      -1.31
+     ],
+     [
+      "Hulugho",
+      41.12,
+      -1.25
+     ]
+    ]
+   },
+   "status": "stalled",
+   "status_note": "No progress report after 2023 found. KeNHA's October 2023 list gave Sections II and III of the package at 3.94% and 5.00% (the list does not name the sections), and the whole package was reported stalled in February 2024.",
+   "status_date": "2024-02",
+   "summary": "83-km spur from Ijara towards the Somalia border at Hulugho, built to all-weather gravel standard as the third part of KeNHA's April 2021 LAPSSET road package with CCCC.",
+   "developer": "Kenya National Highways Authority (contractor: China Communications Construction Company)",
+   "length_km": 83,
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "KES",
+     "year": 2021,
+     "firmness": "disbursing",
+     "note": "Funded within the KES 17.9bn Development Vote contract for the 453-km package, recorded under the Lamu–Ijara–Garissa road. No separate amount for this road.",
+     "source": "https://www.constructionkenya.com/9003/lamu-ijara-garissa-road-project/",
+     "source_date": "2021-04-21",
+     "in_total": false
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.kenyaengineer.co.ke/kenha-signs-a-ksh-17-9-billion-contract-with-a-chinese-company-for-the-construction-of-lamu-ijara-garissa-road-project/",
+     "publisher": "Kenya Engineer",
+     "date": "2021-04-22"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2023/10/Directorate-of-Development-Ongoing-Projects.pdf",
+     "publisher": "KeNHA (ongoing projects list)",
+     "date": "2023-10"
+    },
+    {
+     "url": "https://nation.africa/kenya/news/al-shabaab-ghosts-haunt-sh17-9bn-lapsset-project-4528782",
+     "publisher": "Nation",
+     "date": "2024-02-18"
+    }
+   ],
+   "lcda_component": false
+  },
+  {
+   "id": "garissa-isiolo-road",
+   "name": "Garissa–Isiolo (A10) LAPSSET road, Garissa–Balambala–Kulamawe section",
+   "short": "Garissa–Isiolo road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Garissa",
+      39.65,
+      -0.45
+     ],
+     [
+      "Balambala",
+      39.08,
+      0.11
+     ],
+     [
+      "Kulamawe",
+      38.21,
+      0.57
+     ]
+    ]
+   },
+   "status": "under_construction",
+   "status_note": "On 8 April 2026 the Ministry of Roads and Transport said the 160-km Garissa–Isiolo road was at 64.26% physical progress. Earlier figures don't line up: KeNHA's October 2023 list gave 26.70% (150 km including 10 km of spur roads, to all-weather gravel standard), but KeNHA told Isiolo leaders in February 2024 that the 305-km Garissa–Isiolo road was at 3%, apparently measured against the full length.",
+   "status_date": "2026-04",
+   "summary": "Second leg of the Lamu–Garissa–Isiolo LAPSSET highway. LCDA's 2017 status report gave the Garissa–Isiolo section as 280.5 km (designs complete, funding under negotiation), AU-PIDA lists it at 305 km, and the current KeNHA contract covers 150–160 km. KeNHA tendered it to all-weather gravel standard; the ministry now says the whole route is being upgraded to bitumen. In OpenStreetMap the alignment is mapped as ways tagged ref=LAPSSET from north-west of Garissa through Balambala sub-county to near Kulamawe in Isiolo County, where it meets the Isiolo–Kulamawe (A10/B84) road being paved under the World Bank's Horn of Africa Gateway project. That includes the ways at lon 38.9–39.05, lat 0.18–0.26. Bangale and Modogashe are not on the mapped route. The line here ends at Kulamawe so that the Isiolo–Kulamawe stretch, paved with World Bank money, is not drawn twice.",
+   "developer": "Kenya National Highways Authority (contractor not confirmed; Seetao, undated, reports China Road and Bridge Corporation signed a 160-km, 18-month Garissa–Isiolo contract)",
+   "length_km": 160,
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "KES",
+     "year": 2022,
+     "firmness": "disbursing",
+     "note": "AU-PIDA lists the Government of Kenya (and generically the World Bank) as CAPEX funders of the Garissa–Isiolo highway, at construction stage since 2022. No contract value or budget line was found. Isiolo officials were told in Feb 2024 to engage the National Treasury over funding problems.",
+     "source": "https://map.au-pida.org/projects/show/21510001",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2023/10/Directorate-of-Development-Ongoing-Projects.pdf",
+     "publisher": "KeNHA (ongoing projects list)",
+     "date": "2023-10"
+    },
+    {
+     "url": "https://eastleighvoice.co.ke/northern-kenya/21781/kenha-meets-isiolo-leaders-to-expedite-garissa-isiolo-road-construction",
+     "publisher": "The Eastleigh Voice",
+     "date": "2024-02-28"
+    },
+    {
+     "url": "https://www.the-star.co.ke/counties/eastern/2024-02-28-hire-youths-for-garissa-isiolo-road-project-guyo-tells-kenha/",
+     "publisher": "The Star",
+     "date": "2024-02-28"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/122389-garissa-isiolo-road-under-lapsset-project-64-complete-ministry-says",
+     "publisher": "Kenyans.co.ke (Ministry of Roads statement)",
+     "date": "2026-04-08"
+    },
+    {
+     "url": "https://www.seetao.com/details/146147.html",
+     "publisher": "Seetao (undated) (undated, accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://map.au-pida.org/projects/show/21510001",
+     "publisher": "AU-PIDA project database (accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.openstreetmap.org/way/1271222885",
+     "publisher": "OpenStreetMap (way tagged ref=LAPSSET)",
+     "date": "2026-06-01"
+    },
+    {
+     "url": "https://www.the-star.co.ke/counties/north-eastern/2026-02-13-ruto-tours-isiolo-wajir-mandera-road-dismisses-claims-of-stalled-construction",
+     "publisher": "The Star",
+     "date": "2026-02-13"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a10"
+  },
+  {
+   "id": "isiolo-merille-a2",
+   "name": "Isiolo–Merille River (A2) road, Lot 1 of Isiolo–Moyale",
+   "short": "Isiolo–Merille road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Archers Post",
+      37.67,
+      0.64
+     ],
+     [
+      "Merille",
+      37.72,
+      1.42
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "Completed in July 2011 (ILO, citing the Ministry of Transport). LCDA's September 2017 status report lists it as a LAPSSET highway section, 100% completed.",
+   "status_date": "2011-07",
+   "summary": "First section of the Isiolo–Moyale A2 highway upgraded to bitumen: 136 km. It was Phase I of the AfDB's Mombasa–Nairobi–Addis Ababa Road Corridor Project, co-funded by the AfDB and the Government of Kenya. The Phase I loan also paid for design studies of the later phases.",
+   "developer": "Kenya National Highways Authority",
+   "length_km": 136,
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": 33600000,
+     "currency": "UA",
+     "year": 2004,
+     "firmness": "disbursing",
+     "note": "African Development Fund. Phase I ADF loan of UA 33.6m (the AfDB's unit of account, equal to the IMF's SDR) for the 136-km Isiolo–Merille road plus studies. The year is from the AfDB portfolio table, which dates the Phase I operation's ADF grant 13/12/2004. The AfDB's 2011 appraisal lists Phase I in Kenya at about USD 52m (loan and grant together). Converted at the AfDB's own equivalence for Phase I in Kenya: UA 36.15 m of loan and grant, about USD 52 m.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "source_date": "2009-06",
+     "usd_per_unit": 1.4385
+    },
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "grant",
+     "amount": 2550000,
+     "currency": "UA",
+     "year": 2004,
+     "firmness": "disbursing",
+     "note": "African Development Fund. Phase I ADF grant of UA 2.55m, mainly for feasibility and design studies of 366 km in Kenya and 302 km in Ethiopia for the next phases. Included in the AfDB's ~USD 52m Phase I figure for Kenya. Converted at the AfDB's own equivalence for Phase I in Kenya: UA 36.15 m of loan and grant, about USD 52 m.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "source_date": "2009-06",
+     "usd_per_unit": 1.4385
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 3740000,
+     "currency": "UA",
+     "year": 2004,
+     "firmness": "disbursing",
+     "note": "Kenyan counterpart contribution to Phase I, UA 3.74m, per the AfDB's Phase III appraisal (Table A2-1). Converted at the AfDB's own equivalence for Phase I in Kenya: UA 36.15 m of loan and grant, about USD 52 m.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf",
+     "source_date": "2011-10",
+     "usd_per_unit": 1.4385
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "publisher": "AfDB (Phase II appraisal report)",
+     "date": "2009-06"
+    },
+    {
+     "url": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf",
+     "publisher": "AfDB (Phase III appraisal report)",
+     "date": "2011-10"
+    },
+    {
+     "url": "https://www.ilo.org/sites/default/files/2024-05/EmpIA_Merille-Marsabit_Isiolo-Moyale_Kenya_S2_EN.pdf",
+     "publisher": "ILO (EU co-funded impact assessment)",
+     "date": "2023"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a2",
+   "osm_pad": 0.05,
+   "site_refs": [
+    {
+     "layer": "AfDB",
+     "id": "46002-P-Z1-DB0-018"
+    }
+   ]
+  },
+  {
+   "id": "merille-marsabit-a2",
+   "name": "Merille River–Marsabit (A2) road, Lot 2 of Isiolo–Moyale",
+   "short": "Merille–Marsabit road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Merille",
+      37.72,
+      1.42
+     ],
+     [
+      "Laisamis",
+      37.8,
+      1.59
+     ],
+     [
+      "Marsabit",
+      37.99,
+      2.33
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "Works started on 24 July 2013. The ILO table gives completion in December 2016, contractually completed 26 May 2017. LCDA's September 2017 status report lists it as 100% completed.",
+   "status_date": "2016-12",
+   "summary": "About 121-km section (AfDB: 122 km; ILO: 120.6 km) upgraded to asphalt as Lot 1 (Kenya) of the AfDB's Mombasa–Nairobi–Addis Ababa Road Corridor Phase II. The European Union co-financed it in parallel with a grant; the ILO calls it the only section of the corridor co-funded by the EU.",
+   "developer": "Kenya National Highways Authority",
+   "length_km": 121,
+   "finance": [
+    {
+     "funder": "European Union",
+     "funder_country": "EU",
+     "instrument": "grant",
+     "amount": 85200000,
+     "currency": "EUR",
+     "year": 2009,
+     "firmness": "disbursing",
+     "note": "The ILO gives the EU grant as EUR 85.2m. The AfDB Phase II appraisal (June 2009) shows the EU co-financing Kenya on a parallel basis with UA 76m (23% of Phase II cost). The year is the appraisal year; the EU decision date was not found.",
+     "source": "https://www.ilo.org/sites/default/files/2024-05/EmpIA_Merille-Marsabit_Isiolo-Moyale_Kenya_S2_EN.pdf",
+     "source_date": "2023"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "publisher": "AfDB (Phase II appraisal report)",
+     "date": "2009-06"
+    },
+    {
+     "url": "https://www.ilo.org/sites/default/files/2024-05/EmpIA_Merille-Marsabit_Isiolo-Moyale_Kenya_S2_EN.pdf",
+     "publisher": "ILO (EU co-funded impact assessment)",
+     "date": "2023"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a2",
+   "osm_pad": 0.05
+  },
+  {
+   "id": "marsabit-turbi-a2",
+   "name": "Marsabit–Turbi (A2) road, Lot 3 of Isiolo–Moyale",
+   "short": "Marsabit–Turbi road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Marsabit",
+      37.99,
+      2.33
+     ],
+     [
+      "Turbi",
+      38.38,
+      3.3
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "Completed in March 2015 (ILO, citing the Ministry of Transport). LCDA's September 2017 status report lists it as 100% completed.",
+   "status_date": "2015-03",
+   "summary": "123-km section upgraded to asphalt as Lot 2 (Kenya) of the AfDB's Mombasa–Nairobi–Addis Ababa Road Corridor Phase II, financed by an AfDB loan and the Government of Kenya.",
+   "developer": "Kenya National Highways Authority",
+   "length_km": 123,
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": 125000000,
+     "currency": "UA",
+     "year": 2009,
+     "firmness": "disbursing",
+     "note": "African Development Fund. Phase II ADF loan to Kenya of UA 125m (the AfDB's unit of account, equal to the IMF's SDR). Formally it covers the whole Kenyan Phase II package: Merille River–Marsabit–Turbi (245 km), border post, road stations and TA. The ILO credits the AfDB with this lot and the EU with Merille–Marsabit. The Phase II ADF loans were approved 31/07/2009 per the AfDB portfolio table. About USD 183m at the appraisal rate (1 UA = 1.4674 USD, Apr 2009); the 2011 appraisal also gives USD 183m. Converted at the AfDB's appraisal rate, April 2009.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "source_date": "2009-06",
+     "usd_per_unit": 1.4674
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 26180000,
+     "currency": "UA",
+     "year": 2009,
+     "firmness": "disbursing",
+     "note": "Kenyan counterpart to Phase II, UA 26.18m, covering both Kenyan lots (Merille–Marsabit and Marsabit–Turbi). About USD 38m at 1 UA = 1.4674 USD (Apr 2009). Converted at the AfDB's appraisal rate, April 2009.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "source_date": "2009-06",
+     "usd_per_unit": 1.4674
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Mombasa_-_Nairobi_%E2%80%93_Addis_Ababa_Road_Corridor_Project_Phase_II_-_Appraisal_Report.pdf",
+     "publisher": "AfDB (Phase II appraisal report)",
+     "date": "2009-06"
+    },
+    {
+     "url": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf",
+     "publisher": "AfDB (Phase III appraisal report)",
+     "date": "2011-10"
+    },
+    {
+     "url": "https://www.ilo.org/sites/default/files/2024-05/EmpIA_Merille-Marsabit_Isiolo-Moyale_Kenya_S2_EN.pdf",
+     "publisher": "ILO (EU co-funded impact assessment)",
+     "date": "2023"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a2",
+   "osm_pad": 0.05,
+   "site_refs": [
+    {
+     "layer": "AfDB",
+     "id": "46002-P-Z1-DB0-027"
+    }
+   ]
+  },
+  {
+   "id": "turbi-moyale-a2",
+   "name": "Turbi–Moyale (A2) road with Sololo link, Lot 4 of Isiolo–Moyale",
+   "short": "Turbi–Moyale road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Turbi",
+      38.38,
+      3.3
+     ],
+     [
+      "Sololo",
+      38.64,
+      3.56
+     ],
+     [
+      "Moyale",
+      39.06,
+      3.52
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "Substantially completed on 14 September 2016 (AidData; the ILO gives September 2016). The Isiolo–Moyale road was commissioned by President Kenyatta in July 2017. KeNHA lists Turbi–Moyale (A2) among its completed projects.",
+   "status_date": "2016-09",
+   "summary": "122-km road plus an 8-km link to Sololo, upgraded to bitumen as the Kenyan component of the AfDB's Mombasa–Nairobi–Addis Ababa Road Corridor Phase III. China Wu Yi built it: works started on 6 November 2012, were briefly suspended in 2013 for security reasons, and finished in 2016. This closed the last gap in a paved Nairobi–Moyale road.",
+   "developer": "Kenya National Highways Authority (contractor: China Wu Yi Co., Ltd.)",
+   "length_km": 122,
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": 120000000,
+     "currency": "UA",
+     "year": 2011,
+     "firmness": "disbursing",
+     "note": "African Development Fund. Phase III ADF loan to Kenya of UA 120m (the AfDB's unit of account, equal to the IMF's SDR). Board approval was scheduled for 30 Nov 2011. The loan also covers supervision, trade facilitation and UA 6.48m of transport studies; Turbi–Moyale civil works were costed at UA 116.04m, with UA 109.02m from the AfDB. About USD 192m at the appraisal rate (1 UA = 1.60045 USD, Jul 2011). Converted at the AfDB's appraisal rate, July 2011.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf",
+     "source_date": "2011-10",
+     "usd_per_unit": 1.60045
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 8190000,
+     "currency": "UA",
+     "year": 2011,
+     "firmness": "disbursing",
+     "note": "Kenyan counterpart to Phase III, UA 8.19m, excluding taxes and duties. About USD 13m at 1 UA = 1.60045 USD (Jul 2011). Converted at the AfDB's appraisal rate, July 2011.",
+     "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf",
+     "source_date": "2011-10",
+     "usd_per_unit": 1.60045
+    },
+    {
+     "funder": "Export-Import Bank of China",
+     "funder_country": "CN",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": 2012,
+     "firmness": "disbursing",
+     "note": "AidData records a China Eximbank loan of undisclosed size for this section, used for China Wu Yi's RMB 917m commercial contract. The borrower is unknown: the loan is not in Kenya's external debt register, so AidData tentatively assumes China Wu Yi borrowed it. The AfDB appraisal does not mention it. Possible overlap with the AfDB-financed works.",
+     "source": "https://china.aiddata.org/projects/95560",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf",
+     "publisher": "AfDB (Phase III appraisal report)",
+     "date": "2011-10"
+    },
+    {
+     "url": "https://china.aiddata.org/projects/95560",
+     "publisher": "AidData (undated, accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.ilo.org/sites/default/files/2024-05/EmpIA_Merille-Marsabit_Isiolo-Moyale_Kenya_S2_EN.pdf",
+     "publisher": "ILO (EU co-funded impact assessment)",
+     "date": "2023"
+    },
+    {
+     "url": "https://www.thecitizen.co.tz/tanzania/news/africa/kenya-commissions-420m-key-road-in-northern-region-2598208",
+     "publisher": "The Citizen (Tanzania)",
+     "date": "2017-07-28"
+    },
+    {
+     "url": "https://kenha.co.ke/completed-project/",
+     "publisher": "KeNHA completed projects (accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a2",
+   "osm_pad": 0.05,
+   "site_refs": [
+    {
+     "layer": "AfDB",
+     "id": "46002-P-Z1-DB0-070"
+    },
+    {
+     "layer": "China (AidData)",
+     "id": "95560"
+    }
+   ]
+  },
+  {
+   "id": "isiolo-lokichar-road",
+   "name": "Isiolo–Maralal–Baragoi–Lokori–Lokichar LAPSSET highway (realigned Isiolo–Lokichar link)",
+   "short": "Isiolo–Lokichar road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Maralal",
+      36.7,
+      1.1
+     ],
+     [
+      "Baragoi",
+      36.78,
+      1.78
+     ],
+     [
+      "Lokori",
+      36.03,
+      1.95
+     ],
+     [
+      "Lokichar",
+      35.65,
+      2.38
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "Not started. In April 2026 Business Daily reported the Auditor-General's latest audit, which lists the Isiolo–Maralal–Lokori–Lokichar highway among critical LAPSSET routes still incomplete; the earlier audit for the year to June 2024 said such highways were either not completed or yet to start. AU-PIDA shows the link at pre-feasibility (2018), re-aligned from the original Isiolo–Nginyang route.",
+   "status_date": "2026-04",
+   "summary": "Western LAPSSET highway link from Isiolo to Lokichar, where it would join the upgraded A1 to Nadapal. It was first planned via Nginyang (Isiolo–Nginyang 212 km; LCDA gave Isiolo–Lokichar as 390 km, detailed design ongoing in 2017). The government re-aligned it via Lareta, Maralal, Baragoi and Lokori. No construction financing has been identified. AU-PIDA says the AfDB paid for the (completed) detailed engineering design of the Lamu–Garissa–Isiolo–Nginyang road, i.e. the original alignment; no amount or date given.",
+   "developer": "Kenya National Highways Authority / LCDA (no contractor)",
+   "length_km": 390,
+   "sources": [
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    },
+    {
+     "url": "https://map.au-pida.org/projects/show/21500001",
+     "publisher": "AU-PIDA project database (accessed)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2025-07-27-lapsset-gamechanger-project-a-pipedream-as-key-projects-stall",
+     "publisher": "The Star",
+     "date": "2025-07-27"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/gathungu-says-lapsset-link-delays-stall-lamu-port-gains-5424656",
+     "publisher": "Business Daily",
+     "date": "2026-04-15"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/highways/",
+     "publisher": "LCDA (accessed)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lokichar-nadapal-a1",
+   "name": "Lokichar–Lodwar–Lokichoggio–Nadapal (A1) road upgrade, World Bank EARTTDFP",
+   "short": "Lokichar–Nadapal road",
+   "segment": "road",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Lokichar",
+      35.65,
+      2.38
+     ],
+     [
+      "Lodwar",
+      35.6,
+      3.12
+     ],
+     [
+      "Kakuma",
+      34.87,
+      3.71
+     ],
+     [
+      "Kalobeyei",
+      34.74,
+      3.76
+     ],
+     [
+      "Lokichoggio",
+      34.35,
+      4.2
+     ],
+     [
+      "Nadapal",
+      34.27,
+      4.6
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "The World Bank's December 2024 ISR reports construction from Lokichar to Nadapal, and of the Kainuk bridge, complete: 327 km paved, all but the last 11 km (Nadapal–Nakodok). The IDA credit closed on 31 Dec 2024 with KES 3.2bn (USD 24.6m) of works and fibre bills still unpaid.",
+   "status_date": "2024-12",
+   "summary": "Bitumen upgrade of the A1 from Lokichar to the South Sudan border, which is also the LAPSSET Isiolo–Nadapal highway route. Five lots: Lokichar–Loichangamatak 40 km (China State Engineering Corp), Loichangamatak–Lodwar 50 km (China Railway No. 5 Engineering Group), Lodwar–Lokitaung Junction 80 km (Third Engineering Bureau of China City Construction Group), Lokitaung Junction–Kalobeyei River 80 km (Chongqing International Construction Corp), Kalobeyei River–Nadapal 77 km (China Railway No. 5). Lots 2 and 3 ran over time and cost. The same IDA credit paid for emergency repairs on the 262-km Lesseru–Lokichar stretch, the Kainuk bridge and Eldoret–Nadapal fibre-optic cables.",
+   "developer": "Kenya National Highways Authority (Chinese contractors by lot, see summary)",
+   "length_km": 327,
+   "cost": {
+    "amount": 676000000,
+    "currency": "USD",
+    "note": "Total project cost of the World Bank operation, including the fibre-optic, trade-facilitation and institutional components. Component 1 (roads and fibre) was USD 534.2m, of which IDA USD 421.04m.",
+    "source": "https://projects.worldbank.org/en/projects-operations/project-detail/P148853"
+   },
+   "finance": [
+    {
+     "funder": "World Bank (IDA)",
+     "funder_country": "WB",
+     "instrument": "loan",
+     "amount": 500000000,
+     "currency": "USD",
+     "year": 2015,
+     "firmness": "disbursing",
+     "note": "IDA credit IDA-56380 for the Eastern Africa Regional Transport, Trade and Development Facilitation Project (P148853), approved 11 Jun 2015, effective 16 Nov 2015, closed 31 Dec 2024. 97% disbursed by Dec 2024. Covers roads (298 km of the 338 km IDA-financed at appraisal), Lesseru–Lokichar repairs, fibre-optic cable and border facilitation.",
+     "source": "https://documents.worldbank.org/curated/en/099123024055547221/text/P148853127687b037195b0180f98a346f86.txt",
+     "source_date": "2024-12-30"
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 118520000,
+     "currency": "USD",
+     "year": 2015,
+     "firmness": "disbursing",
+     "note": "Counterpart financing listed in the World Bank's Nov–Dec 2024 aide-memoire. The government was also urged to budget for KES 3.2bn of pending bills.",
+     "source": "https://documents.worldbank.org/curated/en/099123024055532523/text/P1488531ab8b030be1b030164d1490e23a5.txt",
+     "source_date": "2024-12-10"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://projects.worldbank.org/en/projects-operations/project-detail/P148853",
+     "publisher": "World Bank project page / API",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://documents.worldbank.org/curated/en/099123024055547221/text/P148853127687b037195b0180f98a346f86.txt",
+     "publisher": "World Bank ISR",
+     "date": "2024-12-30"
+    },
+    {
+     "url": "https://documents.worldbank.org/curated/en/099123024055532523/text/P1488531ab8b030be1b030164d1490e23a5.txt",
+     "publisher": "World Bank aide-memoire",
+     "date": "2024-12-10"
+    },
+    {
+     "url": "https://kenha.co.ke/wp-content/uploads/2023/10/Directorate-of-Development-Completed-Projects.pdf",
+     "publisher": "KeNHA (completed projects list)",
+     "date": "2023-10"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report (via AU-NEPAD)",
+     "date": "2017-09"
+    },
+    {
+     "url": "https://map.au-pida.org/projects/show/21500001",
+     "publisher": "AU-PIDA project database (accessed)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "a1",
+   "site_refs": [
+    {
+     "layer": "World Bank",
+     "id": "44000-P148853"
+    }
+   ]
+  },
+  {
+   "id": "nadapal-nakodok-link",
+   "name": "Nadapal–Nakodok (A1) 11-km border link to South Sudan",
+   "short": "Nadapal–Nakodok link",
+   "segment": "border",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Nadapal/Nakodok",
+    "lon": 34.27,
+    "lat": 4.6
+   },
+   "status": "stalled",
+   "status_note": "Not built. In December 2024 the World Bank reported it was dropped from the IDA project for lack of site access; the Government of Kenya would fund it, but procurement of a contractor and supervisor had not begun. The Rio Times (13 Sept 2026) describes the 11-km stretch as still unbuilt and caught up in the Ilemi Triangle border dispute. The planned Nadapal one-stop border post was not built either. Presidents Ruto and Kiir agreed in August 2023 to complete the link.",
+   "status_date": "2026-09",
+   "summary": "Last 11 km of the A1/LAPSSET road between Nadapal and Nakodok at the South Sudan border, in a stretch claimed by the Toposa community. Its absence breaks the paved route to Juba.",
+   "developer": "Kenya National Highways Authority (not procured)",
+   "length_km": 11,
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "KES",
+     "year": 2024,
+     "firmness": "pledged",
+     "note": "The World Bank aide-memoire states the section 'is fully funded by GoK' and that GoK will finance the upgrade. No amount or contract exists.",
+     "source": "https://documents.worldbank.org/curated/en/099123024055532523/text/P1488531ab8b030be1b030164d1490e23a5.txt",
+     "source_date": "2024-12-10"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://documents.worldbank.org/curated/en/099123024055532523/text/P1488531ab8b030be1b030164d1490e23a5.txt",
+     "publisher": "World Bank aide-memoire",
+     "date": "2024-12-10"
+    },
+    {
+     "url": "https://www.riotimesonline.com/kenya-south-sudan-trade-route-ilemi-triangle-2026/",
+     "publisher": "The Rio Times",
+     "date": "2026-09-13"
+    },
+    {
+     "url": "https://documents1.worldbank.org/curated/en/099123024055532523/pdf/P1488531ab8b030be1b030164d1490e23a5.pdf",
+     "publisher": "World Bank aide-memoire (mission 11 Nov–10 Dec 2024)",
+     "date": "2024-12-10"
+    },
+    {
+     "url": "https://capitalfm.africa/kenya-south-sudan-joint-infrastructure-to-boost-regional-trade/",
+     "publisher": "Capital FM",
+     "date": "2023-08-20"
+    },
+    {
+     "url": "https://documents1.worldbank.org/curated/en/559411555951544903/pdf/South-Sudan-Eastern-Africa-Regional-Transport-Trade-and-Development-Facilitation-Project.pdf",
+     "publisher": "World Bank (Note on Cancelled Operation)",
+     "date": "2019-04-09"
+    },
+    {
+     "url": "https://allafrica.com/stories/202610050346.html",
+     "publisher": "Capital FM via allAfrica",
+     "date": "2026-10-05"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "ss-juba-torit-kapoeta-nadapal-road",
+   "name": "Juba–Torit–Kapoeta–Nadapal highway (South Sudan National Road 2)",
+   "short": "Juba–Torit–Nadapal road",
+   "segment": "road",
+   "countries": [
+    "SS"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Juba",
+      31.58,
+      4.85
+     ],
+     [
+      "Torit",
+      32.57,
+      4.41
+     ],
+     [
+      "Kapoeta",
+      33.59,
+      4.77
+     ],
+     [
+      "Nadapal",
+      34.27,
+      4.6
+     ]
+    ]
+   },
+   "status": "stalled",
+   "status_note": "No paving under way. Government-funded earthworks by Winners Construction (from August 2020) stopped in June 2023 for lack of funds; in September 2025 Eastern Equatoria launched a self-funded gravel rehabilitation of Torit–Kapoeta–Nadapal by Rhino Star Construction; the road was left out of the USD 2bn gold-backed roads plan approved on 20 February 2026; on 1–2 September 2026 Kenya and South Sudan agreed to 'mobilise resources' for it, with no amounts, funder or contractor named.",
+   "status_date": "2026-09",
+   "summary": "The 365 km road from Juba to the Kenyan border at Nadapal, South Sudan's planned second outlet to Mombasa and Lamu; LCDA lists it as part of the Isiolo–Lokichar–Nadapal–Torit–Juba LAPSSET road. A 2014 World Bank IDA credit and a parallel China Exim loan for Juba–Torit (contract with Shandong-led Chinese firms, November 2015) collapsed after the 2016 conflict, and the government's later oil-for-roads programme funded only clearing and gravel. Estimated cost USD 415m.",
+   "developer": "South Sudan Ministry of Roads and Bridges (contractors: Winners Construction 2020–2023; Rhino Star Construction for 2025 rehabilitation)",
+   "length_km": 365,
+   "cost": {
+    "amount": 415000000,
+    "currency": "USD",
+    "note": "Estimate given in August 2026 for the road 'connecting Nadapal to Juba' (stated there as 340 km).",
+    "source": "https://www.eyeradio.org/nadapal-road-will-shorten-mombasa-juba-trade-route-foreign-affairs-minister/"
+   },
+   "finance": [
+    {
+     "funder": "World Bank (IDA)",
+     "funder_country": "WB",
+     "instrument": "loan",
+     "amount": 80000000,
+     "currency": "USD",
+     "year": 2014,
+     "firmness": "approved",
+     "note": "CANCELLED. SDR 52.2m credit IDA-53630 (South Sudan EARTTDFP, P131426) approved 20 May 2014, effective 22 December 2014, for Kapoeta–Nadapal bridges, 40 km Kapoeta–Narus upgrading, 190 km of repairs, Nadapal OSBP legal work and a Juba–Lokichoggio fibre cable; activities halted in July 2016 and the credit closed or was cancelled on 14 September 2018 with only USD 1.84m disbursed.",
+     "source": "https://documents1.worldbank.org/curated/en/559411555951544903/pdf/South-Sudan-Eastern-Africa-Regional-Transport-Trade-and-Development-Facilitation-Project.pdf",
+     "source_date": "2019-04-09",
+     "cancelled": true
+    },
+    {
+     "funder": "Export-Import Bank of China",
+     "funder_country": "CN",
+     "instrument": "loan",
+     "amount": 169000000,
+     "currency": "USD",
+     "year": 2017,
+     "firmness": "signed",
+     "note": "LAPSED. Oil-backed loan for the 130 km Juba–Torit section, raised from USD 116m to 169m, parallel to the World Bank credit; the loan agreement was signed 7 September 2017 (Radio Tamazuj reported a signing in January 2018) but lapsed by early 2019 without effectiveness or disbursement, partly because it required World Bank readiness to disburse.",
+     "source": "https://china.aiddata.org/projects/47012",
+     "source_date": "2026-10-12",
+     "cancelled": true
+    },
+    {
+     "funder": "Government of South Sudan",
+     "funder_country": "SS",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "USD",
+     "year": 2020,
+     "firmness": "disbursing",
+     "note": "Government-funded bush clearing and gravel works (Winners Construction, with subcontractors under African Resources Corporation) from August 2020; funds were released irregularly and works stopped in June 2023 'due to insufficient funds'.",
+     "source": "https://www.radiotamazuj.org/en/news/article/eastern-equatoria-residents-angry-as-highway-construction-stops",
+     "source_date": "2023-06-26"
+    },
+    {
+     "funder": "Eastern Equatoria State Government",
+     "funder_country": "SS",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "USD",
+     "year": 2025,
+     "firmness": "disbursing",
+     "note": "In-kind support (about 30,000 litres of fuel) to a roughly three-month rehabilitation of Torit–Kapoeta–Nadapal launched 4 September 2025; contractor Rhino Star Construction said it used its own resources and bank loans.",
+     "source": "https://www.radiotamazuj.org/en/news/article/eastern-equatoria-launches-rehabilitation-of-torit-kapoeta-nadapal-highway",
+     "source_date": "2025-09-04"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.eyeradio.org/south-sudan-kenya-agree-to-mobilise-funds-juba-nadapal-highway/",
+     "publisher": "Eye Radio",
+     "date": "2026-09-02"
+    },
+    {
+     "url": "https://www.eyeradio.org/nadapal-road-will-shorten-mombasa-juba-trade-route-foreign-affairs-minister/",
+     "publisher": "Eye Radio",
+     "date": "2026-08-02"
+    },
+    {
+     "url": "https://www.radiotamazuj.org/en/news/article/opinion-build-the-juba-torit-kapoeta-kenya-highway-to-spur-south-sudans-development",
+     "publisher": "Radio Tamazuj (opinion)",
+     "date": "2026-02-27"
+    },
+    {
+     "url": "https://www.radiotamazuj.org/en/news/article/eastern-equatoria-launches-rehabilitation-of-torit-kapoeta-nadapal-highway",
+     "publisher": "Radio Tamazuj",
+     "date": "2025-09-04"
+    },
+    {
+     "url": "https://www.eyeradio.org/construction-of-juba-nadapal-road-to-kick-off-in-dec-2024-mijak/",
+     "publisher": "Eye Radio",
+     "date": "2024-06-28"
+    },
+    {
+     "url": "https://www.radiotamazuj.org/en/news/article/eastern-equatoria-residents-angry-as-highway-construction-stops",
+     "publisher": "Radio Tamazuj",
+     "date": "2023-06-26"
+    },
+    {
+     "url": "https://www.onecitizendaily.com/index.php/2022/05/27/funding-dictates-juba-torit-nadapal-road-progress/",
+     "publisher": "One Citizen Daily",
+     "date": "2022-05-27"
+    },
+    {
+     "url": "https://www.radiotamazuj.org/en/news/article/clearing-work-begins-on-juba-nadapal-road",
+     "publisher": "Radio Tamazuj",
+     "date": "2020-08-21"
+    },
+    {
+     "url": "https://documents1.worldbank.org/curated/en/559411555951544903/pdf/South-Sudan-Eastern-Africa-Regional-Transport-Trade-and-Development-Facilitation-Project.pdf",
+     "publisher": "World Bank (Note on Cancelled Operation)",
+     "date": "2019-04-09"
+    },
+    {
+     "url": "https://china.aiddata.org/projects/47012",
+     "publisher": "AidData, accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.radiotamazuj.org/en/news/article/south-sudan-china-enter-into-169-million-road-project-deal",
+     "publisher": "Radio Tamazuj",
+     "date": "2018-01-19"
+    },
+    {
+     "url": "https://www.nepad.org/project/juba-torit-kapoeta-nadapal-eldoret-road-project-dfs",
+     "publisher": "AUDA-NEPAD",
+     "date": "2016-01-11"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/highways/",
+     "publisher": "LCDA, undated, accessed",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true,
+   "site_refs": [
+    {
+     "layer": "World Bank",
+     "id": "44000-P131426"
+    }
+   ]
+  },
+  {
+   "id": "et-hawassa-moyale-road",
+   "name": "Hawassa–Ageremariam–Yabelo–Mega–Moyale road (Ethiopian leg of the Mombasa–Nairobi–Addis Ababa corridor)",
+   "short": "Moyale–Hawassa road",
+   "segment": "road",
+   "countries": [
+    "ET"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Hawassa",
+      38.48,
+      7.06
+     ],
+     [
+      "Dilla",
+      38.31,
+      6.41
+     ],
+     [
+      "Ageremariam",
+      38.25,
+      5.62
+     ],
+     [
+      "Yabelo",
+      38.08,
+      4.88
+     ],
+     [
+      "Mega",
+      38.3,
+      4.05
+     ],
+     [
+      "Moyale",
+      39.06,
+      3.52
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "The 502 km Hawassa–Moyale road was inaugurated by PM Abiy Ahmed and President Uhuru Kenyatta at Moyale on 9 December 2020, together with the one-stop border post. No 2024–2026 condition or rehabilitation report for this alignment was found.",
+   "status_date": "2020-12",
+   "summary": "About 500 km of two-lane asphalt road from Hawassa to the Kenyan border at Moyale, built in sections by the Ethiopian Roads Authority under the AfDB-led Mombasa–Nairobi–Addis Ababa Road Corridor programme: Phase II rehabilitated the 193 km Ageremariam–Yabelo–Mega section and Phase III the ~197 km Hawassa–Ageremariam section; the ~100 km Mega–Moyale section's funder is unconfirmed. LCDA's highways page lists 'Isiolo–Moyale–Hawassa' as a main LAPSSET corridor road and the May 2018 Kenyatta–Abiy communiqué put the 'Moyale–Hawassa–Addis Ababa road network' under joint LAPSSET supervision, but the AfDB, the Ethiopian government and the World Bank finance and describe it as the Mombasa–Nairobi–Addis Ababa corridor / Cairo–Cape Town Trans-African Highway, never as LAPSSET.",
+   "developer": "Ethiopian Roads Authority (now Ethiopian Roads Administration)",
+   "length_km": 502,
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": 125600000,
+     "currency": "USD",
+     "year": 2010,
+     "firmness": "disbursing",
+     "note": "African Development Fund. Phase II loan of UA 85 million (USD 125.6m per the AfDB release) signed 15 January 2010 for rehabilitation of the 193 km Ageremariam–Yabelo–Mega section to bitumen standard, roadside infrastructure, the Moyale one-stop border post and 12 community water wells; approved by the ADF Board in July 2009. Firmness reflects completed works (road open 2020); no completion report was found.",
+     "source": "https://allafrica.com/stories/201001191030.html",
+     "source_date": "2010-01-19"
+    },
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": 2012,
+     "firmness": "signed",
+     "note": "African Development Fund. Phase III ADF loan for the Hawassa–Agere Mariam road, ratified by Ethiopia's Proclamation No. 739/2012 (year as printed in the proclamation number); the ADF-financed supervision contract for Lot 1 Hawassa–Chuko ran 10/2012–12/2018 (AIC Progetti). The loan amount could not be confirmed from the AfDB's own pages.",
+     "source": "https://www.metaappz.com/References/ethiopian_laws/federal/pr_739_2012/en/pdf",
+     "source_date": "2026-10-12"
+    },
+    {
+     "funder": "Government of Ethiopia",
+     "funder_country": "ET",
+     "instrument": "budget",
+     "amount": 25000000,
+     "currency": "USD",
+     "year": 2012,
+     "firmness": "pledged",
+     "note": "Planned Ethiopian counterpart contribution to Phase II of the corridor programme (13% of the USD 743m two-country programme was government counterpart: Ethiopia USD 25m, Kenya USD 41.3m), per a January 2012 project profile.",
+     "source": "https://www.engineeringnews.co.za/article/addis-ababanairobimombasa-road-corridor-kenya-to-ethiopia-2012-01-20",
+     "source_date": "2012-01-20"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.businessdailyafrica.com/bd/news/uhuru-abiy-open-moyale-border-post-to-boost-kenya-ethiopia-trade-3223572",
+     "publisher": "Business Daily",
+     "date": "2020-12-09"
+    },
+    {
+     "url": "https://mansamedia.africa/ethiopian-kenyan-leaders-launch-cross-border-infrastructure-projects-to-boost-trade/",
+     "publisher": "Mansa Media",
+     "date": "2020-12-10"
+    },
+    {
+     "url": "https://ethiopianembassy.org/prime-minister-abiy-returns-home-concluding-a-two-day-visit-to-kenya-december-10-2020/",
+     "publisher": "Embassy of Ethiopia, Washington",
+     "date": "2020-12-11"
+    },
+    {
+     "url": "https://allafrica.com/stories/201001191030.html",
+     "publisher": "AfDB press release via allAfrica",
+     "date": "2010-01-19"
+    },
+    {
+     "url": "https://allafrica.com/stories/200907020940.html",
+     "publisher": "AfDB press release via allAfrica",
+     "date": "2009-07-02"
+    },
+    {
+     "url": "https://www.engineeringnews.co.za/article/addis-ababanairobimombasa-road-corridor-kenya-to-ethiopia-2012-01-20",
+     "publisher": "Engineering News",
+     "date": "2012-01-20"
+    },
+    {
+     "url": "https://www.aicprogetti.it/en/progetti/strada-hawassa-chuko/",
+     "publisher": "AIC Progetti (supervision consultant), undated, accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.aicprogetti.it/en/?p=1550",
+     "publisher": "AIC Progetti (design consultant), undated, accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.metaappz.com/References/ethiopian_laws/federal/pr_739_2012/en/pdf",
+     "publisher": "Ethiopian Federal Laws index (Proclamation 739/2012), accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.metaappz.com/References/ethiopian_laws/federal/pr_680_2010/en/pdf",
+     "publisher": "Ethiopian Federal Laws index (Proclamation 680/2010), accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/highways/",
+     "publisher": "LCDA, undated, accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/ethiopia-gets-lamu-land-to-cut-reliance-on-port-of-djibouti-2201396",
+     "publisher": "Business Daily",
+     "date": "2018-05-08"
+    }
+   ],
+   "lcda_component": true,
+   "osm": "et",
+   "site_refs": [
+    {
+     "layer": "AfDB",
+     "id": "46002-P-Z1-DB0-032"
+    }
+   ]
+  },
+  {
+   "id": "ke-et-moyale-osbp",
+   "name": "Moyale One-Stop Border Post (Kenya–Ethiopia)",
+   "short": "Moyale border post",
+   "segment": "border",
+   "countries": [
+    "KE",
+    "ET"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Moyale",
+    "lon": 39.06,
+    "lat": 3.53
+   },
+   "status": "operating",
+   "status_note": "Built by 2018, opened by Presidents Kenyatta and Abiy on 9 December 2020, with joint Kenyan–Ethiopian clearance starting around 10 June 2021. Business Daily reported in September 2022 that the post was largely underused because of insecurity and unharmonised trade rules.",
+   "status_date": "2022-09",
+   "summary": "Joint border facility at the only gazetted Kenya–Ethiopia crossing, part of the Mombasa–Nairobi–Addis Ababa corridor programme; it cost more than KES 800m. The AfDB financed the physical post (its 2010 Ethiopia loan lists the OSBP as a component), and the UK government, through TradeMark East Africa, supported the integrated border-management side. LCDA's highways page presents it as part of the LAPSSET highway programme.",
+   "developer": "Governments of Kenya and Ethiopia (KRA, Ethiopian customs), with TradeMark East Africa",
+   "cost": {
+    "amount": 800000000,
+    "currency": "KES",
+    "note": "'More than Sh800 million' per Business Daily; covers construction completed in 2018.",
+    "source": "https://www.businessdailyafrica.com/bd/news/kenya-ethiopia-border-point-to-boost-trade-ties-3223946"
+   },
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "USD",
+     "year": 2010,
+     "firmness": "disbursing",
+     "note": "African Development Fund. The OSBP at Moyale is a component of the UA 85m Phase II loan to Ethiopia (counted under the Moyale–Hawassa road, so no amount here); how much the AfDB put into the Kenyan side was not found.",
+     "source": "https://allafrica.com/stories/201001191030.html",
+     "source_date": "2010-01-19"
+    },
+    {
+     "funder": "Government of the United Kingdom (via TradeMark East Africa)",
+     "funder_country": "UK",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": null,
+     "firmness": "disbursing",
+     "note": "Business Daily says the post was built with funding from the AfDB and the UK government; TradeMark East Africa was an implementing partner for the integrated border-management component.",
+     "source": "https://www.businessdailyafrica.com/bd/news/kenya-ethiopia-border-point-to-boost-trade-ties-3223946",
+     "source_date": "2020-12-10"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.businessdailyafrica.com/bd/news/kenya-ethiopia-border-point-to-boost-trade-ties-3223946",
+     "publisher": "Business Daily",
+     "date": "2020-12-10"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/news/uhuru-abiy-open-moyale-border-post-to-boost-kenya-ethiopia-trade-3223572",
+     "publisher": "Business Daily",
+     "date": "2020-12-09"
+    },
+    {
+     "url": "https://theexchange.africa/kenya-and-ethiopia-kickstart-operations-at-moyale-border-post-to-boost-trade/",
+     "publisher": "The Exchange",
+     "date": "2021-06-12"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/why-moyale-post-is-trade-barrier-3962712",
+     "publisher": "Business Daily",
+     "date": "2022-09-26"
+    },
+    {
+     "url": "https://allafrica.com/stories/201001191030.html",
+     "publisher": "AfDB press release via allAfrica",
+     "date": "2010-01-19"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/highways/",
+     "publisher": "LCDA, undated, accessed",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lapsset-sgr-lamu-isiolo",
+   "name": "LAPSSET standard gauge railway: Lamu–Isiolo",
+   "short": "Railway: Lamu–Isiolo",
+   "segment": "rail",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Lamu",
+      40.9,
+      -2.27
+     ],
+     [
+      "Ijara",
+      40.52,
+      -1.6
+     ],
+     [
+      "Garissa",
+      39.65,
+      -0.45
+     ],
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "LCDA puts the Kenyan segment at feasibility stage (S2B); the feasibility studies date from 2011 and 'may require to be updated'. The Ethiopian segment 1 is at pre-feasibility (S2A) and the South Sudan segment at 'enabling environment' (S0). In Aug 2023 Kenya and Ethiopia agreed to seek financing jointly and set up a bilateral steering committee. In Jan 2024 Kenya was seeking USD 9m from the African Union Infrastructure Fund for detailed feasibility studies. No construction financing exists. The PIDA prospectus schedules this as Phase 1 for 2027–2032, and LCDA forecasts daily Lamu–Isiolo trains by 2030.",
+   "status_date": "2024-01",
+   "summary": "The first leg of LCDA's planned 1,435 mm single-track network of more than 3,000 km linking Lamu with Juba and Addis Ababa, branching at Isiolo. Kenya Railways estimates this 544.4 km leg at USD 3.49 bn. China Civil Engineering Construction Corporation (CCECC) did the Kenyan-side feasibility study and detailed design, and its 2015 study put the whole corridor railway at USD 10.4 bn.",
+   "developer": "Kenya Railways / LCDA (no contractor)",
+   "length_km": 544.4,
+   "cost": {
+    "amount": 3490000000,
+    "currency": "USD",
+    "note": "Kenya Railways projection (Sh565.38 bn in Construction Kenya; another report gives Sh523.05 bn at Sh150/USD).",
+    "source": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/railways/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/",
+     "publisher": "Construction Kenya (Kenya Railways figures)",
+     "date": "2024-01-24"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://au-pida.org/prospectus/project.php?id=45",
+     "publisher": "AU PIDA Investment Prospectus (undated)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension",
+     "publisher": "Kenyans.co.ke",
+     "date": "2023-08-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lapsset-sgr-isiolo-nakodok",
+   "name": "LAPSSET standard gauge railway: Isiolo–Lokichar–Nakodok (to the South Sudan border)",
+   "short": "Railway: Isiolo–Nakodok",
+   "segment": "rail",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Lokichar",
+      35.65,
+      2.38
+     ],
+     [
+      "Lodwar",
+      35.6,
+      3.12
+     ],
+     [
+      "Lokichoggio",
+      34.35,
+      4.2
+     ],
+     [
+      "Nakodok/Nadapal",
+      34.27,
+      4.6
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "LCDA puts the Kenyan segment at feasibility stage (S2B); the feasibility studies date from 2011 and 'may require to be updated'. The Ethiopian segment 1 is at pre-feasibility (S2A) and the South Sudan segment at 'enabling environment' (S0). In Aug 2023 Kenya and Ethiopia agreed to seek financing jointly and set up a bilateral steering committee. In Jan 2024 Kenya was seeking USD 9m from the African Union Infrastructure Fund for detailed feasibility studies. No construction financing exists. The South Sudan segment is only at 'enabling environment' stage, and PIDA schedules the Isiolo–South Sudan border leg for 2032–2037. In March 2026 the government instead proposed a metre-gauge line from Rongai (Nakuru) to South Lokichar and later Nakodok for Turkana crude; see \"Looked at and left out\".",
+   "status_date": "2024-01",
+   "summary": "This is the costliest Kenyan leg in Kenya Railways' estimate: 753.2 km from Isiolo to Nakodok at Sh717.82 bn, plus about 600 km inside South Sudan according to PIDA. The waypoints are approximate.",
+   "developer": "Kenya Railways / LCDA; South Sudan Ministry of Transport",
+   "length_km": 753.2,
+   "cost": {
+    "amount": 717820000000,
+    "currency": "KES",
+    "note": "Kenya Railways projection for the Kenyan section only (Construction Kenya). The EastAfrican's version gives Sh664.65 bn (USD 4.431 bn).",
+    "source": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/railways/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/",
+     "publisher": "Construction Kenya (Kenya Railways figures)",
+     "date": "2024-01-24"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://au-pida.org/prospectus/project.php?id=45",
+     "publisher": "AU PIDA Investment Prospectus (undated)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension",
+     "publisher": "Kenyans.co.ke",
+     "date": "2023-08-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "ss-lapsset-sgr-juba",
+   "name": "LAPSSET standard-gauge railway, South Sudan segment (Kenyan border–Juba)",
+   "short": "Railway: Nakodok–Juba",
+   "segment": "rail",
+   "countries": [
+    "SS"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Nakodok/Nadapal",
+      34.27,
+      4.6
+     ],
+     [
+      "Kapoeta",
+      33.59,
+      4.77
+     ],
+     [
+      "Torit",
+      32.57,
+      4.41
+     ],
+     [
+      "Juba",
+      31.58,
+      4.85
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "LCDA puts the South Sudanese segment at 'enabling environment' stage (S0); the PIDA prospectus schedules a needs assessment 2022–2025, feasibility 2027–2029 and construction 2033–2043. An October 2026 analysis describes the railway as still at study stage. Alignment shown is indicative.",
+   "status_date": "2026-10",
+   "summary": "South Sudanese branch of the planned LAPSSET railway from Isiolo towards Juba, about 600 km in South Sudan per PIDA. No study, funder or agreement specific to this segment was found.",
+   "developer": "South Sudan Ministry of Transport (sponsor per PIDA)",
+   "length_km": 600,
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/railways/",
+     "publisher": "LCDA, undated, accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://au-pida.org/prospectus/project.php?id=45",
+     "publisher": "PIDA Investment Prospectus (AUDA-NEPAD), accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://magazine.feaffa.com/dangotes-lamu-refinery-gives-lapsset-a-second-chance-will-south-sudan-take-it/",
+     "publisher": "FEAFFA Freight Logistics Magazine (opinion)",
+     "date": "2026-10-03"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lapsset-sgr-isiolo-moyale",
+   "name": "LAPSSET standard gauge railway: Isiolo–Moyale (to the Ethiopian border)",
+   "short": "Railway: Isiolo–Moyale",
+   "segment": "rail",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Marsabit",
+      37.99,
+      2.33
+     ],
+     [
+      "Moyale",
+      39.06,
+      3.52
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "LCDA puts the Kenyan segment at feasibility stage (S2B); the feasibility studies date from 2011 and 'may require to be updated'. The Ethiopian segment 1 is at pre-feasibility (S2A) and the South Sudan segment at 'enabling environment' (S0). In Aug 2023 Kenya and Ethiopia agreed to seek financing jointly and set up a bilateral steering committee. In Jan 2024 Kenya was seeking USD 9m from the African Union Infrastructure Fund for detailed feasibility studies. No construction financing exists. On the Ethiopian side, LCDA's 2016 brief says Addis Ababa–Modjo (about 120 km) was built as part of the Addis–Djibouti line, with feasibility and preliminary design done for Modjo–Hawassa–Moyale. Ethiopia had engaged CCECC for Modjo–Hawassa but was waiting for Lamu port before financing Hawassa–Moyale. No later confirmation of financing or works was found.",
+   "status_date": "2024-01",
+   "summary": "Kenya Railways estimates the 475.9 km Kenyan section from Isiolo to Moyale at USD 3.178 bn. In August 2023 Kenya's and Ethiopia's transport ministers agreed to pursue a Lamu–Isiolo–Moyale–Addis Ababa SGR, reported as a 3,000 km electrified line.",
+   "developer": "Kenya Railways / LCDA; Ethiopian Railways Corporation",
+   "length_km": 475.9,
+   "cost": {
+    "amount": 3178000000,
+    "currency": "USD",
+    "note": "Kenya Railways projection for Isiolo–Moyale only (Sh514.84 bn).",
+    "source": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/railways/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/",
+     "publisher": "Construction Kenya (Kenya Railways figures)",
+     "date": "2024-01-24"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://au-pida.org/prospectus/project.php?id=45",
+     "publisher": "AU PIDA Investment Prospectus (undated)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension",
+     "publisher": "Kenyans.co.ke",
+     "date": "2023-08-12"
+    },
+    {
+     "url": "https://africaarbitration.org/2023/09/11/kenya-and-ethiopia-agree-to-build-3000km-lamu-addis-ababa-sgr/",
+     "publisher": "Africa Arbitration (citing Railway Gazette)",
+     "date": "2023-09-11"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "et-lapsset-sgr-moyale-modjo",
+   "name": "LAPSSET standard-gauge railway, Ethiopian segment (Moyale–Hawassa–Modjo / Addis Ababa)",
+   "short": "Railway: Moyale–Addis Ababa",
+   "segment": "rail",
+   "countries": [
+    "ET"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Moyale",
+      39.06,
+      3.52
+     ],
+     [
+      "Hawassa",
+      38.48,
+      7.06
+     ],
+     [
+      "Modjo",
+      39.12,
+      8.59
+     ],
+     [
+      "Addis Ababa",
+      38.75,
+      9.02
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "LCDA says the Ethiopian segment is at pre-feasibility (stage S2A) with only preliminary designs for some sections; the PIDA prospectus schedules Ethiopian feasibility 2024–2026, financing 2028–2030 and construction 2030–2038. In December 2024 the Ethiopian Railways Corporation said the AfDB had agreed to finance a feasibility study for a Modjo–Moyale–Lamu line. Alignment shown is indicative.",
+   "status_date": "2024-12",
+   "summary": "Ethiopian part of the planned LAPSSET railway from Lamu via Isiolo and Moyale to Addis Ababa, about 1,100 km in Ethiopia per PIDA, joining Ethiopia's network at Modjo. Kenya's and Ethiopia's transport ministers signed a deal in August 2023 to pursue a Lamu–Addis Ababa SGR and set up a bilateral steering committee; no financing has been committed.",
+   "developer": "Ethiopian Railways Corporation (with LCDA / Kenya Ministry of Transport)",
+   "length_km": 1100,
+   "finance": [
+    {
+     "funder": "African Development Bank Group",
+     "funder_country": "AfDB",
+     "instrument": "technical assistance",
+     "amount": null,
+     "currency": "USD",
+     "year": 2024,
+     "firmness": "pledged",
+     "note": "ERC deputy CEO said the AfDB had agreed to finance a feasibility study for the Modjo–Moyale–Lamu project; no AfDB approval record or amount found.",
+     "source": "https://www.thereporterethiopia.com/42961/",
+     "source_date": "2024-12-14"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/railways/",
+     "publisher": "LCDA, undated, accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://au-pida.org/prospectus/project.php?id=45",
+     "publisher": "PIDA Investment Prospectus (AUDA-NEPAD), accessed",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.thereporterethiopia.com/42961/",
+     "publisher": "The Reporter Ethiopia",
+     "date": "2024-12-14"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension",
+     "publisher": "Kenyans.co.ke",
+     "date": "2023-08-12"
+    },
+    {
+     "url": "https://www.engineeringnews.co.za/article/kenya-revives-plans-for-138bn-railway-line-to-ethiopia-2023-08-23",
+     "publisher": "Reuters via Engineering News",
+     "date": "2023-08-23"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lapsset-sgr-nairobi-isiolo",
+   "name": "LAPSSET standard gauge railway: Nairobi–Isiolo link",
+   "short": "Railway: Nairobi–Isiolo",
+   "segment": "rail",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Nairobi",
+      36.82,
+      -1.29
+     ],
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "LCDA puts the Kenyan segment at feasibility stage (S2B); the feasibility studies date from 2011 and 'may require to be updated'. The Ethiopian segment 1 is at pre-feasibility (S2A) and the South Sudan segment at 'enabling environment' (S0). In Aug 2023 Kenya and Ethiopia agreed to seek financing jointly and set up a bilateral steering committee. In Jan 2024 Kenya was seeking USD 9m from the African Union Infrastructure Fund for detailed feasibility studies. No construction financing exists.",
+   "status_date": "2024-01",
+   "summary": "A 278.6 km branch connecting the LAPSSET line at Isiolo to Nairobi, estimated by Kenya Railways at USD 2.392 bn. Transport CS Murkomen named the Nairobi link in August 2023.",
+   "developer": "Kenya Railways / LCDA",
+   "length_km": 278.6,
+   "cost": {
+    "amount": 2392000000,
+    "currency": "USD",
+    "note": "Kenya Railways projection (Sh387.50 bn).",
+    "source": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/railways/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/",
+     "publisher": "Construction Kenya (Kenya Railways figures)",
+     "date": "2024-01-24"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://au-pida.org/prospectus/project.php?id=45",
+     "publisher": "AU PIDA Investment Prospectus (undated)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension",
+     "publisher": "Kenyans.co.ke",
+     "date": "2023-08-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lokichar-lamu-crude-oil-pipeline",
+   "name": "Lokichar–Lamu Crude Oil Pipeline (LLCOP), first phase of the LAPSSET crude oil pipeline",
+   "short": "Lokichar–Lamu crude pipeline",
+   "segment": "pipeline",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Lokichar",
+      35.65,
+      2.38
+     ],
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Garissa",
+      39.65,
+      -0.45
+     ],
+     [
+      "Ijara",
+      40.52,
+      -1.6
+     ],
+     [
+      "Lamu",
+      40.9,
+      -2.27
+     ]
+    ]
+   },
+   "status": "stalled",
+   "status_note": "Dropped from the oilfield plan that Parliament ratified on 25 Feb 2026. Gulf Energy's FDP (submitted 30 Sep 2025) trucks crude about 1,100 km to KPRL Mombasa from Dec 2026, then asks the government for a railway to Lokichar. Parliamentary documents call this 'a strategic shift from earlier plans to build a crude oil pipeline to Lamu' (Business Daily, 10 Mar 2026). The ESIA was never licensed by NEMA, and the National Assembly removed the Sh710m FY2026/27 pipeline allocation (Business Daily, 7 Jun 2026). Treasury says the plan is 'still on' (The Standard, c. May 2026). On 1 Oct 2026 President Ruto said 'we will invest in a pipeline from Turkana to Lamu', linking it to the Dangote Lamu refinery, but announced no financing or contractor.",
+   "status_date": "2026-10",
+   "summary": "A buried, heated pipeline for waxy Turkana crude, running from the South Lokichar fields to Lamu port. LCDA describes it as 821 km long and 20 inches wide, carrying up to 89,000 bpd, at a cost of USD 1.5 bn. Pre-FEED was completed in 2015, and FEED plus the ESIA in 2020. A 2017 joint development agreement paired the Government of Kenya with Tullow, Africa Oil and Total. Africa Oil and Total withdrew in 2023, and Tullow sold out to Gulf Energy in 2025.",
+   "developer": "Government of Kenya (State Department for Petroleum; Pipeline Project Management Team with LCDA). The 2017 JDA partners Tullow, Africa Oil and TotalEnergies have all exited the upstream licences.",
+   "length_km": 821,
+   "cost": {
+    "amount": 1500000000,
+    "currency": "USD",
+    "note": "LCDA's current figure. Gulf Energy's FDP cites an IHS pre-feasibility estimate of USD 1.5 bn, and 2026 parliamentary documents put it at about Sh193 bn. Older figures: USD 1 bn (Enerdata, Feb 2019); USD 1.1–1.2 bn for the Nov 2019 design options (GEM); USD 3 bn for the Lamu–Lokichar trunk line (LCDA brief, July 2016). Reported lengths range from 821 to 895 km.",
+    "source": "https://www.lapsset.go.ke/projects/oil-pipelines/"
+   },
+   "finance": [
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 890000000,
+     "currency": "KES",
+     "year": 2025,
+     "firmness": "pledged",
+     "note": "Treasury estimates for LLCOP feasibility, design and pre-FDP work, up from Sh454m. The article labels these 2024/25 but was published in May 2025, so treat the fiscal year as uncertain. No construction finance has been arranged. A later Sh710m allocation for FY2026/27 was removed by the National Assembly and is not counted here.",
+     "source": "https://eastleighvoice.co.ke/energy%20cabinet%20secretary%20opiyo%20wandayi/151326/treasury-doubles-budget-for-turkana-oil-project-as-kenya-accelerates-path-to-commercial-production",
+     "source_date": "2025-05-17"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/projects/oil-pipelines/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://parliament.go.ke/sites/default/files/2025-11/South%20Lokichar%20Field%20Development%20Plan%20Rev%206.2%20(1)_0.pdf",
+     "publisher": "Gulf Energy E&P BV, South Lokichar FDP Rev 6.2 (tabled in Parliament)",
+     "date": "2025-09-30"
+    },
+    {
+     "url": "https://mzalendo.com/democracy-tools/hansard/wednesday-25th-february-2026-afternoon-sitting-2450/",
+     "publisher": "National Assembly Hansard (via Mzalendo)",
+     "date": "2026-02-25"
+    },
+    {
+     "url": "https://parliament.go.ke/sites/default/files/2026-02/Wednesday,%2025th%20February,%202026%20at%202.30%20p.m..pdf",
+     "publisher": "Senate Hansard (Parliament of Kenya)",
+     "date": "2026-02-25"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2025-11-25-kenya-okays-sh793bn-oil-production-plan",
+     "publisher": "The Star",
+     "date": "2025-11-25"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/kenya-plans-sh220bn-rail-to-transport-turkana-oil-5386682",
+     "publisher": "Business Daily",
+     "date": "2026-03-10"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/treasury-sh10bn-funding-cut-blights-kenya-s-oil-dream-5488356",
+     "publisher": "Business Daily",
+     "date": "2026-06-07"
+    },
+    {
+     "url": "https://www.standardmedia.co.ke/business/business/article/2001547363/lokichar-lamu-crude-pipeline-plan-still-on-says-treasury",
+     "publisher": "The Standard (date not shown, c. May 2026)",
+     "date": "2026-05"
+    },
+    {
+     "url": "https://www.kbc.co.ke/ruto-kenya-dangote-agree-on-turkana-lamu-oil-pipeline/",
+     "publisher": "KBC",
+     "date": "2026-10-01"
+    },
+    {
+     "url": "https://naturaljustice.org/eia-process/lamu-lokichar-crude-oil-pipeline/",
+     "publisher": "Natural Justice EIA tracker (undated)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.enerdata.net/publications/daily-energy-news/tullow-oil-plans-build-new-us1bn-crude-oil-pipeline-kenya.html",
+     "publisher": "Enerdata",
+     "date": "2019-02-26"
+    },
+    {
+     "url": "https://www.engineeringnews.co.za/article/kenya-2019-09-06",
+     "publisher": "Engineering News",
+     "date": "2019-09-06"
+    },
+    {
+     "url": "https://prospect-intel.com/kenya-esia-report-lokichar-lamu-pipeline/",
+     "publisher": "Energy Capital & Power",
+     "date": "2023-01-12"
+    },
+    {
+     "url": "https://www.gem.wiki/Lamu_Port-South_Sudan_(LAPSSET)_Pipeline",
+     "publisher": "Global Energy Monitor wiki (edited 2026-10-12)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://worldoil.com/news/2023/5/23/totalenergies-africa-oil-withdraw-from-kenyan-oil-blocks/",
+     "publisher": "World Oil",
+     "date": "2023-05-23"
+    },
+    {
+     "url": "https://www.kbc.co.ke/tullow-completes-sale-of-kenya-assets-to-gulf-energy-ltd/",
+     "publisher": "KBC",
+     "date": "2025-09-26"
+    }
+   ],
+   "lcda_component": true,
+   "gem": "lamu"
+  },
+  {
+   "id": "south-sudan-lokichar-crude-pipeline",
+   "name": "South Sudan–Lokichar crude oil pipeline (LAPSSET crude pipeline, South Sudan leg)",
+   "short": "South Sudan–Lokichar pipeline",
+   "segment": "pipeline",
+   "countries": [
+    "SS",
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Juba",
+      31.58,
+      4.85
+     ],
+     [
+      "Kapoeta",
+      33.59,
+      4.77
+     ],
+     [
+      "Nakodok/Nadapal",
+      34.27,
+      4.6
+     ],
+     [
+      "Lokichoggio",
+      34.35,
+      4.2
+     ],
+     [
+      "Lodwar",
+      35.6,
+      3.12
+     ],
+     [
+      "Lokichar",
+      35.65,
+      2.38
+     ]
+    ]
+   },
+   "status": "stalled",
+   "status_note": "According to LCDA's July 2016 brief, the Kenya–South Sudan Joint Coordination Commission last met in December 2012. The feasibility study was completed in 2013, and civil war halted further negotiations, so the intergovernmental, host-country and transport agreements were never concluded. No later signed agreement was found. A 3 Oct 2026 opinion piece says the crude pipeline is still at study stage and that a South Sudan spur could join a Turkana–Lamu line near Lokichar. Global Energy Monitor still lists it as proposed (160,000 barrels a day). South Sudan came up as a possible crude supplier to the Dangote refinery at Lamu in President Kiir's talks in Nairobi on 5 October 2026; no agreement was reported.",
+   "status_date": "2026-10",
+   "summary": "This is the original LAPSSET concept: a pipeline carrying South Sudanese crude to Lamu through the Lokichar fields. Japan's Toyota Tsusho said in 2012 that it had completed a feasibility study and was preparing a financing proposal. South Sudan has since stayed on its Sudan export route.",
+   "developer": "Governments of Kenya and South Sudan (Joint Coordination Commission); Toyota Tsusho carried out the 2012 feasibility study",
+   "sources": [
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://www.worldpipelines.com/business-news/14062012/South_Sudan_pipeline_could_soon_be_under_construction/",
+     "publisher": "World Pipelines",
+     "date": "2012-06-14"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/projects/oil-pipelines/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://magazine.feaffa.com/dangotes-lamu-refinery-gives-lapsset-a-second-chance-will-south-sudan-take-it/",
+     "publisher": "FEAFFA magazine (opinion)",
+     "date": "2026-10-03"
+    },
+    {
+     "url": "https://www.gem.wiki/Lamu_Port-South_Sudan_(LAPSSET)_Pipeline",
+     "publisher": "Global Energy Monitor wiki (edited 2026-10-12)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://energy-daily.com/south-sudan-and-kenya-sign-oil-pipeline-deal-999/",
+     "publisher": "AFP via Energy Daily",
+     "date": "2012-01-24"
+    },
+    {
+     "url": "https://pachodo.org/news-from-various-sources/4448-south-sudan-says-oil-pipeline-via-kenya-to-cost-$3-billion",
+     "publisher": "Reuters via Pachodo",
+     "date": "2012-08-10"
+    },
+    {
+     "url": "https://allafrica.com/stories/202610050346.html",
+     "publisher": "Capital FM via allAfrica",
+     "date": "2026-10-05"
+    },
+    {
+     "url": "https://www.news9.africa/international-news/kenya-south-sudan-to-broker-oil-deal-thatll-support-dangote-east-africa-refinery-in-lamu-15336/",
+     "publisher": "News9",
+     "date": "2026-10-05"
+    },
+    {
+     "url": "https://www.theeastafrican.co.ke/tea/news/east-africa/kiir-s-quid-pro-quo-with-ruto-on-polls-dangote-refinery-5626546",
+     "publisher": "The EastAfrican",
+     "date": "2026-10-10"
+    }
+   ],
+   "lcda_component": true,
+   "gem": "juba"
+  },
+  {
+   "id": "lamu-isiolo-addis-product-pipeline",
+   "name": "LAPSSET refined-products pipeline: Lamu–Isiolo (with a Nakuru–Isiolo branch) and Isiolo–Moyale–Hawassa–Addis Ababa",
+   "short": "Lamu–Addis products pipeline",
+   "segment": "pipeline",
+   "countries": [
+    "KE",
+    "ET"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Lamu",
+      40.9,
+      -2.27
+     ],
+     [
+      "Ijara",
+      40.52,
+      -1.6
+     ],
+     [
+      "Garissa",
+      39.65,
+      -0.45
+     ],
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Marsabit",
+      37.99,
+      2.33
+     ],
+     [
+      "Moyale",
+      39.06,
+      3.52
+     ],
+     [
+      "Hawassa",
+      38.48,
+      7.06
+     ],
+     [
+      "Addis Ababa",
+      38.75,
+      9.02
+     ]
+    ]
+   },
+   "status": "announced",
+   "status_note": "A Kenya–Ethiopia bilateral agreement on developing and operating the Lamu Port–Isiolo, Nakuru–Isiolo and Isiolo–Moyale–Hawassa–Addis Ababa products pipeline was signed on 23 June 2016. LCDA says 'bilateral instruments have been signed' for implementation and technical preliminary studies. LCDA's product-pipeline page, since taken offline, was quoted as saying a Kenya Pipeline Company-led technical team for detailed feasibility began forming in June 2019. No study results, cost or funder have been published.",
+   "status_date": "2019-06",
+   "summary": "A planned pipeline to carry refined fuel inland from Lamu to Isiolo and on to southern Ethiopia, in the original plan fed by a Lamu refinery. LCDA's 2016 brief gives a length of about 790 km for Lamu–Isiolo–Moyale–Addis Ababa, which does not reconcile with other published section lengths.",
+   "developer": "Governments of Kenya and Ethiopia; Kenya Pipeline Company-led technical team (2019)",
+   "sources": [
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/projects/oil-pipelines/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.gem.wiki/Kenya-Ethiopia_(LAPSSET)_Pipeline",
+     "publisher": "Global Energy Monitor",
+     "date": "2021-04-30"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "dangote-lamu-refinery",
+   "name": "Dangote East Africa Petroleum Refinery and Petrochemicals complex, Lamu (700,000 bpd, with 1,000 MW power plant)",
+   "short": "Dangote refinery, Lamu",
+   "segment": "energy",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Hindi/Magogoni, near Mokowe, Lamu County (approx.)",
+    "lon": 40.84,
+    "lat": -2.23
+   },
+   "status": "approved",
+   "status_note": "Ground broken on 30 September 2026 by Aliko Dangote with Presidents Ruto and Museveni and Ethiopia's Prime Minister Abiy, and construction equipment has landed at Lamu port. No final investment decision, lenders or signed government equity have been announced. A court ordered the status quo on one parcel claimed by 133 Chandavai residents until a hearing on 14 October 2026. Completion is promised within 40 months.",
+   "status_date": "2026-10",
+   "summary": "A USD 16 bn (Sh2.2 tn), 700,000 bpd single-train refinery with petrochemicals, fertiliser and a 1,000 MW power plant. It sits on about 7,000 acres that the government says is LAPSSET land inside the Lamu SEZ. Dangote Group develops it in partnership with the Africa Finance Corporation. Engineers India holds a USD 450 m engineering contract and Honeywell supplies technology. East African governments are offered 30%, and Kenya proposes 10%.",
+   "developer": "Dangote Group (with Africa Finance Corporation); EPCM/engineering Engineers India Ltd; technology Honeywell",
+   "cost": {
+    "amount": 16000000000,
+    "currency": "USD",
+    "note": "Announced project cost (Sh2.2 tn). African Business and others put the wider refinery-plus-port-and-petrochemicals scheme near USD 20 bn, a figure not confirmed in the sources read.",
+    "source": "https://www.the-star.co.ke/news/2026-09-30-how-sh22-trillion-dangote-refinery-will-change-lamu-and-kenya"
+   },
+   "finance": [
+    {
+     "funder": "Dangote Group",
+     "funder_country": "private",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "pledged",
+     "note": "Sponsor of the USD 16 bn project. Dangote described a 70/30 structure with East African governments (Kenya, Ethiopia, Rwanda named). No debt/equity split or lenders disclosed.",
+     "source": "https://mfaethiopia.blog/2026/10/09/a-week-in-the-horn-124/",
+     "source_date": "2026-10-09"
+    },
+    {
+     "funder": "Africa Finance Corporation",
+     "funder_country": "multilateral",
+     "instrument": "unspecified",
+     "amount": null,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "pledged",
+     "note": "Named as Dangote's development partner. No amount or instrument disclosed.",
+     "source": "https://www.the-star.co.ke/news/2026-09-30-how-sh22-trillion-dangote-refinery-will-change-lamu-and-kenya",
+     "source_date": "2026-09-30"
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "equity",
+     "amount": 500000000,
+     "currency": "USD",
+     "year": 2026,
+     "firmness": "pledged",
+     "note": "Proposed 10% stake (about Sh65 bn). Treasury says negotiations are ongoing. Ruto said public land and the National Infrastructure Fund would be deployed. COFEK has petitioned the PPP Petition Committee over undisclosed terms and a reported Sh21.5 bn 'seed allocation'.",
+     "source": "https://www.kenyans.co.ke/news/127534-cofek-seeks-details-kenyas-ksh65b-stake-dangote-refinery",
+     "source_date": "2026-10-02"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.the-star.co.ke/news/2026-09-30-how-sh22-trillion-dangote-refinery-will-change-lamu-and-kenya",
+     "publisher": "The Star",
+     "date": "2026-09-30"
+    },
+    {
+     "url": "https://www.cnbcafrica.com/2026/dangote-to-begin-construction-of-16-billion-east-africa-refinery-in-kenya",
+     "publisher": "Reuters via CNBC Africa",
+     "date": "2026-09-30"
+    },
+    {
+     "url": "https://africaoilgasreport.com/2026/10/refining-gap/dangote-breaks-the-ground-for-east-african-refinery/",
+     "publisher": "Africa Oil+Gas Report",
+     "date": "2026-10-01"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/127534-cofek-seeks-details-kenyas-ksh65b-stake-dangote-refinery",
+     "publisher": "Kenyans.co.ke",
+     "date": "2026-10-02"
+    },
+    {
+     "url": "https://citizen.digital/article/thousands-of-residents-from-the-magogoni-area-in-lamu-are-asking-the-government-to-provide-them-with-n391376",
+     "publisher": "Citizen Digital",
+     "date": "2026-10-03"
+    },
+    {
+     "url": "https://mfaethiopia.blog/2026/10/09/a-week-in-the-horn-124/",
+     "publisher": "Ethiopia Ministry of Foreign Affairs blog",
+     "date": "2026-10-09"
+    },
+    {
+     "url": "https://new.kenyalaw.org/akn/ke/act/ln/2013/58/eng@2022-12-31",
+     "publisher": "Kenya Law (LCDA Order, LN 58 of 2013)",
+     "date": "2013-03-28"
+    },
+    {
+     "url": "https://www.the-star.co.ke/counties/coast/2026-09-28-lamu-takes-centre-stage-in-kenyas-sh2-trillion-oil-ambition",
+     "publisher": "The Star",
+     "date": "2026-09-28"
+    },
+    {
+     "url": "https://www.billionaires.africa/2026/10/01/africas-richest-man-offers-east-africa-30-of-his-16-billion-kenya-refinery/",
+     "publisher": "Billionaires.Africa",
+     "date": "2026-10-02"
+    },
+    {
+     "url": "https://www.kbc.co.ke/ruto-kenya-dangote-agree-on-turkana-lamu-oil-pipeline/",
+     "publisher": "KBC",
+     "date": "2026-10-01"
+    },
+    {
+     "url": "https://magazine.feaffa.com/dangotes-lamu-refinery-gives-lapsset-a-second-chance-will-south-sudan-take-it/",
+     "publisher": "FEAFFA magazine (opinion)",
+     "date": "2026-10-03"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "rabai-malindi-garsen-lamu-220kv",
+   "name": "Rabai–Malindi–Garsen–Lamu 220 kV transmission line (with 33 kV line to Lamu Port)",
+   "short": "Rabai–Lamu power line",
+   "segment": "energy",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Rabai",
+      39.57,
+      -3.93
+     ],
+     [
+      "Malindi",
+      40.12,
+      -3.22
+     ],
+     [
+      "Garsen",
+      40.12,
+      -2.27
+     ],
+     [
+      "Lamu",
+      40.9,
+      -2.27
+     ]
+    ]
+   },
+   "status": "operating",
+   "status_note": "The Garsen–Lamu section was energised in December 2015, connecting Lamu County to the national grid. LCDA's July 2016 brief reports the Rabai–Hindi (Lamu) 220 kV line and a 33 kV line to Lamu Port as completed.",
+   "status_date": "2016-07",
+   "summary": "A 323 km KETRACO line with substations at Rabai, Malindi, Garsen and Lamu, built by China CAMC Engineering under China Exim Bank's rural electrification programme. It cost Sh9.7 bn, and was justified partly by the power needs of Lamu port. LCDA's LAPSSET brief claims it under 'Electric Power Supply'.",
+   "developer": "KETRACO (contractor: China CAMC Engineering)",
+   "length_km": 323,
+   "cost": {
+    "amount": 9700000000,
+    "currency": "KES",
+    "note": "Total project cost, funded by the Government of Kenya and China Exim Bank (Hapakenya, Dec 2015). Sh9 bn at launch (Business Daily, 2011).",
+    "source": "https://hapakenya.com/2015/12/16/lamu-county-now-connected-national-electricity-grid/"
+   },
+   "finance": [
+    {
+     "funder": "Export-Import Bank of China",
+     "funder_country": "CN",
+     "instrument": "loan",
+     "amount": null,
+     "currency": "KES",
+     "year": 2011,
+     "firmness": "disbursing",
+     "note": "Exim share of the Sh9.7 bn not disclosed in sources read; line completed 2015.",
+     "source": "https://www.businessdailyafrica.com/bd/corporate/companies/lamu-banks-on-sh9bn-rabai-project-for-power--1988404",
+     "source_date": "2011-07-19"
+    },
+    {
+     "funder": "Government of Kenya",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": null,
+     "currency": "KES",
+     "year": 2011,
+     "firmness": "disbursing",
+     "note": "Co-funder of the Sh9.7 bn project; share not disclosed.",
+     "source": "https://hapakenya.com/2015/12/16/lamu-county-now-connected-national-electricity-grid/",
+     "source_date": "2015-12-16"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.businessdailyafrica.com/bd/corporate/companies/lamu-banks-on-sh9bn-rabai-project-for-power--1988404",
+     "publisher": "Business Daily",
+     "date": "2011-07-19"
+    },
+    {
+     "url": "https://hapakenya.com/2015/12/16/lamu-county-now-connected-national-electricity-grid/",
+     "publisher": "Hapakenya",
+     "date": "2015-12-16"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "isiolo-garissa-220kv",
+   "name": "Isiolo–Garba Tulla–Garissa 220 kV transmission line (section of LCDA's planned Lamu–Garissa–Isiolo–Lokichar 220 kV line)",
+   "short": "Isiolo–Garissa power line",
+   "segment": "energy",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "line",
+    "waypoints": [
+     [
+      "Isiolo",
+      37.58,
+      0.35
+     ],
+     [
+      "Garba Tulla",
+      38.52,
+      0.53
+     ],
+     [
+      "Garissa",
+      39.65,
+      -0.45
+     ]
+    ]
+   },
+   "status": "under_construction",
+   "status_note": "The China Exim loan and CAMC contract were signed on 14 July 2017, and AidData lists the project as 'Implementation' with a planned 2018–19 build. No report of completion or energisation was found. LCDA's 2016 brief said the full Lamu–Garissa–Isiolo–Lokichar 220 kV line was 'at the financial negotiation stage'. No financing is reported for the Lamu–Garissa or Isiolo–Lokichar sections.",
+   "status_date": "2017-07",
+   "summary": "A 285 km, 220 kV line with three substations, built by China CAMC Engineering for KETRACO under a KSh13.6 bn (about USD 132m) contract. KETRACO's adviser said it 'would boost power supplies along the Lamu Port South Sudan Ethiopia Transport corridor'.",
+   "developer": "KETRACO / Ministry of Energy (contractor: China CAMC Engineering)",
+   "length_km": 285,
+   "cost": {
+    "amount": 13600000000,
+    "currency": "KES",
+    "note": "Contract value (about USD 132m); AidData lists the contract at USD 131.07m.",
+    "source": "https://www.africa-energy.com/news-centre/article/kenya-camc-build-garissa-isiolo-line"
+   },
+   "finance": [
+    {
+     "funder": "Export-Import Bank of China",
+     "funder_country": "CN",
+     "instrument": "loan",
+     "amount": 134000000,
+     "currency": "USD",
+     "year": 2017,
+     "firmness": "signed",
+     "note": "Commitment dated 14 July 2017; disbursement status unknown.",
+     "source": "https://china.aiddata.org/projects/58387",
+     "source_date": "2026-10-12"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://china.aiddata.org/projects/58387",
+     "publisher": "AidData (China)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://constructionreviewonline.com/news/kenya/chinese-firm-bags-us-134m-power-line-contract-in-kenya",
+     "publisher": "Construction Review Online",
+     "date": "2017-07-18"
+    },
+    {
+     "url": "https://www.africa-energy.com/news-centre/article/kenya-camc-build-garissa-isiolo-line",
+     "publisher": "Africa Energy",
+     "date": "2017-07-28"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    }
+   ],
+   "lcda_component": true,
+   "site_refs": [
+    {
+     "layer": "China (AidData)",
+     "id": 58387
+    }
+   ]
+  },
+  {
+   "id": "isiolo-international-airport",
+   "name": "Isiolo International Airport",
+   "short": "Isiolo airport",
+   "segment": "airport",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Isiolo",
+    "lon": 37.58,
+    "lat": 0.35
+   },
+   "status": "operating",
+   "status_note": "Partly operating. The airport was commissioned in July 2017, but in April 2025 Transport CS Chirchir told the Senate that flood damage to the 1.4 km runway made it unsafe for many aircraft types. In its current state it cannot support cargo and passenger operations, so only non-scheduled flights such as helicopters can land. KAA is waiting on Treasury for another Sh4.8 bn: Sh1.5 bn to rehabilitate the runway, Sh1.5 bn to extend it to 3.5 km, Sh500m for land and Sh300m for drainage.",
+   "status_date": "2025-04",
+   "summary": "A Kenya Airports Authority airport built from 2011 as part of LAPSSET. It has a terminal designed for 125,000 passengers a year, and Sh2.97 bn had been spent by 2025. Northern Construction Company built the terminal. Traffic stayed minimal after the 2020 Somali miraa ban and COVID.",
+   "developer": "Kenya Airports Authority (terminal: Northern Construction Company)",
+   "cost": {
+    "amount": 2970000000,
+    "currency": "KES",
+    "note": "Cumulative spend since 2011 per the Transport CS (Apr 2025). Earlier figures: Sh2.7 bn; 'north of Ksh3.1 bn' (Kenyans.co.ke 2022); phase one KES 1.7 bn (Airport Technology 2017). LCDA says the runway is being upgraded from 1.5 to 2.5 km, which conflicts with the 1.4 km reported in 2025.",
+    "source": "https://eastleighvoice.co.ke/isiolo%20governor%20abdi%20hassan%20guyo-isiolo%20international%20airport-isiolo%20senator%20fatuma%20dullo/136415/isiolo-airport-incomplete-after-14-years-requires-additional-sh4-8-billion-for-full-operation"
+   },
+   "finance": [
+    {
+     "funder": "Kenya Airports Authority (Government of Kenya)",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 2970000000,
+     "currency": "KES",
+     "year": 2017,
+     "firmness": "disbursing",
+     "note": "Cumulative 2011–2025 spend; sources name KAA as developer and no external lender. A further Sh4.8 bn requested from Treasury is not counted. Converted at the 2017 rate, the year the airport opened.",
+     "source": "https://eastleighvoice.co.ke/isiolo%20governor%20abdi%20hassan%20guyo-isiolo%20international%20airport-isiolo%20senator%20fatuma%20dullo/136415/isiolo-airport-incomplete-after-14-years-requires-additional-sh4-8-billion-for-full-operation",
+     "source_date": "2025-04-10"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/projects/airports/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://eastleighvoice.co.ke/isiolo%20governor%20abdi%20hassan%20guyo-isiolo%20international%20airport-isiolo%20senator%20fatuma%20dullo/136415/isiolo-airport-incomplete-after-14-years-requires-additional-sh4-8-billion-for-full-operation",
+     "publisher": "Eastleigh Voice",
+     "date": "2025-04-10"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/77295-why-ksh31-billion-isiolo-international-airport-remains-idle",
+     "publisher": "Kenyans.co.ke",
+     "date": "2022-07-15"
+    },
+    {
+     "url": "https://www.airport-technology.com/projects/isiolo-international-airport/",
+     "publisher": "Airport Technology",
+     "date": "2017-07-31"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "manda-airport-lamu-upgrade",
+   "name": "Manda Airport (Lamu) runway, terminal and apron upgrades",
+   "short": "Manda (Lamu) airport",
+   "segment": "airport",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "point",
+    "place": "Manda Island, Lamu",
+    "lon": 40.913,
+    "lat": -2.252
+   },
+   "status": "operating",
+   "status_note": "In operation. KAA began a Sh200m renovation of the apron, taxiway and runway in March 2021, scheduled to finish by August 2021. Completion is not confirmed in the sources read.",
+   "status_date": "2021-04",
+   "summary": "These are interim works on the existing Lamu airstrip: a Sh600m upgrade that lengthened the runway from 1 km to 2 km, a Sh160m terminal for 200 passengers (by 2016), and the 2021 apron and taxiway works. LCDA's 2016 brief counts 'Preliminary facilities at Manda Airport... including a 2.3 km runway and terminal building' as delivered LAPSSET airport works.",
+   "developer": "Kenya Airports Authority",
+   "cost": {
+    "amount": 960000000,
+    "currency": "KES",
+    "note": "Sum of the reported works: Sh600m runway upgrade and Sh160m terminal (Business Daily, Feb 2016), plus the Sh200m 2021 renovation (The Star, Apr 2021).",
+    "source": "https://www.businessdailyafrica.com/bd/corporate/shipping-logistics/kaa-to-expand-taxiway-apron-at-manda-airstrip--2107436"
+   },
+   "finance": [
+    {
+     "funder": "Kenya Airports Authority (Government of Kenya)",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 600000000,
+     "currency": "KES",
+     "year": 2016,
+     "firmness": "disbursing",
+     "note": "Runway extension to 2 km, completed by Feb 2016. The article names KAA as implementer but not the funding source.",
+     "source": "https://www.businessdailyafrica.com/bd/corporate/shipping-logistics/kaa-to-expand-taxiway-apron-at-manda-airstrip--2107436",
+     "source_date": "2016-02-03"
+    },
+    {
+     "funder": "Kenya Airports Authority (Government of Kenya)",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 160000000,
+     "currency": "KES",
+     "year": 2016,
+     "firmness": "disbursing",
+     "note": "New terminal for 200 passengers, built by Feb 2016.",
+     "source": "https://www.businessdailyafrica.com/bd/corporate/shipping-logistics/kaa-to-expand-taxiway-apron-at-manda-airstrip--2107436",
+     "source_date": "2016-02-03"
+    },
+    {
+     "funder": "Kenya Airports Authority (Government of Kenya)",
+     "funder_country": "KE",
+     "instrument": "budget",
+     "amount": 200000000,
+     "currency": "KES",
+     "year": 2021,
+     "firmness": "disbursing",
+     "note": "Apron, taxiway and runway renovation begun March 2021.",
+     "source": "https://www.the-star.co.ke/news/2021-04-02-sh200m-manda-airport-renovations-begin",
+     "source_date": "2021-04-02"
+    }
+   ],
+   "sources": [
+    {
+     "url": "https://www.businessdailyafrica.com/bd/corporate/shipping-logistics/kaa-to-expand-taxiway-apron-at-manda-airstrip--2107436",
+     "publisher": "Business Daily",
+     "date": "2016-02-03"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2021-04-02-sh200m-manda-airport-renovations-begin",
+     "publisher": "The Star",
+     "date": "2021-04-02"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA, Brief on LAPSSET Corridor Project (July 2016)",
+     "date": "2016-07"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lamu-international-airport",
+   "name": "Lamu International Airport (LAPSSET)",
+   "short": "Lamu international airport",
+   "segment": "airport",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lamu County (site not stated)",
+    "lon": 40.9,
+    "lat": -2.27
+   },
+   "status": "announced",
+   "status_note": "LCDA says the Lamu and Turkana international airports 'are expected to be implemented in the long-run' and are 'at mapping and site planning stage'.",
+   "status_date": "2026-10",
+   "summary": "One of LAPSSET's three planned international airports. No site, cost or funder has been published. The existing Manda airstrip is handled separately.",
+   "developer": "LCDA / Kenya Airports Authority",
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/projects/airports/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "turkana-international-airport",
+   "name": "Turkana International Airport (LAPSSET)",
+   "short": "Turkana international airport",
+   "segment": "airport",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Turkana County (site not specified; Lokichoggio not confirmed)",
+    "lon": 35.6,
+    "lat": 3.12
+   },
+   "status": "announced",
+   "status_note": "LCDA lists it as a long-run project 'at mapping and site planning stage'. LCDA does not say whether this means upgrading Lokichoggio or a new site.",
+   "status_date": "2026-10",
+   "summary": "The third of LAPSSET's planned international airports, around Lake Turkana. No site, cost or funder has been published.",
+   "developer": "LCDA / Kenya Airports Authority",
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/projects/airports/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "high-grand-falls-dam",
+   "name": "High Grand Falls (Kibuka) multipurpose dam on the Tana River",
+   "short": "High Grand Falls dam",
+   "segment": "dam",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Tana River at the Kitui–Tharaka Nithi border (approximate)",
+    "lon": 38.0,
+    "lat": -0.3
+   },
+   "status": "stalled",
+   "status_note": "On 2 July 2025 the PPP Committee terminated GBM's privately initiated proposal under the PPP Act because its Project Development Report 'did not meet a number of key requirements'. Treasury CS Mbadi said on 24 Sep 2025 that 'no project agreement was signed' and that the contracting authority can re-tender competitively. No fresh tender had been reported by October 2026.",
+   "status_date": "2025-09",
+   "summary": "LCDA lists this LAPSSET component as a dam storing about 5.6 bn m3 for water supply, irrigation and roughly 700 MW of power. The National Irrigation Authority signed a private development agreement with the UK's GBM Consortium (with Power China and Portugal's RCP Irrigation) in Sept 2023, under a 30-year build-own-operate PPP for 500–1,000 MW and 400,000 acres of irrigation.",
+   "developer": "National Irrigation Authority (contracting authority); GBM Consortium Ltd (UK) with Power China and RCP Irrigation until the July 2025 termination",
+   "cost": {
+    "amount": 337000000000,
+    "currency": "KES",
+    "note": "Figure at termination (Business Daily, July 2025). Earlier figures: Sh425 bn at the Sept 2023 PDA; Sh235 bn revised (Construction Kenya, Jan 2025); USD 3 bn GBM-led investment (UK government, Nov 2022).",
+    "source": "https://www.businessdailyafrica.com/bd/economy/treasury-cancels-sh337bn-high-grand-falls-dam-project-5114552"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/projects/high-grand-falls-dam/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/economy/treasury-cancels-sh337bn-high-grand-falls-dam-project-5114552",
+     "publisher": "Business Daily",
+     "date": "2025-07-11"
+    },
+    {
+     "url": "https://www.kenyans.co.ke/news/116510-treasury-denies-ksh317-billion-loss-following-termination-high-grand-falls-dam-project",
+     "publisher": "Kenyans.co.ke",
+     "date": "2025-09-24"
+    },
+    {
+     "url": "https://www.the-star.co.ke/news/2023-09-22-uk-firm-kenya-sign-deal-to-construct-sh425-billion-high-grand-falls-dam",
+     "publisher": "The Star",
+     "date": "2023-09-22"
+    },
+    {
+     "url": "https://www.gov.uk/government/news/uk-steps-up-climate-finance-support-for-african-countries",
+     "publisher": "UK Government (GOV.UK)",
+     "date": "2022-11-08"
+    },
+    {
+     "url": "https://www.constructionkenya.com/933/high-grand-falls-dam-kenya/",
+     "publisher": "Construction Kenya",
+     "date": "2025-01-06"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lamu-resort-city",
+   "name": "Lamu Resort City / Lamu metropolis (Mokowe)",
+   "short": "Lamu resort city",
+   "segment": "city",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lamu metropolis around Mokowe; no works",
+    "lon": 40.85,
+    "lat": -2.24
+   },
+   "status": "announced",
+   "status_note": "LCDA still lists resort cities only as 'planned'. In September 2026 Transport CS Chirchir said a new master plan would cover the wider Lamu metropolis, not just the LAPSSET land, and that Manda airstrip would be rebuilt for large aircraft.",
+   "status_date": "2026-09",
+   "summary": "One of three LAPSSET resort cities, proposed at Mokowe and built on Lamu's Swahili heritage, beaches and reserves. An LCDA report quoted in July 2022 costs it at Sh114 bn of a Sh143 bn total for the three cities. That report folds in an SEZ, shipbuilding, warehousing and a refinery on about 2,000 acres. In 2016 LCDA said master planning of the Lamu resort city and metropolis was under way.",
+   "developer": "LCDA (planning)",
+   "cost": {
+    "amount": 114000000000,
+    "currency": "KES",
+    "note": "LCDA report figure via Business Daily, July 2022. Isiolo resort city Sh24 bn and Lake Turkana about Sh5 bn are not included here.",
+    "source": "https://www.businessdailyafrica.com/bd/news/counties/lamu-turkana-isiolo-cities-to-cost-sh143bn-lapsset-3871336"
+   },
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/resort-cities/",
+     "publisher": "LCDA (undated page, accessed 2026-10-12)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://aid.nepad.org/m_assets/uploads/document/15054818871514304844.pdf",
+     "publisher": "LCDA status report, via AUDA-NEPAD AID",
+     "date": "2017-09"
+    },
+    {
+     "url": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+     "publisher": "LCDA brief, via Kenya Vision 2030",
+     "date": "2016-07"
+    },
+    {
+     "url": "https://www.businessdailyafrica.com/bd/news/counties/lamu-turkana-isiolo-cities-to-cost-sh143bn-lapsset-3871336",
+     "publisher": "Business Daily",
+     "date": "2022-07-06"
+    },
+    {
+     "url": "https://www.kbc.co.ke/state-working-on-new-master-plan-for-lamu-port/",
+     "publisher": "KBC",
+     "date": "2026-09-30"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "isiolo-resort-city",
+   "name": "Isiolo Resort City (LAPSSET), Kula Mawe",
+   "short": "Isiolo resort city",
+   "segment": "city",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Kula Mawe, Isiolo County (about 70 km from Isiolo town)",
+    "lon": 37.58,
+    "lat": 0.35
+   },
+   "status": "announced",
+   "status_note": "In June 2017 LCDA told Isiolo County to set aside 10,000 acres at Kula Mawe so master planning could start. LCDA's site still describes the resort cities only as 'planned', with no investor, land title or works reported since.",
+   "status_date": "2017-06",
+   "summary": "A planned tourism city to be built as a public-private partnership worth Sh15 bn, of which Sh6.8 bn would come from private investors (2017 plan). Earlier plans for a site at Kipsing Gap drew objections over displacing elephants.",
+   "developer": "LCDA with Isiolo County (PPP; no investor named)",
+   "cost": {
+    "amount": 15000000000,
+    "currency": "KES",
+    "note": "2017 PPP estimate including Sh6.8 bn private capital; no commitments.",
+    "source": "https://www.constructionkenya.com/2472/isiolo-resort-city/"
+   },
+   "sources": [
+    {
+     "url": "https://www.constructionkenya.com/2472/isiolo-resort-city/",
+     "publisher": "Construction Kenya",
+     "date": "2017-06-14"
+    },
+    {
+     "url": "https://www.lapsset.go.ke/resort-cities/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://vision2030.go.ke/project/development-of-lamu-isiolo-and-turkana-resort-cities/",
+     "publisher": "Vision 2030 Delivery Secretariat (undated)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true
+  },
+  {
+   "id": "lake-turkana-resort-city",
+   "name": "Lake Turkana Resort City (LAPSSET)",
+   "short": "Lake Turkana resort city",
+   "segment": "city",
+   "countries": [
+    "KE"
+   ],
+   "geometry": {
+    "type": "area",
+    "place": "Lake Turkana shore (site not specified)",
+    "lon": 36.0,
+    "lat": 3.0
+   },
+   "status": "announced",
+   "status_note": "The Vision 2030 page says land 'has been identified' but gives no area. LCDA still lists the project as planned.",
+   "status_date": "2026-10",
+   "summary": "The third planned LAPSSET resort city. No site, investor or cost has been published.",
+   "developer": "LCDA",
+   "sources": [
+    {
+     "url": "https://www.lapsset.go.ke/resort-cities/",
+     "publisher": "LCDA (undated page)",
+     "date": "2026-10-12"
+    },
+    {
+     "url": "https://vision2030.go.ke/project/development-of-lamu-isiolo-and-turkana-resort-cities/",
+     "publisher": "Vision 2030 Delivery Secretariat (undated)",
+     "date": "2026-10-12"
+    }
+   ],
+   "lcda_component": true
+  }
+ ],
+ "pledges": [
+  {
+   "funder": "Government of Kenya (LCDA estimate)",
+   "funder_country": "KE",
+   "what": "Construction cost of the seven key LAPSSET infrastructure components in Kenya",
+   "amount": 24500000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2016-07",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+   "note": "Equivalent to 'Kshs. 2.4 Trillion' at 2016 rates. Same brief: Lamu Port (32 berths) about USD 3.1 bn, railway USD 7.1 bn, Lamu-Lokichar crude pipeline about USD 3 bn."
+  },
+  {
+   "funder": "Governments of Kenya, Ethiopia and South Sudan",
+   "funder_country": "KE",
+   "what": "Estimated cost of LAPSSET at its launch",
+   "amount": 25000000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2012-03-02",
+   "source": "https://www.kenyaembassyaddis.org/2012/03/lapsset-launched-in-lamu/",
+   "note": "'Estimated at about $25 billion' (Kenya Embassy Addis Ababa). The same headline figure is still used in 2024-2026 press, e.g. Eastleigh Voice Aug 2024 and Kenyans.co.ke Apr 2025 (about Sh3.2 tn at 2025 rates)."
+  },
+  {
+   "funder": "Government of Kenya",
+   "funder_country": "KE",
+   "what": "Budget when Kibaki revived LAPSSET",
+   "amount": 16000000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2008",
+   "source": "https://africarenewal.un.org/en/magazine/megaproject-rises-east-africa",
+   "note": "Africa Renewal (5 Aug 2016): revived in 2008 with a budget of about USD 16 bn, later 'risen to $24.7 billion'."
+  },
+  {
+   "funder": "LAPSSET (overall)",
+   "funder_country": "KE",
+   "what": "Overall LAPSSET value cited at Lamu berth 1 commissioning",
+   "amount": 25500000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2021-06-28",
+   "source": "https://www.dredgingtoday.com/2021/06/28/new-lamu-port-officially-commissioned/",
+   "note": "'$25.5 billion worth' (Dredging Today). Another version of the headline figure."
+  },
+  {
+   "funder": "Government of Kenya",
+   "funder_country": "KE",
+   "what": "Kenya's spending on LAPSSET corridor projects over the previous decade",
+   "amount": 157000000000,
+   "currency": "KES",
+   "firmness": "estimate",
+   "date": "2022-02-07",
+   "source": "https://mwananchi.co.tz/kenya/news/kenya-seeks-investors-in-bid-to-complete-lapsset-projects-3707370",
+   "note": "'More than Sh157 billion' (Nation, mirrored by Mwananchi). No breakdown. LCDA chair Titus Ibui said Kenya had funded all projects alone and the 2020 tripartite crowdfunding agreement was unimplemented. The only spending-to-date figure found."
+  },
+  {
+   "funder": "Afri Fund Capital",
+   "funder_country": "private",
+   "what": "Planned debt raise for LAPSSET build-out (roads from Lamu to northern Kenya, rail towards Ethiopia)",
+   "amount": 780000000000,
+   "currency": "KES",
+   "firmness": "intention",
+   "date": "2026-04-09",
+   "source": "https://kenyanwallstreet.com/lapsset-buildout",
+   "note": "About USD 6 bn. To be cross-listed on the NSE, LSE and a Middle East or Asian exchange. Business Daily (24 Mar 2026) gave Sh777 bn. No agreement with LCDA or government reported."
+  },
+  {
+   "funder": "Private port concessionaires (via Kenya PPP programme)",
+   "funder_country": "private",
+   "what": "Private investment expected from Phase 1 port concessions (Mombasa Berths 11-14, Mombasa CT1, Lamu Container Terminal + Lamu SEZ)",
+   "amount": 1000000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2026-09-05",
+   "source": "https://uchumi360.com/r/e/kenya-approves-billion-port",
+   "note": "About USD 1 bn per Kenya's 2026 Investment Projects Catalogue, covering all three transactions, of which Mombasa Berths 11-14 is about USD 300 m. Not Lamu-only. Mjengo Hub (Mar 2026) says the state seeks over Sh44 bn of private investment at Lamu for agri-bulk and liquid-bulk terminals."
+  },
+  {
+   "funder": "LCDA (Government of Kenya)",
+   "funder_country": "KE",
+   "what": "LAPSSET railway, all segments (more than 3,000 km)",
+   "amount": 13796000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2026-10-12",
+   "source": "https://www.lapsset.go.ke/railways/",
+   "note": "Current LCDA railway page. Other estimates: USD 16 bn (Kenya Railways, Jan 2024), USD 12 bn (PIDA prospectus), USD 10.4 bn (CCECC 2015 feasibility study)."
+  },
+  {
+   "funder": "Kenya Railways Corporation",
+   "funder_country": "KE",
+   "what": "Lapsset SGR, Kenyan segments, 2,377 km",
+   "amount": 16000000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2024-01-24",
+   "source": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/",
+   "note": "Sum of the Lamu–Isiolo, Isiolo–Moyale, Isiolo–Nakodok, Isiolo–Nairobi and Lamu–Mariakani projections, reported as 'at least' Sh2.4–2.6 trillion."
+  },
+  {
+   "funder": "LCDA and IGAD (NEPAD Infrastructure Project Preparation Facility)",
+   "funder_country": "multilateral",
+   "what": "Financing of detailed-engineering-design stage of the LAPSSET railway",
+   "amount": null,
+   "currency": "USD",
+   "firmness": "MoU",
+   "date": "2016-07",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf",
+   "note": "LCDA–IGAD MoU to access the NEPAD IPPF. No amount stated and no disbursement found. PIDA lists a USD 45m preparation funding gap."
+  },
+  {
+   "funder": "Government of Kenya",
+   "funder_country": "KE",
+   "what": "Turkana–Lamu crude oil pipeline",
+   "amount": null,
+   "currency": "USD",
+   "firmness": "intention",
+   "date": "2026-10-01",
+   "source": "https://www.kbc.co.ke/ruto-kenya-dangote-agree-on-turkana-lamu-oil-pipeline/",
+   "note": "President Ruto said 'we will invest in a pipeline from Turkana to Lamu' after agreeing with Dangote. No amount, structure or timeline was given, and the FY2026/27 budget line was removed."
+  },
+  {
+   "funder": "GBM Engineering-led consortium (UK)",
+   "funder_country": "private",
+   "what": "High Grand Falls dam PPP investment",
+   "amount": 3000000000,
+   "currency": "USD",
+   "firmness": "intention",
+   "date": "2022-11-08",
+   "source": "https://www.gov.uk/government/news/uk-steps-up-climate-finance-support-for-african-countries",
+   "note": "Announced by the UK PM at COP27. The PPP was terminated by Kenya's PPP Committee on 2 July 2025, and no UK Export Finance role was found."
+  },
+  {
+   "funder": "Lamu Road Consortium (Group Five Construction with Development Bank of Southern Africa financing)",
+   "funder_country": "ZA",
+   "what": "KES 62bn contract signed by KeNHA for the 530-km Lamu–Garissa–Isiolo road. DBSA financing to be repaid over 13 years, with 25 years of operation and maintenance by the consortium; construction was due to start in June 2018.",
+   "amount": 62000000000,
+   "currency": "KES",
+   "firmness": "pledged",
+   "date": "2017-11-29",
+   "source": "https://capitalfm.africa/sh62bn-contract-signed-lamu-garissa-isiolo-rd-construction/",
+   "note": "No construction under this deal was found. In 2021 KeNHA instead awarded the government-funded CCCC gravel contract. No record of the consortium contract's termination was found."
+  },
+  {
+   "funder": "Government of Kenya",
+   "funder_country": "KE",
+   "what": "Roads CS Murkomen's estimate of the total cost of the Lamu–Garissa road once upgraded from murram to bitumen, following President Ruto's 2023 directive",
+   "amount": 60000000000,
+   "currency": "KES",
+   "firmness": "estimate",
+   "date": "2024-05-17",
+   "source": "https://www.kenyanews.go.ke/lamu-garissa-highway-set-for-completion-by-february-2025-to-boost-lapsset-corridor/",
+   "note": "Not a contract figure. It overlaps the KES 17.9bn gravel contract."
+  },
+  {
+   "funder": "Government of Kenya",
+   "funder_country": "KE",
+   "what": "President Ruto's figure for the 420-km Isiolo–Garissa–Lamu road under construction",
+   "amount": 27000000000,
+   "currency": "KES",
+   "firmness": "estimate",
+   "date": "2026-02-13",
+   "source": "https://www.the-star.co.ke/counties/north-eastern/2026-02-13-ruto-tours-isiolo-wajir-mandera-road-dismisses-claims-of-stalled-construction",
+   "note": "A figure from a speech; its length and cost do not match the contract records."
+  },
+  {
+   "funder": "African Development Bank Group, Government of Kenya and others",
+   "funder_country": "multilateral",
+   "what": "Headline cost of the Isiolo–Moyale road as commissioned by President Kenyatta",
+   "amount": 420000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2017-07-28",
+   "source": "https://www.thecitizen.co.tz/tanzania/news/africa/kenya-commissions-420m-key-road-in-northern-region-2598208",
+   "note": "Umbrella figure for all four A2 lots. The article credits AfDB and China Exim Bank support. The ILO gives about EUR 320m."
+  },
+  {
+   "funder": "PIDA (AUDA-NEPAD) project sponsors",
+   "funder_country": "multilateral",
+   "what": "LAPSSET railway, about 2,900 km (Kenya 1,200 km, Ethiopia 1,100 km, South Sudan 600 km), full completion targeted December 2043",
+   "amount": 12000000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2026-10-12",
+   "source": "https://au-pida.org/prospectus/project.php?id=45",
+   "note": "Undated PIDA prospectus page; preparation funding gap USD 45m; potential investors listed (AfDB, World Bank, China Exim, EIB, JICA, etc.) have not committed."
+  },
+  {
+   "funder": "Government of South Sudan (estimate)",
+   "funder_country": "SS",
+   "what": "South Sudan–Lamu crude oil pipeline, about 2,000 km",
+   "amount": 3000000000,
+   "currency": "USD",
+   "firmness": "estimate",
+   "date": "2012-08-10",
+   "source": "https://pachodo.org/news-from-various-sources/4448-south-sudan-says-oil-pipeline-via-kenya-to-cost-$3-billion",
+   "note": "Finance Minister Kosti Manibe (Reuters); South Sudan to take equity and offer crude reserves as guarantee. Outdated; construction was to start by June 2013."
+  },
+  {
+   "funder": "Export-Import Bank of China",
+   "funder_country": "CN",
+   "what": "Oil-backed framework for several South Sudan roads, including the Juba–Torit section of the Juba–Nadapal highway",
+   "amount": 1300000000,
+   "currency": "USD",
+   "firmness": "pledged",
+   "date": "2018-02-01",
+   "source": "https://china.aiddata.org/projects/59617",
+   "note": "AidData umbrella record ('Pipeline: Commitment'); repaid from 30,000 bpd of crude via an escrow account under a March 2019 agreement with Shandong Hi-Speed. Most of the money is for non-LAPSSET roads (Juba–Rumbek, Kaya–Yei, etc.); no Juba–Torit works under it were found."
+  },
+  {
+   "funder": "World Bank, AfDB, JICA, Saudi and Qatari funds (per South Sudan's roads minister)",
+   "funder_country": "multilateral",
+   "what": "Juba–Torit–Kapoeta–Nadapal highway",
+   "amount": null,
+   "currency": "USD",
+   "firmness": "intention",
+   "date": "2024-06-28",
+   "source": "https://www.eyeradio.org/construction-of-juba-nadapal-road-to-kick-off-in-dec-2024-mijak/",
+   "note": "Minister Simon Mijok Mijak said 'the World Bank has mobilized a lot of fund' and construction would start in December 2024; it did not, and no financing agreement with any of these funders was found."
+  },
+  {
+   "funder": "Governments of Kenya and South Sudan",
+   "funder_country": "multilateral",
+   "what": "Joint resource mobilisation for the 365 km Juba–Torit–Kapoeta–Nadapal highway",
+   "amount": null,
+   "currency": "USD",
+   "firmness": "intention",
+   "date": "2026-09-02",
+   "source": "https://www.eyeradio.org/south-sudan-kenya-agree-to-mobilise-funds-juba-nadapal-highway/",
+   "note": "Announced by Roads Minister Peter Lam Both after Nairobi talks; no amounts, funders or split."
+  }
+ ],
+ "timeline": [
+  {
+   "date": "1972",
+   "event": "LAPSSET first conceived, then shelved because Kenya could not afford it (Wikipedia gives 1975, uncited).",
+   "source": "https://africarenewal.un.org/en/magazine/megaproject-rises-east-africa"
+  },
+  {
+   "date": "2004-12",
+   "event": "AfDB approves Phase I of the Mombasa–Nairobi–Addis Ababa Road Corridor Project (Isiolo–Merille and studies); the portfolio table dates the Phase I ADF grant 13/12/2004",
+   "source": "https://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Kenya-Ethiopia_-_AR_Road_III_Project_.pdf"
+  },
+  {
+   "date": "2008",
+   "event": "President Mwai Kibaki revives the project with a budget of about USD 16 bn.",
+   "source": "https://africarenewal.un.org/en/magazine/megaproject-rises-east-africa"
+  },
+  {
+   "date": "2009-07",
+   "event": "AfDB Board approves Phase II of the Mombasa–Nairobi–Addis Ababa Road Corridor (ADF loans of UA 85m to Ethiopia and UA 125m to Kenya).",
+   "source": "https://allafrica.com/stories/200907020940.html"
+  },
+  {
+   "date": "2012-01-24",
+   "event": "Kenya and South Sudan sign an MoU in Juba for a crude pipeline from South Sudan's oil fields to Lamu, which South Sudan would build and own.",
+   "source": "https://energy-daily.com/south-sudan-and-kenya-sign-oil-pipeline-deal-999/"
+  },
+  {
+   "date": "2012-03-02",
+   "event": "Kibaki, Ethiopian PM Meles Zenawi and South Sudan President Salva Kiir jointly launch Lamu Port and the LAPSSET corridor at Mokowe, Lamu, laying the foundation stone of the port administration building.",
+   "source": "https://www.kenyaembassyaddis.org/2012/03/lapsset-launched-in-lamu/"
+  },
+  {
+   "date": "2012-12",
+   "event": "Kenya–South Sudan Joint Coordination Commission on the crude pipeline last meets; feasibility completed 2013, talks then halted by South Sudan's civil war.",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+  },
+  {
+   "date": "2013-03-28",
+   "event": "LAPSSET Corridor Development Authority Order (Legal Notice 58 of 2013, State Corporations Act) gazetted and in force; LCDA established.",
+   "source": "https://new.kenyalaw.org/akn/ke/act/ln/2013/58/eng@2022-12-31"
+  },
+  {
+   "date": "2014-08-01",
+   "event": "Contract for the first three Lamu berths signed with a Chinese EPC contractor (CCCC, USD 478.9 m).",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+  },
+  {
+   "date": "2015-06",
+   "event": "LAPSSET endorsed as an AU Presidential Infrastructure Champion Initiative (PICI) project at the AU summit in Johannesburg; it is also admitted as a PIDA project.",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+  },
+  {
+   "date": "2015-06-11",
+   "event": "World Bank approves USD 500m IDA credit for the Lokichar–Nadapal/Nakodok road (EARTTDFP, P148853)",
+   "source": "https://projects.worldbank.org/en/projects-operations/project-detail/P148853"
+  },
+  {
+   "date": "2015-12-16",
+   "event": "Garsen–Lamu section of KETRACO's Rabai–Malindi–Garsen–Lamu line energised, connecting Lamu to the national grid.",
+   "source": "https://hapakenya.com/2015/12/16/lamu-county-now-connected-national-electricity-grid/"
+  },
+  {
+   "date": "2016-06-23",
+   "event": "Kenya and Ethiopia sign the bilateral agreement on the Lamu–Isiolo, Nakuru–Isiolo and Isiolo–Moyale–Hawassa–Addis Ababa products pipeline.",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+  },
+  {
+   "date": "2016-07",
+   "event": "World Bank halts all activities on the South Sudan Juba–Nadapal project after renewed fighting in Juba.",
+   "source": "https://documents1.worldbank.org/curated/en/559411555951544903/pdf/South-Sudan-Eastern-Africa-Regional-Transport-Trade-and-Development-Facilitation-Project.pdf"
+  },
+  {
+   "date": "2017-07",
+   "event": "President Kenyatta commissions the Isiolo–Moyale road (USD 420m headline cost)",
+   "source": "https://www.thecitizen.co.tz/tanzania/news/africa/kenya-commissions-420m-key-road-in-northern-region-2598208"
+  },
+  {
+   "date": "2017-07-14",
+   "event": "China Exim Bank commits a USD 134m loan for the Isiolo–Garissa 220 kV line; China CAMC Engineering signs the construction contract.",
+   "source": "https://china.aiddata.org/projects/58387"
+  },
+  {
+   "date": "2017-11-29",
+   "event": "KeNHA signs KES 62bn Lamu–Garissa–Isiolo contract with the Group Five / DBSA consortium (never built)",
+   "source": "https://capitalfm.africa/sh62bn-contract-signed-lamu-garissa-isiolo-rd-construction/"
+  },
+  {
+   "date": "2018-05-07",
+   "event": "Kenyatta–Abiy communiqué: Kenya to formalise land at Lamu Port given to Ethiopia; joint supervision of the Lamu–Isiolo–Moyale and Moyale–Hawassa–Addis road networks under LAPSSET.",
+   "source": "https://www.businessdailyafrica.com/bd/economy/ethiopia-gets-lamu-land-to-cut-reliance-on-port-of-djibouti-2201396"
+  },
+  {
+   "date": "2018-09-14",
+   "event": "World Bank's South Sudan Juba–Nadapal credit is closed and cancelled with USD 1.84m disbursed.",
+   "source": "https://documents1.worldbank.org/curated/en/559411555951544903/pdf/South-Sudan-Eastern-Africa-Regional-Transport-Trade-and-Development-Facilitation-Project.pdf"
+  },
+  {
+   "date": "2019-11-22",
+   "event": "Lamu–Lokichar crude pipeline ESIA submitted to NEMA (later marked 'Not Approved'; no licence issued).",
+   "source": "https://naturaljustice.org/eia-process/lamu-lokichar-crude-oil-pipeline/"
+  },
+  {
+   "date": "2020-01",
+   "event": "Ministers of Kenya, Ethiopia and South Sudan sign a LAPSSET MoU in Mombasa, presided over by AU High Representative Raila Odinga. It covers joint budgetary allocation, harmonised regulation, joint marketing and crowdfunding.",
+   "source": "https://www.businessdailyafrica.com/bd/economy/kenya-neighbours-turn-to-lapsset-crowdfunding-2276588"
+  },
+  {
+   "date": "2020-12-09",
+   "event": "Kenyatta and Abiy open the Moyale one-stop border post and the 502 km Hawassa–Moyale road.",
+   "source": "https://www.businessdailyafrica.com/bd/news/uhuru-abiy-open-moyale-border-post-to-boost-kenya-ethiopia-trade-3223572"
+  },
+  {
+   "date": "2021-04-19",
+   "event": "KeNHA signs KES 17.9bn contract with CCCC for the 453-km Lamu–Ijara–Garissa package (gravel standard)",
+   "source": "https://www.the-star.co.ke/news/2021-04-19-kenha-signs-sh17-billion-deal-with-chinese-company/"
+  },
+  {
+   "date": "2021-05-20",
+   "event": "President Uhuru Kenyatta commissions Lamu Port berth 1; maiden ship MV CAP Carmel.",
+   "source": "https://www.the-star.co.ke/business/kenya/2022-06-21-phase-1-of-lamu-port-complete-as-second-third-berths-opened"
+  },
+  {
+   "date": "2022-06",
+   "event": "Berths 2 and 3 reported complete and fully operational; Phase 1 done.",
+   "source": "https://www.the-star.co.ke/business/kenya/2022-06-21-phase-1-of-lamu-port-complete-as-second-third-berths-opened"
+  },
+  {
+   "date": "2022-07",
+   "event": "Reported Treasury concession with DP World covering three Lamu berths plus a 500 ha SEZ (and Mombasa, Kisumu), left to the incoming government. Never concluded.",
+   "source": "https://maritime-executive.com/article/a-kenyan-port-deal-could-increase-dp-world-s-presence-in-east-africa"
+  },
+  {
+   "date": "2023-05-23",
+   "event": "TotalEnergies and Africa Oil notify withdrawal from Blocks 10BB, 13T and 10BA; Tullow's interest rises to 100%.",
+   "source": "https://worldoil.com/news/2023/5/23/totalenergies-africa-oil-withdraw-from-kenyan-oil-blocks/"
+  },
+  {
+   "date": "2023-05-28",
+   "event": "Budget for the Lamu–Garissa road cut from KES 2.87bn (FY2022/23) to KES 75m (FY2023/24)",
+   "source": "https://www.businessdailyafrica.com/bd/economy/president-ruto-cuts-lamu-garissa-road-cash-that-g--4249978"
+  },
+  {
+   "date": "2023-06",
+   "event": "Juba–Torit–Kapoeta–Nadapal works stop for lack of funds.",
+   "source": "https://www.radiotamazuj.org/en/news/article/eastern-equatoria-residents-angry-as-highway-construction-stops"
+  },
+  {
+   "date": "2023-08-11",
+   "event": "Kenya and Ethiopia agree to pursue a Lamu–Isiolo–Moyale–Addis Ababa SGR and set up a bilateral LAPSSET steering committee.",
+   "source": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension"
+  },
+  {
+   "date": "2023-09-22",
+   "event": "National Irrigation Authority and GBM Consortium sign a private development agreement for the High Grand Falls dam.",
+   "source": "https://www.the-star.co.ke/news/2023-09-22-uk-firm-kenya-sign-deal-to-construct-sh425-billion-high-grand-falls-dam"
+  },
+  {
+   "date": "2023-11",
+   "event": "High Court (Justice Chacha Mwita) suspends the KPA PPP tender to lease Lamu and Mombasa berths. A consent order in early 2024 later lets the process resume.",
+   "source": "https://www.the-star.co.ke/news/2023-11-28-privatisation-of-mombasa-lamu-ports-halted"
+  },
+  {
+   "date": "2024-02-18",
+   "event": "Nation reports the Lamu–Ijara–Garissa package stalled, contractor off site, KES 9.8bn spent",
+   "source": "https://nation.africa/kenya/news/al-shabaab-ghosts-haunt-sh17-9bn-lapsset-project-4528782"
+  },
+  {
+   "date": "2024-05",
+   "event": "Ethiopian ship MV Abbay II docks at Lamu with 60,000 t of fertiliser, the first transit cargo for Ethiopia via Lamu. Floods had damaged the Lamu-Witu-Garsen road, so it was evacuated by an alternative route.",
+   "source": "https://www.transport.go.ke/cs-tours-lamu-port-landmark-ethiopian-cargo-vessel-docks"
+  },
+  {
+   "date": "2024-07-16",
+   "event": "Kenya's energy ministry rejects Tullow's revised FDP (130,000 bpd via an 895-km pipeline to Lamu) over financing.",
+   "source": "https://oilprice.com/Latest-Energy-News/World-News/Kenyan-Government-Rejects-Tullow-Oils-Field-Plan.html"
+  },
+  {
+   "date": "2024-08-21",
+   "event": "Fourth LAPSSET Ministerial Council in Lamu (21-22 Aug) agrees a 10-year joint corridor strategic plan and a regional coordination mechanism. Ethiopia is to host the next council.",
+   "source": "https://eastleighvoice.co.ke/lappset%20corridor/71186/lapsset-countries-renew-commitment-to-completing-transport-corridor-projects"
+  },
+  {
+   "date": "2024-12-30",
+   "event": "World Bank ISR: Lokichar–Nadapal road and Kainuk bridge complete; credit closes 31 Dec 2024 with the 11-km Nadapal–Nakodok link unbuilt",
+   "source": "https://documents.worldbank.org/curated/en/099123024055547221/text/P148853127687b037195b0180f98a346f86.txt"
+  },
+  {
+   "date": "2025-01-21",
+   "event": "Kenya's Cabinet approves dissolving LCDA among nine state corporations, with functions to go back to ministries; LCDA staff told to suspend activities. Whether the dissolution has taken effect is unconfirmed.",
+   "source": "https://tech-ish.com/2025/01/23/kenya-state-corporations-restructured/"
+  },
+  {
+   "date": "2025-02-27",
+   "event": "President Ruto says he has reached an agreement with Ethiopia for it to use Lamu Port for imports. No signed text published.",
+   "source": "https://capitalfm.africa/ethiopia-to-use-lamu-port-to-move-imports-president-ruto-says/"
+  },
+  {
+   "date": "2025-07-02",
+   "event": "PPP Committee terminates the High Grand Falls dam project with GBM.",
+   "source": "https://www.businessdailyafrica.com/bd/economy/treasury-cancels-sh337bn-high-grand-falls-dam-project-5114552"
+  },
+  {
+   "date": "2025-09-26",
+   "event": "Tullow completes sale of Tullow Kenya BV to Auron Energy E&P (Gulf Energy) for a minimum of USD 120m, keeping a 30% back-in right for future phases.",
+   "source": "https://www.kbc.co.ke/tullow-completes-sale-of-kenya-assets-to-gulf-energy-ltd/"
+  },
+  {
+   "date": "2025-09-30",
+   "event": "Gulf Energy E&P BV submits the South Lokichar FDP to EPRA: trucking to KPRL Mombasa from 1 Dec 2026, rail for 50,000 bpd later; no Lamu pipeline.",
+   "source": "https://parliament.go.ke/sites/default/files/2025-11/South%20Lokichar%20Field%20Development%20Plan%20Rev%206.2%20(1)_0.pdf"
+  },
+  {
+   "date": "2026-02-15",
+   "event": "Transport CS Davis Chirchir declares Lamu Port fully operational after three ships unload at once; projects 1.2 m TEU by 2027.",
+   "source": "https://capitalfm.africa/lamu-port-now-operational-as-kenya-advances-lapsset-vision/"
+  },
+  {
+   "date": "2026-02-25",
+   "event": "National Assembly adopts the joint report approving ratification of the FDP and PSCs for Blocks T6/T7; Senate ratifies 35–0 the same day.",
+   "source": "https://parliament.go.ke/sites/default/files/2026-02/Wednesday,%2025th%20February,%202026%20at%202.30%20p.m..pdf"
+  },
+  {
+   "date": "2026-04-08",
+   "event": "Ministry of Roads: 160-km Garissa–Isiolo road at 64.26% physical progress",
+   "source": "https://www.kenyans.co.ke/news/122389-garissa-isiolo-road-under-lapsset-project-64-complete-ministry-says"
+  },
+  {
+   "date": "2026-06-07",
+   "event": "National Assembly removes the Sh9.84 bn South Lokichar development budget for FY2026/27, including Sh710m for the Lokichar–Lamu pipeline.",
+   "source": "https://www.businessdailyafrica.com/bd/economy/treasury-sh10bn-funding-cut-blights-kenya-s-oil-dream-5488356"
+  },
+  {
+   "date": "2026-08-27",
+   "event": "PPP Committee approves feasibility studies; Lamu Container Terminal and Lamu SEZ move to procurement as one integrated concession.",
+   "source": "https://www.kenyans.co.ke/news/126555-kenya-moves-key-mombasa-lamu-port-assets-ppp-procurement"
+  },
+  {
+   "date": "2026-09-01",
+   "event": "Kenya and South Sudan agree to mobilise resources for the Juba–Torit–Kapoeta–Nadapal highway and reactivate their presidential border committee.",
+   "source": "https://www.eyeradio.org/south-sudan-kenya-agree-to-mobilise-funds-juba-nadapal-highway/"
+  },
+  {
+   "date": "2026-09-30",
+   "event": "Groundbreaking of the USD 16 bn Dangote East Africa refinery on LAPSSET/SEZ land in Lamu, attended by Ruto, Abiy and Museveni. Chirchir announces a new Lamu master plan and six more berths.",
+   "source": "https://www.kbc.co.ke/state-working-on-new-master-plan-for-lamu-port/"
+  },
+  {
+   "date": "2026-10-01",
+   "event": "Ruto says Kenya and Dangote agreed Kenya will invest in a Turkana–Lamu pipeline.",
+   "source": "https://www.kbc.co.ke/ruto-kenya-dangote-agree-on-turkana-lamu-oil-pipeline/"
+  },
+  {
+   "date": "2026-10-03",
+   "event": "MV Hamouna (366 m, about 14,500 TEU) discharges about 5,200 TEU at Lamu for transshipment, a record single-ship discharge for Kenya.",
+   "source": "https://capitalfm.africa/lamu-port-handles-5200-teus-from-single-vessel/"
+  }
+ ],
+ "governance": [
+  {
+   "name": "LAPSSET Corridor Development Authority (LCDA)",
+   "what": "Kenyan state corporation set up by the LCDA Order (Legal Notice 58 of 2013, State Corporations Act) to plan, coordinate and sequence LAPSSET projects with implementing ministries and agencies, and to mobilise funds (budget, donor loans, infrastructure bonds, private finance). HQ is in Nairobi with field offices in Lamu, Isiolo, Lokichogio, Marsabit and Moyale. The Order lists 13 'Projects Components', including a merchant oil refinery at Lamu.",
+   "since": "March 2013",
+   "source": "https://new.kenyalaw.org/akn/ke/act/ln/2013/58/eng@2022-12-31"
+  },
+  {
+   "name": "LCDA dissolution decision",
+   "what": "Cabinet approved dissolving LCDA among nine state corporations on 21 January 2025, its functions to be absorbed by ministries, and staff were told to suspend activities (EastAfrican). In May 2026 the Atlas Institute still described the dissolution as 'proposed'. LCDA's website remains live and no gazette notice was found.",
+   "since": "January 2025",
+   "source": "https://tech-ish.com/2025/01/23/kenya-state-corporations-restructured/"
+  },
+  {
+   "name": "LAPSSET Ministerial Council (Kenya, Ethiopia, South Sudan)",
+   "what": "Tripartite ministerial forum facilitated by UNECA. Earlier meetings in Mombasa and Addis Ababa; 3rd in Juba (May 2023, 'Juba Commitments'); 4th in Lamu (21-22 Aug 2024: 10-year joint strategic plan, regional coordination mechanism). Ethiopia is to host the next; no 5th meeting found as of Oct 2026.",
+   "since": "January 2020 (Mombasa MoU); first meeting date not confirmed",
+   "source": "https://allafrica.com/stories/202305220223.html"
+  },
+  {
+   "name": "LAPSSET Joint Technical Committee and Steering Committee",
+   "what": "Technical-level tripartite committees. The first JTC met in Nairobi on 24-25 Jan 2024 with UNECA and the NEPAD/APRM Kenya Secretariat and agreed terms of reference for governance structures and a Steering Committee.",
+   "since": "January 2024",
+   "source": "https://www.uneca.org/stories/lapsset-initiative-continues-to-gain-momentum-as-the-first-joint-technical-committee-meeting"
+  },
+  {
+   "name": "AU PIDA / PICI listing",
+   "what": "LAPSSET was endorsed as an AU Presidential Infrastructure Champion Initiative project (AU summit, Johannesburg, June 2015) and admitted as a PIDA project. LCDA says the LAPSSET SGR and the crude oil pipeline are in PIDA PAP 2 (2021-2030). PIDA's prospectus lists the LAPSSET Railway at USD 12 bn, sponsored by the transport ministries of Kenya and South Sudan and Ethiopian Railways Corporation.",
+   "since": "June 2015",
+   "source": "https://www.lapsset.go.ke/"
+  },
+  {
+   "name": "Kenya–Ethiopia Bilateral Steering Committee on LAPSSET",
+   "what": "Agreed by the two transport ministers to fast-track the LAPSSET corridor, including the Lamu–Moyale–Addis SGR.",
+   "since": "August 2023",
+   "source": "https://www.kenyans.co.ke/news/92049-murkomen-signs-deal-ethiopia-sgr-extension"
+  },
+  {
+   "name": "Kenya–South Sudan Joint Coordination Commission (crude pipeline)",
+   "what": "Negotiates the intergovernmental, host-country, development and transport agreements for the South Sudan–Lamu crude pipeline. It has been dormant since its last meeting in December 2012.",
+   "since": "December 2012",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+  },
+  {
+   "name": "South Sudan national LAPSSET coordinating structure",
+   "what": "Body announced by Transport Minister Madut Biar Yel to speed up corridor projects; South Sudan's 16 priority LAPSSET projects were endorsed at the same council.",
+   "since": "May 2023 (announced)",
+   "source": "https://allafrica.com/stories/202305220223.html"
+  },
+  {
+   "name": "Kenya Ports Authority (KPA) and PPP Directorate",
+   "what": "KPA owns and operates Lamu Port and is the contracting authority for the Lamu Container Terminal + SEZ concession. KPA is being turned into a public limited company under the Government-Owned Enterprises Act (reported as enacted November 2025), while the National Treasury PPP Directorate runs procurement.",
+   "since": "August 2026 (PPP approval)",
+   "source": "https://uchumi360.com/r/e/kenya-approves-billion-port"
+  },
+  {
+   "name": "Pipeline Project Management Team (PPMT)",
+   "what": "A government team that, jointly with LCDA, develops the Lokichar–Lamu crude pipeline. It ran the ESIA (scoping approved October 2018), and LCDA says it is procuring an EPCM contractor.",
+   "since": "October 2018",
+   "source": "https://naturaljustice.org/eia-process/lamu-lokichar-crude-oil-pipeline/"
+  },
+  {
+   "name": "Gulf Energy E&P BV",
+   "what": "Holds 100% of Blocks T6/T7 (ex-10BB/13T). A PSC addendum (Clause 27(6)) ratified in Feb 2026 gives it exclusive rights to transport Turkana crude to Mombasa and market it.",
+   "since": "September 2025",
+   "source": "https://www.parliament.go.ke/node/25129"
+  }
+ ],
+ "excluded": [
+  {
+   "name": "Lamu coal power plant (Amu Power, 1,050 MW)",
+   "why": "Not a LAPSSET Project Component: it is absent from the LCDA Order's list and from LCDA's current website. LCDA's July 2016 brief mentions it only under 'Electric Power Supply' (government 'awarded concession to Amu Power Ltd') and 'New Corridor Investments' (13 km north of Lamu Port), as a related private investment that berth 1 would serve. The project is dead in practice. The National Environment Tribunal cancelled its licence on 26 June 2019, AfDB withdrew in November 2019, and ICBC, expected to lend about USD 1.2 bn of the roughly USD 2 bn cost, reportedly pulled out in November 2020. Recommend showing it, if at all, as a cancelled related project.",
+   "source": "https://www.vision2030.go.ke/wp-content/uploads/2018/05/LAPSSET-Project-Report-July-2016.pdf"
+  },
+  {
+   "name": "Isiolo–Mandera road (World Bank Horn of Africa Gateway Development Project)",
+   "why": "LCDA's own list of LAPSSET highways (Lamu port access, Lamu–Witu–Garsen, Lamu–Garissa–Isiolo, Isiolo–Moyale–Hawassa, Isiolo–Lokichar–Nadapal–Juba) does not include it. However, a State Department for Transport ToR (Jan 2025) calls it 'a branch line of the LAPSSET corridor'. The 740-km, KES 168bn corridor is financed by the World Bank (508 km), the AfDB (Elwak–Rhamu, 142 km) and Arab banks (Samatar–Wajir, 90 km), with completion targeted for June 2030. Grey zone: its first 77 km, Isiolo–Kulamawe (A10/B84), appears to be the route the LAPSSET Garissa–Isiolo road uses to reach Isiolo. OSM's LAPSSET-tagged ways end near Kulamawe, and KeNHA numbers Isiolo–Kulamawe A10.",
+   "source": "https://transport.go.ke/sites/default/files/2025-01/RSS%20ToR%20for%20Feasibility%20Study%20of%20RSS%20and%20Dryport%2024%20July%202024%20EOI%20REVISED%2030-1-2025.pdf"
+  },
+  {
+   "name": "Lesseru–Kitale (B2) and Morpus–Lokichar (A1) upgrade (AfDB Multinational Kenya–South Sudan road corridor)",
+   "why": "This is the Eldoret–Kitale–Lokichar approach to the A1, not the LAPSSET routing, which reaches Lokichar from Isiolo. LCDA does not list it. AfDB-funded; KeNHA invited bids for Lots 2–3 (Morpus–Kainuk 54 km, Kainuk–Lokichar 75 km, est. KES 24.39bn) on 5 May 2026.",
+   "source": "https://www.kenyans.co.ke/news/123134-kenha-invites-eligible-contractors-construction-129km-kenya-south-sudan-road-section"
+  },
+  {
+   "name": "Modjo–Hawassa expressway (Ethiopia)",
+   "why": "The 202 km toll road from Modjo to Hawassa carries traffic bound for Moyale, but LCDA's LAPSSET road ends at Hawassa and no LCDA, AfDB, World Bank or Ethiopian document calls the expressway LAPSSET. Modjo–Batu (AfDB, Korea Exim USD 228 m) has been open since 2021; Batu–Arsi Negele (World Bank IDA) was 93.7% built in August 2025 and Arsi Negele–Hawassa (China Exim USD 171 m, payments frozen since 2021) 64.2% in July 2024.",
+   "source": "https://documents1.worldbank.org/curated/en/099080425084011416/pdf/P148850-ebec8278-c1a8-4459-ae6a-321f1c726506.pdf"
+  },
+  {
+   "name": "Addis Ababa–Adama Expressway (Addis–Modjo leg of the route to Moyale)",
+   "why": "Carries Addis–Moyale traffic past Modjo but was built as Ethiopia's first expressway on the Djibouti corridor and is never described as LAPSSET; for reference, China Exim lent USD 349m (Nov 2009) for Phase 1 (78 km, completed May 2014) and USD 333m (Sept 2013) split USD 143m Phase 1 and USD 190m Phase 2 (completed Aug 2016); contractor CCCC.",
+   "source": "https://china.aiddata.org/projects/980"
+  },
+  {
+   "name": "Lamu–Mariakani standard gauge railway link",
+   "why": "A coastal link that appears only as a line item (USD 2.57 bn) in Kenya Railways' January 2024 cost projection for the LAPSSET railway; LCDA's railway page does not list it and no study or financing has been reported.",
+   "source": "https://www.constructionkenya.com/11690/lamu-ethiopia-railway/"
+  },
+  {
+   "name": "Rongai (Nakuru)–South Lokichar metre-gauge railway extension (later to Nakodok)",
+   "why": "A Kenya Railways MGR plan that replaces, rather than forms part of, LAPSSET: 640 km, Sh220 bn, due Dec 2031, with feasibility still under way (Mar 2026). It would be extended to Nakodok on the South Sudan border. LAPSSET officials told MPs that removing the pipeline 'would undermine the integrated design of the corridor'.",
+   "source": "https://www.businessdailyafrica.com/bd/economy/kenya-plans-sh220bn-rail-to-transport-turkana-oil-5386682"
+  },
+  {
+   "name": "Crude trucking Lokichar–KPRL Changamwe and KPRL–KOT2 export works (Mombasa)",
+   "why": "Phase 1 of the South Lokichar evacuation route: about 600 insulated trucks, 1,100 km, with storage and pipeline rehab at KPRL and Kipevu Oil Terminal 2. This is the Mombasa route, not LAPSSET.",
+   "source": "https://parliament.go.ke/sites/default/files/2025-11/South%20Lokichar%20Field%20Development%20Plan%20Rev%206.2%20(1)_0.pdf"
+  },
+  {
+   "name": "South Lokichar upstream oil development (Blocks T6/T7, Gulf Energy)",
+   "why": "An upstream oilfield, not a LAPSSET component. It would have fed the Lokichar–Lamu pipeline but now exports via Mombasa. The FDP plans about USD 6.1 bn over 25 years, 20,000 bpd from Dec 2026 and 50,000 bpd by 2032. Baker Hughes supplies well services and SLB the early production facility.",
+   "source": "https://www.the-star.co.ke/news/2025-11-25-kenya-okays-sh793bn-oil-production-plan"
+  },
+  {
+   "name": "Garsen–Bura–Hola–Garissa 220 kV line",
+   "why": "Not named as LAPSSET by its funder or by LCDA in the documents read. It is a China Exim RMB 584m concessional loan (2012) built by China CAMC; construction began Nov 2020. It runs parallel to the planned Lamu–Garissa section.",
+   "source": "https://china.aiddata.org/projects/31087"
+  },
+  {
+   "name": "Loiyangalani–Suswa 400 kV line (Lake Turkana Wind Power)",
+   "why": "Spanish (CESCE-backed) financing plus Government of Kenya; operational since Sept 2018. Neither the funders nor LCDA describe it as LAPSSET.",
+   "source": "https://powerline.net.in/2019/08/01/kenya-based-ketraco-operationalises-400-kv-loiyangalani-suswa-transmission-line/"
+  },
+  {
+   "name": "Uganda–Kenya Crude Oil Pipeline (Hoima–Lokichar–Lamu)",
+   "why": "Abandoned in 2016 when Uganda chose the Tanzania route (EACOP). GEM lists it as cancelled.",
+   "source": "https://www.gem.wiki/Uganda%E2%80%93Kenya_Crude_Oil_Pipeline_(UKCOP)"
+  },
+  {
+   "name": "Paloch–Mathiang–Maiwut–Pagak road (South Sudan–Ethiopia)",
+   "why": "Competing route giving South Sudan access to Djibouti via Gambella; financing agreement signed in Juba on 18 May 2023 by Ethiopia's and South Sudan's finance ministers; not part of LAPSSET.",
+   "source": "https://www.fanamc.com/english/ethiopia-south-sudan-ink-agreement-to-construct-the-paloch-mathiang-maiwut-pagak-road-in-juba/"
+  },
+  {
+   "name": "Addis Ababa–Khartoum–Port Sudan railway study (AfDB and NEPAD-IPPF grants)",
+   "why": "Competing 1,522 km Ethiopia–Sudan rail outlet to the Red Sea (AfDB USD 1.2m ADF grant plus USD 2m NEPAD-IPPF towards a USD 3.4m feasibility study, June 2020), not LAPSSET.",
+   "source": "https://capitalethiopia.com/2020/06/14/afdb-gives-1-2-million-for-ethiopia-sudan-railway-study/?amp=1"
+  },
+  {
+   "name": "South Sudan dry port at Naivasha (Kenya)",
+   "why": "The Kenyan land known to be set aside for South Sudan is at the Naivasha inland container depot on the Mombasa SGR route, not at Lamu Port; operationalising it came up again in the October 2026 Kiir–Ruto talks.",
+   "source": "https://www.theeastafrican.co.ke/tea/news/east-africa/kiir-s-quid-pro-quo-with-ruto-on-polls-dangote-refinery-5626546"
+  },
+  {
+   "name": "Isiolo–Wajir–Mandera fibre backbone (ICT Authority)",
+   "why": "A 741.75 km NOFBI-type backbone whose EIA was gazetted on 3 Feb 2026. A Kenyans.co.ke caption calls the highway 'part of the LAPSSET project', but LCDA's utility page names no specific fibre project, and no funder or cost is given.",
+   "source": "https://www.kenyans.co.ke/news/120397-ict-authority-install-high-speed-optical-fiber-cable-along-isiolo-mandera-highway"
+  },
+  {
+   "name": "'Berths 4-7 under construction' claim",
+   "why": "Appears only in an aggregator (The Project Herald, Aug 2026) citing an unnamed tracker, with no contractor, cost or primary source. Contradicted by KBC (30 Sep 2026), where Chirchir speaks only of planned further berths. Treated as unverified.",
+   "source": "https://www.theprojectherald.com/intelligence/lapsset-corridor-lamu-port-berths-4-7-and-road-development/"
+  }
+ ],
+ "lcda_components": [
+  {
+   "component": "Lamu Port (23-berth port at Manda Bay; anchor project)",
+   "lcda_status": "\"The 1st three births are complete\" (Phase 1); \"Future terminals will include a Liquid-bulk Terminal and an Agri-bulk terminal\"; \"plans are under consideration to have the port operated privately with the Government of Kenya as the landlord.\"",
+   "source": "https://www.lapsset.go.ke/lamu-port/"
+  },
+  {
+   "component": "Highways (Lamu Port access road 10 km; Lamu-Witu-Garsen 113 km; Lamu-Garissa-Isiolo 530 km; Isiolo-Moyale-Hawassa 505 km; Isiolo-Lokichar-Nadapal-Torit-Juba 700 km)",
+   "lcda_status": "No status given per road on the page. Only dated item: the Moyale One Stop Border Post \"was commissioned on the 9th of December 2020.\"",
+   "source": "https://www.lapsset.go.ke/highways/"
+  },
+  {
+   "component": "Oil pipelines: Lokichar-Lamu crude oil pipeline (821 km, 1.5 B$) and Lamu-Isiolo-Moyale-Addis Ababa product oil pipeline",
+   "lcda_status": "Crude: pre-FEED \"complete in 2015\"; FEED and ESIA \"complete in 2020\"; \"in the process of procuring an EPCM Contractor\". Product: \"Bilateral instruments have been signed between Kenya and Ethiopia\" for implementation and technical preliminary studies.",
+   "source": "https://www.lapsset.go.ke/projects/oil-pipelines/"
+  },
+  {
+   "component": "Railways (LAPSSET standard gauge railway, est. USD 13,796 million)",
+   "lcda_status": "\"The Kenyan segment is at feasibility stage (S2B)\"; \"The Ethiopian segment 1 is at pre-feasibility stage (S2A)\"; \"The South Sudanese segment is at enabling environment stage (S0).\"",
+   "source": "https://www.lapsset.go.ke/railways/"
+  },
+  {
+   "component": "Airports (Isiolo, Lamu, Turkana international airports)",
+   "lcda_status": "Isiolo \"completed and commissioned for operations in July 2017\"; \"Ongoing developments are Construction of Freight Cargo Shade Passenger terminal and runway expansion\"; Lamu and Turkana \"at mapping and site planning stage\".",
+   "source": "https://www.lapsset.go.ke/projects/airports/"
+  },
+  {
+   "component": "Resort cities (Lamu, Isiolo, Lake Turkana)",
+   "lcda_status": "\"planned for in Lamu, Isiolo and around Lake Turkana\" (no other status). An LCDA report quoted by Business Daily (6 Jul 2022) costs them at Sh143 bn: Lamu Sh114 bn, Isiolo Sh24 bn, Lake Turkana about Sh5 bn.",
+   "source": "https://www.lapsset.go.ke/resort-cities/"
+  },
+  {
+   "component": "High Grand Falls Dam (River Tana; 5.6 bn m3; 700 MW)",
+   "lcda_status": "Future tense only: \"The dam will be constructed across River Tana.\" No status, cost or funder given.",
+   "source": "https://www.lapsset.go.ke/projects/high-grand-falls-dam/"
+  },
+  {
+   "component": "Special Economic Zones (Lamu Port City SEZ)",
+   "lcda_status": "\"Preliminary planning and investment Framework for Lamu Port City are completed and approved.\" \"The integrated Transport and Infrastructure Master Plan for Lamu Port City and SEZ is also complete.\"",
+   "source": "https://www.lapsset.go.ke/special-economic-zones/"
+  },
+  {
+   "component": "Utility projects (water supply, power supply, fibre optics)",
+   "lcda_status": "Future tense only: water supply \"is set to be developed along the corridor\"; power via \"Construction of the Inner and outer Corridor\"; fibre for communities along the corridor. No status, cost or funder.",
+   "source": "https://www.lapsset.go.ke/utility-projects/"
+  },
+  {
+   "component": "Merchant oil refinery at Lamu",
+   "lcda_status": "Not on the current lapsset.go.ke projects page, but listed as Project Component (g) in the LCDA Order, Legal Notice 58 of 2013, and as component VIII in LCDA's July 2016 project brief. No LCDA status statement found.",
+   "source": "https://new.kenyalaw.org/akn/ke/act/ln/2013/58/eng@2022-12-31"
+  },
+  {
+   "component": "Malindi-Garsen-Lamu Road",
+   "lcda_status": "Listed as Project Component (h) in the LCDA Order (LN 58 of 2013); not a separate entry on the current website (Lamu-Witu-Garsen appears under Highways).",
+   "source": "https://new.kenyalaw.org/akn/ke/act/ln/2013/58/eng@2022-12-31"
+  },
+  {
+   "component": "Isiolo-Maralal-Lokichar Road",
+   "lcda_status": "Listed as Project Component (i) in the LCDA Order (LN 58 of 2013); not on the current website.",
+   "source": "https://new.kenyalaw.org/akn/ke/act/ln/2013/58/eng@2022-12-31"
+  }
+ ],
+ "lamu_port_traffic": [
+  {
+   "period": "2021 (from May)",
+   "vessel_calls": 12,
+   "tonnes": null,
+   "teu": null,
+   "source": "https://topnews.ke/how-lamu-port-is-transforming-trade-and-rivaling-regional-ports/",
+   "note": "TopNews citing KPA records (2026-03-11); same series in Food Business MEA 2026-07-13."
+  },
+  {
+   "period": "2022",
+   "vessel_calls": 4,
+   "tonnes": 6539,
+   "teu": 382,
+   "source": "https://maritime-executive.com/article/kenya-tries-to-jump-start-new-seaport-with-better-equipment-lower-fees",
+   "note": "Tonnes/TEU from Maritime Executive 2024-04-21; calls from TopNews 2026-03-11."
+  },
+  {
+   "period": "2023",
+   "vessel_calls": 36,
+   "tonnes": 37576,
+   "teu": 1779,
+   "source": "https://maritime-executive.com/article/kenya-tries-to-jump-start-new-seaport-with-better-equipment-lower-fees",
+   "note": "Maritime Executive 2024-04-21; 59 calls in total since May 2021 commissioning at that date."
+  },
+  {
+   "period": "2024",
+   "vessel_calls": 20,
+   "tonnes": 74380,
+   "teu": null,
+   "source": "https://www.foodbusinessmea.com/dangote-refinery-aims-to-anchor-lamu-port-accelerate-lapsset-corridor-development/",
+   "note": "Food Business MEA (2026-07-13) gives 20 calls for 2024; TopNews says 20 in the first half only. Tonnes: Kenyans.co.ke 2026-03-19 citing KPA."
+  },
+  {
+   "period": "2025",
+   "vessel_calls": null,
+   "tonnes": 799161,
+   "teu": 55687,
+   "source": "https://www.kbc.co.ke/state-working-on-new-master-plan-for-lamu-port/",
+   "note": "Up 974% in tonnes; KPA figures via KBC 2026-09-30 and Maritime Executive 2026-03-22. TopNews reports 116 calls by July 2025."
+  },
+  {
+   "period": "2026-01 to 2026-03-18",
+   "vessel_calls": 74,
+   "tonnes": null,
+   "teu": null,
+   "source": "https://www.kenyans.co.ke/news/121802-luxury-car-ship-diverts-lamu-kpa-reports-surge-vessel-traffic",
+   "note": "KPA MD at a 18 March 2026 briefing. Surge tied to Gulf/Hormuz disruption (Grimaldi car carriers diverted from Jebel Ali). Search-result text only reports 'over 120 vessels' by 11 May 2026."
+  }
+ ]
+}

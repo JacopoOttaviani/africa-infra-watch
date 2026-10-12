@@ -172,6 +172,22 @@
   td .m{font-size:12px}
   td a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule)}
   td a:hover{border-color:var(--accent)}
+  /* every table sorts on a header click and, when it is long, filters as you type (script at the end) */
+  th .sorter{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;display:inline-flex;align-items:center;gap:5px;text-align:inherit;white-space:nowrap}
+  th .sorter::after{content:"";flex:none;border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.3}
+  th .sorter:hover{color:var(--ink)} th .sorter:hover::after{opacity:.7}
+  th .sorter:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  th[aria-sort=descending] .sorter,th[aria-sort=ascending] .sorter{color:var(--ink)}
+  th[aria-sort=descending] .sorter::after{border-top-color:var(--accent);opacity:1}
+  th[aria-sort=ascending] .sorter::after{border-top-color:transparent;border-bottom-color:var(--accent);margin:-4px 0 0;opacity:1}
+  tr[hidden]{display:none}
+  .tfilter{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:14px}
+  .tfilter + .tbl,.tfilter + table{margin-top:6px}
+  .tfilter input{flex:0 1 300px;min-width:0;font:13px var(--display);color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:6px 9px}
+  .tfilter input::placeholder{color:var(--ink-3)}
+  .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
+  @media print{.tfilter{display:none} th .sorter::after{display:none}}
   .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
   .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
@@ -238,7 +254,7 @@
 </main>
 
 <footer class="wrap foot">
-  made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="__WEB_URL__" target="_blank" rel="noopener noreferrer">Web</a>)
+  __SITE_NAME__ · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="__WEB_URL__" target="_blank" rel="noopener noreferrer">Web</a>)
   · <a href="__HOME_URL__">Map</a> · <a href="__HOME_URL__dashboard.html">Dashboard</a> · <a href="__HOME_URL__#t=m">Methodology</a>
   · this page's data: <a href="__DATA_URL__">__DATA_FILE__</a> · built __BUILT__
 </footer>
@@ -370,4 +386,111 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
     svg.appendChild(el("line", {x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: "var(--ink-3)", "stroke-width": 1}));
   }
 });
+
+/* ================= tables: sort on a header click, filter as you type =================
+   Every table on a reading page: a header is a button that sorts by its column, largest
+   first for figures and A to Z for words, then the other way, then back to the page's own
+   order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
+   gets a box above it that keeps the rows containing every word typed. A row of class
+   "grow" is a group heading: rows sort within their group, and a filter that names the
+   group keeps it whole. Tables a page draws or redraws later (the comparison's) are
+   picked up as they appear, and keep their sort and filter across redraws. */
+{
+  const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
+  const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
+  const NUMLIKE = /^[<>~≈]?\s*[-−]?[\d,]*\.?\d+\s*(%|×|bn|m)?$/;
+  const state = new Map();
+  const keyOf = t => {
+    const host = t.parentElement.closest("[id]");
+    return (host ? host.id : "") + ":" + [...(host || document).querySelectorAll("table")].indexOf(t);
+  };
+
+  function enhance(t) {
+    if (t.dataset.tt || !t.tHead || !t.tBodies[0]) return;
+    t.dataset.tt = "1";
+    const head = t.tHead.rows[t.tHead.rows.length - 1], body = t.tBodies[0];
+    const all = [...body.rows], isGroup = r => r.classList.contains("grow");
+    const data = all.filter(r => !isGroup(r));
+    if (data.length < 2) return;
+    const val = (r, c) => { const s = r.cells.length > c && r.cells[c].colSpan === 1 ? r.cells[c].textContent.trim() : ""; return MISSING.test(s) ? null : s; };
+    const filled = [...head.cells].map((th, c) => data.map(r => val(r, c)).filter(v => v != null));
+    const cols = [...head.cells].map((th, c) =>
+      th.classList.contains("num") || (filled[c].length > 0 && filled[c].every(v => NUMLIKE.test(v))));
+    let group = null;
+    all.forEach((r, i) => { r.dataset.i = i; if (isGroup(r)) group = r; r._t = fold((group && !isGroup(r) ? group.textContent + " " : "") + r.textContent); });
+    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: ""};
+    state.set(key, st);
+
+    let input = null, count = null;
+    if (data.length > 8) {
+      const bar = document.createElement("div");
+      bar.className = "tfilter";
+      input = document.createElement("input");
+      input.type = "search";
+      input.placeholder = `Filter these ${data.length} rows`;
+      input.setAttribute("aria-label", "Filter the rows of: " + (t.caption ? t.caption.textContent.trim().slice(0, 90) : "this table"));
+      input.value = st.q;
+      count = document.createElement("span");
+      count.className = "tcount";
+      count.setAttribute("aria-live", "polite");
+      bar.append(input, count);
+      const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
+      box.before(bar);
+      input.addEventListener("input", () => { st.q = input.value; apply(); });
+    }
+
+    [...head.cells].forEach((th, c) => {
+      if (!filled[c].length) return;       // a column of bars or icons has nothing to sort by
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "sorter";
+      while (th.firstChild) b.appendChild(th.firstChild);
+      th.appendChild(b);
+      b.addEventListener("click", () => {
+        const first = cols[c] ? -1 : 1;     // figures largest first, words A to Z
+        if (st.col !== c) { st.col = c; st.dir = first; }
+        else if (st.dir === first) st.dir = -first;
+        else { st.col = -1; st.dir = 0; }
+        apply();
+      });
+    });
+
+    function apply() {
+      const groups = [{head: null, rows: []}];
+      for (const r of all) { if (isGroup(r)) groups.push({head: r, rows: []}); else groups[groups.length - 1].rows.push(r); }
+      if (st.col >= 0) {
+        const c = st.col, num = cols[c];
+        const cmp = (a, b) => {
+          const x = val(a, c), y = val(b, c);
+          if (x == null || y == null) return (x == null) - (y == null) || a.dataset.i - b.dataset.i;
+          const d = num ? (numOf(x) ?? 0) - (numOf(y) ?? 0) : x.localeCompare(y, undefined, {numeric: true, sensitivity: "base"});
+          return st.dir * d || a.dataset.i - b.dataset.i;
+        };
+        groups.forEach(g => g.rows.sort(cmp));
+      }
+      const words = fold(st.q).split(/\s+/).filter(Boolean);
+      let shown = 0;
+      const frag = document.createDocumentFragment();
+      for (const g of groups) {
+        let any = false;
+        for (const r of g.rows) { r.hidden = !words.every(w => r._t.includes(w)); if (!r.hidden) { shown++; any = true; } }
+        if (g.head) { g.head.hidden = !any; frag.append(g.head); }
+        frag.append(...g.rows);
+      }
+      body.append(frag);
+      [...head.cells].forEach((th, c) => { if (filled[c].length) th.setAttribute("aria-sort", c !== st.col ? "none" : st.dir > 0 ? "ascending" : "descending"); });
+      if (count) count.textContent = !words.length ? "" : shown ? `${shown.toLocaleString("en")} of ${data.length.toLocaleString("en")} rows` : "no row matches";
+    }
+    apply();
+  }
+
+  document.querySelectorAll("table").forEach(enhance);
+  new MutationObserver(ms => {
+    for (const m of ms) for (const n of m.addedNodes) {
+      if (n.nodeType !== 1 || n.nodeName === "TR") continue;
+      if (n.nodeName === "TABLE") enhance(n); else n.querySelectorAll("table").forEach(enhance);
+    }
+  }).observe(document.body, {childList: true, subtree: true});
+}
 </script>
