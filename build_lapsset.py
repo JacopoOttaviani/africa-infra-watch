@@ -147,7 +147,8 @@ def basemap():
     out.append(f'<path class="adm" d="{path_d(adm, eps=0.8)}"></path>')
     for lk in bm["lakes"]:
         if any(in_window(x, y) for ring in lk["r"] for x, y in ring):
-            out.append(f'<path class="lake" d="{path_d(lk["r"], closed=True)}"><title>{esc(lk["n"])}</title></path>')
+            name = f'<title>{esc(lk["n"])}</title>' if lk.get("n") else ""     # a few small lakes have no name
+            out.append(f'<path class="lake" d="{path_d(lk["r"], closed=True)}">{name}</path>')
     # the larger rivers only, and the Tana, on whose lower course the High Grand Falls dam is planned
     rivers = [r["c"] for r in bm["rivers"] if r.get("n") and (r["s"] <= 6 or r["n"] == "Tana")
               and any(in_window(x, y, 0) for x, y in r["c"])]

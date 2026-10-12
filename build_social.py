@@ -223,11 +223,10 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     mark = mark.replace('width="1em" height="1em"', 'width="46" height="46" x="64" y="52"', 1)
     mark = mark.replace('id="aiw-cut"', 'id="soc-cut"').replace('url(#aiw-cut)', 'url(#soc-cut)')
     out.append(f'<g color="{C["accent"]}">{mark}</g>')
-    out.append(f'<text x="124" y="83" class="kicker">{SITE_NAME}</text>')
+    out.append(f'<text x="124" y="83" class="kicker">Geopolitics of Africa</text>')
 
-    out.append(f'<text x="62" y="200" class="title">Africa</text>')
-    out.append(f'<text x="62" y="276" class="title">Infrastructure</text>')
-    out.append(f'<text x="62" y="352" class="title">Map</text>')
+    for i, word in enumerate(SITE_NAME.split()):   # one word a line
+        out.append(f'<text x="62" y="{200 + 76 * i}" class="title">{word}</text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
     out.append('<text x="64" y="430" class="sub">the continent, from ten open datasets.</text>')
 

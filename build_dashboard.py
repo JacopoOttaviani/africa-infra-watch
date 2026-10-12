@@ -22,7 +22,7 @@ import sys
 from fetch_basemap import WIN, dp, ring_area, rnd, touches
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
     DASHBOARD_LAYERS, DOCS, EUR_USD, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
-    payload_meta, site_facts, wrap_document,
+    SITE_NAME, payload_meta, site_facts, wrap_document,
 )
 
 ROOT = pathlib.Path(__file__).parent
@@ -763,7 +763,7 @@ def main():
     # GitHub Pages copy: a complete document rather than an artifact fragment.
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
-        page, title="Africa Infrastructure Map", path="dashboard.html", kind="dashboard",
+        page, title=SITE_NAME, path="dashboard.html", kind="dashboard",
         facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei),
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "

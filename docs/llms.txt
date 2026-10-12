@@ -10,11 +10,11 @@ Site: https://jacopoottaviani.com/africa-infra-watch/
 
 ## Pages
 
-- [Africa Infrastructure Map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
+- [Africa Project Atlas, map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Map, dashboard view](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
+- [Africa Project Atlas, dashboard view](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
 - [Russia in Africa's infrastructure](https://jacopoottaviani.com/africa-infra-watch/russia/): What the open data holds on Russian money in African infrastructure: sovereign debt owed to the Russian Federation by every African government (World Bank International Debt Statistics), the energy assets with a Russian vendor or shareholder (Global Energy Monitor), Rosatom's nuclear agreements and the Bank of Russia's investment stocks, country by country. Data: https://jacopoottaviani.com/africa-infra-watch/data/donors/russia.json
 - [Turkey in Africa's infrastructure](https://jacopoottaviani.com/africa-infra-watch/turkey/): What the open data holds on Turkish money in Africa: Turkey's aid activities country by country from the OECD's Creditor Reporting System, net ODA by recipient, Turkish direct-investment stock by African country, sovereign debt owed to Turkey (World Bank International Debt Statistics), the power units with a Turkish owner in Global Energy Monitor's tracker, and the works that Türk Eximbank, Summa, Yapı Merkezi and Karpowership place on the map themselves. Data: https://jacopoottaviani.com/africa-infra-watch/data/donors/turkey.json

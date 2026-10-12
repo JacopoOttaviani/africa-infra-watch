@@ -700,7 +700,7 @@ def structured_data(facts, *, path, title, description, kind):
     graph = [website, person, page, dataset, *parts]
     if path:
         graph.append({"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Africa Infrastructure Map", "item": SITE_URL},
+            {"@type": "ListItem", "position": 1, "name": SITE_NAME, "item": SITE_URL},
             {"@type": "ListItem", "position": 2, "name": "Dashboard" if kind == "dashboard" else title, "item": site_url(path)}]})
     return {"@context": "https://schema.org", "@graph": graph}
 
@@ -804,7 +804,7 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geopolitics of Africa: {t} · {q(SITE_NAME)}</title>
+<title>Geopolitics of Africa: {t}{"" if title == SITE_NAME else " · " + q(SITE_NAME)}</title>
 <meta name="description" content="{d}">
 <meta name="keywords" content="{q(", ".join(KEYWORDS))}">
 <meta name="author" content="{q(AUTHOR_NAME)}">
@@ -886,11 +886,11 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [Africa Infrastructure Map]({SITE_URL}): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
+- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infrastructure Map, dashboard view]({site_url('dashboard.html')}): the same records as a page
+- [{SITE_NAME}, dashboard view]({site_url('dashboard.html')}): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
 {donor_pages}{"- [Debt: who African governments owe, creditor by creditor](" + site_url("debt/") + "): World Bank International Debt Statistics by creditor, with a card on the dashboard. Data: " + site_url("data/debt.json") + chr(10) if (DOCS / "debt" / "index.html").exists() else ""}{"- [Compare the lenders](" + site_url("compare/") + "): the seven lender profiles side by side, with filters by lender, region or country, year and measure: where each one's money goes (small-multiple maps and a who-leads-where map), what it funds (sector mix), how it is lent (grants, loans, delivery channels, concentration) and how its exposure moved since 2000. Data: " + site_url("data/compare.json") + chr(10) if (DOCS / "compare" / "index.html").exists() else ""}{"- [Africa's strategic corridors](" + site_url("corridors/") + "): a hand-kept register of Africa's main cross-border transport and energy corridors (LAPSSET, Lobito, TAZARA, the standard gauge railways, EACOP, the Saharan and Atlantic gas pipelines and others), on one map, piece by piece, with each piece's stage and who lends for, owns and builds it, every line sourced. Data: " + site_url("data/corridors.json") + chr(10) if (DOCS / "corridors" / "index.html").exists() else ""}
 ## Data

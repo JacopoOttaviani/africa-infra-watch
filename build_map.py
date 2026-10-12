@@ -39,7 +39,7 @@ from build_dashboard import (  # noqa: E402
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
-    DOCS, brand_assets, inline_vendor, load_meta, payload_meta, site_facts, wrap_document,
+    DOCS, SITE_NAME, brand_assets, inline_vendor, load_meta, payload_meta, site_facts, wrap_document,
     write_site_index,
 )
 
@@ -314,7 +314,7 @@ def main():
     # draw a layer with zero records.
     digest = hashlib.sha1(blob.encode()).hexdigest()[:10]
     loader = f'''<div class="loading" id="loading" role="status">
-  <div class="lbox"><b>Africa Infrastructure Map</b>
+  <div class="lbox"><b>{SITE_NAME}</b>
   <span>Loading the basemap and {n_records:,} records, about {len(blob.encode()) / 1024 / 1024:.0f} MB…</span><i></i></div>
 </div>
 <script>
@@ -340,7 +340,7 @@ async function loadPayload(){{
     (DOCS / "data").mkdir(exist_ok=True)
     facts = site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei)
     (DOCS / "index.html").write_text(wrap_document(
-        pages, title="Africa Infrastructure Map", path="", kind="map", facts=facts,
+        pages, title=SITE_NAME, path="", kind="map", facts=facts,
         description="Interactive open-data map of infrastructure across Africa: power plants and "
                     "oil and gas pipelines (Global Energy Monitor), African Development Bank "
                     "and World Bank projects, Chinese-financed infrastructure 2000–2021 (AidData), "
