@@ -182,7 +182,7 @@ One page per lending country or bloc, at `docs/<slug>/` (served at
 button of the top bar on the map, the dashboard and every reading page. It is
 named apart from the rail's Lenders filter on purpose: the filter narrows the
 map, the menu leaves it. Its panel lists the themes first (`DEEP_THEMES`: the
-debt section and the comparison of seven lenders), then the profiles, single
+debt section, the comparison of seven lenders and the strategic corridors), then the profiles, single
 countries apart from groups of countries (`DONOR_BLOCS`). On the map and the
 dashboard every entry opens in a new tab, and the panel says so, so the
 reader's filters and view stay put; on a reading page entries open in the same

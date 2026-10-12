@@ -230,6 +230,7 @@ DONOR_BLOCS = ("eu", "gulf", "nordics")
 DEEP_THEMES = [
     ("debt", "Who Africa owes", "Debt by creditor, 2000–2024, from the World Bank", "debt.json"),
     ("compare", "Seven lenders side by side", "Debt, aid and what each one builds, compared", "donors"),
+    ("corridors", "Africa's strategic corridors", "Railways, ports and pipelines: who pays and who builds", "corridors.json"),
 ]
 
 DEEP_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/>'
@@ -308,7 +309,7 @@ def donor_nav(current=None):
     blocs = sorted((d for d in DONORS if d["slug"] in DONOR_BLOCS), key=lambda d: d["name"])
     here = next((d["name"] for d in DONORS if d["slug"] == current), None) or \
         next((t for slug, t, _, _ in DEEP_THEMES if slug == current), "")
-    short = {"debt": "Debt", "compare": "Compare"}.get(current, here)
+    short = {"debt": "Debt", "compare": "Compare", "corridors": "Corridors"}.get(current, here)
     body = ""
     if themes:
         body += ('<span class="lm-gl">Themes</span><div class="lm-themes">' + "".join(
@@ -853,6 +854,7 @@ def write_site_index(facts):
             *[(d["slug"] + "/", "monthly", "0.8") for d in DONORS],
             *([("debt/", "monthly", "0.8"), ("data/debt.json", "monthly", "0.3")] if (DOCS / "debt" / "index.html").exists() else []),
             *([("compare/", "monthly", "0.8"), ("data/compare.json", "monthly", "0.3")] if (DOCS / "compare" / "index.html").exists() else []),
+            *([("corridors/", "monthly", "0.8"), ("data/corridors.json", "monthly", "0.3")] if (DOCS / "corridors" / "index.html").exists() else []),
             *[("data/donors/" + d["slug"] + ".json", "monthly", "0.3") for d in DONORS],
             ("llms.txt", "monthly", "0.3"),
             ("data/meta.json", "monthly", "0.2"), ("data/map.json", "monthly", "0.2")]
@@ -890,7 +892,7 @@ Site: {SITE_URL}
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
 - [Africa Infrastructure Map, dashboard view]({site_url('dashboard.html')}): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
-{donor_pages}{"- [Debt: who African governments owe, creditor by creditor](" + site_url("debt/") + "): World Bank International Debt Statistics by creditor, with a card on the dashboard. Data: " + site_url("data/debt.json") + chr(10) if (DOCS / "debt" / "index.html").exists() else ""}{"- [Compare the lenders](" + site_url("compare/") + "): the seven lender profiles side by side, with filters by lender, region or country, year and measure: where each one's money goes (small-multiple maps and a who-leads-where map), what it funds (sector mix), how it is lent (grants, loans, delivery channels, concentration) and how its exposure moved since 2000. Data: " + site_url("data/compare.json") + chr(10) if (DOCS / "compare" / "index.html").exists() else ""}
+{donor_pages}{"- [Debt: who African governments owe, creditor by creditor](" + site_url("debt/") + "): World Bank International Debt Statistics by creditor, with a card on the dashboard. Data: " + site_url("data/debt.json") + chr(10) if (DOCS / "debt" / "index.html").exists() else ""}{"- [Compare the lenders](" + site_url("compare/") + "): the seven lender profiles side by side, with filters by lender, region or country, year and measure: where each one's money goes (small-multiple maps and a who-leads-where map), what it funds (sector mix), how it is lent (grants, loans, delivery channels, concentration) and how its exposure moved since 2000. Data: " + site_url("data/compare.json") + chr(10) if (DOCS / "compare" / "index.html").exists() else ""}{"- [Africa's strategic corridors](" + site_url("corridors/") + "): a hand-kept register of Africa's main cross-border transport and energy corridors (LAPSSET, Lobito, TAZARA, the standard gauge railways, EACOP, the Saharan and Atlantic gas pipelines and others), on one map, piece by piece, with each piece's stage and who lends for, owns and builds it, every line sourced. Data: " + site_url("data/corridors.json") + chr(10) if (DOCS / "corridors" / "index.html").exists() else ""}
 ## Data
 
 The compiled payload the map draws, one JSON with column-wise layers:

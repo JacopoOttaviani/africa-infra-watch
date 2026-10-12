@@ -6,10 +6,10 @@ data/corridors.json.
 
     python3 build_corridors.py
 
-The page is not linked from the site yet: it is in no menu, not in the
-sitemap or llms.txt, and its <meta robots> says noindex, nofollow. To
-announce it, add it to DEEP_THEMES and write_site_index() in shared.py,
-add this script to refresh.py's build list and drop the NOINDEX swap below.
+The page is a theme of the Deep dives menu (DEEP_THEMES in shared.py), in
+the sitemap and llms.txt, and refresh.py builds it with the others. A
+corridor with a deep dive of its own links to it only once that page is
+published, that is in DEEP_THEMES too.
 
 The register is curated by hand, not fetched. A corridor is in it when a
 published priority list names it (the EU's Global Gateway strategic
@@ -45,8 +45,11 @@ from build_donors import FRAME, table, td
 from build_donors import NAMES
 from build_lobito import (STAGES, STATUS, _mid, clip_ring, esc, host, simplify, src_link, st,
                           stage_strip)
-from shared import (AUTHOR_NAME, AUTHOR_URL, DATA, DOCS, EUR_USD, SITE_NAME, SITE_URL, WEB_URL,
+from shared import (AUTHOR_NAME, AUTHOR_URL, DATA, DEEP_THEMES, DOCS, SITE_NAME, SITE_URL, WEB_URL,
                     brand_assets, fmt_date, site_url, today, wrap_document)
+
+# the deep dives a corridor may link to: those in the menu
+PUBLISHED = {slug for slug, *_ in DEEP_THEMES}
 
 ROOT = pathlib.Path(__file__).parent
 SRC = DATA / "corridors.json"
@@ -440,6 +443,56 @@ def cor_tip(cor, num):
     return f'<b>{num[cor["id"]]}. {cor["name"]}</b>' + "<br>".join(esc(t) for t in bits)
 
 
+# ---------------------------------------------------------- the locator
+
+# A small map of the whole continent beside the lede, as on the Lobito
+# page: the 1:110m basemap, the countries the corridors cross shaded, every
+# piece drawn in its stage's colour, dashed while it is only planned.
+LOC_LON0, LOC_LON1, LOC_LAT0, LOC_LAT1 = -18.5, 52.5, -35.5, 38.0
+LOC_SC = 5.0
+LOC_W, LOC_H = (LOC_LON1 - LOC_LON0) * LOC_SC, (LOC_LAT1 - LOC_LAT0) * LOC_SC
+
+
+def lxy(lon, lat):
+    return round((lon - LOC_LON0) * LOC_SC, 1), round((LOC_LAT1 - lat) * LOC_SC, 1)
+
+
+def locator(P, gem, rail):
+    bm = json.loads((DATA / "africa_basemap.json").read_text())
+    crossed = {cc for c in P for cc in c["countries"]}
+
+    def d_of(lines, closed=False, eps=0.4):
+        out = []
+        for ln in lines:
+            pts = simplify([lxy(a, b) for a, b in ln], eps)
+            if len(pts) >= (3 if closed else 2):
+                out.append("M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) + (" Z" if closed else ""))
+        return " ".join(out)
+    out = [f'<svg class="loc" viewBox="0 0 {LOC_W:.0f} {LOC_H:.0f}" role="img" aria-label="Map of Africa with '
+           f'the {len(crossed)} countries the corridors cross shaded and the {len(P)} corridors drawn, coloured by '
+           f'how far each piece has got">']
+    # the crossed countries last, so their outline sits on top of their neighbours'
+    for c in sorted(bm["countries"], key=lambda c: c["iso"] in crossed):
+        d = d_of([ring for poly in c["p"] for ring in poly], closed=True)
+        out.append(f'<path class="lc{" on" if c["iso"] in crossed else ""}" d="{d}"><title>{esc(c["n"])}</title></path>')
+    segs = sorted(((c, s) for c in P for s in c["segments"]), key=lambda t: DRAW_RANK[t[1]["status"]])
+    for c, s in segs:
+        lines = seg_lines(s, gem, rail)
+        if lines:
+            out.append(f'<path class="ll {s["status"]}" d="{d_of(lines, eps=0.6)}"><title>{esc(c["short"])}: '
+                       f'{esc(s["name"])}</title></path>')
+    for c, s in segs:
+        if seg_point(s):
+            x, y = lxy(*seg_point(s))
+            out.append(f'<circle class="lp {s["status"]}" cx="{x}" cy="{y}" r="2"><title>{esc(c["short"])}: '
+                       f'{esc(s["name"])}</title></circle>')
+    for name, lon, lat in (("Atlantic", -11.0, -15.0), ("Indian Ocean", 45.0, -28.5)):
+        x, y = lxy(lon, lat)
+        out.append(f'<text class="lsea" x="{x}" y="{y}" text-anchor="middle">{name}</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
 # ----------------------------------------------------------- the page parts
 
 def gdot(g):
@@ -505,7 +558,7 @@ def board(P, num):
                          f'{(" · " + esc(cost["note"])) if cost.get("note") else ""} {src_link(cost["source"], "↗")}</span>'
                          if cost and cost.get("amount") else "")
             deep = (f'<a class="deep" href="{esc(c["deep_dive"])}">The full register: {esc(c["deep_dive_label"])} →</a>'
-                    if c.get("deep_dive") else "")
+                    if c.get("deep_dive") and c["deep_dive"].strip("./") in PUBLISHED else "")
             srcs = " · ".join(src_link(s["url"], s.get("publisher") or None) for s in c.get("sources", [])[:4])
             rows.append([
                 td(f'<span class="pn">{num[c["id"]]}</span>', "nc"),
@@ -611,7 +664,7 @@ def build_page(reg, gem, rail):
         **{f"__S_{k.upper()}__": str(v) for k, v in seg_status.items()},
         "__MAP_W__": f"{MAP_W:.0f}", "__MAP_H__": f"{MAP_H:.0f}",
         "__BASEMAP__": basemap(), "__MARKS__": map_marks(P, num, gem, rail), "__NODES__": node_svg(),
-        "__SIDE_LIST__": side_list(P, num),
+        "__SIDE_LIST__": side_list(P, num), "__LOCATOR__": locator(P, gem, rail),
         "__MODE_KEY__": "".join(f'<span class="dk"><i class="mk-{k}"></i>{esc(n)}</span>' for k, n in MODES
                                 if any(MODE_OF.get(s["mode"], "other") == k for s in segs)),
         "__STATUS_KEY__": "".join(f'<span class="dk"><i class="sk {k}"></i>{esc(n)}</span>' for k, n in STATUS.items()),
@@ -654,10 +707,6 @@ def jsonld(path):
             + json.dumps(page, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>\n")
 
 
-NOINDEX = ('<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">',
-           '<meta name="robots" content="noindex,nofollow">')
-
-
 def build():
     reg, gem, rail = load()
     tokens = build_page(reg, gem, rail)
@@ -668,7 +717,7 @@ def build():
         page = page.replace(k, v)
     # the frame's own map script looks for #map; this page draws #cmap itself
     page = page.replace("/*__PAYLOAD__*/", json.dumps({"charts": {}}), 1)
-    # "corridors" is in no menu, so the Deep dives menu marks nothing current
+    # the Deep dives menu names this page and marks it current
     page = brand_assets(page, donor=SLUG)
     left = sorted(set(re.findall(r"__[A-Z][A-Z0-9_]*__", page)))
     if left:
@@ -676,9 +725,6 @@ def build():
     path = f"{SLUG}/index.html"
     doc = wrap_document(page, title=TITLE, description=DESCRIPTION, path=path, kind="profile",
                         extra_head=jsonld(path))
-    if NOINDEX[0] not in doc:
-        sys.exit("corridors: the robots meta changed in shared.wrap_document; update NOINDEX")
-    doc = doc.replace(*NOINDEX)
     (DOCS / SLUG).mkdir(parents=True, exist_ok=True)
     (DOCS / SLUG / "index.html").write_text(doc)
     (DOCS / "data").mkdir(parents=True, exist_ok=True)

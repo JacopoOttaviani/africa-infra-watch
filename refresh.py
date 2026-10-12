@@ -68,7 +68,8 @@ def main():
     # must be the one they ship with.
     if run("Build the link-preview image", "build_social.py") != 0:
         print("\nbuild_social.py failed — the previous docs/social.png stays", flush=True)
-    for script in ("build_dashboard.py", "build_map.py", "build_donors.py", "build_debt.py", "build_compare.py"):
+    for script in ("build_dashboard.py", "build_map.py", "build_donors.py", "build_debt.py", "build_compare.py",
+                   "build_corridors.py"):
         if run(f"Build {script}", script) != 0:
             sys.exit(f"\n{script} failed")
 

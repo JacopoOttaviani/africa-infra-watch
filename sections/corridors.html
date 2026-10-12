@@ -21,6 +21,28 @@
     --cf-gulf:#d55181; --cf-us:#008300; --cf-gov:#9085e9; --cf-otherstate:#e66767; --cf-unknown:#56625b;
   }
 
+  /* ---- the head: the lede beside a locator map of the continent */
+  .headgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(312px,440px);gap:8px 56px;align-items:center}
+  .locator{margin:0;padding-top:30px}
+  .locator svg{display:block;width:100%;height:auto}
+  .locator figcaption{font-size:12px;line-height:1.45;color:var(--ink-3);margin-top:10px;max-width:46ch}
+  .loc .lc{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  .loc .lc.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:.6}
+  .loc .ll{fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .loc .ll.announced,.loc .ll.approved{stroke-dasharray:3 2.2;stroke-width:1.6}
+  .loc .ll.operating{stroke:var(--st-operating)} .loc .ll.under_construction{stroke:var(--st-construction)}
+  .loc .ll.approved{stroke:var(--st-approved)} .loc .ll.announced{stroke:var(--st-announced)}
+  .loc .ll.stalled{stroke:var(--st-stalled);stroke-dasharray:1.5 2}
+  .loc .lp{stroke:var(--paper);stroke-width:.8}
+  .loc .lp.operating{fill:var(--st-operating)} .loc .lp.under_construction{fill:var(--st-construction)}
+  .loc .lp.approved{fill:var(--st-approved)} .loc .lp.announced{fill:var(--st-announced)}
+  .loc .lp.stalled{fill:var(--st-stalled)}
+  .loc .lsea{font:italic 9px var(--serif);fill:var(--ink-3)}
+  @media (max-width:960px){
+    .headgrid{grid-template-columns:1fr}
+    .locator{padding-top:6px;max-width:380px}
+  }
+
   /* ---- the map and its list */
   .cwrap{display:grid;grid-template-columns:minmax(0,1fr) 236px;gap:16px;align-items:start;margin-top:6px}
   .cwrap>*{min-width:0}
@@ -157,6 +179,7 @@
   #method .spec dd{min-width:0}
 </style>
 
+<div class="headgrid">
 <div class="head">
   <span class="kicker">Deep dive · __N_COUNTRIES__ countries</span>
   <h1>Africa's strategic corridors</h1>
@@ -164,6 +187,11 @@
   <p class="lede"><strong>China lends for, owns or builds pieces of __N_CHINA__ of the __N_CORRIDORS__ corridors</strong> in this register, more than any other foreign power, and __CN_LEAD_PHRASE__ in service or being built. American money is in __N_US__, Lobito; European money or ownership in __N_EUROPE__. Across __N_COUNTRIES__ countries the register holds __N_SEGMENTS__ pieces: __S_OPERATING__ in service, __S_UNDER_CONSTRUCTION__ being built, __S_APPROVED__ approved, __S_ANNOUNCED__ only announced and __S_STALLED__ stalled.</p>
   <p class="lede">The newest pieces are mostly on paper. The railway from Lobito into Zambia has a development bank's loan but no builder; Uganda's standard gauge line has its loans approved but a contract its army chief called cancelled; the Abidjan–Lagos highway has a treaty, an authority and studies but no money to build; the Atlantic gas pipeline has its West African agreement but not its investment decision.</p>
   <p class="asof">Register compiled <b>__COMPILED__</b> · <b>__N_CORRIDORS__</b> corridors in <b>__N_SEGMENTS__</b> pieces · <b>__N_BACKERS__</b> funders, owners and builders · <b>__N_SOURCES__</b> sources, each linked</p>
+</div>
+<figure class="locator">
+  __LOCATOR__
+  <figcaption>The __N_CORRIDORS__ corridors and the __N_COUNTRIES__ countries they cross. Green is in service, magenta being built, blue approved and amber only announced, dashed until it is built; the map further down has the detail.</figcaption>
+</figure>
 </div>
 
 <dl class="kpis">
