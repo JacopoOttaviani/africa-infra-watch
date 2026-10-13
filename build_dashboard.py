@@ -272,10 +272,13 @@ def build_assets():
             (p.get("name") or "").strip()[:78], iso, r(lon), r(lat),
             p.get("dash_status"), (p.get("tech") or "").strip()[:26] or None,
             cap, yr, p.get("project_id") or None, p.get("url") or None,
+            # exact site or not, as on the map: the record card's
+            # "possibly the same project" lookup trusts only exact units by distance
+            1 if p.get("geo_precision") == "exact" else 0,
         ])
     return {
         "cols": ["name", "iso", "lon", "lat", "status", "tech", "mw", "yr",
-                 "pid", "url"],
+                 "pid", "url", "exact"],
         "rows": rows,
     }
 

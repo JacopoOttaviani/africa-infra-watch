@@ -144,17 +144,28 @@
   .lyr .lt b{font-weight:600;font-size:13px}
   .lyr .lt span{font-size:11px;color:var(--ink-3)}
   .lyr .lc{font-family:var(--mono);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
-  /* lender buttons wear no status tint: a monogram names the institution, the
-     map shape rides small in the sub line, and the rows sit under family headings */
-  .lyr[data-ln]{--tone:var(--ink-3);grid-template-columns:38px 1fr auto;background:var(--surface);border-color:var(--rule)}
-  .lyr[data-ln][aria-pressed="false"]{background:transparent;border-color:var(--rule-soft)}
-  .lyr .badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:20px;padding:0 4px;border:1px solid var(--rule);border-radius:3px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--ink-2)}
-  .lyr[aria-pressed="false"] .badge{opacity:.45}
-  .lyr .mini{display:inline-flex;vertical-align:-1px;margin-right:4px;color:var(--ink-2)}
-  .lyr .mini svg{width:10px;height:10px}
+  /* lender buttons wear the layers' card: the map shape on the left, in the tone
+     of the layer the lender's records belong to (set inline from LAYER_TONE, so a
+     new lender needs no rule here); the rows sit under family headings */
+  .lyr:disabled,.fh:disabled{opacity:.45;cursor:default}
   .fam{margin-top:10px} .fam:first-child{margin-top:0}
-  .fh{font-size:11px;font-weight:600;color:var(--ink-2);margin:0 0 4px 1px}
+  .fh{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--ink-2);margin:0 0 4px 1px}
   .fh + .lyr{margin-top:0}
+  /* a family of two lenders is one switch for both: box filled all on, bar some on */
+  button.fh::before{content:"";width:9px;height:9px;border:1.5px solid currentColor;border-radius:2px;box-sizing:border-box;flex:none}
+  button.fh[aria-pressed="true"]::before{background:currentColor}
+  button.fh[aria-pressed="mixed"]::before{background:linear-gradient(currentColor,currentColor) center/5px 1.5px no-repeat}
+  button.fh:hover:not(:disabled){color:var(--ink)}
+  .railnote,.offnote{font-size:11.5px;color:var(--ink-3);line-height:1.45;margin:-3px 0 10px}
+  .offnote{margin:0 0 8px}
+  .is-off div.fh{opacity:.45}
+  .offnote + .lyr,.offnote + .fam{margin-top:0}
+  .offnote button{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  /* what the map shows: what is built, who is paying for it, or both */
+  .seg{display:flex;gap:2px;padding:3px;background:var(--surface-2);border-radius:4px}
+  .seg button{flex:1;padding:6px 4px;border-radius:3px;font-size:12px;font-weight:600;color:var(--ink-3);text-align:center}
+  .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+  .seg button:hover:not([aria-pressed="true"]){color:var(--ink-2)}
 
   .chips{display:flex;flex-wrap:wrap;gap:5px}
   .chip{display:inline-flex;gap:6px;align-items:center;padding:4px 8px 4px 6px;border:1px solid var(--rule);border-radius:2px;background:var(--surface);font-size:12px;font-weight:500}
@@ -375,6 +386,14 @@
   .detail .actions a,.detail .actions button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;font-size:12px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--surface-3)}
   .detail .actions a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   .detail .note{margin:10px 0 0;font-size:11.5px;color:var(--ink-3);line-height:1.45}
+  .twins{margin-top:12px;padding-top:10px;border-top:1px solid var(--rule-soft)}
+  .twins h4{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin:0 0 4px}
+  .twins p{margin:0 0 4px;font-size:11.5px;color:var(--ink-3);line-height:1.45}
+  .twin{display:grid;grid-template-columns:16px 1fr;gap:8px;align-items:start;width:100%;padding:6px 0;border-top:1px dotted var(--rule-soft);text-align:left}
+  .twin > span:first-child{display:flex;justify-content:center;padding-top:1px}
+  .twin b{display:block;font-size:12.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+  .twin i{display:block;font-style:normal;font-size:11px;color:var(--ink-3);margin-top:1px}
+  .twin:hover b{color:var(--accent)}
 
   #toast{position:absolute;left:50%;bottom:22px;transform:translate(-50%,8px);z-index:7;background:var(--ink);color:var(--paper);padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;opacity:0;transition:opacity .15s,transform .15s;pointer-events:none}
   #toast.show{opacity:1;transform:translate(-50%,0)}
@@ -533,7 +552,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://jacopoottaviani.com/africa-infra-watch/#website","name":"Africa Project Atlas","url":"https://jacopoottaviani.com/africa-infra-watch/","inLanguage":"en","description":"An interactive map and dashboard of announced, approved and ongoing infrastructure in Africa, compiled from open data.","author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"publisher":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"}},{"@type":"Person","@id":"https://jacopoottaviani.com/africa-infra-watch/#author","name":"Jacopo Ottaviani","url":"https://jacopoottaviani.com/","sameAs":["https://jacopoottaviani.com/","https://www.linkedin.com/in/jacopo-ottaviani/","https://ko-fi.com/jacopoottaviani"]},{"@type":["WebPage","WebApplication"],"@id":"https://jacopoottaviani.com/africa-infra-watch/","url":"https://jacopoottaviani.com/africa-infra-watch/","name":"Africa Project Atlas","headline":"Africa Project Atlas","description":"Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank and World Bank projects, Chinese-financed infrastructure 2000–2021 (AidData), European Union finance (European Commission and EIB), Italy's Piano Mattei projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.","inLanguage":"en","isPartOf":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#website"},"about":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"mainEntity":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"dateModified":"2026-10-12","keywords":"Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, World Bank projects Africa, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, Chinese investment Africa, China Africa infrastructure, AidData, Chinese loans Africa, Belt and Road Africa, EU investment Africa, Global Gateway Africa, European Investment Bank Africa, European Commission Africa infrastructure, Piano Mattei, Mattei Plan Africa, Italy Africa investment, Italian cooperation Africa, open data Africa, infrastructure investment Africa, interactive map","primaryImageOfPage":{"@type":"ImageObject","url":"https://jacopoottaviani.com/africa-infra-watch/social.png?v=0e137a5d0a","width":1200,"height":630},"applicationCategory":"Map","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset","name":"Africa Project Atlas: infrastructure projects across Africa","description":"Ten open datasets on infrastructure in Africa, kept as separate layers because they share no project identifier: 4,274 power units tracked by Global Energy Monitor, 1,710 projects financed by the African Development Bank and 1,121 by the World Bank, 3,680 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,324 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2021, from AidData, and 1,992 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Each source's lifecycle is mapped onto five shared statuses (announced, approved, under construction, operating, stalled).","url":"https://jacopoottaviani.com/africa-infra-watch/","keywords":["Africa infrastructure","infrastructure projects Africa","Africa power plants map","African Development Bank projects","AfDB finance","World Bank projects Africa","construction Africa map","energy Africa","Global Energy Monitor","OpenStreetMap construction","oil and gas pipelines Africa","submarine cables Africa","TeleGeography","Chinese investment Africa","China Africa infrastructure","AidData","Chinese loans Africa","Belt and Road Africa","EU investment Africa","Global Gateway Africa","European Investment Bank Africa","European Commission Africa infrastructure","Piano Mattei","Mattei Plan Africa","Italy Africa investment","Italian cooperation Africa","open data Africa","infrastructure investment Africa","interactive map"],"creator":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","hasPart":[{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance_wb"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-china"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-eu"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-mattei"}],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/map.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/meta.json"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets","name":"Africa Project Atlas: Global Energy Monitor layer","description":"Power generation units in Africa (announced, pre-construction, under construction, operating, cancelled or shelved) with technology, capacity in MW, owner and coordinates. 4,274 records in this snapshot. Global Integrated Power Tracker, release 2026-08-v2.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance","name":"Africa Project Atlas: African Development Bank layer","description":"African Development Bank projects from its IATI 2.03 activity files: title, recipient country, status, DAC sector, commitment and disbursement, and geocoded locations where published. 1,710 records in this snapshot. IATI 2.03 activity files, 57 country datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/afdb","creator":{"@type":"Organization","name":"African Development Bank","url":"https://iatiregistry.org/publisher/afdb"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance_wb","name":"Africa Project Atlas: World Bank layer","description":"World Bank infrastructure projects in Africa from its IATI 2.03 activity files: title, recipient country or region, status, DAC sector, commitment and disbursement in USD, and the Bank's geocoded project locations with their location class. 1,121 records in this snapshot. IATI 2.03 activity files, 52 African country and regional datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/worldbank","creator":{"@type":"Organization","name":"World Bank","url":"https://iatiregistry.org/publisher/worldbank"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground","name":"Africa Project Atlas: OpenStreetMap layer","description":"Roads (motorway to secondary), railways and airports under construction or proposed in Africa, traced by OpenStreetMap mappers, as line geometries with status, operator and opening date. 3,680 records in this snapshot. Overpass API, significant road/rail/air classes.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.openstreetmap.org/copyright","creator":{"@type":"Organization","name":"OpenStreetMap","url":"https://www.openstreetmap.org/copyright"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson"}],"license":"https://opendatacommons.org/licenses/odbl/1-0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines","name":"Africa Project Atlas: Global Energy Monitor layer","description":"Oil, NGL and gas transmission pipelines with an African country on their route (proposed, under construction, operating, shelved or cancelled), as route geometries with fuel, capacity, length, owner and start year, from Global Energy Monitor's Global Gas and Global Oil Infrastructure Trackers. 324 records in this snapshot. Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables","name":"Africa Project Atlas: TeleGeography layer","description":"Submarine telecommunications cables with at least one landing point in Africa, planned or in service, as route geometries with owners, suppliers, ready-for-service year, length and African landing points, from TeleGeography's Submarine Cable Map. 81 records in this snapshot. Submarine Cable Map, cables with an African landing point.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.submarinecablemap.com/","creator":{"@type":"Organization","name":"TeleGeography","url":"https://www.submarinecablemap.com/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson"}],"license":"https://creativecommons.org/licenses/by-sa/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-china","name":"Africa Project Atlas: AidData layer","description":"Infrastructure projects in Africa supported by official financial commitments from China between 2000 and 2021 (loans and grants from China Eximbank, China Development Bank, the Ministry of Commerce and other official lenders), with status, sector, funder, implementer, commitment in constant 2021 USD, loan terms where known, and the project's footprint traced in OpenStreetMap where AidData geocoded it, from AidData's Global Chinese Development Finance Dataset 3.0 and its Geospatial companion. 2,324 records in this snapshot. GCDF 3.0 · GeoGCDF v3.0.1, official commitments to infrastructure 2000–2021, footprints from OpenStreetMap.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0","creator":{"@type":"Organization","name":"AidData","url":"https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/aiddata_china_finance.geojson"}],"license":"https://opendatacommons.org/licenses/by/1-0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-eu","name":"Africa Project Atlas: European Union layer","description":"Infrastructure projects in Africa financed by the European Union's institutions: the European Commission's contracts and financing decisions (DG International Partnerships and DG Neighbourhood and Enlargement) and the European Investment Bank's loans, equity and grants, from their IATI activity files, with status, DAC or EIB sector, implementer, instrument, commitment and disbursement in euros, and the location the publisher gives: a named place, the country's point or the Commission's Africa-wide point. 1,992 records in this snapshot. IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, 57 African country and regional datasets) and the European Investment Bank's global file.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/ec-intpa","creator":{"@type":"Organization","name":"European Union","url":"https://iatiregistry.org/publisher/ec-intpa"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_eu_finance.geojson"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-mattei","name":"Africa Project Atlas: Italian Government layer","description":"The projects of Italy's Piano Mattei per l'Africa (Mattei Plan) as the Italian Government's project portal lists them: title, the plan's directive (energy, water, agriculture, health, education, infrastructure), objective, countries, implementing body, partners, funding source, the stated amount in euros and the portal's progress stage (identified, formulated, approved, ongoing, completed), placed on the site the description names, the country's point or between the countries listed. 76 records in this snapshot. Piano Mattei per l'Africa project portal (Presidency of the Council of Ministers), one page per project, read in its Italian and English versions.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.governo.it/en/piano-mattei/progetti/","creator":{"@type":"Organization","name":"Italian Government","url":"https://www.governo.it/en/piano-mattei/progetti/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/piano_mattei.geojson"}],"license":"https://creativecommons.org/licenses/by/3.0/it/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://jacopoottaviani.com/africa-infra-watch/#website","name":"Africa Project Atlas","url":"https://jacopoottaviani.com/africa-infra-watch/","inLanguage":"en","description":"An interactive map and dashboard of announced, approved and ongoing infrastructure in Africa, compiled from open data.","author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"publisher":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"}},{"@type":"Person","@id":"https://jacopoottaviani.com/africa-infra-watch/#author","name":"Jacopo Ottaviani","url":"https://jacopoottaviani.com/","sameAs":["https://jacopoottaviani.com/","https://www.linkedin.com/in/jacopo-ottaviani/","https://ko-fi.com/jacopoottaviani"]},{"@type":["WebPage","WebApplication"],"@id":"https://jacopoottaviani.com/africa-infra-watch/","url":"https://jacopoottaviani.com/africa-infra-watch/","name":"Africa Project Atlas","headline":"Africa Project Atlas","description":"Interactive open-data map of infrastructure across Africa: power plants and oil and gas pipelines (Global Energy Monitor), African Development Bank and World Bank projects, Chinese-financed infrastructure 2000–2021 (AidData), European Union finance (European Commission and EIB), Italy's Piano Mattei projects, construction works traced in OpenStreetMap and submarine cables (TeleGeography). Filter by country, status and sector.","inLanguage":"en","isPartOf":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#website"},"about":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"mainEntity":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset"},"author":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"dateModified":"2026-10-13","keywords":"Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, World Bank projects Africa, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, Chinese investment Africa, China Africa infrastructure, AidData, Chinese loans Africa, Belt and Road Africa, EU investment Africa, Global Gateway Africa, European Investment Bank Africa, European Commission Africa infrastructure, Piano Mattei, Mattei Plan Africa, Italy Africa investment, Italian cooperation Africa, open data Africa, infrastructure investment Africa, interactive map","primaryImageOfPage":{"@type":"ImageObject","url":"https://jacopoottaviani.com/africa-infra-watch/social.png?v=0e137a5d0a","width":1200,"height":630},"applicationCategory":"Map","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset","name":"Africa Project Atlas: infrastructure projects across Africa","description":"Ten open datasets on infrastructure in Africa, kept as separate layers because they share no project identifier: 4,274 power units tracked by Global Energy Monitor, 1,710 projects financed by the African Development Bank and 1,121 by the World Bank, 3,680 construction works traced in OpenStreetMap, 324 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,324 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2021, from AidData, and 1,992 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Each source's lifecycle is mapped onto five shared statuses (announced, approved, under construction, operating, stalled).","url":"https://jacopoottaviani.com/africa-infra-watch/","keywords":["Africa infrastructure","infrastructure projects Africa","Africa power plants map","African Development Bank projects","AfDB finance","World Bank projects Africa","construction Africa map","energy Africa","Global Energy Monitor","OpenStreetMap construction","oil and gas pipelines Africa","submarine cables Africa","TeleGeography","Chinese investment Africa","China Africa infrastructure","AidData","Chinese loans Africa","Belt and Road Africa","EU investment Africa","Global Gateway Africa","European Investment Bank Africa","European Commission Africa infrastructure","Piano Mattei","Mattei Plan Africa","Italy Africa investment","Italian cooperation Africa","open data Africa","infrastructure investment Africa","interactive map"],"creator":{"@id":"https://jacopoottaviani.com/africa-infra-watch/#author"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-13","hasPart":[{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance_wb"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-china"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-eu"},{"@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-mattei"}],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/map.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/meta.json"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-assets","name":"Africa Project Atlas: Global Energy Monitor layer","description":"Power generation units in Africa (announced, pre-construction, under construction, operating, cancelled or shelved) with technology, capacity in MW, owner and coordinates. 4,274 records in this snapshot. Global Integrated Power Tracker, release 2026-08-v2.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-integrated-power-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance","name":"Africa Project Atlas: African Development Bank layer","description":"African Development Bank projects from its IATI 2.03 activity files: title, recipient country, status, DAC sector, commitment and disbursement, and geocoded locations where published. 1,710 records in this snapshot. IATI 2.03 activity files, 57 country datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/afdb","creator":{"@type":"Organization","name":"African Development Bank","url":"https://iatiregistry.org/publisher/afdb"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-finance_wb","name":"Africa Project Atlas: World Bank layer","description":"World Bank infrastructure projects in Africa from its IATI 2.03 activity files: title, recipient country or region, status, DAC sector, commitment and disbursement in USD, and the Bank's geocoded project locations with their location class. 1,121 records in this snapshot. IATI 2.03 activity files, 52 African country and regional datasets.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/worldbank","creator":{"@type":"Organization","name":"World Bank","url":"https://iatiregistry.org/publisher/worldbank"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-ground","name":"Africa Project Atlas: OpenStreetMap layer","description":"Roads (motorway to secondary), railways and airports under construction or proposed in Africa, traced by OpenStreetMap mappers, as line geometries with status, operator and opening date. 3,680 records in this snapshot. Overpass API, significant road/rail/air classes.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.openstreetmap.org/copyright","creator":{"@type":"Organization","name":"OpenStreetMap","url":"https://www.openstreetmap.org/copyright"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson"}],"license":"https://opendatacommons.org/licenses/odbl/1-0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-pipelines","name":"Africa Project Atlas: Global Energy Monitor layer","description":"Oil, NGL and gas transmission pipelines with an African country on their route (proposed, under construction, operating, shelved or cancelled), as route geometries with fuel, capacity, length, owner and start year, from Global Energy Monitor's Global Gas and Global Oil Infrastructure Trackers. 324 records in this snapshot. Global Gas and Global Oil Infrastructure Trackers, releases GGIT 2025-11 · GOIT 2026-07.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/","creator":{"@type":"Organization","name":"Global Energy Monitor","url":"https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson"}],"license":"https://creativecommons.org/licenses/by/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-cables","name":"Africa Project Atlas: TeleGeography layer","description":"Submarine telecommunications cables with at least one landing point in Africa, planned or in service, as route geometries with owners, suppliers, ready-for-service year, length and African landing points, from TeleGeography's Submarine Cable Map. 81 records in this snapshot. Submarine Cable Map, cables with an African landing point.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.submarinecablemap.com/","creator":{"@type":"Organization","name":"TeleGeography","url":"https://www.submarinecablemap.com/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/telegeography_cables.geojson"}],"license":"https://creativecommons.org/licenses/by-sa/4.0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-china","name":"Africa Project Atlas: AidData layer","description":"Infrastructure projects in Africa supported by official financial commitments from China between 2000 and 2021 (loans and grants from China Eximbank, China Development Bank, the Ministry of Commerce and other official lenders), with status, sector, funder, implementer, commitment in constant 2021 USD, loan terms where known, and the project's footprint traced in OpenStreetMap where AidData geocoded it, from AidData's Global Chinese Development Finance Dataset 3.0 and its Geospatial companion. 2,324 records in this snapshot. GCDF 3.0 · GeoGCDF v3.0.1, official commitments to infrastructure 2000–2021, footprints from OpenStreetMap.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0","creator":{"@type":"Organization","name":"AidData","url":"https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/aiddata_china_finance.geojson"}],"license":"https://opendatacommons.org/licenses/by/1-0/"},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-eu","name":"Africa Project Atlas: European Union layer","description":"Infrastructure projects in Africa financed by the European Union's institutions: the European Commission's contracts and financing decisions (DG International Partnerships and DG Neighbourhood and Enlargement) and the European Investment Bank's loans, equity and grants, from their IATI activity files, with status, DAC or EIB sector, implementer, instrument, commitment and disbursement in euros, and the location the publisher gives: a named place, the country's point or the Commission's Africa-wide point. 1,992 records in this snapshot. IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, 57 African country and regional datasets) and the European Investment Bank's global file.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://iatiregistry.org/publisher/ec-intpa","creator":{"@type":"Organization","name":"European Union","url":"https://iatiregistry.org/publisher/ec-intpa"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/iati_eu_finance.geojson"}]},{"@type":"Dataset","@id":"https://jacopoottaviani.com/africa-infra-watch/#dataset-mattei","name":"Africa Project Atlas: Italian Government layer","description":"The projects of Italy's Piano Mattei per l'Africa (Mattei Plan) as the Italian Government's project portal lists them: title, the plan's directive (energy, water, agriculture, health, education, infrastructure), objective, countries, implementing body, partners, funding source, the stated amount in euros and the portal's progress stage (identified, formulated, approved, ongoing, completed), placed on the site the description names, the country's point or between the countries listed. 76 records in this snapshot. Piano Mattei per l'Africa project portal (Presidency of the Council of Ministers), one page per project, read in its Italian and English versions.","url":"https://jacopoottaviani.com/africa-infra-watch/","isBasedOn":"https://www.governo.it/en/piano-mattei/progetti/","creator":{"@type":"Organization","name":"Italian Government","url":"https://www.governo.it/en/piano-mattei/progetti/"},"spatialCoverage":{"@type":"Place","name":"Africa","geo":{"@type":"GeoShape","box":"-35.5 -25.5 37.8 57.9"}},"isAccessibleForFree":true,"dateModified":"2026-10-12","distribution":[{"@type":"DataDownload","encodingFormat":"application/geo+json","contentUrl":"https://jacopoottaviani.com/africa-infra-watch/data/piano_mattei.geojson"}],"license":"https://creativecommons.org/licenses/by/3.0/it/"}]}</script>
 <script data-goatcounter="https://jacopo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -568,7 +587,7 @@ open tracker exists for ports, water or electricity transmission.</p>
 <p>The compiled payload is <a href="data/map.json">data/map.json</a>; fetch dates and
 release names are in <a href="data/meta.json">data/meta.json</a>. A plain-text summary
 for language models is at <a href="llms.txt">llms.txt</a>.
-Country outlines: Natural Earth. Built 12 Oct 2026 by
+Country outlines: Natural Earth. Built 13 Oct 2026 by
 <a href="https://www.linkedin.com/in/jacopo-ottaviani/">Jacopo Ottaviani</a>.</p>
 </article>
 </noscript>
@@ -580,7 +599,7 @@ Country outlines: Natural Earth. Built 12 Oct 2026 by
 async function loadPayload(){
   const box = document.getElementById("loading");
   try{
-    const res = await fetch("data/map.json?v=35c4f42034");
+    const res = await fetch("data/map.json?v=5669626c84");
     if(!res.ok) throw new Error(res.status + " " + res.statusText);
     const data = await res.json();
     box.remove();
@@ -627,12 +646,22 @@ async function loadPayload(){
     </div>
 
     <div class="panel map-only">
-      <h3>Layers <span class="hint">shape = source</span></h3>
+      <h3>Show <span class="hint">a project can be in both</span></h3>
+      <div class="seg" id="side" role="group" aria-label="What the map shows">
+        <button data-side="all" title="What is built and who is paying for it">Both</button>
+        <button data-side="built" title="What is built: power units, works on the ground, pipelines, cables">Built</button>
+        <button data-side="paid" title="Who is paying: the lenders' own project records">Financed</button>
+      </div>
+    </div>
+
+    <div class="panel map-only">
+      <h3>Layers <span class="hint">what is built</span></h3>
       <div id="layers"></div>
     </div>
 
     <div class="panel map-only">
       <h3>Lenders <span class="hint">who is paying</span></h3>
+      <p class="railnote">Each lender's projects are records of their own, not a filter on the layers above: switching China off hides the Chinese loans, not the power plants they paid for.</p>
       <div id="lenders"></div>
     </div>
 
@@ -1022,6 +1051,7 @@ const S_ = {
   lenders:allLendersOn(),
   status:new Set(STATUS_ORDER),
   country:"", sector:"", q:"",
+  side:"all",      /* "all", "built" (the four layers) or "paid" (the lenders' records) */
   picked:null,
   cluster:false,
   sat:false,
@@ -1030,12 +1060,19 @@ const S_ = {
 function syncLayers(){
   for(const L of ["finance","china","eu","mattei"]) S_.layers[L] = LENDER_ORDER.some(k => LENDER_LAYER[k]===L && S_.lenders[k]);
 }
-const shown = r => S_.layers[r.layer] && (!r.lender || S_.lenders[r.lender]);
-const pass = r =>
-  shown(r) && S_.status.has(r.status) &&
-  (!S_.country || (r.isos ? r.isos.includes(S_.country) : r.iso===S_.country)) &&
-  (!S_.sector || r.sector===S_.sector) &&
+/* the Show switch sits over the two panels: it hides one side without
+   touching the buttons, so switching back restores them as they were */
+const onSide = r => S_.side==="all" || (S_.side==="paid") === !!r.lender;
+const shown = r => onSide(r) && S_.layers[r.layer] && (!r.lender || S_.lenders[r.lender]);
+const inCountry = r => !S_.country || (r.isos ? r.isos.includes(S_.country) : r.iso===S_.country);
+/* every filter but one, so a panel can count what it would show if its own filter were open */
+const passBut = (r, skip) =>
+  (skip==="layer"   || shown(r)) &&
+  (skip==="status"  || S_.status.has(r.status)) &&
+  (skip==="country" || inCountry(r)) &&
+  (skip==="sector"  || !S_.sector || r.sector===S_.sector) &&
   (!S_.q || r.text.includes(S_.q));
+const pass = r => passBut(r, null);
 let VIS = [], VIS_PTS = [], VIS_LINES = [];
 
 /* ================= satellite (site only) ================= */
@@ -1538,39 +1575,59 @@ function renderLede(){
      its record; every figure carries its source.`;
 }
 
+/* Each panel counts what it would show with its own filter open: the same
+   passBut the map uses, so a multi-country record counts in every country it
+   names, in the rail as on the map. */
 function counts(){
-  const c = {layer:Object.fromEntries(LAYER_ORDER.map(k=>[k,0])), lender:Object.fromEntries(LENDER_ORDER.map(k=>[k,0])), status:{}};
+  const c = {layer:Object.fromEntries(LAYER_ORDER.map(k=>[k,0])), lender:Object.fromEntries(LENDER_ORDER.map(k=>[k,0])), status:{}, country:{}, sector:{}, anyCountry:0, anySector:0};
   for(const r of ALL){
-    const okL = shown(r), okS = S_.status.has(r.status);
-    if(S_.country && r.iso!==S_.country) continue;
-    if(S_.sector && r.sector!==S_.sector) continue;
-    if(S_.q && !r.text.includes(S_.q)) continue;
-    if(okS){ c.layer[r.layer]++; if(r.lender) c.lender[r.lender]++; }
-    if(okL) c.status[r.status] = (c.status[r.status]||0)+1;
+    if(passBut(r,"layer")){ c.layer[r.layer]++; if(r.lender) c.lender[r.lender]++; }
+    if(passBut(r,"status")) c.status[r.status] = (c.status[r.status]||0)+1;
+    if(passBut(r,"country")){ c.anyCountry++; for(const i of (r.isos||[r.iso])) if(i) c.country[i] = (c.country[i]||0)+1; }
+    if(passBut(r,"sector")){ c.anySector++; c.sector[r.sector] = (c.sector[r.sector]||0)+1; }
   }
   return c;
 }
 
+/* the panel the Show switch hides keeps its buttons, greyed, with a way back */
+const offNote = what => `<p class="offnote">Hidden while the map shows ${what}. <button data-side="all">Show both</button></p>`;
+function renderSide(){
+  document.querySelectorAll("#side [data-side]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.side===S_.side)));
+}
 function renderLayers(c){
-  el("layers").innerHTML = RAIL_LAYERS.map(k => `
-    <button class="lyr" data-l="${k}" aria-pressed="${S_.layers[k]}">
+  const off = S_.side==="paid";
+  el("layers").innerHTML = (off ? offNote("who is paying") : "") + RAIL_LAYERS.map(k => `
+    <button class="lyr" data-l="${k}" aria-pressed="${S_.layers[k]}"${off?" disabled":""}>
       <span class="glyph">${glyph[k](COL[LAYER_TONE[k]])}</span>
       <span class="lt"><b>${LAYER_LABEL[k]}</b><span>${LAYER_SUB[k]}</span></span>
       <span class="lc">${fmt(c.layer[k])}</span>
     </button>`).join("");
   el("layers").querySelectorAll("[data-l]").forEach(b =>
     b.onclick = () => { S_.layers[b.dataset.l] = !S_.layers[b.dataset.l]; apply(); });
+  el("layers").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S_.side = b.dataset.side; apply(); });
 }
+/* the CSS variable behind a layer's tone, for the lender cards */
+const toneVar = L => LAYER_TONE[L]==="copper" ? "--copper" : "--st-" + (LAYER_TONE[L]==="under_construction" ? "construction" : LAYER_TONE[L]);
 function renderLenders(c){
-  el("lenders").innerHTML = LENDER_FAMILY.map(([fam, ks]) => `
-    <div class="fam"><div class="fh">${fam}</div>${ks.map(k => `
-    <button class="lyr" data-ln="${k}" aria-pressed="${S_.lenders[k]}">
-      <span class="badge">${k}</span>
-      <span class="lt"><b>${LENDER_NAME[k]}</b><span><span class="mini">${glyph[LENDER_GLYPH[k]]("currentColor")}</span>${LENDER_SUB[k]}</span></span>
+  const off = S_.side==="built";
+  const famState = ks => ks.every(k=>S_.lenders[k]) ? "true" : ks.some(k=>S_.lenders[k]) ? "mixed" : "false";
+  el("lenders").innerHTML = (off ? offNote("what is built") : "") + LENDER_FAMILY.map(([fam, ks], i) => `
+    <div class="fam">${ks.length>1
+      ? `<button class="fh" data-fam="${i}" aria-pressed="${famState(ks)}"${off?" disabled":""} title="Switch all ${esc(fam)} on or off">${fam}</button>`
+      : `<div class="fh">${fam}</div>`}${ks.map(k => `
+    <button class="lyr" data-ln="${k}" style="--tone:var(${toneVar(LENDER_LAYER[k])})" aria-pressed="${S_.lenders[k]}"${off?" disabled":""}>
+      <span class="glyph">${glyph[LENDER_GLYPH[k]](COL[LAYER_TONE[LENDER_LAYER[k]]])}</span>
+      <span class="lt"><b>${LENDER_NAME[k]}</b><span>${k} · ${LENDER_SUB[k]}</span></span>
       <span class="lc">${fmt(c.lender[k])}</span>
     </button>`).join("")}</div>`).join("");
+  el("lenders").classList.toggle("is-off", off);
   el("lenders").querySelectorAll("[data-ln]").forEach(b =>
     b.onclick = () => { S_.lenders[b.dataset.ln] = !S_.lenders[b.dataset.ln]; syncLayers(); apply(); });
+  /* a family switch turns all its lenders on, unless all are on already */
+  el("lenders").querySelectorAll("[data-fam]").forEach(b =>
+    b.onclick = () => { const ks = LENDER_FAMILY[+b.dataset.fam][1], on = !ks.every(k=>S_.lenders[k]);
+      for(const k of ks) S_.lenders[k] = on; syncLayers(); apply(); });
+  el("lenders").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S_.side = b.dataset.side; apply(); });
 }
 function renderStatuses(c){
   el("statuses").innerHTML = STATUS_ORDER.map(s => `
@@ -1586,13 +1643,18 @@ function renderStatuses(c){
       apply();
     });
 }
-function renderSelects(){
-  const isos = [...new Set(ALL.map(r=>r.iso).filter(Boolean))].sort((a,b)=>(NAMES[a]||a).localeCompare(NAMES[b]||b));
-  el("country").innerHTML = `<option value="">All countries</option>` +
-    isos.map(i=>`<option value="${i}"${S_.country===i?" selected":""}>${esc(NAMES[i]||i)}</option>`).join("");
-  const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort((a,b)=>(SECTOR_LABEL[a]||a).localeCompare(SECTOR_LABEL[b]||b));
-  el("sector").innerHTML = `<option value="">All sectors</option>` +
-    secs.map(s=>`<option value="${s}"${S_.sector===s?" selected":""}>${SECTOR_LABEL[s]||s}</option>`).join("");
+/* every country any record names, multi-country ones included; an option
+   with nothing under the other filters stays listed but greyed, as a chip at 0 would */
+const ALL_ISOS = [...new Set(ALL.flatMap(r => r.isos || [r.iso]).filter(Boolean))].sort((a,b)=>(NAMES[a]||a).localeCompare(NAMES[b]||b));
+const ALL_SECTORS = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort((a,b)=>(SECTOR_LABEL[a]||a).localeCompare(SECTOR_LABEL[b]||b));
+/* "All …" carries no count and is never greyed: it is always the way back */
+const opt = (v, label, n, on) => v==="" ? `<option value=""${on?" selected":""}>${label}</option>`
+  : `<option value="${v}"${on?" selected":""}${!n && !on ? " disabled" : ""}>${label} (${fmt(n||0)})</option>`;
+function renderSelects(c){
+  el("country").innerHTML = opt("", "All countries", c.anyCountry, !S_.country) +
+    ALL_ISOS.map(i => opt(i, esc(NAMES[i]||i), c.country[i], S_.country===i)).join("");
+  el("sector").innerHTML = opt("", "All sectors", c.anySector, !S_.sector) +
+    ALL_SECTORS.map(s => opt(s, SECTOR_LABEL[s]||s, c.sector[s], S_.sector===s)).join("");
 }
 function renderLegend(){
   el("legend").innerHTML = `
@@ -1680,6 +1742,90 @@ function renderView(){
 
 el("listtoggle").onclick = () => { listExpanded = !listExpanded; renderView(); };
 
+/* ================= possibly the same project =================
+   The sources share no project identifier, so a power unit and the loan that
+   paid for it are two records. For the picked record this lists records from
+   the other sources, in the same sector, that share a rare word of the name
+   within 50 km, or sit within 2 km of it when both locations are precise.
+   One side of every pair must be a lender's record: a plant and the pipeline
+   feeding it are neighbours, not one project. A match is a lead to check,
+   never a merge, and nothing is added up because of it. */
+const TWIN_KM = 2, TWIN_NAME_KM = 50, TWIN_RARE = 25;
+const TWIN_STOP = new Set(`project projects programme program phase support construction rehabilitation development
+  provides provide provided loan loans grant grants million billion financing finance funding government chinese china
+  power plant station solar hydro hydroelectric hydropower thermal wind farm energy electricity electrification road roads
+  railway rail line lines national regional rural urban water supply sanitation african africa bank world european union
+  international company limited unit units with from that this into under over between expansion extension upgrade
+  upgrading interconnection transmission distribution network system systems improvement improved access sector
+  modernisation modernization infrastructure facility facilities emergency additional north south east west central
+  eximbank export import credit buyer buyers seller preferential concessional interest free agreement contract technical
+  assistance study studies feasibility design port economic integrated corridor city town district province region
+  county state highway bridge airport complex building second third first section stage works work transport trade
+  growth inclusive private public facilitation green clean renewable sustainable resilience resilient climate smart
+  digital lake lakes river valley falls gas oil pipeline cable submarine`.split(/\s+/));
+const foldName = s => (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const sectorFam = s => s==="road" || s==="rail" || s==="air" ? "transport" : s;
+const sourceKey = r => r.lender || r.layer;
+/* traced routes and cable landings are exact; a point layer only where its source says so (a new layer: add it here) */
+const precise = r => r.layer==="assets" ? !!r.ref.exact : r.layer==="finance" || r.layer==="china" ? r.ref.prec===0
+  : r.layer==="ground" || r.layer==="pipelines" || r.layer==="cables";
+/* lon,lat pairs to measure from: a route's vertices, a cable's landings, else the point */
+const twinPts = r => r._ll || (r._ll =
+  r.layer==="cables" ? (r.ref.lps||[]).flatMap(l => [l[0], l[1]])
+  : r.layer==="ground" || r.layer==="pipelines" ? r.ref.parts.flatMap(p => { const o=[]; for(let i=0;i<p.a.length;i+=2) o.push(invLon(p.a[i]), invLat(p.a[i+1])); return o; })
+  : r.lat==null ? [] : [r.lon, r.lat]);
+const twinBox = r => r._bb || (r._bb = (() => { const p = twinPts(r), b = [180,90,-180,-90];
+  for(let i=0;i<p.length;i+=2){ if(p[i]<b[0]) b[0]=p[i]; if(p[i+1]<b[1]) b[1]=p[i+1]; if(p[i]>b[2]) b[2]=p[i]; if(p[i+1]>b[3]) b[3]=p[i+1]; }
+  return b; })());
+function twinKm(a, b){
+  const A = twinPts(a), B = twinPts(b); let best = Infinity;
+  for(let i=0;i<A.length;i+=2){ const k = Math.cos(A[i+1]*D2R);
+    for(let j=0;j<B.length;j+=2){ const dx=(A[i]-B[j])*k, dy=A[i+1]-B[j+1], d=dx*dx+dy*dy; if(d<best) best=d; } }
+  return Math.sqrt(best)*111.2;
+}
+/* a word is rare when few distinct names carry it; country names never count */
+let twinDF = null;
+const nameWords = r => r._w || (r._w = [...new Set(foldName(r.name).split(/[^a-z]+/).filter(t => t.length>=4 && !TWIN_STOP.has(t)))]);
+function rareWords(r){
+  if(!twinDF){
+    twinDF = new Map(); const seen = new Set();
+    for(const x of ALL){ const n = foldName(x.name); if(seen.has(n)) continue; seen.add(n); for(const t of nameWords(x)) twinDF.set(t, (twinDF.get(t)||0)+1); }
+    for(const n of Object.values(NAMES)) for(const t of foldName(n).split(/[^a-z]+/)) twinDF.set(t, Infinity);
+  }
+  return nameWords(r).filter(t => twinDF.get(t) <= TWIN_RARE);
+}
+function twins(r){
+  if(!twinPts(r).length) return [];
+  const words = new Set(rareWords(r)), rb = twinBox(r), out = [];
+  const pad = TWIN_NAME_KM/111.2/Math.max(.2, Math.cos(((rb[1]+rb[3])/2)*D2R));
+  for(const o of ALL){
+    if(o===r || (!r.lender && !o.lender) || sourceKey(o)===sourceKey(r) || sectorFam(o.sector)!==sectorFam(r.sector) || !twinPts(o).length) continue;
+    const ob = twinBox(o);
+    if(ob[2]<rb[0]-pad || ob[0]>rb[2]+pad || ob[3]<rb[1]-pad || ob[1]>rb[3]+pad) continue;
+    const shared = rareWords(o).filter(t => words.has(t));
+    if(!shared.length && !(precise(r) && precise(o))) continue;
+    const km = twinKm(r, o);
+    if(km <= (shared.length ? TWIN_NAME_KM : TWIN_KM)) out.push({r:o, km, shared});
+  }
+  out.sort((a,b) => (b.shared.length>0)-(a.shared.length>0) || a.km-b.km);
+  /* one row per power plant, not per unit */
+  const plants = new Set();
+  return out.filter(t => t.r.layer!=="assets" || (!plants.has(t.r.ref.pid) && plants.add(t.r.ref.pid))).slice(0, 5);
+}
+const twinWhere = t => (t.shared.length ? `name shares “${t.shared.join("”, “")}” · ` : "") + (t.km < 1 ? "under 1 km" : `${fmt1(t.km)} km`) + " away";
+const twinSource = r => r.lender ? LENDER_NAME[r.lender] : LAYER_SUB[r.layer];
+/* a match the Show switch alone hides opens with the switch back on Both */
+const passIfBoth = r => { const was = S_.side; S_.side = "all"; const ok = pass(r); S_.side = was; return ok; };
+const twinHidden = r => pass(r) ? "" : passIfBoth(r) ? " · opens with Show set to Both" : " · hidden by the filters";
+function openTwin(r){ if(!pass(r) && passIfBoth(r)){ S_.side = "all"; apply(); } pick(r, true); }
+function twinsHtml(tw){
+  if(!tw.length) return "";
+  return `<div class="twins"><h4>Possibly the same project</h4>
+    <p>Records from other sources in the same sector, nearby. The sources share no project ID, so a match is a lead to check.</p>
+    ${tw.map((t,i) => `<button class="twin" data-tw="${i}"><span>${glyphStatus(t.r.layer, t.r.status, t.r.lender)}</span>
+      <span><b>${esc(t.r.name)}</b><i>${esc(twinSource(t.r))} · ${twinWhere(t)}${twinHidden(t.r)}</i></span></button>`).join("")}</div>`;
+}
+
 /* ================= detail card ================= */
 function pick(r, fly){
   S_.picked = r;
@@ -1693,7 +1839,7 @@ function pick(r, fly){
 function renderDetail(){
   const box = el("detail"), r = S_.picked;
   if(!r){ box.hidden = true; return; }
-  const f = r.ref, rows = [];
+  const f = r.ref, rows = [], tw = twins(r);
   let link=null, link2=null, note="";
   if(r.layer==="assets"){
     if(f.unit) rows.push(["Unit", f.unit]);
@@ -1842,10 +1988,12 @@ function renderDetail(){
         ${link2 ? `<a href="${link2[0]}" target="_blank" rel="noopener noreferrer">${link2[1]} ↗</a>` : ""}
       </div>
       <p class="note">${note}</p>
+      ${twinsHtml(tw)}
     </div>`;
   box.hidden = false;
   el("dclose").onclick = () => { S_.picked = null; renderDetail(); draw(); renderView(); };
   el("dfly").onclick = () => pick(r, true);
+  box.querySelectorAll("[data-tw]").forEach(b => b.onclick = () => openTwin(tw[+b.dataset.tw].r));
 }
 
 /* ================= apply ================= */
@@ -1858,7 +2006,7 @@ function apply(){
   el("scope").hidden = !S_.country;
   el("scopename").textContent = S_.country ? (NAMES[S_.country]||S_.country) : "";
   const c = counts();
-  renderLayers(c); renderLenders(c); renderStatuses(c); renderSelects();
+  renderSide(); renderLayers(c); renderLenders(c); renderStatuses(c); renderSelects(c);
   if(S_.cluster) syncMarkers();
   draw(); renderView(); writeHash();
 }
@@ -2168,11 +2316,12 @@ el("country").onchange = e => {
   const c = AFRICA.find(x=>x.iso===S_.country); if(c) flyTo(fitBounds(c.b, 60, 8));
 };
 el("sector").onchange = e => { S_.sector = e.target.value; apply(); };
+document.querySelectorAll("#side [data-side]").forEach(b => b.onclick = () => { S_.side = b.dataset.side; apply(); });
 let qt=null;
 el("q").oninput = e => { clearTimeout(qt); qt = setTimeout(()=>{ S_.q = e.target.value.trim().toLowerCase(); apply(); }, 150); };
 el("reset").onclick = () => {
   S_.layers=allLayersOn(); S_.lenders=allLendersOn(); S_.status=new Set(STATUS_ORDER);
-  S_.country=""; S_.sector=""; S_.q=""; el("q").value="";
+  S_.country=""; S_.sector=""; S_.q=""; S_.side="all"; el("q").value="";
   S_.picked=null; renderDetail(); apply(); flyTo(homeView());
 };
 
@@ -2192,6 +2341,7 @@ function writeHash(){
        layer is on with some of its lenders off */
     if(LENDER_ORDER.some(k=>S_.layers[LENDER_LAYER[k]] && !S_.lenders[k])) parts.push("ln="+LENDER_ORDER.filter(k=>S_.lenders[k]).join(","));
     if(S_.q) parts.push("q="+encodeURIComponent(S_.q));
+    if(S_.side!=="all") parts.push("show="+S_.side);
     if(!S_.cluster) parts.push("cl=0");   /* clustering is the default; only its absence is worth recording */
     if(S_.sat) parts.push("sat=1");
     if(document.body.dataset.tab==="method") parts.push("t=m");
@@ -2221,6 +2371,7 @@ function readHash(){
       syncLayers();
     }
     else if(k==="q"){ S_.q=decodeURIComponent(v); el("q").value=S_.q; }
+    else if(k==="show" && (v==="built" || v==="paid")) S_.side=v;
     else if(k==="t" && v==="m") wantTab = "method";
     else if(k==="cl") wantCluster = v==="1";
     else if(k==="sat") wantSat = v==="1";

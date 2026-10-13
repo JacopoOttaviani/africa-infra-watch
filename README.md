@@ -30,6 +30,13 @@ the amount the Government's portal states), thin lines
 routes) and lines ending in dots (submarine cables, dots at their African
 landing points). Filters, a viewport summary, a "largest in view" list, per-record
 detail cards linking back to the source record, and a shareable URL hash. A
+**Show** switch above the filters, on map and dashboard alike (`show=built` /
+`show=paid` in the map's hash), limits the view to what is built or to the
+lenders' own records, so one project is not drawn twice; the panel it hides
+keeps its buttons, greyed. Each record card lists up to five records from other
+sources that may be **the same project**: same sector, and either a rare word of
+the name shared within 50 km or both locations precise and within 2 km. They
+are leads, never merged or summed. A
 **Cluster markers** toggle (on by default; `cl=0` in the hash turns it off) regroups the records that pass
 the filters into donuts, sized by count and sliced by status (pipelines and
 submarine cables stay drawn as lines), using
