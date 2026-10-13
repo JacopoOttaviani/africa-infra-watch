@@ -274,7 +274,7 @@
   .tfilter input::placeholder{color:var(--ink-3)}
   .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
   .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
-  /* a table longer than twelve rows shows its first ten, with buttons under it for the rest */
+  /* a table longer than five rows shows its first five, with buttons under it for the rest */
   tr.capped{display:none}
   tr.tlast td{border-bottom:0}
   .tmore{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:var(--ink-3)}
@@ -612,7 +612,7 @@
   <h2>What they fund</h2>
   <p class="lead">Each row is one lender's aid commitments split by the DAC's sector headings, as a share of its total; darker is more. Read across a row for a lender's priorities, down a column for who cares about a sector. The sources do not split purposes by country, so this grid is Africa-wide whatever the scope above.</p>
   <div class="ctl"><span class="fl">Share of</span><div class="seg" id="secbasis" role="group" aria-label="Basis"><button type="button" data-v="usd" aria-pressed="true">money</button><button type="button" data-v="n" aria-pressed="false">activities</button></div></div>
-  <div class="heat" id="secheat"></div>
+  <div class="heat" id="secheat" data-allrows></div>
   <p class="note">Five lenders report every activity to the OECD's Creditor Reporting System; their packs keep the fourteen largest purposes, which cover 100% of the United States's; 100% of Turkey's; 100% of Italy's; 100% of Germany's; 100% of the European Union's commitments, and the rest is the last column. China's row is AidData's record of official commitments to infrastructure, 2000–2021, in constant 2021 dollars, so it has no humanitarian, budget or debt-relief column by construction. Russia reports to neither.</p>
 </section>
 
@@ -634,7 +634,7 @@
   </div>
   <h3>Who delivers it</h3>
   <p class="note">Share of each lender's activities by the channel that receives the money, from the six most common channels each pack keeps.</p>
-  <div class="heat" id="chanheat"></div>
+  <div class="heat" id="chanheat" data-allrows></div>
 </section>
 
 <section id="time">
@@ -656,7 +656,7 @@
 <section id="table">
   <h2>The seven in one table</h2>
   <p class="lead">The figures behind the page for the scope and years chosen above. Each name opens the lender's profile, where the same data sits with its sources and tables.</p>
-  <div id="tbl"><div class="tbl"><table class=cmp><caption>The seven lenders, Africa-wide. Debt at the end of 2024; aid commitments over each source's window; net ODA 2024; FDI stock 2024. USD bn.</caption><thead><tr><th>Lender</th><th class=num>Owed to it, 2024</th><th class=num>Debtor states</th><th class=num>Largest creditor in</th><th class=num>Aid committed</th><th class=num>Recipient states</th><th>Largest recipient</th><th class=num>Builds things</th><th class=num>Grants</th><th class=num>Net ODA 2024</th><th class=num>FDI stock 2024</th></tr></thead><tbody><tr><td class="name"><span class="lk lk-italy"></span><a href="../italy/">Italy</a></td><td class="num">3.7</td><td class="num">21</td><td class="num">2</td><td class="num">5.0 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Somalia <span class="dim">19%</span></td><td class="num">26%</td><td class="num">53% <span class="dim">of money</span></td><td class="num">0.8</td><td class="num">29.9</td></tr><tr><td class="name"><span class="lk lk-turkey"></span><a href="../turkey/">Turkey</a></td><td class="num">0.6</td><td class="num">8</td><td class="num">0</td><td class="num">0.7 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Somalia <span class="dim">35%</span></td><td class="num">15%</td><td class="num">91% <span class="dim">of money</span></td><td class="num">0.1</td><td class="num">2.6</td></tr><tr><td class="name"><span class="lk lk-china"></span><a href="../china/">China</a></td><td class="num">82.2</td><td class="num">46</td><td class="num">38</td><td class="num">242.7 <span class="dim">2000–2021</span></td><td class="num">52</td><td>Angola <span class="dim">17%</span></td><td class="num"><span class="dim">all, by construction</span></td><td class="num">4% <span class="dim">of money</span></td><td class="num">–</td><td class="num">–</td></tr><tr><td class="name"><span class="lk lk-eu"></span><a href="../eu/">European Union</a></td><td class="num">13.8</td><td class="num">43</td><td class="num">6</td><td class="num">66.0 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Egypt <span class="dim">21%</span></td><td class="num">25%</td><td class="num">63% <span class="dim">of money</span></td><td class="num">5.5</td><td class="num">–</td></tr><tr><td class="name"><span class="lk lk-russia"></span><a href="../russia/">Russia</a></td><td class="num">4.5</td><td class="num">12</td><td class="num">1</td><td class="num"><span class="dim">not reported</span></td><td class="num">–</td><td>–</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="name"><span class="lk lk-usa"></span><a href="../usa/">United States</a></td><td class="num">6.8</td><td class="num">19</td><td class="num">1</td><td class="num">136.2 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Ethiopia <span class="dim">9%</span></td><td class="num">9%</td><td class="num">94% <span class="dim">of money</span></td><td class="num">15.8</td><td class="num">43.2</td></tr><tr><td class="name"><span class="lk lk-germany"></span><a href="../germany/">Germany</a></td><td class="num">13.6</td><td class="num">23</td><td class="num">1</td><td class="num">48.0 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Morocco <span class="dim">11%</span></td><td class="num">28%</td><td class="num">70% <span class="dim">of money</span></td><td class="num">4.6</td><td class="num">14.7</td></tr></tbody></table></div></div>
+  <div id="tbl" data-allrows><div class="tbl"><table class=cmp><caption>The seven lenders, Africa-wide. Debt at the end of 2024; aid commitments over each source's window; net ODA 2024; FDI stock 2024. USD bn.</caption><thead><tr><th>Lender</th><th class=num>Owed to it, 2024</th><th class=num>Debtor states</th><th class=num>Largest creditor in</th><th class=num>Aid committed</th><th class=num>Recipient states</th><th>Largest recipient</th><th class=num>Builds things</th><th class=num>Grants</th><th class=num>Net ODA 2024</th><th class=num>FDI stock 2024</th></tr></thead><tbody><tr><td class="name"><span class="lk lk-italy"></span><a href="../italy/">Italy</a></td><td class="num">3.7</td><td class="num">21</td><td class="num">2</td><td class="num">5.0 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Somalia <span class="dim">19%</span></td><td class="num">26%</td><td class="num">53% <span class="dim">of money</span></td><td class="num">0.8</td><td class="num">29.9</td></tr><tr><td class="name"><span class="lk lk-turkey"></span><a href="../turkey/">Turkey</a></td><td class="num">0.6</td><td class="num">8</td><td class="num">0</td><td class="num">0.7 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Somalia <span class="dim">35%</span></td><td class="num">15%</td><td class="num">91% <span class="dim">of money</span></td><td class="num">0.1</td><td class="num">2.6</td></tr><tr><td class="name"><span class="lk lk-china"></span><a href="../china/">China</a></td><td class="num">82.2</td><td class="num">46</td><td class="num">38</td><td class="num">242.7 <span class="dim">2000–2021</span></td><td class="num">52</td><td>Angola <span class="dim">17%</span></td><td class="num"><span class="dim">all, by construction</span></td><td class="num">4% <span class="dim">of money</span></td><td class="num">–</td><td class="num">–</td></tr><tr><td class="name"><span class="lk lk-eu"></span><a href="../eu/">European Union</a></td><td class="num">13.8</td><td class="num">43</td><td class="num">6</td><td class="num">66.0 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Egypt <span class="dim">21%</span></td><td class="num">25%</td><td class="num">63% <span class="dim">of money</span></td><td class="num">5.5</td><td class="num">–</td></tr><tr><td class="name"><span class="lk lk-russia"></span><a href="../russia/">Russia</a></td><td class="num">4.5</td><td class="num">12</td><td class="num">1</td><td class="num"><span class="dim">not reported</span></td><td class="num">–</td><td>–</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="name"><span class="lk lk-usa"></span><a href="../usa/">United States</a></td><td class="num">6.8</td><td class="num">19</td><td class="num">1</td><td class="num">136.2 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Ethiopia <span class="dim">9%</span></td><td class="num">9%</td><td class="num">94% <span class="dim">of money</span></td><td class="num">15.8</td><td class="num">43.2</td></tr><tr><td class="name"><span class="lk lk-germany"></span><a href="../germany/">Germany</a></td><td class="num">13.6</td><td class="num">23</td><td class="num">1</td><td class="num">48.0 <span class="dim">2018–2024</span></td><td class="num">53</td><td>Morocco <span class="dim">11%</span></td><td class="num">28%</td><td class="num">70% <span class="dim">of money</span></td><td class="num">4.6</td><td class="num">14.7</td></tr></tbody></table></div></div>
 </section>
 
 <section id="method">
@@ -1185,14 +1185,15 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
    order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
    gets a box above it that keeps the rows containing every word typed. A row of class
    "grow" is a group heading: rows sort within their group, and a filter that names the
-   group keeps it whole. A table longer than twelve rows shows its first ten, in
+   group keeps it whole. A table longer than five rows shows its first five, in
    whatever order it is sorted, with buttons under it for ten more, all of them or
-   back to ten; a filter shows every match, and a link to something in a hidden row
-   (a corridor's marker on the map) opens the table first. Tables a page draws or
+   back to five; a filter shows every match, and a link to something in a hidden row
+   (a corridor's marker on the map) opens the table first. A table inside an element
+   marked data-allrows keeps every row. Tables a page draws or
    redraws later (the comparison's) are picked up as they appear, and keep their
    sort, filter and length across redraws. */
 {
-  const CAP = 10, STEP = 10, SLACK = 2;   // 11 or 12 rows stay whole: the buttons would take the room they save
+  const CAP = 5, STEP = 10;
   const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
   const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
@@ -1254,7 +1255,7 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
     });
 
     let more = null, said, nextB, allB, lessB;
-    if (data.length > CAP + SLACK) {
+    if (data.length > CAP && !t.closest("[data-allrows]")) {   // the comparison's rows are its seven lenders: all stay
       const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
       const btn = fn => { const b = document.createElement("button"); b.type = "button"; b.addEventListener("click", fn); return b; };
       more = document.createElement("div");

@@ -204,8 +204,9 @@ their top bar. A profile is a reading page in the site's frame, not a map
 layer: a lede, four headline figures, a small map of what can be placed, two
 charts, the tables behind them (rendered at build time, so crawlers read the
 substance; in the browser every header sorts its column, a table longer than eight
-rows gets a filter box, and one longer than twelve shows its first ten with buttons
-for the rest, all from one script in the shared frame), and a "How to read this page" section with the sources, licences,
+rows gets a filter box, and one longer than five shows its first five with buttons
+for the rest unless a container marks it `data-allrows`, as the comparison's do,
+all from one script in the shared frame), and a "How to read this page" section with the sources, licences,
 status rules and what is absent and why. Its data pack is published beside the
 other data files (`docs/data/donors/<slug>.json`) and listed in the sitemap and
 `llms.txt`.

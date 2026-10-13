@@ -274,7 +274,7 @@
   .tfilter input::placeholder{color:var(--ink-3)}
   .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
   .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
-  /* a table longer than twelve rows shows its first ten, with buttons under it for the rest */
+  /* a table longer than five rows shows its first five, with buttons under it for the rest */
   tr.capped{display:none}
   tr.tlast td{border-bottom:0}
   .tmore{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:var(--ink-3)}
@@ -659,14 +659,15 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
    order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
    gets a box above it that keeps the rows containing every word typed. A row of class
    "grow" is a group heading: rows sort within their group, and a filter that names the
-   group keeps it whole. A table longer than twelve rows shows its first ten, in
+   group keeps it whole. A table longer than five rows shows its first five, in
    whatever order it is sorted, with buttons under it for ten more, all of them or
-   back to ten; a filter shows every match, and a link to something in a hidden row
-   (a corridor's marker on the map) opens the table first. Tables a page draws or
+   back to five; a filter shows every match, and a link to something in a hidden row
+   (a corridor's marker on the map) opens the table first. A table inside an element
+   marked data-allrows keeps every row. Tables a page draws or
    redraws later (the comparison's) are picked up as they appear, and keep their
    sort, filter and length across redraws. */
 {
-  const CAP = 10, STEP = 10, SLACK = 2;   // 11 or 12 rows stay whole: the buttons would take the room they save
+  const CAP = 5, STEP = 10;
   const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
   const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
@@ -728,7 +729,7 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
     });
 
     let more = null, said, nextB, allB, lessB;
-    if (data.length > CAP + SLACK) {
+    if (data.length > CAP && !t.closest("[data-allrows]")) {   // the comparison's rows are its seven lenders: all stay
       const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
       const btn = fn => { const b = document.createElement("button"); b.type = "button"; b.addEventListener("click", fn); return b; };
       more = document.createElement("div");

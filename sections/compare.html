@@ -196,7 +196,7 @@
   <h2>What they fund</h2>
   <p class="lead">Each row is one lender's aid commitments split by the DAC's sector headings, as a share of its total; darker is more. Read across a row for a lender's priorities, down a column for who cares about a sector. The sources do not split purposes by country, so this grid is Africa-wide whatever the scope above.</p>
   <div class="ctl"><span class="fl">Share of</span><div class="seg" id="secbasis" role="group" aria-label="Basis"><button type="button" data-v="usd" aria-pressed="true">money</button><button type="button" data-v="n" aria-pressed="false">activities</button></div></div>
-  <div class="heat" id="secheat"></div>
+  <div class="heat" id="secheat" data-allrows></div>
   <p class="note">Five lenders report every activity to the OECD's Creditor Reporting System; their packs keep the fourteen largest purposes, which cover __COVER_NOTE__ commitments, and the rest is the last column. China's row is AidData's record of official commitments to infrastructure, __CHINA_FROM__–__CHINA_TO__, in constant 2021 dollars, so it has no humanitarian, budget or debt-relief column by construction. Russia reports to neither.</p>
 </section>
 
@@ -218,7 +218,7 @@
   </div>
   <h3>Who delivers it</h3>
   <p class="note">Share of each lender's activities by the channel that receives the money, from the six most common channels each pack keeps.</p>
-  <div class="heat" id="chanheat"></div>
+  <div class="heat" id="chanheat" data-allrows></div>
 </section>
 
 <section id="time">
@@ -240,7 +240,7 @@
 <section id="table">
   <h2>The seven in one table</h2>
   <p class="lead">The figures behind the page for the scope and years chosen above. Each name opens the lender's profile, where the same data sits with its sources and tables.</p>
-  <div id="tbl">__TABLE__</div>
+  <div id="tbl" data-allrows>__TABLE__</div>
 </section>
 
 <section id="method">
