@@ -22,9 +22,9 @@ rivers, lakes and cities around Africa), with
 the eight data layers drawn as circles (power units, sized by MW), squares and
 diamonds (AfDB and World Bank projects, sized by commitment), triangles
 (Chinese-financed projects from AidData, 2000–2021, sized by commitment, with
-the works' OpenStreetMap footprint outlined from country zoom in), five-pointed
-stars (EU-financed records: European Commission contracts and EIB operations,
-sized by commitment), hexagons (the projects of Italy's Piano Mattei, sized by
+the works' OpenStreetMap footprint outlined from country zoom in), five- and
+four-pointed stars (EU-financed records: European Commission contracts and EIB
+operations, sized by commitment), hexagons (the projects of Italy's Piano Mattei, sized by
 the amount the Government's portal states), thin lines
 (construction ways traced in OpenStreetMap), haloed lines (oil and gas pipeline
 routes) and lines ending in dots (submarine cables, dots at their African

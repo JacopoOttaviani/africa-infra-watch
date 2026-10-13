@@ -14,7 +14,7 @@
     --label:#586760; --label-city:#3E4B44; --halo:#F8FAF6;
     --st-announced:#B5841A; --st-approved:#3556B9; --st-construction:#C43D88;
     --st-operating:#2B7A4C; --st-stalled:#7F8B86;
-    --copper:#B0642A; --tint:14%;
+    --copper:#B0642A;
     --display:"Archivo","Helvetica Neue",Arial,sans-serif;
     --serif:"Source Serif 4",Georgia,serif;
     --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -32,7 +32,7 @@
       --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
       --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
       --st-operating:#67C98B; --st-stalled:#6E7A75;
-      --copper:#D9935C; --tint:22%;
+      --copper:#D9935C;
       --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
       --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
     }
@@ -47,7 +47,7 @@
     --label:#8E9C94; --label-city:#B7C3BB; --halo:#1B231E;
     --st-announced:#B7810F; --st-approved:#92A4FC; --st-construction:#D44A98;
     --st-operating:#67C98B; --st-stalled:#6E7A75;
-      --copper:#D9935C; --tint:22%;
+      --copper:#D9935C;
     --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
     --shadow-lg:0 2px 4px rgba(0,0,0,.5),0 18px 40px -18px rgba(0,0,0,.8);
   }
@@ -101,9 +101,9 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371827A' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");background-repeat:no-repeat;background-position:9px 50%}
   input[type=search]::placeholder{color:var(--ink-3)}
 
-  .lyr{--tone:var(--st-stalled);display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid color-mix(in srgb,var(--tone) 30%,var(--rule-soft));border-radius:3px;background:color-mix(in srgb,var(--tone) var(--tint),var(--surface));text-align:left;margin-top:5px}
-  .lyr[data-l="assets"]{--tone:var(--st-operating)} .lyr[data-l="cables"]{--tone:var(--st-approved)}
-  .lyr[data-l="ground"]{--tone:var(--st-construction)} .lyr[data-l="pipelines"]{--tone:var(--copper)}
+  /* source cards, layers and lenders alike, carry no colour: on the map colour
+     means status, so the shape alone names the source and the icon takes the text colour */
+  .lyr{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 9px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);text-align:left;margin-top:5px}
   .lyr:first-child{margin-top:0}
   .lyr[aria-pressed="false"]{background:transparent;border-color:var(--rule-soft);color:var(--ink-3)}
   .lyr[aria-pressed="false"] .glyph{opacity:.35}
@@ -113,9 +113,7 @@
   .lyr .lt b{font-weight:600;font-size:13px}
   .lyr .lt span{font-size:11px;color:var(--ink-3)}
   .lyr .lc{font-family:var(--mono);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
-  /* lender buttons wear the layers' card: the map shape on the left, in the tone
-     of the layer the lender's records belong to (set inline from LAYER_TONE, so a
-     new lender needs no rule here); the rows sit under family headings */
+  /* lender buttons wear the layers' card, the map shape on the left; the rows sit under family headings */
   .lyr:disabled,.fh:disabled{opacity:.45;cursor:default}
   .fam{margin-top:10px} .fam:first-child{margin-top:0}
   .fh{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--ink-2);margin:0 0 4px 1px}
@@ -510,6 +508,11 @@
     </div>
 
     <div class="panel map-only">
+      <h3>Status <span class="hint">colour = status</span></h3>
+      <div class="chips" id="statuses"></div>
+    </div>
+
+    <div class="panel map-only">
       <h3>Show <span class="hint">a project can be in both</span></h3>
       <div class="seg" id="side" role="group" aria-label="What the map shows">
         <button data-side="all" title="What is built and who is paying for it">Both</button>
@@ -527,11 +530,6 @@
       <h3>Lenders <span class="hint">who is paying</span></h3>
       <p class="railnote">Each lender's projects are records of their own, not a filter on the layers above: switching China off hides the Chinese loans, not the power plants they paid for.</p>
       <div id="lenders"></div>
-    </div>
-
-    <div class="panel map-only">
-      <h3>Status <span class="hint">colour = status</span></h3>
-      <div class="chips" id="statuses"></div>
     </div>
 
     <div class="panel map-only">
@@ -655,7 +653,7 @@ const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank
 /* The rail lists the data in two groups. "Layers" is what is built: power
    units, works on the ground, pipelines, cables. "Lenders" is who is paying:
    the finance layer's two banks (squares and diamonds), the EU layer's two
-   institutions (stars) and Chinese official lenders (triangles). The three
+   institutions (five- and four-pointed stars) and Chinese official lenders (triangles). The three
    finance layers stay layers in the payload and the drawing; their on/off
    flags are derived from the lenders (syncLayers), so everything that reads
    the layer flags keeps working. */
@@ -664,10 +662,11 @@ const LENDER_ORDER = ["AfDB","WB","EC","EIB","CN","IT"];
 const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
 const LENDER_SUB   = {AfDB:"IATI activity files", WB:"IATI activity files", EC:"DG INTPA · DG NEAR · IATI", EIB:"IATI activity file", CN:"AidData · 2000–2021", IT:"Government project portal"};
 const LENDER_LAYER = {AfDB:"finance", WB:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
-const LENDER_GLYPH = {AfDB:"finance", WB:"finance_wb", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
+const LENDER_GLYPH = {AfDB:"finance", WB:"finance_wb", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
 const LENDER_FAMILY = [["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["Italy",["IT"]]];
 const allLendersOn = () => Object.fromEntries(LENDER_ORDER.map(k=>[k,true]));
-const sourceOf     = r => r.layer==="finance" ? (LENDER_NAME[r.lender]||LAYER_SUB.finance) : LAYER_SUB[r.layer];
+/* a record of a two-lender layer names its own lender: AfDB or World Bank, Commission or EIB */
+const sourceOf     = r => r.layer==="finance" || r.layer==="eu" ? (LENDER_NAME[r.lender]||LAYER_SUB[r.layer]) : LAYER_SUB[r.layer];
 const LAYER_KEY    = {assets:"a",finance:"f",ground:"g",pipelines:"p",cables:"c",china:"d",eu:"e",mattei:"i"};
 /* AidData's vocabulary behind the shared one */
 const CHINA_RAW    = {approved:"Pipeline: Commitment", under_construction:"Implementation", operating:"Completion"};
@@ -687,9 +686,6 @@ const isLine = r => r.layer in LINE_RANK;
    nothing, so they stay drawn as lines in the cluster view too. */
 const UNCLUSTERED = new Set(["pipelines","cables"]);
 const clustered = r => !UNCLUSTERED.has(r.layer);
-/* the colour each layer's button and stat row wear: its most common status,
-   except oil and gas, which get a copper of their own so they never read as power */
-const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"copper",cables:"approved",china:"operating",eu:"approved",mattei:"under_construction"};
 /* the Piano Mattei portal's location tiers, as the fetcher assigns them */
 const MATTEI_PREC  = ["", "named site or town", "named administrative area", "country only", "multi-country"];
 const allLayersOn  = () => Object.fromEntries(LAYER_ORDER.map(k=>[k,true]));
@@ -1068,7 +1064,6 @@ function markerR(r){
   return Math.max(2.4, Math.min(7.5, 2.4 + Math.sqrt(r.size||0)/6)) * zf;   /* half-side of the square */
 }
 
-/* a five-pointed star of outer radius R, one point up, on the current path */
 function hexPath(x, y, R){
   /* a flat-topped hexagon of circumradius R, on the current path */
   for(let i=0;i<6;i++){
@@ -1077,9 +1072,11 @@ function hexPath(x, y, R){
   }
   ctx.closePath();
 }
-function starPath(x, y, R){
-  for(let i=0;i<10;i++){
-    const a = -Math.PI/2 + i*Math.PI/5, rr = i%2 ? R*0.42 : R;
+/* a star of n points and outer radius R, one point up, on the current path:
+   five for a Commission record, four for an EIB operation */
+function starPath(x, y, R, n=5, inner=0.42){
+  for(let i=0;i<2*n;i++){
+    const a = -Math.PI/2 + i*Math.PI/n, rr = i%2 ? R*inner : R;
     const px = x + rr*Math.cos(a), py = y + rr*Math.sin(a);
     if(i) ctx.lineTo(px, py); else ctx.moveTo(px, py);
   }
@@ -1241,7 +1238,7 @@ function draw(){
       else ctx.rect(x-rad, y-rad, rad*2, rad*2);
     }
     else if(r.layer==="china"){ const d = rad*1.3; ctx.moveTo(x, y-d*1.05); ctx.lineTo(x+d*1.08, y+d*0.75); ctx.lineTo(x-d*1.08, y+d*0.75); ctx.closePath(); }
-    else if(r.layer==="eu") starPath(x, y, rad*1.55);
+    else if(r.layer==="eu"){ if(r.lender==="EIB") starPath(x, y, rad*1.55, 4, 0.44); else starPath(x, y, rad*1.55); }
     else if(r.layer==="mattei") hexPath(x, y, rad*1.25);
     else ctx.arc(x, y, rad, 0, 6.2832);
     if(hollow){
@@ -1394,6 +1391,10 @@ function countryAt(px_, py_){
 }
 
 /* ================= rendering: rail ================= */
+/* the EIB's four-pointed star, one point up: the glyph, its stalled outline, and the larger cluster-view marker */
+const STAR4 = {fill:"M8 1.4 10.05 5.95 14.6 8 10.05 10.05 8 14.6 5.95 10.05 1.4 8 5.95 5.95Z",
+               line:"M8 2.2 9.77 6.23 13.8 8 9.77 9.77 8 13.8 6.23 9.77 2.2 8 6.23 6.23Z",
+               big:"M8 1 10.19 5.81 15 8 10.19 10.19 8 15 5.81 10.19 1 8 5.81 5.81Z"};
 const glyph = {
   assets:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${col}"/></svg>`,
   finance: col => `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" fill="${col}"/></svg>`,
@@ -1403,16 +1404,18 @@ const glyph = {
   cables:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 12 13.5 4" stroke="${col}" stroke-width="1.7" stroke-linecap="round" fill="none"/><circle cx="2.8" cy="11.8" r="2.3" fill="${col}"/><circle cx="13.2" cy="4.2" r="2.3" fill="${col}"/></svg>`,
   china:   col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2.2 14.3 13.6H1.7Z" fill="${col}"/></svg>`,
   eu:      col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8.00 1.70L9.59 6.12L14.28 6.26L10.57 9.13L11.88 13.64L8.00 11.00L4.12 13.64L5.43 9.13L1.72 6.26L6.41 6.12Z" fill="${col}"/></svg>`,
+  eu_eib:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="${STAR4.fill}" fill="${col}"/></svg>`,
   mattei:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M14.3 8L11.15 13.46L4.85 13.46L1.7 8L4.85 2.54L11.15 2.54Z" fill="${col}"/></svg>`,
 };
 const glyphStatus = (layer, status, lender) => {
   const col = statusColor(status);
-  const wb = layer==="finance" && lender==="WB";
-  if(status!=="stalled") return (wb ? glyph.finance_wb : glyph[layer])(col);
+  const wb = layer==="finance" && lender==="WB", eib = layer==="eu" && lender==="EIB";
+  if(status!=="stalled") return (wb ? glyph.finance_wb : eib ? glyph.eu_eib : glyph[layer])(col);
   if(layer==="assets") return `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.3" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(wb) return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2.4 13.6 8 8 13.6 2.4 8Z" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(layer==="finance") return `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3.8" y="3.8" width="8.4" height="8.4" fill="none" stroke="${col}" stroke-width="1.6"/></svg>`;
   if(layer==="china") return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3.4 13.2 12.8H2.8Z" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+  if(eib) return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="${STAR4.line}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
   if(layer==="eu") return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8.00 2.10L9.41 6.06L13.61 6.18L10.28 8.74L11.47 12.77L8.00 10.40L4.53 12.77L5.72 8.74L2.39 6.18L6.59 6.06Z" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
   if(layer==="mattei") return `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M13.5 8L10.75 12.76L5.25 12.76L2.5 8L5.25 3.24L10.75 3.24Z" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
   return (glyph[layer] || glyph.ground)(col);
@@ -1455,7 +1458,7 @@ function renderLayers(c){
   const off = S_.side==="paid";
   el("layers").innerHTML = (off ? offNote("who is paying") : "") + RAIL_LAYERS.map(k => `
     <button class="lyr" data-l="${k}" aria-pressed="${S_.layers[k]}"${off?" disabled":""}>
-      <span class="glyph">${glyph[k](COL[LAYER_TONE[k]])}</span>
+      <span class="glyph">${glyph[k]("currentColor")}</span>
       <span class="lt"><b>${LAYER_LABEL[k]}</b><span>${LAYER_SUB[k]}</span></span>
       <span class="lc">${fmt(c.layer[k])}</span>
     </button>`).join("");
@@ -1463,8 +1466,6 @@ function renderLayers(c){
     b.onclick = () => { S_.layers[b.dataset.l] = !S_.layers[b.dataset.l]; apply(); });
   el("layers").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S_.side = b.dataset.side; apply(); });
 }
-/* the CSS variable behind a layer's tone, for the lender cards */
-const toneVar = L => LAYER_TONE[L]==="copper" ? "--copper" : "--st-" + (LAYER_TONE[L]==="under_construction" ? "construction" : LAYER_TONE[L]);
 function renderLenders(c){
   const off = S_.side==="built";
   const famState = ks => ks.every(k=>S_.lenders[k]) ? "true" : ks.some(k=>S_.lenders[k]) ? "mixed" : "false";
@@ -1472,8 +1473,8 @@ function renderLenders(c){
     <div class="fam">${ks.length>1
       ? `<button class="fh" data-fam="${i}" aria-pressed="${famState(ks)}"${off?" disabled":""} title="Switch all ${esc(fam)} on or off">${fam}</button>`
       : `<div class="fh">${fam}</div>`}${ks.map(k => `
-    <button class="lyr" data-ln="${k}" style="--tone:var(${toneVar(LENDER_LAYER[k])})" aria-pressed="${S_.lenders[k]}"${off?" disabled":""}>
-      <span class="glyph">${glyph[LENDER_GLYPH[k]](COL[LAYER_TONE[LENDER_LAYER[k]]])}</span>
+    <button class="lyr" data-ln="${k}" aria-pressed="${S_.lenders[k]}"${off?" disabled":""}>
+      <span class="glyph">${glyph[LENDER_GLYPH[k]]("currentColor")}</span>
       <span class="lt"><b>${LENDER_NAME[k]}</b><span>${k} · ${LENDER_SUB[k]}</span></span>
       <span class="lc">${fmt(c.lender[k])}</span>
     </button>`).join("")}</div>`).join("");
@@ -1528,7 +1529,8 @@ function renderLegend(){
       <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(COL.ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
       <div class="lg">${glyph.china(COL.ink)}<span><b>Chinese-financed project</b> · size = commitment</span></div>
-      <div class="lg">${glyph.eu(COL.ink)}<span><b>EU-financed record</b> · size = commitment</span></div>
+      <div class="lg">${glyph.eu(COL.ink)}<span><b>European Commission record</b> · size = commitment</span></div>
+      <div class="lg">${glyph.eu_eib(COL.ink)}<span><b>EIB operation</b> · size = commitment</span></div>
       <div class="lg">${glyph.mattei(COL.ink)}<span><b>Piano Mattei project</b> · size = stated amount</span></div>
       <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = not yet built</span></div>
       ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
@@ -1795,7 +1797,7 @@ function renderDetail(){
     else link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
     note = eib
       ? `EIB signed amount from its IATI commitment transactions, distinct tranche records summed, converted at ${DATA.meta.eur_note}. The Bank's own share; co-financiers, including the Commission's grants, are not counted.`
-      : `Commission ${f.kind==="contract" ? "contracted" : "committed"} amount from IATI type-2 transactions, converted at ${DATA.meta.eur_note}. The Commission's money only; an EIB loan to the same project is its own star, and member states' finance is absent. Never added to the other lenders.`;
+      : `Commission ${f.kind==="contract" ? "contracted" : "committed"} amount from IATI type-2 transactions, converted at ${DATA.meta.eur_note}. The Commission's money only; an EIB loan to the same project is its own four-pointed star, and member states' finance is absent. Never added to the other lenders.`;
   } else if(r.layer==="mattei"){
     const plain = /^(EUR|USD|\$) ?[\d.,]+ ?(million|billion|thousand)?$/.test(f.amt||"");
     rows.push(["Programme", `Piano Mattei per l'Africa <span>· the Italian Government's project portal</span>`]);
@@ -1940,6 +1942,11 @@ function iconFor(r){
     html = r.status==="stalled"
       ? `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.2 13.4 12.9H2.6Z" fill="none" stroke="${v}" stroke-width="1.7" stroke-linejoin="round"/></svg>`
       : `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 14.6 13.8H1.4Z" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
+  } else if(r.layer==="eu" && r.lender==="EIB"){
+    const v = `var(${STATUS_VAR(r.status)})`;
+    html = r.status==="stalled"
+      ? `<svg class="star" viewBox="0 0 16 16" aria-hidden="true"><path d="${STAR4.line}" fill="none" stroke="${v}" stroke-width="1.5" stroke-linejoin="round"/></svg>`
+      : `<svg class="star" viewBox="0 0 16 16" aria-hidden="true"><path d="${STAR4.big}" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
   } else if(r.layer==="eu"){
     const v = `var(${STATUS_VAR(r.status)})`;
     html = r.status==="stalled"
@@ -2687,7 +2694,7 @@ function renderMethod(){
       <div class="yes"><h4>What it tells you</h4><ul>
         <li>What the Commission has contracted and the EIB has signed, project by project, in which sector and country, and through whom: a UN agency, a member state's development bank, a government, a company.</li>
         <li>How much of a contract has been paid out, where the Commission publishes it.</li>
-        <li>Where the Commission and the EIB fund the same corridor or plant: two stars at one site, a grant and a loan.</li>
+        <li>Where the Commission and the EIB fund the same corridor or plant: a star and a four-pointed star at one site, a grant and a loan.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
         <li><strong>Total EU or "Team Europe" money.</strong> Member states' agencies are absent, guarantees are absent, and the two institutions' shares are never summed.</li>
@@ -2764,7 +2771,8 @@ function renderMethod(){
       <div>${glyph.pipelines(COL.ink)}<div><b>Haloed line · pipeline</b><span>Drawn along the route with a translucent halo of its own colour, so it reads as a pipe. Dashed while proposed.</span></div></div>
       <div>${glyph.cables(COL.ink)}<div><b>Line with dots · submarine cable</b><span>Drawn along the whole route; a dot at each African landing point. Dashed until in service.</span></div></div>
       <div>${glyph.china(COL.ink)}<div><b>Triangle · Chinese-financed project</b><span>Area scales with the commitment in constant 2021 US dollars. Where AidData traced the works in OpenStreetMap, the footprint is outlined in the same colour from country zoom in.</span></div></div>
-      <div>${glyph.eu(COL.ink)}<div><b>Star · EU-financed record</b><span>A Commission contract or decision, or an EIB operation. Area scales with the commitment in euros, converted to US dollars at a stated rate.</span></div></div>
+      <div>${glyph.eu(COL.ink)}<div><b>Star · European Commission record</b><span>A Commission contract or decision. Area scales with the commitment in euros, converted to US dollars at a stated rate.</span></div></div>
+      <div>${glyph.eu_eib(COL.ink)}<div><b>Four-pointed star · EIB operation</b><span>Same layer, same scale, the other EU institution. The Bank publishes no locations, so every one sits on its country's point.</span></div></div>
       <div>${glyph.mattei(COL.ink)}<div><b>Hexagon · Piano Mattei project</b><span>One project page of the Italian Government's portal. Area scales with the amount the portal states, in euros, converted at the same rate.</span></div></div>
       <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved or suspended.</span></div></div>
     </div>
