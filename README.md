@@ -203,8 +203,9 @@ and at the bottom right of the dashboard's map; the reading pages keep it in
 their top bar. A profile is a reading page in the site's frame, not a map
 layer: a lede, four headline figures, a small map of what can be placed, two
 charts, the tables behind them (rendered at build time, so crawlers read the
-substance; in the browser every header sorts its column and a table longer than eight
-rows gets a filter box, from one script in the shared frame), and a "How to read this page" section with the sources, licences,
+substance; in the browser every header sorts its column, a table longer than eight
+rows gets a filter box, and one longer than twelve shows its first ten with buttons
+for the rest, all from one script in the shared frame), and a "How to read this page" section with the sources, licences,
 status rules and what is absent and why. Its data pack is published beside the
 other data files (`docs/data/donors/<slug>.json`) and listed in the sitemap and
 `llms.txt`.
@@ -227,6 +228,12 @@ Three files make a profile, plus one list entry:
   rendered tables) and the payload the page draws (map points, series, bars).
   The frame shared by all profiles is `donor.template.html`; `wrap_document`
   makes every absolute site link relative to the profile's folder.
+- `headmap.py` → the map beside every deep dive's opening text: the lender's
+  outline from the 1:10m basemap (`PROFILE_SHAPES`, one ISO3 list per slug) with
+  its headline debt figure under it (`OWED_TO` names the creditors), or, on the
+  debt and comparison pages, the continent coloured by lead creditor. It is
+  inserted at build time, so a new profile needs those two entries and no edit to
+  its fragment.
 
 **Russia** (`fetch_sources.py`-style notes in `fetch_donors.py`): there is no
 Russian counterpart to AidData, and Russia reports no project-level aid to the

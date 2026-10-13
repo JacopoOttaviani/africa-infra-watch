@@ -27,6 +27,7 @@ import shutil
 import sys
 
 from build_donors import FRAME, MAP_H, MAP_W, esc, px, table, td
+from headmap import africa_map, figure, head_wrap
 from fetch_donors import CRS_GROUPS, NAME, centre, crs_group
 from shared import (AUTHOR_NAME, AUTHOR_URL, DATA, DOCS, DONORS, SITE_NAME, SITE_URL, WEB_URL,
                     brand_assets, fmt_date, site_url, today, wrap_document)
@@ -449,6 +450,32 @@ def tokens(pl, f):
     }
 
 
+def head_figure(pl, f):
+    """The map beside the head: each country in the colour of whichever of the
+    seven lenders it owes most, at the end of the last debt year."""
+    yi = len(pl["years"]["debt"]) - 1
+    y = pl["years"]["debt"][-1]
+    lead = {}
+    for iso in pl["countries"]:
+        best, bv = None, 0
+        for s in LENDERS:
+            v = (pl["debt"][s].get(iso) or [0] * (yi + 1))[yi]
+            if v > bv:
+                best, bv = s, v
+        if best:
+            lead[iso] = best
+    top = max(LENDERS, key=lambda s: f[s]["lead"])
+    svg = africa_map({iso: f"var(--ld-{s})" for iso, s in lead.items()},
+                     {iso: f"{NAME[iso]}: owes {f[s]['name']} the most of the seven" for iso, s in lead.items()},
+                     f"Map of Africa with each country coloured by which of the seven lenders it owes most at the end of {y}")
+    keys = '<span class="ins-k">' + "".join(
+        f'<span><i style="background:var(--ld-{s})"></i>{esc(f[s]["name"])} {f[s]["lead"]}</span>'
+        for s in sorted(LENDERS, key=lambda s: -f[s]["lead"]) if f[s]["lead"]) + "</span>"
+    return figure(svg, f"{f[top]['lead']} of {len(lead)}",
+                  f"governments owe {esc(f[top]['name'])} more than any of the other six lenders at the end of {y}. "
+                  f"Each country is coloured by the one of the seven it owes most.", keys)
+
+
 def jsonld(path):
     page = {"@context": "https://schema.org", "@graph": [
         {"@type": "WebPage", "@id": site_url(path), "url": site_url(path), "name": TITLE,
@@ -478,7 +505,7 @@ def build():
     pl = payload(packs, debt)
     f = facts(pl)
     toks = tokens(pl, f)
-    page = FRAME.read_text().replace("<!--__BODY__-->", FRAG.read_text(), 1)
+    page = FRAME.read_text().replace("<!--__BODY__-->", head_wrap(FRAG.read_text(), head_figure(pl, f)), 1)
     for k, v in toks.items():
         page = page.replace(k, v)
     page = page.replace("<!--__LAND_DEFS__-->", land_defs(), 1)

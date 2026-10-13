@@ -171,6 +171,28 @@
   .lede strong{color:var(--ink);font-weight:600}
   .asof{margin:16px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
   .asof b{font-weight:500;color:var(--ink-2)}
+  /* the head beside a map (headmap.py): the lede on the left; on the right the
+     lender's outline, or the continent, with one key figure under it. The
+     corridor pages restyle these in their own sections. */
+  .headgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,400px);gap:8px 56px;align-items:center}
+  .locator{margin:0;padding-top:30px}
+  .locator svg{display:block;width:100%;height:auto}
+  .locator figcaption{font-size:12px;line-height:1.45;color:var(--ink-3);margin-top:10px;max-width:46ch}
+  .loc .lc{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  .loc .lc.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:.6}
+  .loc.shape{max-height:420px}
+  .loc.shape .lc{fill:var(--land);stroke:var(--border);stroke-width:.5}
+  .loc.shape .lc.on{fill:var(--accent);fill-opacity:.85;stroke:var(--paper);stroke-width:.6}
+  .loc.afr .lc.on{stroke:var(--surface);stroke-width:.6}
+  .insight{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--rule);padding-top:10px}
+  .insight .ins-n{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+  .insight .ins-t{font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+  .insight .ins-k{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;font-size:11.5px;color:var(--ink-2)}
+  .insight .ins-k i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  @media (max-width:960px){
+    .headgrid{grid-template-columns:1fr}
+    .locator{padding-top:6px;max-width:380px}
+  }
   p{max-width:72ch;margin:10px 0 0}
   section{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule)}
   section h2{font-size:21px;font-weight:700;letter-spacing:-.015em}
@@ -252,7 +274,15 @@
   .tfilter input::placeholder{color:var(--ink-3)}
   .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
   .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
-  @media print{.tfilter{display:none} th .sorter::after{display:none}}
+  /* a table longer than twelve rows shows its first ten, with buttons under it for the rest */
+  tr.capped{display:none}
+  tr.tlast td{border-bottom:0}
+  .tmore{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+  .tmore button{font-size:12px;font-weight:600;color:var(--accent-ink)}
+  .tmore button:hover{text-decoration:underline;text-underline-offset:2px}
+  .tmore button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  .tmore[hidden],.tmore button[hidden]{display:none}
+  @media print{.tfilter,.tmore{display:none} th .sorter::after{display:none} tr.capped{display:table-row}}
   .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
   .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
@@ -333,12 +363,16 @@
 <main class="wrap" id="main">
 <!-- Spain: the prose and section order of docs/spain/. Tokens (double-underscore
      names) are filled by build_donors.py from data/donors/spain.json. -->
+<div class="headgrid">
 <div class="head">
   <span class="kicker">Lender profile · Kingdom of Spain</span>
   <h1>Spain</h1>
   <p class="lede"><strong>Spain's record is small money in many hands.</strong> 12,494 activities with an African recipient for 2018–2024, USD 2.11 bn committed, 100% grants and only 12 loans; 40% of the activities are reported by the Municipalities, the rest by the autonomous communities, the cities, the universities and the ministries. The largest purpose is COVID-19 control, USD 212 m; Morocco, Senegal and Mali receive the most, the Maghreb and the Sahel first.</p>
   <p class="lede">The capital is across the strait. Spanish direct-investment stock in Africa stood at USD 7.0 bn at the end of 2024, Morocco 44% of it; the map's own layers carry 5 pipelines with Naturgy, Enagás or Repsol among the owners, the Medgaz line from Algeria and the Maghreb–Europe line through Morocco among them, and 13 power units owned by Acciona, Sener, Elecnor, Abengoa or Cobra, mostly solar and wind in South Africa, Egypt and Morocco. What African governments owe Spanish creditors is USD 2,343 m at the end of 2024, USD 1,137 m of it to the Spanish state.</p>
   <p class="asof">OECD CRS activities <b>2018–2024</b> and DAC2a net ODA <b>2010–2024</b> and FDI positions <b>2015–2024</b>, fetched <b>12 Oct 2026</b> · World Bank International Debt Statistics to <b>2024</b>, release of <b>3 Dec 2025</b> · Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<figure class="locator"><svg class="loc shape" viewBox="0 0 400 326" role="img" aria-label="Outline of Spain"><defs><radialGradient id="hm-fade" cx=".5" cy=".5" r=".62"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="hm-mask" maskContentUnits="userSpaceOnUse"><rect width="400" height="326" fill="url(#hm-fade)"/></mask></defs><g mask="url(#hm-mask)"><path class="lc" d="M400.0 0.0 L399.9 54.2 L395.7 54.1 L395.6 56.4 L393.6 56.6 L393.9 55.0 L389.9 53.8 L388.5 54.4 L390.3 55.5 L388.2 56.8 L383.6 53.0 L376.1 52.5 L376.4 50.8 L374.4 48.2 L368.6 49.4 L368.2 47.1 L371.5 46.2 L372.5 44.4 L367.8 42.3 L368.7 46.4 L364.5 47.0 L365.4 48.6 L364.5 49.5 L360.2 42.3 L363.6 49.4 L358.4 49.4 L356.3 46.5 L348.8 46.9 L346.8 44.2 L343.4 44.9 L333.9 53.7 L329.5 54.6 L325.2 59.8 L323.8 65.1 L324.5 75.0 L328.1 81.0 L322.3 80.1 L316.8 82.5 L316.2 84.7 L312.8 85.3 L307.1 82.3 L300.7 85.2 L298.9 82.5 L293.8 80.9 L295.0 78.7 L293.9 77.2 L289.7 76.2 L287.1 78.0 L285.0 74.5 L280.5 74.8 L279.0 72.8 L272.5 71.1 L268.9 71.1 L268.8 75.9 L262.0 75.1 L260.2 76.7 L257.7 75.0 L252.9 76.4 L250.0 73.0 L248.3 73.3 L246.2 71.6 L240.5 73.9 L236.0 68.5 L226.9 66.8 L223.6 65.3 L223.7 63.6 L221.9 66.0 L219.8 65.7 L219.1 64.5 L220.9 59.4 L217.4 58.1 L215.9 59.3 L215.1 57.7 L213.0 58.0 L211.9 55.3 L215.0 54.5 L219.1 48.8 L223.7 17.9 L225.2 14.5 L228.4 14.3 L225.5 10.9 L223.6 15.7 L224.8 0.0 L235.7 0.0 L239.7 6.9 L238.3 2.9 L240.6 3.7 L236.8 0.0 Z"><title>France</title></path><path class="lc" d="M95.2 325.7 L107.7 293.8 L116.2 292.8 L121.2 289.7 L124.9 300.5 L137.0 311.7 L147.8 314.8 L159.0 311.4 L159.3 313.0 L162.3 313.2 L164.6 310.7 L173.3 313.8 L180.7 311.0 L183.5 306.0 L183.6 311.0 L185.3 311.9 L186.4 315.9 L189.2 316.4 L185.8 312.3 L191.3 316.7 L195.2 317.0 L197.8 315.4 L201.4 316.6 L203.6 320.0 L211.0 325.7 Z"><title>Morocco</title></path><path class="lc" d="M211.0 325.7 L203.6 320.0 L202.8 317.3 L209.7 317.7 L214.7 315.9 L221.2 310.6 L226.7 308.4 L229.5 301.7 L233.3 298.3 L239.2 295.3 L243.7 296.8 L246.3 294.9 L247.4 291.4 L250.7 290.8 L252.4 293.3 L257.6 294.2 L260.6 292.0 L262.8 286.0 L268.2 280.9 L281.3 275.0 L285.7 271.4 L293.9 269.1 L311.4 267.6 L318.1 265.1 L321.2 266.4 L325.0 266.1 L333.1 258.9 L338.4 260.7 L340.1 260.0 L340.5 258.3 L346.9 259.0 L355.4 254.1 L379.1 252.8 L387.8 255.7 L387.6 257.8 L392.3 259.7 L397.1 258.6 L400.0 255.0 L400.0 325.7 Z"><title>Algeria</title></path><path class="lc" d="M293.7 80.6 L287.5 82.9 L286.9 78.5 L289.7 76.2 L293.9 77.2 L295.0 78.7 L293.7 80.6 Z"><title>Andorra</title></path><path class="lc" d="M82.3 196.2 L78.1 198.8 L75.4 207.9 L81.3 216.9 L85.2 216.3 L83.0 221.7 L80.6 221.1 L76.7 222.9 L75.7 226.8 L69.7 235.5 L72.0 248.3 L69.4 248.0 L61.4 253.0 L57.4 253.1 L52.5 249.6 L42.5 247.8 L31.8 250.3 L37.3 238.1 L37.4 232.3 L39.5 228.3 L38.1 228.5 L38.6 222.9 L36.4 221.1 L39.9 213.9 L39.8 208.5 L36.4 204.4 L44.5 206.9 L41.4 205.6 L40.8 202.0 L40.2 204.6 L37.4 203.4 L29.2 205.8 L30.6 201.7 L29.2 198.0 L32.8 198.4 L37.1 195.0 L35.7 190.6 L37.6 187.5 L42.1 185.2 L37.8 186.7 L33.3 193.1 L32.8 196.7 L27.5 197.7 L23.9 196.4 L23.6 192.9 L28.1 181.0 L27.1 175.3 L31.8 174.7 L35.3 169.4 L41.9 152.6 L43.9 152.9 L41.1 150.1 L45.8 136.5 L50.4 133.2 L48.1 133.3 L48.6 130.2 L45.9 136.1 L49.5 120.5 L47.6 117.3 L46.4 103.9 L49.6 102.5 L45.7 102.8 L45.9 97.9 L52.0 92.2 L61.7 89.6 L61.9 92.3 L64.4 93.4 L61.2 96.9 L61.9 100.5 L65.0 100.5 L68.6 97.7 L68.7 99.4 L72.9 98.4 L75.5 99.4 L75.5 100.9 L78.7 100.2 L79.2 101.7 L84.6 99.7 L86.2 96.4 L88.7 97.9 L93.3 98.1 L94.1 96.8 L96.2 98.6 L99.1 97.8 L100.9 100.9 L99.5 104.8 L100.2 107.4 L104.4 107.4 L108.0 110.6 L105.1 115.5 L100.8 119.0 L97.1 119.7 L93.1 125.9 L89.7 127.3 L92.5 132.5 L90.8 145.5 L92.2 148.3 L86.0 153.5 L89.6 159.2 L85.7 169.0 L72.7 168.7 L73.5 171.5 L78.2 176.1 L77.7 179.7 L79.5 184.4 L81.3 185.3 L81.4 187.4 L84.3 187.4 L85.6 188.8 L85.8 190.5 L82.3 196.2 Z"><title>Portugal</title></path></g><path class="lc on" d="M211.9 55.0 L211.9 56.4 L213.0 58.0 L215.1 57.7 L215.9 59.3 L217.4 58.1 L220.9 59.4 L220.5 62.8 L219.1 64.5 L219.8 65.7 L221.9 66.0 L222.3 64.1 L223.7 63.6 L223.1 64.4 L223.6 65.3 L226.9 66.8 L231.7 68.6 L236.0 68.5 L236.5 70.5 L238.6 71.5 L240.5 73.9 L241.3 72.8 L243.9 73.3 L246.2 71.6 L248.3 73.3 L250.0 73.0 L251.0 75.4 L252.9 76.4 L257.7 75.0 L259.3 75.4 L260.2 76.7 L262.0 75.1 L263.3 76.2 L269.1 75.8 L269.2 74.9 L268.4 74.0 L268.9 71.1 L272.5 71.1 L275.1 72.5 L279.0 72.8 L280.5 74.8 L285.0 74.5 L287.1 78.0 L286.7 80.1 L287.7 80.9 L286.8 81.5 L287.8 83.1 L289.4 83.1 L293.7 80.6 L298.9 82.5 L299.9 84.6 L301.0 85.2 L302.2 84.8 L303.9 82.9 L307.1 82.3 L310.6 83.5 L312.8 85.3 L313.6 84.4 L316.2 84.7 L315.7 83.6 L316.8 82.5 L319.0 82.2 L322.3 80.1 L324.5 80.1 L325.9 81.3 L328.1 81.0 L328.4 83.6 L331.5 84.2 L330.4 86.9 L328.2 86.4 L327.1 87.8 L327.4 90.3 L329.7 92.4 L329.3 93.5 L330.3 96.2 L328.6 99.5 L327.0 100.2 L323.8 104.1 L321.6 104.7 L320.3 106.4 L308.6 113.3 L305.6 118.0 L284.2 125.3 L283.2 126.8 L281.4 126.5 L279.5 127.2 L272.6 134.9 L272.2 135.9 L273.5 136.5 L273.9 135.8 L276.5 137.5 L276.2 138.9 L274.4 139.7 L272.0 142.9 L270.5 143.3 L269.9 142.4 L271.6 142.6 L273.2 140.6 L269.2 142.2 L264.4 152.0 L261.0 155.7 L259.7 158.7 L257.8 160.2 L248.8 176.8 L249.5 182.9 L251.7 187.3 L251.0 187.8 L251.4 189.5 L253.2 192.9 L257.0 197.0 L261.0 198.1 L263.1 200.9 L259.4 203.5 L259.4 204.5 L256.4 205.2 L255.6 207.5 L249.4 209.8 L247.4 213.2 L245.0 214.1 L245.3 218.3 L242.3 219.7 L241.6 225.2 L240.1 226.7 L239.1 231.4 L238.4 230.5 L236.8 233.1 L238.0 235.5 L239.3 236.3 L240.1 235.9 L240.6 236.9 L235.1 239.1 L231.0 238.3 L230.2 239.0 L230.6 239.9 L227.2 238.4 L226.7 239.1 L225.1 239.0 L221.5 241.6 L220.8 243.3 L216.5 245.4 L212.9 250.4 L210.6 257.3 L210.8 258.8 L208.6 260.1 L206.5 264.0 L205.1 265.3 L203.1 265.3 L201.1 263.0 L199.1 262.1 L197.3 262.8 L194.1 262.7 L191.6 266.6 L189.1 267.1 L187.5 266.0 L186.8 266.4 L184.7 264.8 L174.6 264.9 L172.4 266.4 L169.0 265.9 L167.7 264.9 L164.4 265.5 L161.7 264.5 L158.6 265.3 L156.2 264.6 L151.9 265.6 L147.4 265.2 L144.2 269.6 L142.6 269.8 L140.7 271.8 L139.1 272.3 L134.5 271.7 L132.2 273.2 L127.2 274.5 L125.4 278.1 L124.5 278.7 L123.1 282.9 L121.0 281.6 L120.5 285.3 L116.0 286.9 L114.1 285.0 L111.4 284.3 L108.4 281.0 L105.4 280.7 L103.7 277.8 L102.4 277.0 L98.8 269.6 L100.1 270.3 L100.8 271.6 L102.1 270.4 L101.0 270.4 L100.8 268.3 L99.6 267.2 L96.8 266.2 L96.0 262.6 L98.3 261.3 L98.6 258.5 L99.5 257.8 L101.5 258.1 L102.2 257.2 L98.4 258.0 L98.3 260.5 L97.2 260.9 L94.6 255.9 L85.0 248.9 L84.4 247.4 L86.2 244.9 L84.1 246.8 L83.3 246.7 L84.1 248.7 L79.8 246.9 L79.2 247.1 L80.2 247.5 L74.1 247.3 L72.7 247.9 L71.9 247.4 L71.0 238.4 L69.7 235.8 L72.1 230.4 L75.7 226.8 L76.7 222.9 L79.6 222.4 L80.6 221.1 L83.0 221.7 L85.2 216.3 L81.3 216.9 L79.8 213.7 L75.4 207.9 L77.9 202.6 L77.4 201.4 L78.1 198.8 L83.5 195.4 L83.3 193.8 L85.8 190.5 L85.6 188.8 L83.7 187.2 L81.4 187.4 L81.3 185.3 L79.1 183.9 L79.4 182.0 L77.7 179.7 L78.2 176.1 L76.2 174.8 L73.5 171.5 L72.7 168.7 L81.7 169.4 L85.7 169.0 L86.4 165.5 L88.2 163.8 L89.6 159.2 L87.9 156.1 L86.5 155.5 L86.0 153.5 L86.7 152.2 L90.1 151.1 L92.2 148.3 L90.8 145.5 L92.0 143.3 L91.2 141.1 L92.2 139.1 L91.8 135.6 L92.5 132.5 L89.7 127.3 L90.6 126.1 L93.1 125.9 L94.4 123.0 L97.1 119.7 L100.8 119.0 L103.7 115.9 L105.1 115.5 L108.0 110.6 L106.5 108.7 L104.4 107.4 L102.1 106.9 L100.2 107.4 L99.5 104.8 L100.9 100.9 L99.7 100.3 L99.9 98.4 L99.1 97.8 L98.7 98.4 L96.2 98.6 L94.1 96.8 L93.3 98.1 L91.2 98.0 L90.1 97.2 L88.7 97.9 L86.6 96.4 L85.2 97.0 L84.6 99.7 L80.5 100.6 L79.2 101.7 L78.7 100.2 L77.6 99.7 L76.8 100.7 L75.5 100.9 L75.5 99.4 L72.9 98.4 L68.7 99.4 L68.6 97.7 L67.6 99.1 L66.4 99.1 L65.0 100.5 L61.9 100.5 L62.1 99.3 L61.1 98.7 L61.0 97.5 L64.4 93.4 L63.5 92.3 L61.9 92.3 L61.7 89.6 L58.7 91.1 L52.0 92.2 L50.9 93.8 L45.7 96.8 L45.9 89.7 L47.5 89.4 L47.1 88.4 L52.6 84.3 L52.8 82.9 L51.5 84.3 L46.9 85.4 L47.3 83.9 L47.9 84.2 L47.9 82.7 L49.3 82.8 L52.2 79.9 L47.8 80.8 L46.9 79.0 L45.6 78.5 L47.1 77.8 L47.2 78.7 L48.3 79.0 L48.7 75.6 L51.1 72.0 L49.7 73.4 L48.5 72.0 L47.7 74.0 L46.1 74.2 L46.4 74.6 L44.2 76.5 L43.0 74.3 L44.2 70.9 L47.4 68.4 L47.8 67.2 L47.3 66.9 L46.2 68.3 L44.0 68.1 L43.4 69.2 L42.7 69.2 L42.0 67.4 L42.9 66.8 L42.0 66.0 L42.3 64.1 L41.0 63.0 L40.9 63.7 L40.3 63.2 L39.1 64.6 L38.7 63.4 L39.9 60.7 L39.3 59.5 L40.9 57.7 L41.5 58.2 L43.5 57.1 L41.2 57.0 L41.0 56.5 L42.9 55.1 L44.9 55.5 L45.9 54.2 L47.7 54.4 L48.2 54.1 L46.6 52.8 L50.3 51.3 L53.3 53.0 L55.7 52.2 L56.5 52.6 L60.5 50.5 L61.2 51.8 L61.9 50.0 L63.3 50.7 L64.5 53.1 L64.6 50.6 L65.5 49.9 L62.6 48.6 L65.5 48.1 L65.8 47.5 L62.0 47.9 L63.1 46.0 L62.7 44.9 L64.5 44.8 L68.0 42.5 L68.8 42.9 L68.8 40.8 L70.5 40.7 L72.3 39.3 L73.6 40.9 L72.1 42.3 L73.2 42.4 L73.1 41.5 L74.2 41.6 L74.4 40.7 L77.4 38.7 L77.8 39.4 L77.1 40.8 L78.4 40.0 L78.8 42.1 L80.6 40.8 L84.5 42.7 L85.7 45.3 L86.8 45.9 L86.4 46.6 L91.6 46.9 L91.5 49.4 L92.6 47.0 L99.4 47.3 L100.7 46.7 L103.8 47.9 L104.9 47.7 L104.8 47.0 L108.3 47.4 L110.4 46.6 L113.9 47.6 L117.7 47.1 L117.7 45.6 L119.0 44.8 L122.9 48.2 L129.4 48.6 L128.8 50.1 L130.2 49.1 L131.5 49.2 L134.2 50.8 L138.9 51.9 L139.7 51.5 L144.3 53.4 L149.5 54.0 L150.1 54.6 L151.3 54.0 L152.5 54.6 L156.9 54.0 L160.9 52.6 L161.7 53.1 L162.6 51.9 L165.2 51.3 L166.6 51.9 L164.8 52.9 L165.6 53.6 L166.5 52.7 L167.1 53.2 L166.8 52.1 L170.9 50.7 L174.3 52.4 L174.3 53.0 L173.4 52.8 L172.7 53.5 L173.6 54.1 L173.9 53.5 L178.0 54.4 L181.2 55.9 L182.1 55.6 L184.0 57.0 L183.5 55.3 L185.4 53.6 L189.5 52.9 L190.7 53.8 L191.3 55.6 L192.0 54.2 L196.1 55.5 L198.7 57.2 L202.7 57.3 L204.2 58.1 L208.1 56.3 L209.1 57.0 L208.9 56.3 L211.9 55.0 Z M296.4 188.6 L296.9 190.5 L294.3 193.7 L292.0 195.1 L291.8 197.0 L287.1 195.5 L287.1 193.3 L289.1 192.8 L288.8 190.7 L290.3 189.2 L294.3 187.8 L296.4 188.6 Z M337.8 164.3 L340.7 165.2 L340.4 168.0 L337.5 172.6 L336.1 177.0 L331.6 181.0 L329.0 178.2 L324.8 178.0 L323.4 175.4 L323.5 173.5 L321.9 172.4 L319.2 173.4 L317.4 175.5 L316.4 173.4 L314.9 173.9 L313.8 172.3 L313.9 171.2 L318.9 167.7 L324.5 162.3 L333.1 158.7 L334.0 159.1 L331.3 160.6 L331.3 161.6 L334.0 161.1 L333.6 162.3 L332.1 163.1 L332.5 164.5 L334.7 165.6 L336.3 165.5 L337.8 164.3 Z M360.3 158.2 L361.3 160.0 L360.4 159.4 L360.5 161.5 L359.3 161.8 L352.5 158.5 L348.9 158.7 L349.3 157.2 L348.1 156.2 L348.5 155.2 L354.0 154.5 L355.2 153.7 L356.2 155.4 L356.8 154.0 L359.3 156.4 L359.1 157.5 L360.3 158.2 Z"><title>Spain</title></path></svg><figcaption class="insight"><b class="ins-n m">USD 2.34 bn</b><span class="ins-t">owed to Spanish creditors by 22 African governments at the end of 2024, down from USD 3.57 bn in 2014. Angola owes the most, 31% of it.</span></figcaption></figure>
 </div>
 
 <dl class="kpis">
@@ -487,7 +521,7 @@
 <footer class="wrap foot">
   Africa Project Atlas · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
   · <a href="../index.html">Map</a> · <a href="../dashboard.html">Dashboard</a> · <a href="../index.html#t=m">Methodology</a>
-  · this page's data: <a href="../data/donors/spain.json">spain.json</a> · built 12 Oct 2026
+  · this page's data: <a href="../data/donors/spain.json">spain.json</a> · built 13 Oct 2026
 </footer>
 
 <script>
@@ -624,9 +658,14 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
    order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
    gets a box above it that keeps the rows containing every word typed. A row of class
    "grow" is a group heading: rows sort within their group, and a filter that names the
-   group keeps it whole. Tables a page draws or redraws later (the comparison's) are
-   picked up as they appear, and keep their sort and filter across redraws. */
+   group keeps it whole. A table longer than twelve rows shows its first ten, in
+   whatever order it is sorted, with buttons under it for ten more, all of them or
+   back to ten; a filter shows every match, and a link to something in a hidden row
+   (a corridor's marker on the map) opens the table first. Tables a page draws or
+   redraws later (the comparison's) are picked up as they appear, and keep their
+   sort, filter and length across redraws. */
 {
+  const CAP = 10, STEP = 10, SLACK = 2;   // 11 or 12 rows stay whole: the buttons would take the room they save
   const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
   const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
@@ -650,7 +689,7 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       th.classList.contains("num") || (filled[c].length > 0 && filled[c].every(v => NUMLIKE.test(v))));
     let group = null;
     all.forEach((r, i) => { r.dataset.i = i; if (isGroup(r)) group = r; r._t = fold((group && !isGroup(r) ? group.textContent + " " : "") + r.textContent); });
-    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: ""};
+    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: "", lim: CAP};
     state.set(key, st);
 
     let input = null, count = null;
@@ -687,6 +726,28 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       });
     });
 
+    let more = null, said, nextB, allB, lessB;
+    if (data.length > CAP + SLACK) {
+      const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
+      const btn = fn => { const b = document.createElement("button"); b.type = "button"; b.addEventListener("click", fn); return b; };
+      more = document.createElement("div");
+      more.className = "tmore";
+      said = document.createElement("span");
+      said.setAttribute("aria-live", "polite");
+      nextB = btn(() => { st.lim += STEP; apply(); });
+      allB = btn(() => { st.lim = Infinity; apply(); });
+      lessB = btn(() => {     // the rows fold away above the reader: put the buttons back at the bottom of the screen
+        st.lim = CAP; apply();
+        nextB.focus({preventScroll: true});
+        const r = more.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > innerHeight) more.scrollIntoView({block: "end", behavior: "instant"});
+      });
+      lessB.textContent = "Show fewer";
+      more.append(said, nextB, allB, lessB);
+      box.after(more);
+      t._uncap = () => { st.lim = Infinity; apply(); };
+    }
+
     function apply() {
       const groups = [{head: null, rows: []}];
       for (const r of all) { if (isGroup(r)) groups.push({head: r, rows: []}); else groups[groups.length - 1].rows.push(r); }
@@ -701,15 +762,30 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
         groups.forEach(g => g.rows.sort(cmp));
       }
       const words = fold(st.q).split(/\s+/).filter(Boolean);
-      let shown = 0;
+      const lim = more && !words.length ? st.lim : Infinity;
+      let shown = 0, last = null;
       const frag = document.createDocumentFragment();
       for (const g of groups) {
         let any = false;
-        for (const r of g.rows) { r.hidden = !words.every(w => r._t.includes(w)); if (!r.hidden) { shown++; any = true; } }
+        for (const r of g.rows) {
+          r.hidden = !words.every(w => r._t.includes(w));
+          const cut = !r.hidden && shown >= lim;
+          r.classList.toggle("capped", cut);
+          if (!r.hidden) { shown++; if (!cut) { any = true; last = r; } }
+        }
         if (g.head) { g.head.hidden = !any; frag.append(g.head); }
         frag.append(...g.rows);
       }
       body.append(frag);
+      for (const r of all) r.classList.toggle("tlast", r === last);
+      if (more) {
+        const n = data.length, vis = Math.min(st.lim, n), en = x => x.toLocaleString("en");
+        more.hidden = words.length > 0;
+        said.textContent = vis < n ? `${en(vis)} of ${en(n)} rows shown` : `All ${en(n)} rows shown`;
+        nextB.hidden = vis >= n; nextB.textContent = `Show ${en(Math.min(STEP, n - vis))} more`;
+        allB.hidden = n - vis <= STEP; allB.textContent = `Show all ${en(n)}`;
+        lessB.hidden = vis <= CAP;
+      }
       [...head.cells].forEach((th, c) => { if (filled[c].length) th.setAttribute("aria-sort", c !== st.col ? "none" : st.dir > 0 ? "ascending" : "descending"); });
       if (count) count.textContent = !words.length ? "" : shown ? `${shown.toLocaleString("en")} of ${data.length.toLocaleString("en")} rows` : "no row matches";
     }
@@ -717,6 +793,25 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
   }
 
   document.querySelectorAll("table").forEach(enhance);
+
+  /* a link into a row the length cap hides shows that whole table first: on a click
+     before the browser follows it, on a hash set by script, and on arrival */
+  const reveal = id => {
+    let el = null;
+    try { el = id ? document.getElementById(decodeURIComponent(id)) : null; } catch (e) { return null; }
+    const r = el && el.closest("tr.capped"), t = r && r.closest("table");
+    if (!t || !t._uncap) return null;
+    t._uncap();
+    return el;
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) reveal(a.getAttribute("href").slice(1));
+  });
+  const arrive = () => { const el = reveal(location.hash.slice(1)); if (el) el.scrollIntoView(); };
+  addEventListener("hashchange", arrive);
+  arrive();
+
   new MutationObserver(ms => {
     for (const m of ms) for (const n of m.addedNodes) {
       if (n.nodeType !== 1 || n.nodeName === "TR") continue;

@@ -26,6 +26,7 @@ import shutil
 import sys
 
 from build_donors import FRAME, MAP_H, MAP_W, esc, land_paths, px, table, td
+from headmap import africa_map, figure, head_wrap
 from shared import (AUTHOR_NAME, AUTHOR_URL, DATA, DOCS, DONORS, SITE_NAME, SITE_URL, WEB_URL,
                     brand_assets, fmt_date, site_url, today, wrap_document)
 
@@ -298,8 +299,27 @@ def build_page(pack, sh):
                                               "text": f"{bn(by_c[i][y1]['bonds'])} bn"} for i in bbar]},
     }}
 
+    # ---- the map beside the head: each country in the colour of its largest bilateral creditor
+    top_g = {}
+    for iso in C:
+        code, _ = biggest_bilateral(iso)
+        if code:
+            top_g[iso] = sh["dg_of"][code]
+    n_g = {g: sum(1 for v in top_g.values() if v == g) for g in DG}
+    headmap = figure(
+        africa_map({iso: f"var(--dg-{g})" for iso, g in top_g.items()},
+                   {iso: f"{C[iso]['name']}: largest bilateral creditor {cr[biggest_bilateral(iso)[0]]['name']}"
+                    for iso in top_g},
+                   f"Map of Africa with each country coloured by its largest bilateral creditor at the end of {y1}"),
+        f"{n_g['china']} of {len(top_g)}",
+        f"governments have China as their largest bilateral creditor at the end of {y1}. Each country is "
+        f"coloured by its largest; multilateral lenders and bondholders are left out.",
+        '<span class="ins-k">' + "".join(f'<span><i style="background:var(--dg-{g})"></i>{esc(n)} {n_g[g]}</span>'
+                                         for g, n in DISPLAY if n_g.get(g)) + "</span>")
+
     eu0, eu1 = pct(cont[y0]["europe"], T0), pct(cont[y1]["europe"], T)
     tokens = {
+        "__HEADMAP__": headmap,
         "__DATA_TO__": str(y1), "__FIRST_YEAR__": str(y0), "__REF_YEAR__": str(ref),
         "__N_COUNTRIES__": str(len(C)), "__MISSING__": ", ".join(pack["missing"]) or "none",
         "__N_CREDITORS__": str(len(cr)),
@@ -353,7 +373,7 @@ def build():
     tokens.update({"__TITLE__": esc(TITLE), "__MAP_W__": f"{MAP_W:.0f}", "__MAP_H__": f"{MAP_H:.0f}",
                    "__DATA_URL__": site_url("data/debt.json"), "__DATA_FILE__": "debt.json",
                    "__BUILT__": fmt_date(today())})
-    page = FRAME.read_text().replace("<!--__BODY__-->", FRAG.read_text(), 1)
+    page = FRAME.read_text().replace("<!--__BODY__-->", head_wrap(FRAG.read_text(), "__HEADMAP__"), 1)
     for k, v in tokens.items():
         page = page.replace(k, v)
     page = page.replace("<!--__LAND__-->", land_paths(), 1)

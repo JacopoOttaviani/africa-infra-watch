@@ -171,6 +171,28 @@
   .lede strong{color:var(--ink);font-weight:600}
   .asof{margin:16px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
   .asof b{font-weight:500;color:var(--ink-2)}
+  /* the head beside a map (headmap.py): the lede on the left; on the right the
+     lender's outline, or the continent, with one key figure under it. The
+     corridor pages restyle these in their own sections. */
+  .headgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,400px);gap:8px 56px;align-items:center}
+  .locator{margin:0;padding-top:30px}
+  .locator svg{display:block;width:100%;height:auto}
+  .locator figcaption{font-size:12px;line-height:1.45;color:var(--ink-3);margin-top:10px;max-width:46ch}
+  .loc .lc{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  .loc .lc.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:.6}
+  .loc.shape{max-height:420px}
+  .loc.shape .lc{fill:var(--land);stroke:var(--border);stroke-width:.5}
+  .loc.shape .lc.on{fill:var(--accent);fill-opacity:.85;stroke:var(--paper);stroke-width:.6}
+  .loc.afr .lc.on{stroke:var(--surface);stroke-width:.6}
+  .insight{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--rule);padding-top:10px}
+  .insight .ins-n{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+  .insight .ins-t{font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+  .insight .ins-k{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;font-size:11.5px;color:var(--ink-2)}
+  .insight .ins-k i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  @media (max-width:960px){
+    .headgrid{grid-template-columns:1fr}
+    .locator{padding-top:6px;max-width:380px}
+  }
   p{max-width:72ch;margin:10px 0 0}
   section{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule)}
   section h2{font-size:21px;font-weight:700;letter-spacing:-.015em}
@@ -252,7 +274,15 @@
   .tfilter input::placeholder{color:var(--ink-3)}
   .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
   .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
-  @media print{.tfilter{display:none} th .sorter::after{display:none}}
+  /* a table longer than twelve rows shows its first ten, with buttons under it for the rest */
+  tr.capped{display:none}
+  tr.tlast td{border-bottom:0}
+  .tmore{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+  .tmore button{font-size:12px;font-weight:600;color:var(--accent-ink)}
+  .tmore button:hover{text-decoration:underline;text-underline-offset:2px}
+  .tmore button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  .tmore[hidden],.tmore button[hidden]{display:none}
+  @media print{.tfilter,.tmore{display:none} th .sorter::after{display:none} tr.capped{display:table-row}}
   .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
   .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
@@ -770,7 +800,7 @@
 <footer class="wrap foot">
   Africa Project Atlas · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
   · <a href="../index.html">Map</a> · <a href="../dashboard.html">Dashboard</a> · <a href="../index.html#t=m">Methodology</a>
-  · this page's data: <a href="../data/corridors.json">corridors.json</a> · built 12 Oct 2026
+  · this page's data: <a href="../data/corridors.json">corridors.json</a> · built 13 Oct 2026
 </footer>
 
 <script>
@@ -907,9 +937,14 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
    order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
    gets a box above it that keeps the rows containing every word typed. A row of class
    "grow" is a group heading: rows sort within their group, and a filter that names the
-   group keeps it whole. Tables a page draws or redraws later (the comparison's) are
-   picked up as they appear, and keep their sort and filter across redraws. */
+   group keeps it whole. A table longer than twelve rows shows its first ten, in
+   whatever order it is sorted, with buttons under it for ten more, all of them or
+   back to ten; a filter shows every match, and a link to something in a hidden row
+   (a corridor's marker on the map) opens the table first. Tables a page draws or
+   redraws later (the comparison's) are picked up as they appear, and keep their
+   sort, filter and length across redraws. */
 {
+  const CAP = 10, STEP = 10, SLACK = 2;   // 11 or 12 rows stay whole: the buttons would take the room they save
   const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
   const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
@@ -933,7 +968,7 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       th.classList.contains("num") || (filled[c].length > 0 && filled[c].every(v => NUMLIKE.test(v))));
     let group = null;
     all.forEach((r, i) => { r.dataset.i = i; if (isGroup(r)) group = r; r._t = fold((group && !isGroup(r) ? group.textContent + " " : "") + r.textContent); });
-    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: ""};
+    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: "", lim: CAP};
     state.set(key, st);
 
     let input = null, count = null;
@@ -970,6 +1005,28 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       });
     });
 
+    let more = null, said, nextB, allB, lessB;
+    if (data.length > CAP + SLACK) {
+      const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
+      const btn = fn => { const b = document.createElement("button"); b.type = "button"; b.addEventListener("click", fn); return b; };
+      more = document.createElement("div");
+      more.className = "tmore";
+      said = document.createElement("span");
+      said.setAttribute("aria-live", "polite");
+      nextB = btn(() => { st.lim += STEP; apply(); });
+      allB = btn(() => { st.lim = Infinity; apply(); });
+      lessB = btn(() => {     // the rows fold away above the reader: put the buttons back at the bottom of the screen
+        st.lim = CAP; apply();
+        nextB.focus({preventScroll: true});
+        const r = more.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > innerHeight) more.scrollIntoView({block: "end", behavior: "instant"});
+      });
+      lessB.textContent = "Show fewer";
+      more.append(said, nextB, allB, lessB);
+      box.after(more);
+      t._uncap = () => { st.lim = Infinity; apply(); };
+    }
+
     function apply() {
       const groups = [{head: null, rows: []}];
       for (const r of all) { if (isGroup(r)) groups.push({head: r, rows: []}); else groups[groups.length - 1].rows.push(r); }
@@ -984,15 +1041,30 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
         groups.forEach(g => g.rows.sort(cmp));
       }
       const words = fold(st.q).split(/\s+/).filter(Boolean);
-      let shown = 0;
+      const lim = more && !words.length ? st.lim : Infinity;
+      let shown = 0, last = null;
       const frag = document.createDocumentFragment();
       for (const g of groups) {
         let any = false;
-        for (const r of g.rows) { r.hidden = !words.every(w => r._t.includes(w)); if (!r.hidden) { shown++; any = true; } }
+        for (const r of g.rows) {
+          r.hidden = !words.every(w => r._t.includes(w));
+          const cut = !r.hidden && shown >= lim;
+          r.classList.toggle("capped", cut);
+          if (!r.hidden) { shown++; if (!cut) { any = true; last = r; } }
+        }
         if (g.head) { g.head.hidden = !any; frag.append(g.head); }
         frag.append(...g.rows);
       }
       body.append(frag);
+      for (const r of all) r.classList.toggle("tlast", r === last);
+      if (more) {
+        const n = data.length, vis = Math.min(st.lim, n), en = x => x.toLocaleString("en");
+        more.hidden = words.length > 0;
+        said.textContent = vis < n ? `${en(vis)} of ${en(n)} rows shown` : `All ${en(n)} rows shown`;
+        nextB.hidden = vis >= n; nextB.textContent = `Show ${en(Math.min(STEP, n - vis))} more`;
+        allB.hidden = n - vis <= STEP; allB.textContent = `Show all ${en(n)}`;
+        lessB.hidden = vis <= CAP;
+      }
       [...head.cells].forEach((th, c) => { if (filled[c].length) th.setAttribute("aria-sort", c !== st.col ? "none" : st.dir > 0 ? "ascending" : "descending"); });
       if (count) count.textContent = !words.length ? "" : shown ? `${shown.toLocaleString("en")} of ${data.length.toLocaleString("en")} rows` : "no row matches";
     }
@@ -1000,6 +1072,25 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
   }
 
   document.querySelectorAll("table").forEach(enhance);
+
+  /* a link into a row the length cap hides shows that whole table first: on a click
+     before the browser follows it, on a hash set by script, and on arrival */
+  const reveal = id => {
+    let el = null;
+    try { el = id ? document.getElementById(decodeURIComponent(id)) : null; } catch (e) { return null; }
+    const r = el && el.closest("tr.capped"), t = r && r.closest("table");
+    if (!t || !t._uncap) return null;
+    t._uncap();
+    return el;
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) reveal(a.getAttribute("href").slice(1));
+  });
+  const arrive = () => { const el = reveal(location.hash.slice(1)); if (el) el.scrollIntoView(); };
+  addEventListener("hashchange", arrive);
+  arrive();
+
   new MutationObserver(ms => {
     for (const m of ms) for (const n of m.addedNodes) {
       if (n.nodeType !== 1 || n.nodeName === "TR") continue;

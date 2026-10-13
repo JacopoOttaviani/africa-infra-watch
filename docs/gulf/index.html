@@ -171,6 +171,28 @@
   .lede strong{color:var(--ink);font-weight:600}
   .asof{margin:16px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
   .asof b{font-weight:500;color:var(--ink-2)}
+  /* the head beside a map (headmap.py): the lede on the left; on the right the
+     lender's outline, or the continent, with one key figure under it. The
+     corridor pages restyle these in their own sections. */
+  .headgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,400px);gap:8px 56px;align-items:center}
+  .locator{margin:0;padding-top:30px}
+  .locator svg{display:block;width:100%;height:auto}
+  .locator figcaption{font-size:12px;line-height:1.45;color:var(--ink-3);margin-top:10px;max-width:46ch}
+  .loc .lc{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  .loc .lc.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:.6}
+  .loc.shape{max-height:420px}
+  .loc.shape .lc{fill:var(--land);stroke:var(--border);stroke-width:.5}
+  .loc.shape .lc.on{fill:var(--accent);fill-opacity:.85;stroke:var(--paper);stroke-width:.6}
+  .loc.afr .lc.on{stroke:var(--surface);stroke-width:.6}
+  .insight{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--rule);padding-top:10px}
+  .insight .ins-n{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+  .insight .ins-t{font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+  .insight .ins-k{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;font-size:11.5px;color:var(--ink-2)}
+  .insight .ins-k i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  @media (max-width:960px){
+    .headgrid{grid-template-columns:1fr}
+    .locator{padding-top:6px;max-width:380px}
+  }
   p{max-width:72ch;margin:10px 0 0}
   section{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule)}
   section h2{font-size:21px;font-weight:700;letter-spacing:-.015em}
@@ -252,7 +274,15 @@
   .tfilter input::placeholder{color:var(--ink-3)}
   .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
   .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
-  @media print{.tfilter{display:none} th .sorter::after{display:none}}
+  /* a table longer than twelve rows shows its first ten, with buttons under it for the rest */
+  tr.capped{display:none}
+  tr.tlast td{border-bottom:0}
+  .tmore{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+  .tmore button{font-size:12px;font-weight:600;color:var(--accent-ink)}
+  .tmore button:hover{text-decoration:underline;text-underline-offset:2px}
+  .tmore button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  .tmore[hidden],.tmore button[hidden]{display:none}
+  @media print{.tfilter,.tmore{display:none} th .sorter::after{display:none} tr.capped{display:table-row}}
   .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
   .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
@@ -333,12 +363,16 @@
 <main class="wrap" id="main">
 <!-- Gulf states: the prose and section order of docs/gulf/. Tokens (double-underscore
      names) are filled by build_donors.py from data/donors/gulf.json. -->
+<div class="headgrid">
 <div class="head">
   <span class="kicker">Lender profile · United Arab Emirates, Saudi Arabia, Kuwait, Qatar</span>
   <h1>Gulf states</h1>
   <p class="lede"><strong>Four providers, read as one: the United Arab Emirates, Saudi Arabia, Kuwait and Qatar, which report their aid to the OECD although none sits on its development committee.</strong> 6,010 activities with an African recipient for 2018–2024, USD 29.94 bn committed, 1,159 of them loans, the Saudi Fund's and the Kuwait Fund's; by provider, Saudi Arabia USD 16,309 m, United Arab Emirates USD 8,748 m, Kuwait USD 4,298 m, Qatar USD 587 m. The largest purpose is General budget support-related aid, USD 14,406 m; Egypt, Sudan and Tunisia receive the most.</p>
   <p class="lede">The ground footprint is the newest on this site. The map's power layer holds 99 units owned by ACWA Power, AMEA Power, Masdar, TAQA, Phanes, Al Nowais or Alcazar, solar and wind from Egypt and Morocco to South Africa, Uganda and Togo, most of them built in the last five years; 2 pipeline segments carry Aramco or a Gulf company; and 18 cables land in Africa with a Gulf carrier among the owners. None of the four reports an investment stock to the OECD. What African governments owe creditors in the four states is USD 27.86 bn at the end of 2024, USD 23.47 bn of it to the four governments, and USD 21.80 bn more to the Gulf-based development funds.</p>
   <p class="asof">OECD CRS activities <b>2018–2024</b> and DAC2a net ODA <b>2010–2024</b>, fetched <b>12 Oct 2026</b> · World Bank International Debt Statistics to <b>2024</b>, release of <b>3 Dec 2025</b> · Global Energy Monitor and TeleGeography as on the map</p>
+</div>
+
+<figure class="locator"><svg class="loc shape" viewBox="0 0 400 340" role="img" aria-label="Outline of Saudi Arabia, the United Arab Emirates, Qatar and Kuwait"><defs><radialGradient id="hm-fade" cx=".5" cy=".5" r=".62"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="hm-mask" maskContentUnits="userSpaceOnUse"><rect width="400" height="340" fill="url(#hm-fade)"/></mask></defs><g mask="url(#hm-mask)"><path class="lc" d="M39.0 49.3 L43.9 44.3 L42.9 43.5 L46.7 37.7 L53.9 19.4 L59.1 19.8 L60.4 16.7 L61.1 17.5 L64.3 14.9 L63.4 17.1 L64.5 22.6 L59.5 27.2 L59.2 31.4 L54.3 28.5 L50.6 33.8 L51.2 38.7 L50.2 39.9 L53.1 40.5 L53.7 39.4 L54.0 41.6 L49.8 43.2 L48.1 47.5 L52.1 47.8 L56.4 46.0 L55.5 52.4 L50.3 63.2 L49.9 68.2 L46.3 77.6 L45.6 78.4 L44.9 77.4 L39.0 49.3 Z"><title>Israel</title></path><path class="lc" d="M42.9 43.5 L43.9 44.3 L39.0 49.3 L38.5 47.6 L42.9 43.5 Z M50.5 37.7 L52.4 29.6 L54.5 28.5 L59.2 31.4 L58.2 41.6 L56.4 46.0 L52.1 47.8 L48.1 47.5 L49.8 43.2 L54.0 41.6 L53.7 39.4 L53.1 40.5 L50.2 39.9 L50.5 37.7 Z"><title>Palestine</title></path><path class="lc" d="M54.0 19.4 L60.3 6.5 L62.8 5.1 L63.6 0.0 L75.2 0.0 L76.2 2.7 L71.5 6.5 L72.5 8.4 L68.1 8.5 L66.0 11.2 L67.5 12.5 L61.1 17.5 L60.4 16.7 L59.1 19.8 L54.0 19.4 Z"><title>Lebanon</title></path><path class="lc" d="M52.2 340.3 L54.7 331.5 L61.8 332.4 L64.1 329.7 L66.4 329.6 L70.3 335.6 L76.2 323.2 L77.9 325.8 L81.4 326.8 L84.5 331.2 L91.5 330.3 L93.9 327.8 L97.0 331.4 L101.9 329.6 L107.9 332.1 L111.4 331.6 L122.0 337.2 L124.9 340.3 Z"><title>Ethiopia</title></path><path class="lc" d="M62.4 25.7 L64.5 22.6 L63.4 16.1 L67.5 12.5 L66.0 11.2 L68.1 8.5 L72.3 8.6 L71.5 6.5 L76.2 2.7 L75.2 0.0 L137.2 0.0 L135.9 2.2 L76.5 33.7 L70.6 32.3 L62.4 25.7 Z"><title>Syria</title></path><path class="lc" d="M355.3 135.2 L357.0 131.7 L359.9 132.2 L358.5 132.2 L359.1 129.4 L361.1 129.7 L359.8 131.3 L361.1 133.3 L358.9 133.0 L361.1 134.1 L359.8 135.2 L361.0 136.6 L358.9 142.1 L356.9 141.5 L356.9 135.8 L355.3 135.2 Z M361.3 152.8 L365.3 160.5 L374.1 168.8 L391.9 172.8 L395.8 172.0 L399.2 174.2 L399.4 225.5 L398.4 226.6 L394.6 226.2 L394.4 222.8 L389.1 230.1 L387.6 238.1 L390.4 250.1 L381.2 252.3 L375.2 255.5 L372.8 258.8 L371.9 265.7 L369.0 269.4 L354.9 272.1 L351.7 277.3 L353.0 279.2 L352.5 282.3 L349.0 286.2 L345.4 287.5 L342.2 286.2 L334.2 287.2 L327.0 291.8 L318.8 294.2 L299.9 256.2 L345.7 237.0 L353.7 203.4 L346.1 191.8 L346.3 184.9 L350.2 173.8 L348.8 170.6 L356.7 168.1 L355.6 165.8 L352.9 165.9 L353.1 154.3 L355.7 153.6 L356.2 155.1 L355.1 155.1 L357.4 157.2 L361.3 152.8 Z"><title>Oman</title></path><path class="lc" d="M0.0 340.3 L0.0 199.5 L9.5 200.5 L14.9 205.7 L21.6 205.3 L23.2 201.6 L65.7 204.7 L65.4 210.4 L71.4 220.7 L70.2 221.2 L68.6 217.7 L67.9 220.7 L69.7 228.8 L69.2 245.2 L71.6 257.2 L73.1 259.7 L75.2 259.4 L79.0 262.2 L82.0 265.2 L82.3 267.9 L84.8 267.1 L83.4 268.5 L86.1 268.5 L89.3 272.2 L83.2 279.9 L80.7 280.6 L80.1 279.4 L71.4 282.8 L69.8 287.4 L63.0 286.4 L63.3 290.1 L61.1 295.4 L62.2 299.3 L53.0 317.6 L54.0 332.0 L52.2 340.3 Z M70.5 224.0 L70.3 225.7 L70.5 224.0 Z"><title>Sudan</title></path><path class="lc" d="M124.9 340.3 L122.0 337.2 L111.4 331.6 L107.9 332.1 L101.9 329.6 L97.0 331.4 L93.9 327.8 L91.5 330.3 L84.5 331.2 L81.4 326.8 L77.9 325.8 L76.2 323.2 L70.3 335.6 L66.4 329.6 L63.6 330.0 L62.5 332.3 L57.6 331.1 L54.0 332.0 L53.0 317.6 L62.2 299.3 L61.1 295.4 L63.3 290.1 L63.0 286.4 L69.8 287.4 L71.4 282.8 L80.1 279.4 L80.7 280.6 L83.2 279.9 L89.2 272.3 L95.2 286.5 L99.0 307.1 L101.3 309.1 L101.5 313.8 L103.9 314.3 L105.4 321.1 L106.9 321.4 L107.6 319.9 L106.4 316.2 L108.1 314.4 L111.3 317.3 L110.4 318.9 L112.4 323.2 L114.4 324.4 L118.1 322.8 L121.0 324.9 L122.1 328.2 L128.5 329.4 L136.2 340.3 Z M116.3 312.5 L116.4 313.6 L109.8 312.8 L109.2 311.2 L111.5 312.0 L109.1 310.6 L110.8 309.0 L109.5 308.1 L112.4 309.6 L112.8 312.3 L114.4 311.4 L116.3 312.5 Z M111.9 305.6 L112.1 306.7 L110.2 306.1 L111.2 304.6 L111.9 305.6 Z"><title>Eritrea</title></path><path class="lc" d="M200.9 0.0 L198.1 0.1 L197.0 2.6 L198.9 5.5 L196.5 10.3 L201.4 16.7 L203.5 15.9 L203.0 18.1 L204.7 18.2 L207.2 22.0 L207.4 23.5 L205.5 24.5 L206.8 25.2 L206.4 27.0 L211.8 28.0 L220.4 34.8 L225.0 36.0 L226.2 40.1 L231.1 45.6 L229.1 52.2 L229.1 59.1 L233.9 59.1 L234.2 67.8 L238.4 70.2 L242.2 76.2 L235.8 74.7 L233.7 75.4 L233.2 73.7 L233.4 75.6 L229.4 73.9 L222.6 75.1 L215.7 87.8 L213.1 90.7 L210.6 91.2 L186.4 89.0 L149.3 57.3 L126.5 42.7 L108.7 38.8 L110.9 36.8 L110.2 34.9 L107.3 35.2 L106.8 32.8 L107.9 32.5 L104.9 17.9 L135.9 2.2 L137.2 0.0 Z"><title>Iraq</title></path><path class="lc" d="M400.0 0.0 L399.8 142.3 L396.3 139.9 L390.3 139.7 L386.8 141.1 L383.5 138.9 L380.8 140.1 L380.4 138.4 L373.8 138.3 L367.1 118.5 L365.5 118.5 L364.5 116.4 L354.5 116.9 L352.0 119.3 L348.1 120.1 L346.2 123.8 L342.5 123.9 L335.9 129.3 L333.3 129.3 L328.5 126.1 L319.8 126.8 L315.5 122.6 L302.8 117.0 L303.7 115.3 L300.5 112.5 L293.7 109.5 L288.9 109.7 L284.7 108.2 L279.1 95.1 L275.3 91.9 L277.0 89.9 L275.6 88.5 L272.8 88.6 L272.7 83.5 L265.0 75.7 L263.8 71.4 L261.5 71.4 L256.2 74.5 L255.3 72.4 L252.0 72.5 L251.6 70.7 L250.7 71.4 L247.2 68.9 L251.3 69.3 L251.3 66.7 L248.0 66.6 L248.8 67.9 L246.4 69.5 L247.3 74.5 L243.4 74.3 L243.6 75.5 L241.8 75.9 L238.3 70.1 L234.2 67.8 L233.9 59.1 L229.1 59.1 L229.1 52.2 L231.1 45.6 L226.2 40.1 L225.0 36.0 L220.4 34.8 L211.8 28.0 L206.4 27.0 L206.8 25.2 L205.5 24.5 L207.4 23.5 L207.2 22.0 L204.7 18.2 L203.0 18.1 L203.5 15.9 L201.4 16.7 L196.5 10.3 L198.9 5.5 L197.0 2.6 L198.1 0.1 L200.9 0.0 Z M356.0 119.4 L357.2 120.1 L352.6 124.8 L351.5 124.1 L343.2 127.9 L342.9 126.1 L349.9 123.3 L349.5 120.7 L351.6 121.3 L356.0 119.4 Z"><title>Iran</title></path><path class="lc" d="M60.3 26.6 L64.3 26.4 L66.3 29.8 L76.3 33.8 L104.9 17.9 L107.9 32.5 L106.8 32.8 L107.3 35.2 L110.2 34.9 L110.9 36.8 L106.1 40.7 L77.4 47.4 L90.6 64.6 L85.7 67.1 L82.8 72.5 L72.0 74.2 L68.0 79.9 L61.0 84.5 L46.0 80.8 L50.3 63.2 L55.5 52.4 L60.3 26.6 Z"><title>Jordan</title></path><path class="lc" d="M39.0 49.3 L45.3 78.4 L42.9 81.2 L40.4 90.6 L36.7 97.2 L36.5 102.9 L33.1 105.7 L33.6 106.8 L26.9 101.3 L20.2 91.6 L20.2 84.6 L14.4 76.4 L13.5 67.0 L9.3 73.6 L12.4 77.6 L12.3 84.2 L15.0 91.0 L23.7 103.2 L24.1 105.0 L22.4 104.3 L23.9 107.4 L22.5 107.2 L26.8 114.4 L28.6 120.3 L27.4 124.2 L34.9 140.3 L42.2 161.3 L51.2 172.0 L46.7 170.9 L46.2 178.4 L47.7 184.4 L41.2 189.9 L47.7 184.4 L50.7 190.9 L56.3 193.4 L59.3 198.3 L65.9 203.5 L65.7 204.7 L0.0 199.3 L0.0 40.8 L2.1 42.1 L7.6 41.4 L10.7 45.4 L6.9 41.1 L4.7 45.0 L6.7 46.8 L8.3 46.5 L8.9 49.3 L11.5 48.1 L10.8 45.4 L15.8 49.8 L20.5 48.7 L17.1 50.3 L20.4 49.4 L21.5 50.4 L22.4 49.2 L20.8 49.5 L23.1 48.2 L23.2 50.7 L27.2 49.2 L33.4 49.7 L38.5 47.6 L39.0 49.3 Z M32.6 197.3 L24.4 198.5 L32.6 197.3 Z M22.8 47.7 L25.3 48.0 L20.6 48.8 L22.8 47.7 Z"><title>Egypt</title></path><path class="lc" d="M299.9 256.2 L318.8 294.2 L310.1 297.9 L306.4 301.1 L304.4 305.8 L305.7 311.8 L292.2 318.8 L260.4 329.4 L256.0 331.6 L250.4 339.2 L246.6 340.3 L159.9 340.3 L157.2 332.2 L158.2 333.3 L158.4 331.8 L156.1 322.5 L151.8 320.0 L153.4 318.1 L154.7 320.7 L153.2 312.5 L155.5 309.1 L154.9 301.6 L158.9 298.9 L159.7 296.7 L161.2 296.8 L160.3 289.9 L162.4 287.1 L161.1 285.9 L163.3 283.7 L166.5 282.9 L173.0 286.5 L176.7 284.8 L184.6 284.4 L192.8 284.5 L197.0 286.4 L211.2 287.9 L217.4 287.0 L221.5 292.2 L224.6 292.3 L228.8 289.9 L231.3 283.7 L240.2 272.2 L253.9 264.8 L299.9 256.2 Z"><title>Yemen</title></path><path class="lc" d="M9.5 200.5 L23.2 201.6 L21.6 205.3 L14.9 205.7 L9.5 200.5 Z"><title>Bir Tawil</title></path><path class="lc" d="M273.5 137.6 L274.9 138.3 L273.9 144.3 L271.9 138.2 L272.4 136.8 L274.0 136.8 L273.5 137.6 Z"><title>Bahrain</title></path></g><path class="lc on" d="M358.9 142.1 L359.8 142.4 L360.4 143.7 L361.3 152.8 L360.5 152.9 L360.3 154.2 L358.3 155.6 L357.4 157.2 L355.3 155.3 L355.4 154.8 L356.2 155.1 L355.3 153.3 L354.1 153.5 L352.7 155.0 L353.3 159.0 L352.6 160.4 L353.5 163.2 L352.9 165.9 L355.6 165.8 L356.7 168.1 L354.0 169.5 L351.5 169.4 L348.8 170.6 L350.0 172.0 L350.2 173.8 L346.3 184.9 L346.1 191.8 L345.2 193.2 L306.0 190.3 L290.3 171.7 L290.3 167.0 L291.0 169.6 L291.6 168.7 L292.0 169.6 L292.9 168.5 L293.2 168.9 L293.8 173.2 L295.7 173.8 L301.9 172.7 L305.3 170.2 L305.6 169.2 L306.9 170.3 L311.8 169.6 L313.9 170.2 L314.1 169.4 L315.5 170.5 L318.4 170.0 L320.7 171.1 L325.0 170.5 L333.0 166.2 L333.7 163.6 L335.0 163.5 L332.6 162.2 L333.6 161.6 L334.4 162.7 L335.1 162.5 L336.2 159.8 L335.7 158.4 L341.9 153.5 L344.6 149.3 L345.4 150.2 L344.9 148.9 L347.3 146.6 L348.2 143.7 L348.2 144.6 L349.4 144.4 L350.1 142.8 L353.9 139.2 L353.9 140.1 L355.3 135.2 L356.6 134.8 L356.9 135.8 L356.9 141.5 L357.8 142.4 L358.9 142.1 Z M359.0 147.0 L358.6 149.0 L360.3 148.0 L359.0 147.0 Z M321.6 169.2 L324.3 167.1 L326.2 168.7 L325.0 169.3 L324.2 168.7 L323.4 169.5 L321.6 169.2 Z"><title>United Arab Emirates</title></path><path class="lc on" d="M278.2 161.5 L279.0 160.6 L277.2 154.2 L276.9 149.1 L277.5 148.5 L278.3 149.5 L278.1 147.6 L277.3 147.2 L278.4 146.4 L279.1 148.4 L279.2 147.3 L280.2 146.4 L279.1 146.6 L278.8 145.9 L278.9 144.1 L280.0 143.9 L280.0 140.9 L283.9 137.7 L285.3 138.6 L286.1 140.8 L287.9 141.1 L288.9 142.2 L289.3 144.2 L288.6 144.6 L289.3 145.0 L288.0 145.4 L288.7 146.3 L287.9 146.6 L287.6 148.2 L288.5 151.9 L289.9 152.5 L290.1 156.4 L287.8 162.2 L286.4 164.1 L286.4 163.0 L285.4 162.6 L283.4 164.1 L280.9 164.3 L278.2 161.5 Z"><title>Qatar</title></path><path class="lc on" d="M278.2 161.5 L280.9 164.3 L282.7 164.4 L285.2 163.2 L285.8 163.4 L285.8 165.0 L287.1 163.0 L288.7 163.8 L286.4 166.1 L285.6 168.5 L287.6 168.2 L290.0 169.2 L290.5 172.1 L306.0 190.3 L345.0 193.3 L346.1 191.8 L353.7 203.4 L345.7 237.0 L299.9 256.2 L253.9 264.8 L240.2 272.2 L231.3 283.7 L228.8 289.9 L224.6 292.3 L221.5 292.2 L217.4 287.0 L211.2 287.9 L197.0 286.4 L192.8 284.5 L184.6 284.4 L176.7 284.8 L175.7 285.8 L174.4 285.4 L173.0 286.5 L172.5 285.6 L170.1 285.6 L167.6 283.4 L165.0 282.8 L161.1 285.9 L162.4 286.8 L160.9 287.8 L160.3 289.9 L160.2 292.8 L161.7 294.7 L161.2 296.8 L159.7 296.7 L158.9 298.9 L154.9 301.6 L155.0 300.2 L154.0 298.6 L154.1 296.6 L151.1 293.1 L151.1 291.0 L149.6 290.3 L149.1 288.5 L148.2 288.0 L148.3 290.6 L147.4 283.5 L140.7 277.3 L139.4 277.0 L135.9 271.1 L134.9 270.5 L134.1 266.4 L132.8 264.7 L131.6 264.3 L130.6 262.5 L131.3 260.3 L129.5 258.5 L130.2 256.4 L128.6 255.3 L128.1 253.0 L126.9 251.7 L126.8 249.0 L123.9 247.2 L124.5 247.3 L124.6 245.8 L123.8 244.4 L122.4 244.0 L122.4 244.6 L120.4 242.1 L120.6 241.2 L113.7 235.7 L110.9 235.1 L111.5 235.9 L108.7 234.3 L105.9 230.6 L106.3 230.2 L104.8 228.2 L105.0 227.6 L103.8 227.1 L104.2 226.2 L101.9 224.5 L100.1 221.3 L100.1 219.9 L98.8 217.8 L100.3 216.4 L100.2 214.7 L99.2 213.5 L99.6 210.7 L98.9 211.0 L97.0 206.2 L97.5 205.8 L98.2 206.4 L98.9 202.5 L100.5 199.8 L99.4 200.4 L99.7 197.4 L98.4 194.4 L98.8 193.7 L97.8 192.5 L98.2 194.0 L97.2 192.3 L96.5 190.6 L97.4 192.0 L98.2 191.9 L97.2 190.3 L95.7 189.6 L95.8 187.1 L94.3 185.0 L93.2 180.0 L92.5 180.1 L93.0 180.8 L92.2 180.4 L91.1 176.3 L83.6 170.0 L84.3 169.6 L83.7 169.7 L83.9 168.9 L83.4 169.8 L82.6 169.8 L79.8 167.3 L79.1 168.0 L77.5 167.5 L76.2 165.8 L76.7 164.6 L73.6 159.5 L73.6 158.4 L72.5 157.5 L74.1 157.3 L74.2 152.2 L72.3 149.7 L70.1 144.1 L68.5 142.2 L68.1 142.8 L66.8 141.7 L66.3 140.0 L67.0 137.7 L64.4 136.0 L60.8 127.2 L55.2 118.2 L55.1 116.7 L52.1 112.8 L49.2 105.6 L47.1 103.2 L47.9 102.5 L45.6 101.2 L42.6 101.8 L42.5 101.1 L42.0 101.8 L42.3 101.1 L41.5 101.4 L40.7 100.5 L39.2 102.2 L38.7 100.8 L40.0 100.0 L42.7 94.2 L42.5 91.9 L46.0 80.8 L61.8 84.4 L68.0 79.9 L72.0 74.2 L82.8 72.5 L85.7 67.1 L90.6 64.6 L77.4 47.4 L106.1 40.7 L108.9 38.7 L125.8 42.4 L149.3 57.3 L186.4 89.0 L210.6 91.2 L213.1 90.7 L226.2 92.2 L228.5 98.2 L229.8 99.8 L241.0 99.5 L241.9 100.2 L242.1 101.5 L241.6 102.0 L242.5 101.7 L242.4 103.1 L243.8 104.8 L244.4 107.6 L246.5 108.2 L245.8 109.0 L247.9 111.2 L247.3 112.8 L247.5 111.6 L246.8 112.4 L246.8 111.2 L246.4 113.0 L246.9 112.6 L246.9 113.5 L247.9 113.5 L247.8 114.8 L247.2 114.8 L248.2 114.4 L248.5 115.4 L249.2 114.6 L250.6 115.9 L253.3 115.7 L254.4 117.3 L254.0 116.9 L251.5 117.5 L252.9 118.2 L253.7 117.9 L253.1 119.3 L254.4 119.0 L254.7 121.3 L256.0 121.3 L255.5 122.3 L257.7 122.5 L257.1 121.8 L258.3 121.4 L258.4 122.9 L260.3 125.3 L264.5 127.1 L267.3 129.9 L265.3 129.4 L265.0 128.6 L264.8 129.0 L265.5 132.8 L268.0 134.3 L268.4 135.6 L267.4 140.4 L265.7 137.7 L264.9 138.8 L265.2 141.0 L265.7 140.5 L266.9 141.2 L267.2 143.2 L269.4 147.1 L268.9 146.2 L267.7 145.4 L267.8 146.0 L270.9 149.5 L271.3 149.8 L271.3 149.0 L272.7 150.2 L274.3 156.5 L276.9 159.3 L277.5 161.7 L278.2 161.5 Z M145.4 295.8 L145.2 297.9 L143.5 296.9 L144.3 296.6 L143.8 296.0 L141.7 296.3 L138.9 293.9 L138.6 292.5 L140.9 295.0 L143.4 295.4 L142.8 294.9 L143.4 294.0 L145.4 295.8 Z"><title>Saudi Arabia</title></path><path class="lc on" d="M233.4 75.6 L234.1 78.3 L236.9 83.0 L233.8 82.5 L230.1 86.0 L232.0 85.6 L231.7 86.4 L232.3 86.7 L234.1 85.5 L235.8 86.2 L236.8 91.7 L238.6 93.7 L239.4 95.9 L240.3 96.2 L239.8 97.9 L240.3 97.6 L241.0 99.5 L229.8 99.8 L228.5 98.2 L226.3 92.2 L213.1 90.7 L217.7 84.9 L221.8 75.6 L224.9 74.1 L229.4 73.9 L233.4 75.6 Z M239.3 80.1 L237.6 82.0 L236.6 81.5 L234.9 78.7 L235.8 78.1 L235.5 77.2 L236.5 77.4 L237.0 76.6 L235.9 75.7 L236.9 75.7 L239.2 78.8 L239.3 80.1 Z"><title>Kuwait</title></path></svg><figcaption class="insight"><b class="ins-n m">USD 27.86 bn</b><span class="ins-t">owed to creditors in the four Gulf states by 45 African governments at the end of 2024, up from USD 15.61 bn in 2014. Egypt owes the most, 58% of it.</span></figcaption></figure>
 </div>
 
 <dl class="kpis">
@@ -488,7 +522,7 @@
 <footer class="wrap foot">
   Africa Project Atlas · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
   · <a href="../index.html">Map</a> · <a href="../dashboard.html">Dashboard</a> · <a href="../index.html#t=m">Methodology</a>
-  · this page's data: <a href="../data/donors/gulf.json">gulf.json</a> · built 12 Oct 2026
+  · this page's data: <a href="../data/donors/gulf.json">gulf.json</a> · built 13 Oct 2026
 </footer>
 
 <script>
@@ -625,9 +659,14 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
    order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
    gets a box above it that keeps the rows containing every word typed. A row of class
    "grow" is a group heading: rows sort within their group, and a filter that names the
-   group keeps it whole. Tables a page draws or redraws later (the comparison's) are
-   picked up as they appear, and keep their sort and filter across redraws. */
+   group keeps it whole. A table longer than twelve rows shows its first ten, in
+   whatever order it is sorted, with buttons under it for ten more, all of them or
+   back to ten; a filter shows every match, and a link to something in a hidden row
+   (a corridor's marker on the map) opens the table first. Tables a page draws or
+   redraws later (the comparison's) are picked up as they appear, and keep their
+   sort, filter and length across redraws. */
 {
+  const CAP = 10, STEP = 10, SLACK = 2;   // 11 or 12 rows stay whole: the buttons would take the room they save
   const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
   const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
@@ -651,7 +690,7 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       th.classList.contains("num") || (filled[c].length > 0 && filled[c].every(v => NUMLIKE.test(v))));
     let group = null;
     all.forEach((r, i) => { r.dataset.i = i; if (isGroup(r)) group = r; r._t = fold((group && !isGroup(r) ? group.textContent + " " : "") + r.textContent); });
-    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: ""};
+    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: "", lim: CAP};
     state.set(key, st);
 
     let input = null, count = null;
@@ -688,6 +727,28 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       });
     });
 
+    let more = null, said, nextB, allB, lessB;
+    if (data.length > CAP + SLACK) {
+      const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
+      const btn = fn => { const b = document.createElement("button"); b.type = "button"; b.addEventListener("click", fn); return b; };
+      more = document.createElement("div");
+      more.className = "tmore";
+      said = document.createElement("span");
+      said.setAttribute("aria-live", "polite");
+      nextB = btn(() => { st.lim += STEP; apply(); });
+      allB = btn(() => { st.lim = Infinity; apply(); });
+      lessB = btn(() => {     // the rows fold away above the reader: put the buttons back at the bottom of the screen
+        st.lim = CAP; apply();
+        nextB.focus({preventScroll: true});
+        const r = more.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > innerHeight) more.scrollIntoView({block: "end", behavior: "instant"});
+      });
+      lessB.textContent = "Show fewer";
+      more.append(said, nextB, allB, lessB);
+      box.after(more);
+      t._uncap = () => { st.lim = Infinity; apply(); };
+    }
+
     function apply() {
       const groups = [{head: null, rows: []}];
       for (const r of all) { if (isGroup(r)) groups.push({head: r, rows: []}); else groups[groups.length - 1].rows.push(r); }
@@ -702,15 +763,30 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
         groups.forEach(g => g.rows.sort(cmp));
       }
       const words = fold(st.q).split(/\s+/).filter(Boolean);
-      let shown = 0;
+      const lim = more && !words.length ? st.lim : Infinity;
+      let shown = 0, last = null;
       const frag = document.createDocumentFragment();
       for (const g of groups) {
         let any = false;
-        for (const r of g.rows) { r.hidden = !words.every(w => r._t.includes(w)); if (!r.hidden) { shown++; any = true; } }
+        for (const r of g.rows) {
+          r.hidden = !words.every(w => r._t.includes(w));
+          const cut = !r.hidden && shown >= lim;
+          r.classList.toggle("capped", cut);
+          if (!r.hidden) { shown++; if (!cut) { any = true; last = r; } }
+        }
         if (g.head) { g.head.hidden = !any; frag.append(g.head); }
         frag.append(...g.rows);
       }
       body.append(frag);
+      for (const r of all) r.classList.toggle("tlast", r === last);
+      if (more) {
+        const n = data.length, vis = Math.min(st.lim, n), en = x => x.toLocaleString("en");
+        more.hidden = words.length > 0;
+        said.textContent = vis < n ? `${en(vis)} of ${en(n)} rows shown` : `All ${en(n)} rows shown`;
+        nextB.hidden = vis >= n; nextB.textContent = `Show ${en(Math.min(STEP, n - vis))} more`;
+        allB.hidden = n - vis <= STEP; allB.textContent = `Show all ${en(n)}`;
+        lessB.hidden = vis <= CAP;
+      }
       [...head.cells].forEach((th, c) => { if (filled[c].length) th.setAttribute("aria-sort", c !== st.col ? "none" : st.dir > 0 ? "ascending" : "descending"); });
       if (count) count.textContent = !words.length ? "" : shown ? `${shown.toLocaleString("en")} of ${data.length.toLocaleString("en")} rows` : "no row matches";
     }
@@ -718,6 +794,25 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
   }
 
   document.querySelectorAll("table").forEach(enhance);
+
+  /* a link into a row the length cap hides shows that whole table first: on a click
+     before the browser follows it, on a hash set by script, and on arrival */
+  const reveal = id => {
+    let el = null;
+    try { el = id ? document.getElementById(decodeURIComponent(id)) : null; } catch (e) { return null; }
+    const r = el && el.closest("tr.capped"), t = r && r.closest("table");
+    if (!t || !t._uncap) return null;
+    t._uncap();
+    return el;
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) reveal(a.getAttribute("href").slice(1));
+  });
+  const arrive = () => { const el = reveal(location.hash.slice(1)); if (el) el.scrollIntoView(); };
+  addEventListener("hashchange", arrive);
+  arrive();
+
   new MutationObserver(ms => {
     for (const m of ms) for (const n of m.addedNodes) {
       if (n.nodeType !== 1 || n.nodeName === "TR") continue;

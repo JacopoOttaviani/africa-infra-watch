@@ -171,6 +171,28 @@
   .lede strong{color:var(--ink);font-weight:600}
   .asof{margin:16px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
   .asof b{font-weight:500;color:var(--ink-2)}
+  /* the head beside a map (headmap.py): the lede on the left; on the right the
+     lender's outline, or the continent, with one key figure under it. The
+     corridor pages restyle these in their own sections. */
+  .headgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,400px);gap:8px 56px;align-items:center}
+  .locator{margin:0;padding-top:30px}
+  .locator svg{display:block;width:100%;height:auto}
+  .locator figcaption{font-size:12px;line-height:1.45;color:var(--ink-3);margin-top:10px;max-width:46ch}
+  .loc .lc{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  .loc .lc.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:.6}
+  .loc.shape{max-height:420px}
+  .loc.shape .lc{fill:var(--land);stroke:var(--border);stroke-width:.5}
+  .loc.shape .lc.on{fill:var(--accent);fill-opacity:.85;stroke:var(--paper);stroke-width:.6}
+  .loc.afr .lc.on{stroke:var(--surface);stroke-width:.6}
+  .insight{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--rule);padding-top:10px}
+  .insight .ins-n{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+  .insight .ins-t{font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+  .insight .ins-k{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;font-size:11.5px;color:var(--ink-2)}
+  .insight .ins-k i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  @media (max-width:960px){
+    .headgrid{grid-template-columns:1fr}
+    .locator{padding-top:6px;max-width:380px}
+  }
   p{max-width:72ch;margin:10px 0 0}
   section{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule)}
   section h2{font-size:21px;font-weight:700;letter-spacing:-.015em}
@@ -252,7 +274,15 @@
   .tfilter input::placeholder{color:var(--ink-3)}
   .tfilter input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
   .tfilter .tcount{font-size:11.5px;color:var(--ink-3)}
-  @media print{.tfilter{display:none} th .sorter::after{display:none}}
+  /* a table longer than twelve rows shows its first ten, with buttons under it for the rest */
+  tr.capped{display:none}
+  tr.tlast td{border-bottom:0}
+  .tmore{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+  .tmore button{font-size:12px;font-weight:600;color:var(--accent-ink)}
+  .tmore button:hover{text-decoration:underline;text-underline-offset:2px}
+  .tmore button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  .tmore[hidden],.tmore button[hidden]{display:none}
+  @media print{.tfilter,.tmore{display:none} th .sorter::after{display:none} tr.capped{display:table-row}}
   .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .st i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--ink-3)}
   .st.announced i{background:var(--st-announced)} .st.approved i{background:var(--st-approved)}
@@ -333,12 +363,16 @@
 <main class="wrap" id="main">
 <!-- Japan: the prose and section order of docs/japan/. Tokens (double-underscore
      names) are filled by build_donors.py from data/donors/japan.json. -->
+<div class="headgrid">
 <div class="head">
   <span class="kicker">Lender profile · Japan</span>
   <h1>Japan</h1>
   <p class="lede"><strong>Japan is the lender that builds: JICA's yen loans for ports, roads, power and water are the spine of its record.</strong> 32,502 activities with an African recipient for 2018–2024, USD 14.31 bn committed, 146 of them loans; 88% of the activities are reported by the Japanese International Co-operation Agency. The largest purpose is Road transport, USD 1,767 m; Egypt, Kenya and Morocco receive the most. 7,620 records, USD 7,070 m, build, renovate or drill something, a larger share than for any other provider on this site.</p>
   <p class="lede">The corporate footprint is thinner than the lending. Japan reports its direct-investment stock in Africa for South Africa alone, USD 4.5 bn at the end of 2024; the map's own layers carry 9 power units owned by Eurus Energy, Toyota Tsusho or Sumitomo, wind and solar in Egypt, Kenya and South Africa, and 1 pipeline segment with Sojitz among the owners. What African governments owe Japanese creditors is USD 10,095 m at the end of 2024, Egypt first; USD 8,317 m of it is the yen loans themselves.</p>
   <p class="asof">OECD CRS activities <b>2018–2024</b> and DAC2a net ODA <b>2010–2024</b> and FDI positions <b>2015–2024</b>, fetched <b>12 Oct 2026</b> · World Bank International Debt Statistics to <b>2024</b>, release of <b>3 Dec 2025</b> · Global Energy Monitor as on the map</p>
+</div>
+
+<figure class="locator"><svg class="loc shape" viewBox="0 0 400 460" role="img" aria-label="Outline of Japan"><defs><radialGradient id="hm-fade" cx=".5" cy=".5" r=".62"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="hm-mask" maskContentUnits="userSpaceOnUse"><rect width="400" height="460" fill="url(#hm-fade)"/></mask></defs><g mask="url(#hm-mask)"><path class="lc" d="M0.0 0.0 L139.2 0.0 L140.3 2.9 L145.6 2.1 L147.9 3.7 L159.9 3.4 L162.1 0.0 L187.4 0.0 L189.3 4.3 L186.5 8.8 L181.4 11.3 L181.9 15.4 L180.4 16.3 L176.4 27.6 L176.9 31.7 L174.0 33.9 L173.5 37.9 L171.4 38.8 L170.8 43.5 L166.6 46.1 L165.2 53.3 L162.6 54.8 L149.8 50.4 L148.3 48.2 L142.1 55.2 L135.1 57.1 L136.8 60.3 L138.6 72.5 L136.5 82.4 L138.0 85.4 L134.9 94.3 L124.9 97.0 L124.6 98.1 L127.0 99.5 L126.3 101.2 L122.7 97.4 L122.7 93.8 L117.8 91.5 L114.3 102.1 L112.8 101.8 L111.9 103.3 L109.2 101.5 L106.8 103.9 L106.9 105.8 L102.8 109.0 L89.7 108.8 L92.7 117.1 L90.2 120.7 L88.2 118.8 L82.9 119.1 L75.8 116.7 L76.7 115.4 L73.5 111.0 L71.3 112.7 L69.8 111.8 L70.5 112.6 L68.0 114.1 L66.7 119.0 L60.3 123.6 L58.3 126.9 L54.6 126.7 L48.9 131.1 L47.2 130.5 L43.2 132.4 L43.1 133.7 L41.2 133.1 L28.4 144.0 L23.0 143.7 L21.6 141.6 L20.2 144.1 L17.8 144.7 L17.9 143.0 L15.4 142.7 L14.6 145.3 L11.5 144.9 L0.0 149.7 L0.0 132.0 L3.7 127.6 L1.9 125.4 L2.4 123.5 L0.0 122.0 L0.0 187.9 Z"><title>People&#x27;s Republic of China</title></path><path class="lc" d="M88.2 174.3 L91.5 184.0 L97.2 193.4 L102.0 205.7 L99.7 225.6 L100.7 226.7 L102.4 225.0 L102.9 226.2 L100.0 236.0 L99.3 236.7 L98.8 235.5 L98.4 239.0 L93.9 243.7 L91.6 244.3 L91.7 242.6 L91.0 243.7 L87.6 243.0 L86.2 240.7 L86.7 243.7 L84.1 242.7 L82.2 244.3 L84.2 243.7 L83.1 247.7 L81.5 247.0 L81.7 245.4 L79.5 246.4 L77.2 245.4 L77.6 242.5 L74.6 244.8 L69.8 244.4 L70.7 247.2 L72.7 246.6 L71.8 248.8 L69.9 249.2 L70.1 250.8 L68.9 249.9 L68.6 245.4 L66.1 246.5 L67.8 251.2 L65.4 251.0 L66.8 252.1 L65.0 253.7 L61.7 251.6 L63.3 249.8 L62.9 251.1 L63.8 251.0 L64.4 248.5 L64.9 249.7 L65.8 248.9 L64.2 247.3 L60.1 250.1 L58.0 253.6 L56.6 252.8 L56.4 250.1 L55.3 253.1 L51.7 255.5 L51.3 251.9 L52.6 250.3 L50.1 250.6 L48.8 249.3 L49.0 246.2 L51.4 249.7 L50.3 247.1 L54.0 249.0 L50.1 246.3 L55.1 245.6 L53.7 245.3 L53.7 243.7 L52.5 246.0 L50.4 245.5 L51.8 242.0 L49.9 242.5 L50.8 241.1 L49.1 238.9 L50.6 238.3 L51.8 241.2 L52.2 239.7 L50.3 236.9 L52.9 234.8 L53.7 231.4 L56.8 231.7 L53.6 229.2 L56.9 226.7 L58.7 227.4 L57.6 225.6 L59.9 225.0 L56.3 224.6 L55.1 222.9 L60.7 221.8 L57.8 222.6 L56.5 220.0 L54.9 219.8 L56.7 219.2 L55.7 214.2 L57.6 213.4 L55.7 213.6 L56.0 207.8 L54.8 210.4 L53.9 207.7 L52.9 210.8 L52.8 208.0 L51.3 208.8 L50.7 207.0 L53.9 203.3 L53.1 206.5 L54.3 206.8 L55.5 204.4 L54.6 202.7 L56.1 202.9 L56.2 206.0 L57.1 204.0 L57.9 205.0 L57.0 202.0 L58.9 203.2 L58.7 204.9 L59.6 203.5 L61.4 204.2 L61.7 208.4 L62.1 206.1 L65.1 204.0 L63.0 205.0 L61.8 203.5 L63.2 203.4 L63.0 201.7 L61.0 202.4 L62.7 200.1 L60.0 200.8 L59.8 198.4 L63.1 198.3 L59.5 195.8 L58.9 188.1 L60.9 188.5 L60.7 190.3 L62.2 191.0 L61.0 189.9 L61.4 185.1 L68.5 178.9 L82.8 180.1 L85.9 178.4 L88.2 174.3 Z M57.0 271.8 L55.0 274.9 L51.2 275.9 L45.6 276.1 L44.1 274.0 L49.6 270.3 L54.6 270.0 L57.0 271.8 Z"><title>South Korea</title></path><path class="lc" d="M88.2 174.3 L85.9 178.4 L82.8 180.1 L68.5 178.9 L61.4 185.1 L59.9 188.2 L57.2 185.6 L53.8 186.2 L52.5 188.0 L52.1 185.4 L50.6 184.5 L50.9 186.3 L49.9 185.8 L48.4 182.7 L45.5 181.6 L47.4 183.7 L45.7 183.6 L45.2 186.6 L43.9 185.9 L40.9 187.9 L43.8 184.1 L42.5 183.6 L42.6 185.0 L40.6 185.3 L39.6 185.0 L40.1 182.9 L38.8 183.9 L35.9 182.4 L39.0 182.0 L38.1 180.7 L40.2 181.1 L40.5 180.0 L31.8 178.0 L36.8 176.6 L35.1 175.8 L35.5 174.1 L37.9 171.5 L37.5 169.7 L39.8 170.1 L39.8 168.4 L45.0 168.2 L47.8 170.1 L45.0 166.8 L42.3 168.1 L40.4 165.9 L41.8 162.3 L44.1 160.9 L43.5 159.4 L45.4 158.5 L46.6 155.1 L44.9 154.1 L46.9 151.6 L44.4 152.3 L43.7 150.8 L42.1 151.0 L37.2 146.3 L36.7 149.0 L35.1 149.8 L34.5 145.4 L31.2 143.0 L32.9 140.9 L34.1 141.2 L32.5 139.5 L41.2 133.1 L43.1 133.7 L43.2 132.4 L47.2 130.5 L48.9 131.1 L54.6 126.7 L58.3 126.9 L60.3 123.6 L66.7 119.0 L68.0 114.1 L70.5 112.6 L69.8 111.8 L71.3 112.7 L73.5 111.0 L76.7 115.4 L75.8 116.7 L82.9 119.1 L88.2 118.8 L90.2 120.7 L92.7 117.1 L89.7 108.8 L102.8 109.0 L106.9 105.8 L106.8 103.9 L109.2 101.5 L111.9 103.3 L112.8 101.8 L114.3 102.1 L117.8 91.5 L121.1 92.1 L120.7 93.2 L122.7 93.8 L122.7 97.4 L125.2 100.7 L126.2 99.8 L128.4 105.7 L126.9 106.4 L125.7 104.8 L124.3 105.1 L112.9 117.3 L112.2 120.9 L114.2 122.6 L112.0 133.2 L109.9 132.8 L105.7 135.8 L104.7 135.0 L102.1 139.4 L95.4 142.0 L95.0 144.5 L90.3 147.0 L85.6 146.2 L83.2 149.1 L79.4 149.9 L77.5 151.9 L77.6 159.7 L76.9 157.5 L75.0 158.3 L76.3 159.0 L75.1 159.1 L74.8 161.8 L80.1 163.9 L83.4 169.2 L86.1 172.0 L87.3 171.5 L88.2 174.3 Z"><title>North Korea</title></path><path class="lc" d="M250.2 0.0 L244.5 11.7 L239.3 17.3 L236.6 26.5 L232.6 34.1 L220.7 49.2 L216.1 52.7 L211.0 60.5 L209.8 60.4 L207.2 66.0 L202.6 68.6 L199.5 74.8 L197.3 76.5 L198.0 77.8 L196.7 80.0 L193.2 81.0 L192.6 84.9 L179.0 92.9 L175.0 96.6 L172.0 97.8 L170.3 97.0 L163.9 100.0 L162.0 99.7 L162.9 98.7 L161.7 97.2 L159.1 98.5 L158.5 95.5 L155.8 96.7 L153.4 94.6 L152.0 96.5 L153.0 87.7 L146.8 91.9 L145.7 91.2 L148.8 87.2 L147.6 88.0 L145.7 86.6 L141.6 93.0 L139.1 93.9 L140.1 95.3 L137.2 97.0 L136.1 101.3 L134.9 99.0 L131.5 100.1 L130.5 99.4 L132.4 99.1 L130.1 99.0 L130.7 98.2 L128.3 98.7 L131.2 101.5 L128.4 105.8 L126.3 101.2 L127.0 99.4 L124.4 97.8 L127.5 95.7 L134.9 94.3 L134.7 91.9 L138.1 85.4 L136.6 82.4 L138.7 72.4 L135.2 57.0 L142.2 55.1 L148.4 48.2 L149.8 50.3 L162.7 54.8 L165.2 53.4 L166.6 46.0 L170.8 43.6 L170.9 39.9 L173.4 37.8 L174.0 33.8 L177.0 31.7 L176.4 27.6 L178.8 24.0 L179.7 18.0 L181.9 15.4 L181.4 11.4 L186.4 8.8 L189.4 4.3 L187.1 0.0 L162.0 0.0 L160.0 3.4 L152.0 3.8 L147.9 3.7 L145.9 2.1 L140.6 3.0 L139.4 0.0 Z M290.9 0.0 L293.5 7.3 L297.9 10.6 L300.5 17.9 L299.4 19.0 L300.7 20.8 L303.6 20.6 L300.9 19.4 L300.9 18.3 L304.6 18.2 L307.4 26.9 L305.3 33.5 L303.6 23.5 L302.8 24.5 L300.8 22.9 L296.0 23.4 L294.7 20.6 L293.4 21.1 L290.9 24.5 L287.5 37.1 L285.1 34.6 L282.9 25.1 L285.6 15.2 L283.6 4.6 L285.2 0.0 Z M349.7 60.6 L351.0 60.1 L350.4 61.9 L345.3 64.5 L338.8 72.9 L338.8 76.8 L338.5 75.4 L337.0 75.6 L336.3 73.3 L340.4 69.1 L344.7 59.6 L349.7 60.6 Z M378.6 38.2 L379.1 39.9 L372.2 42.8 L367.9 48.4 L364.4 48.2 L364.6 49.7 L359.7 56.7 L357.3 57.7 L356.4 60.1 L355.0 59.7 L355.6 56.3 L356.6 57.2 L356.4 55.5 L359.0 54.2 L357.4 52.1 L359.0 52.5 L362.0 48.9 L362.2 46.5 L363.7 46.7 L367.0 43.5 L367.1 39.4 L369.3 42.6 L372.5 41.7 L377.4 36.2 L379.1 37.0 L378.6 38.2 Z M396.4 20.5 L399.5 19.7 L395.6 26.1 L389.2 33.1 L386.6 33.9 L388.9 28.5 L396.4 20.5 Z"><title>Russia</title></path></g><path class="lc on" d="M131.9 297.0 L132.3 298.2 L131.3 298.7 L127.9 308.5 L128.6 310.1 L125.6 318.3 L124.1 317.8 L123.5 316.6 L121.2 316.5 L120.1 318.1 L121.6 318.8 L121.0 319.7 L122.0 319.8 L120.0 320.8 L118.7 322.7 L113.9 324.8 L114.0 323.4 L115.4 322.5 L116.6 318.3 L115.1 315.9 L115.2 314.1 L113.4 313.3 L115.1 312.8 L116.2 314.0 L117.1 312.3 L116.7 311.1 L114.4 311.0 L112.3 314.7 L112.6 318.3 L114.2 319.5 L113.0 321.6 L110.7 319.7 L106.9 319.4 L106.9 317.7 L105.5 316.2 L107.3 316.9 L109.1 313.6 L109.2 312.0 L106.7 308.9 L107.1 308.0 L107.9 308.4 L107.3 303.1 L109.6 302.7 L112.3 298.4 L112.9 298.6 L113.8 295.8 L114.6 295.4 L114.0 294.6 L115.9 292.8 L112.3 293.2 L115.3 291.8 L115.1 290.0 L112.5 287.3 L112.3 284.0 L109.5 281.9 L107.7 283.1 L109.0 285.9 L107.1 287.7 L110.8 288.4 L110.9 291.7 L107.7 293.4 L107.1 291.6 L108.5 290.4 L106.6 289.5 L104.5 289.9 L103.2 291.8 L100.7 293.3 L102.8 290.6 L99.5 286.2 L100.4 283.2 L101.6 284.1 L101.2 285.2 L101.7 284.6 L102.5 285.5 L101.9 287.6 L105.2 288.2 L104.2 286.6 L104.6 284.9 L101.5 283.7 L101.7 282.3 L100.9 281.9 L100.2 283.0 L100.0 281.2 L98.4 280.3 L99.1 277.6 L100.6 277.2 L101.0 278.2 L102.8 278.3 L103.4 279.7 L103.8 277.4 L102.6 276.3 L103.1 275.8 L103.9 276.6 L103.7 274.5 L105.1 274.9 L105.1 275.9 L106.3 276.6 L108.8 275.2 L107.6 274.3 L109.6 272.5 L110.8 274.6 L112.5 274.1 L112.7 272.7 L111.9 273.3 L110.9 272.4 L111.9 272.9 L113.4 271.8 L114.4 269.1 L118.8 267.9 L121.2 269.0 L122.8 267.5 L121.9 270.4 L122.7 270.6 L123.9 274.4 L128.2 275.6 L130.8 273.6 L133.2 273.9 L134.1 277.7 L133.6 279.0 L132.4 278.8 L131.7 280.1 L130.3 279.8 L130.2 281.6 L136.5 281.9 L134.9 284.5 L136.5 284.8 L136.0 285.6 L138.0 285.5 L138.1 286.2 L136.8 286.2 L136.3 287.5 L139.1 288.4 L137.5 289.3 L137.1 290.5 L137.7 290.9 L135.7 291.4 L135.3 293.1 L134.7 292.9 L132.6 295.1 L132.4 296.3 L133.2 296.9 L131.9 297.0 Z M182.0 272.6 L183.0 272.6 L175.8 277.5 L173.5 283.9 L169.6 278.9 L166.5 277.8 L159.1 281.1 L158.0 284.9 L154.2 288.1 L154.1 290.4 L153.4 290.8 L154.5 293.0 L154.0 293.5 L152.7 292.1 L148.0 292.5 L149.4 289.5 L147.0 288.8 L145.9 289.7 L145.6 286.8 L144.1 287.1 L144.6 286.2 L145.8 286.2 L145.3 285.4 L146.0 285.0 L144.4 283.6 L146.0 284.3 L147.0 283.1 L145.9 282.1 L146.8 281.6 L144.3 281.3 L145.1 279.0 L143.3 278.5 L138.4 280.4 L145.0 277.2 L149.5 273.7 L150.1 270.2 L150.8 270.1 L151.2 268.3 L153.6 267.1 L153.3 266.1 L154.0 265.7 L156.9 269.9 L160.0 268.9 L163.1 269.4 L165.2 267.3 L165.3 265.3 L164.0 263.7 L166.3 264.4 L170.2 261.6 L172.4 262.2 L173.4 261.5 L173.9 262.9 L174.7 262.1 L178.2 265.1 L181.5 264.6 L180.5 268.7 L182.2 270.3 L181.4 272.2 L182.5 272.2 L182.0 272.6 Z M161.9 260.0 L159.6 262.4 L160.1 261.5 L159.2 260.3 L158.1 263.1 L156.3 263.5 L156.2 262.3 L157.9 261.6 L156.6 261.0 L156.1 262.1 L152.5 262.4 L149.6 264.4 L147.8 264.5 L147.4 261.4 L144.7 261.2 L142.5 263.3 L142.2 268.1 L141.0 269.1 L141.2 271.0 L139.6 272.1 L140.3 270.4 L136.4 267.7 L135.2 268.2 L135.9 267.1 L134.7 266.4 L132.2 266.7 L132.0 267.6 L130.5 266.8 L129.8 267.7 L129.0 267.5 L129.0 266.5 L126.8 268.7 L125.5 268.4 L123.4 266.0 L121.3 268.6 L120.7 268.0 L121.4 266.7 L120.6 264.7 L121.6 263.4 L120.9 261.4 L121.3 260.2 L123.6 259.6 L122.0 259.1 L122.6 258.5 L125.2 259.1 L125.8 259.9 L125.9 258.7 L127.6 259.2 L126.9 259.0 L126.5 259.9 L129.7 259.1 L133.0 254.6 L137.2 253.9 L146.4 245.2 L150.1 243.2 L150.6 241.2 L150.2 240.3 L155.5 238.9 L157.4 237.4 L158.5 238.2 L160.9 237.9 L160.1 239.5 L162.2 240.5 L165.1 239.1 L167.5 239.7 L175.6 239.0 L180.4 236.7 L186.5 237.5 L191.3 235.0 L192.6 237.0 L190.6 239.3 L191.6 238.5 L191.4 239.5 L193.0 240.1 L192.6 241.3 L193.9 240.7 L193.0 239.5 L194.9 238.4 L196.0 240.5 L197.9 239.6 L197.4 240.5 L199.0 240.6 L199.5 239.8 L198.5 239.4 L199.3 239.0 L200.7 239.8 L200.4 237.7 L203.1 237.9 L202.8 235.9 L203.8 235.1 L204.6 237.3 L205.0 235.0 L203.3 232.8 L202.9 230.7 L205.4 225.8 L209.5 223.1 L214.4 216.5 L215.6 211.6 L214.8 208.5 L214.1 208.3 L214.8 204.8 L223.2 201.1 L224.6 201.3 L224.6 202.5 L223.0 202.9 L222.7 205.6 L220.9 205.8 L219.3 207.8 L218.4 206.8 L217.0 209.7 L218.9 210.3 L220.0 209.3 L219.4 214.4 L221.7 215.9 L223.9 215.9 L225.1 215.1 L226.2 212.6 L233.2 210.0 L236.2 207.8 L238.4 207.6 L243.1 203.6 L246.1 199.3 L247.7 194.8 L253.2 191.5 L256.3 188.3 L257.0 182.5 L258.6 178.5 L261.1 175.2 L264.8 161.8 L264.3 155.6 L262.6 154.1 L260.2 155.0 L259.2 152.5 L261.8 152.6 L263.7 147.5 L263.7 145.2 L262.7 144.0 L262.3 141.1 L261.2 140.4 L263.9 137.2 L264.9 137.7 L267.1 136.3 L267.7 132.0 L268.4 132.8 L269.0 132.0 L266.6 130.3 L267.6 129.7 L267.8 127.4 L269.6 129.0 L270.9 128.0 L272.1 128.8 L273.4 135.3 L274.9 135.4 L275.6 134.6 L275.3 133.3 L276.0 132.1 L279.7 134.6 L281.0 132.2 L281.6 128.9 L280.5 127.0 L279.7 126.7 L278.3 128.7 L274.1 129.4 L275.8 121.8 L281.4 125.2 L283.9 123.6 L283.3 131.4 L284.4 138.3 L285.3 140.4 L288.4 142.6 L290.6 146.1 L290.4 147.5 L291.5 148.2 L291.0 149.6 L292.7 150.9 L293.7 155.3 L293.3 158.4 L294.4 157.8 L295.0 159.5 L293.3 161.4 L294.9 161.1 L292.8 163.9 L293.9 163.5 L292.8 164.9 L293.5 165.4 L292.5 166.3 L293.2 167.0 L292.0 167.5 L293.1 168.4 L291.8 168.6 L292.5 169.2 L291.8 169.2 L292.3 170.0 L290.5 169.7 L290.6 171.4 L289.2 170.7 L289.8 173.4 L288.5 172.9 L288.6 174.0 L287.6 175.1 L288.4 176.4 L286.8 177.2 L288.0 177.8 L287.0 179.0 L288.3 179.9 L287.2 181.7 L288.4 182.4 L287.7 182.8 L288.2 184.8 L286.6 182.7 L284.6 182.2 L283.1 182.7 L282.7 184.1 L282.0 183.1 L281.3 183.3 L280.9 184.3 L281.4 184.7 L279.8 187.1 L279.2 191.0 L280.9 195.6 L281.3 207.3 L280.7 210.4 L278.3 212.1 L275.8 219.6 L275.9 222.9 L275.0 224.1 L276.6 229.3 L280.5 234.8 L277.1 235.5 L274.3 237.9 L273.0 241.7 L273.0 245.6 L272.1 246.6 L269.1 246.9 L266.9 248.9 L266.0 251.1 L264.6 251.3 L263.3 250.2 L265.0 249.4 L264.1 246.3 L264.9 244.5 L263.4 243.2 L265.1 242.4 L265.2 241.2 L268.3 238.2 L266.3 236.3 L263.4 237.7 L263.0 236.8 L263.4 239.5 L261.1 240.7 L261.9 241.1 L261.1 241.7 L261.3 243.6 L263.0 244.6 L261.7 245.8 L262.1 246.7 L261.0 247.0 L260.9 245.4 L259.6 243.5 L253.9 244.6 L253.6 247.0 L253.0 246.8 L252.4 248.2 L253.5 252.2 L251.3 255.0 L251.2 256.6 L248.8 257.6 L247.3 255.9 L247.9 251.6 L247.3 250.2 L247.8 249.2 L249.7 249.2 L247.9 247.5 L244.0 248.0 L243.4 250.3 L241.2 251.5 L240.7 253.3 L238.8 255.6 L238.4 257.0 L239.0 258.0 L234.8 256.5 L232.0 257.1 L228.1 256.3 L219.6 258.3 L220.4 256.8 L221.1 257.4 L224.7 255.4 L223.8 253.8 L222.3 253.9 L222.0 254.8 L219.6 254.4 L218.7 253.5 L219.0 251.7 L218.0 254.4 L218.8 256.0 L217.1 255.2 L216.4 251.1 L217.5 248.4 L216.9 249.4 L216.6 248.6 L216.7 249.6 L213.9 250.6 L211.6 256.4 L212.1 258.0 L218.0 261.3 L218.0 262.2 L217.4 262.4 L217.7 264.4 L216.0 264.8 L216.9 263.6 L214.5 263.8 L214.7 263.2 L208.7 266.1 L208.2 267.9 L206.8 268.0 L207.6 270.2 L206.9 269.8 L206.9 270.8 L204.8 271.7 L202.2 277.0 L202.5 277.5 L199.2 280.6 L199.4 279.7 L194.1 278.2 L192.3 275.9 L193.3 275.1 L190.7 273.7 L189.0 271.5 L188.0 271.7 L188.4 269.8 L189.7 269.0 L188.6 268.0 L189.1 266.7 L190.2 266.5 L188.1 264.1 L193.2 260.1 L193.9 256.1 L191.3 255.8 L191.1 256.8 L190.4 256.4 L188.1 257.3 L183.2 254.3 L179.2 253.8 L176.9 255.4 L174.7 254.9 L175.8 255.5 L173.7 257.4 L170.3 257.5 L170.3 258.1 L172.1 257.8 L170.2 260.2 L167.8 260.4 L166.8 258.6 L162.7 260.6 L163.5 259.4 L161.9 260.0 Z M342.3 81.5 L343.0 81.8 L340.5 83.2 L339.4 86.0 L334.0 87.3 L333.8 88.0 L334.5 88.2 L332.2 89.2 L332.4 90.1 L330.9 90.4 L329.4 89.2 L328.6 90.6 L329.3 91.5 L328.8 91.8 L324.8 91.7 L322.7 90.7 L316.9 94.2 L312.9 99.2 L310.0 104.8 L310.1 108.9 L309.0 112.4 L304.7 109.2 L297.4 106.6 L293.0 103.1 L287.8 100.7 L285.2 100.5 L282.3 101.8 L276.1 107.1 L275.4 106.5 L276.2 106.3 L272.3 102.2 L269.0 102.0 L266.7 104.9 L266.2 108.2 L270.1 111.0 L272.4 110.5 L276.3 114.6 L279.8 116.6 L277.1 118.5 L274.3 117.4 L272.7 117.9 L273.0 116.7 L271.9 116.4 L271.1 118.1 L269.0 119.4 L268.8 122.3 L266.6 123.3 L265.8 124.9 L263.2 124.2 L262.3 121.6 L264.3 117.0 L264.4 113.7 L259.2 108.9 L258.7 107.5 L259.6 105.4 L259.4 102.1 L260.0 100.7 L262.3 100.1 L264.5 97.7 L265.7 98.6 L268.9 93.8 L268.4 92.3 L266.2 89.9 L266.3 87.6 L268.1 86.7 L272.7 89.8 L275.6 89.1 L275.8 90.3 L278.0 90.8 L279.7 89.5 L281.3 87.1 L281.5 85.4 L280.2 83.3 L280.6 82.1 L279.8 79.7 L280.4 78.1 L283.7 75.0 L283.6 68.5 L284.7 65.7 L285.1 61.5 L284.1 56.7 L281.6 51.6 L282.1 46.2 L282.7 47.0 L284.4 46.5 L285.7 44.5 L290.0 48.5 L301.4 61.5 L307.8 66.3 L313.1 68.4 L311.7 68.7 L312.5 70.0 L317.9 69.2 L318.6 69.5 L317.9 71.1 L318.5 71.3 L319.6 69.3 L321.8 72.2 L326.9 72.8 L332.7 66.5 L334.3 63.6 L335.0 65.5 L332.4 71.5 L331.8 75.1 L334.2 78.3 L335.9 82.4 L337.1 83.5 L335.3 83.3 L339.1 84.9 L338.8 84.1 L339.7 82.7 L342.3 81.5 Z M69.8 402.8 L69.2 404.6 L66.5 405.9 L66.0 407.3 L60.9 408.9 L61.9 411.5 L60.4 411.2 L59.2 413.0 L60.1 413.7 L59.6 414.6 L57.0 415.5 L57.0 413.0 L58.9 411.0 L58.7 408.9 L63.0 406.8 L61.8 405.5 L61.8 404.2 L64.8 405.4 L67.9 402.6 L68.5 400.9 L69.8 402.8 Z"><title>Japan</title></path></svg><figcaption class="insight"><b class="ins-n m">USD 10.09 bn</b><span class="ins-t">owed to Japanese creditors by 27 African governments at the end of 2024, up from USD 6.18 bn in 2014. Egypt owes the most, 24% of it.</span></figcaption></figure>
 </div>
 
 <dl class="kpis">
@@ -488,7 +522,7 @@
 <footer class="wrap foot">
   Africa Project Atlas · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
   · <a href="../index.html">Map</a> · <a href="../dashboard.html">Dashboard</a> · <a href="../index.html#t=m">Methodology</a>
-  · this page's data: <a href="../data/donors/japan.json">japan.json</a> · built 12 Oct 2026
+  · this page's data: <a href="../data/donors/japan.json">japan.json</a> · built 13 Oct 2026
 </footer>
 
 <script>
@@ -625,9 +659,14 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
    order; a missing value ("–") always sinks to the bottom. A table longer than eight rows
    gets a box above it that keeps the rows containing every word typed. A row of class
    "grow" is a group heading: rows sort within their group, and a filter that names the
-   group keeps it whole. Tables a page draws or redraws later (the comparison's) are
-   picked up as they appear, and keep their sort and filter across redraws. */
+   group keeps it whole. A table longer than twelve rows shows its first ten, in
+   whatever order it is sorted, with buttons under it for ten more, all of them or
+   back to ten; a filter shows every match, and a link to something in a hidden row
+   (a corridor's marker on the map) opens the table first. Tables a page draws or
+   redraws later (the comparison's) are picked up as they appear, and keep their
+   sort, filter and length across redraws. */
 {
+  const CAP = 10, STEP = 10, SLACK = 2;   // 11 or 12 rows stay whole: the buttons would take the room they save
   const MISSING = /^(–|—|-|·|none|n\/a|no data|not reported)?$/i;
   const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const numOf = s => { const m = s.replace(/−/g, "-").replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
@@ -651,7 +690,7 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       th.classList.contains("num") || (filled[c].length > 0 && filled[c].every(v => NUMLIKE.test(v))));
     let group = null;
     all.forEach((r, i) => { r.dataset.i = i; if (isGroup(r)) group = r; r._t = fold((group && !isGroup(r) ? group.textContent + " " : "") + r.textContent); });
-    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: ""};
+    const key = keyOf(t), st = state.get(key) || {col: -1, dir: 0, q: "", lim: CAP};
     state.set(key, st);
 
     let input = null, count = null;
@@ -688,6 +727,28 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
       });
     });
 
+    let more = null, said, nextB, allB, lessB;
+    if (data.length > CAP + SLACK) {
+      const box = t.parentElement.classList.contains("tbl") ? t.parentElement : t;
+      const btn = fn => { const b = document.createElement("button"); b.type = "button"; b.addEventListener("click", fn); return b; };
+      more = document.createElement("div");
+      more.className = "tmore";
+      said = document.createElement("span");
+      said.setAttribute("aria-live", "polite");
+      nextB = btn(() => { st.lim += STEP; apply(); });
+      allB = btn(() => { st.lim = Infinity; apply(); });
+      lessB = btn(() => {     // the rows fold away above the reader: put the buttons back at the bottom of the screen
+        st.lim = CAP; apply();
+        nextB.focus({preventScroll: true});
+        const r = more.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > innerHeight) more.scrollIntoView({block: "end", behavior: "instant"});
+      });
+      lessB.textContent = "Show fewer";
+      more.append(said, nextB, allB, lessB);
+      box.after(more);
+      t._uncap = () => { st.lim = Infinity; apply(); };
+    }
+
     function apply() {
       const groups = [{head: null, rows: []}];
       for (const r of all) { if (isGroup(r)) groups.push({head: r, rows: []}); else groups[groups.length - 1].rows.push(r); }
@@ -702,15 +763,30 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
         groups.forEach(g => g.rows.sort(cmp));
       }
       const words = fold(st.q).split(/\s+/).filter(Boolean);
-      let shown = 0;
+      const lim = more && !words.length ? st.lim : Infinity;
+      let shown = 0, last = null;
       const frag = document.createDocumentFragment();
       for (const g of groups) {
         let any = false;
-        for (const r of g.rows) { r.hidden = !words.every(w => r._t.includes(w)); if (!r.hidden) { shown++; any = true; } }
+        for (const r of g.rows) {
+          r.hidden = !words.every(w => r._t.includes(w));
+          const cut = !r.hidden && shown >= lim;
+          r.classList.toggle("capped", cut);
+          if (!r.hidden) { shown++; if (!cut) { any = true; last = r; } }
+        }
         if (g.head) { g.head.hidden = !any; frag.append(g.head); }
         frag.append(...g.rows);
       }
       body.append(frag);
+      for (const r of all) r.classList.toggle("tlast", r === last);
+      if (more) {
+        const n = data.length, vis = Math.min(st.lim, n), en = x => x.toLocaleString("en");
+        more.hidden = words.length > 0;
+        said.textContent = vis < n ? `${en(vis)} of ${en(n)} rows shown` : `All ${en(n)} rows shown`;
+        nextB.hidden = vis >= n; nextB.textContent = `Show ${en(Math.min(STEP, n - vis))} more`;
+        allB.hidden = n - vis <= STEP; allB.textContent = `Show all ${en(n)}`;
+        lessB.hidden = vis <= CAP;
+      }
       [...head.cells].forEach((th, c) => { if (filled[c].length) th.setAttribute("aria-sort", c !== st.col ? "none" : st.dir > 0 ? "ascending" : "descending"); });
       if (count) count.textContent = !words.length ? "" : shown ? `${shown.toLocaleString("en")} of ${data.length.toLocaleString("en")} rows` : "no row matches";
     }
@@ -718,6 +794,25 @@ Object.entries(DATA.charts || {}).forEach(([id, c]) => {
   }
 
   document.querySelectorAll("table").forEach(enhance);
+
+  /* a link into a row the length cap hides shows that whole table first: on a click
+     before the browser follows it, on a hash set by script, and on arrival */
+  const reveal = id => {
+    let el = null;
+    try { el = id ? document.getElementById(decodeURIComponent(id)) : null; } catch (e) { return null; }
+    const r = el && el.closest("tr.capped"), t = r && r.closest("table");
+    if (!t || !t._uncap) return null;
+    t._uncap();
+    return el;
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) reveal(a.getAttribute("href").slice(1));
+  });
+  const arrive = () => { const el = reveal(location.hash.slice(1)); if (el) el.scrollIntoView(); };
+  addEventListener("hashchange", arrive);
+  arrive();
+
   new MutationObserver(ms => {
     for (const m of ms) for (const n of m.addedNodes) {
       if (n.nodeType !== 1 || n.nodeName === "TR") continue;

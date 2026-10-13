@@ -32,6 +32,8 @@ ROOT = pathlib.Path(__file__).parent
 FRAME = ROOT / "donor.template.html"
 # the site's country names (fetch_donors keeps them beside the ISO table)
 from fetch_donors import NAME as NAMES
+# the lender's outline beside the head
+from headmap import head_wrap, lender_figure
 
 # Equirectangular, like the dashboard's map; wide enough for Cabo Verde and
 # Mauritius, the islands the debt table reaches.
@@ -999,6 +1001,7 @@ def build(d, land):
         "__DATA_FILE__": f"{slug}.json",
         "__BUILT__": fmt_date(today()),
     })
+    frag = head_wrap(frag, lender_figure(slug, d["name"], pack["ids"]))
     page = FRAME.read_text().replace("<!--__BODY__-->", frag, 1)
     for k, v in tokens.items():
         page = page.replace(k, v)
