@@ -321,7 +321,7 @@ def build_finance():
                         break
                 if sector:
                     break
-            com = p.get("commitment")
+            com, pub = p.get("commitment"), p.get("commitment_published")
             rate = TO_USD.get(p.get("currency") or ("XDR" if ln == "AfDB" else "USD"))
             best[key] = (rank, [
                 (p.get("name") or "").strip()[:88],
@@ -329,10 +329,12 @@ def build_finance():
                 sector, round(com * rate / 1e6, 2) if com and rate else None,
                 rank, (p.get("location_name") or "")[:40] or None, pid, ln,
                 p.get("project_url") or None,
+                # the lender's own figure where the counted one differs, and why
+                round(pub * rate / 1e6, 2) if pub and rate else None, p.get("counted_note"),
             ])
     return {
         "cols": ["name", "iso", "lon", "lat", "status", "sector",
-                 "usd_m", "prec", "place", "iid", "ln", "purl"],
+                 "usd_m", "prec", "place", "iid", "ln", "purl", "pub_m", "cnote"],
         "rows": [v[1] for v in best.values()],
     }
 
@@ -367,6 +369,8 @@ def build_ground(idx):
             skipped += 1
             continue
         parts = sorted(parts, key=len, reverse=True)[:6]
+        # the middle vertex of the longest raw part, as build_map takes it,
+        # so a coastal or border work lands in the same country on both pages
         mid = parts[0][len(parts[0]) // 2]
         iso, _ = locate(mid[0], mid[1], idx)
         rows.append({
@@ -430,9 +434,10 @@ def build_pipelines(idx, simp=simplify_line):
             p.get("diameter") or None,
             p.get("project_id") or None, p.get("url") or None, p.get("tracker"),
             isos or None, (p.get("pipeline") or "").strip()[:90] or None, geoms,
+            p.get("length_note") or None,
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "fuel", "km", "cap", "bcm", "boed",
-                     "yr", "owner", "from", "to", "dia", "pid", "url", "trk", "isos", "pipe", "g"],
+                     "yr", "owner", "from", "to", "dia", "pid", "url", "trk", "isos", "pipe", "g", "lnote"],
             "rows": rows}
 
 
@@ -464,18 +469,22 @@ def build_cables(idx, simp=simplify_line, rnd=r):
             (p.get("name") or "").strip()[:100] or None, isos[0] if isos else None,
             rnd(lon), rnd(lat), p["dash_status"], p.get("rfs_year"),
             1 if p.get("is_planned") else 0,
-            # TeleGeography leaves length blank for a few planned systems
-            # (Umoja, MRSC); fall back to the drawn route so they still rank
-            round(p["length_km"]) if p.get("length_km") else round(_length_km(geoms)),
-            (p.get("owners") or "").strip()[:200] or None,
-            (p.get("suppliers") or "").strip()[:80] or None,
+            # TeleGeography leaves length blank for a few systems (Umoja,
+            # FEA, ReuNION); the fetcher's estimate from the whole drawn route
+            # stands in, flagged, so both pages show the same figure
+            round(p["length_km"]) if p.get("length_km") else (p.get("length_km_est") or None),
+            # owner and supplier lists whole: the Methodology tallies them,
+            # and a consortium cable lists a dozen or more
+            (p.get("owners") or "").strip() or None,
+            (p.get("suppliers") or "").strip() or None,
             p.get("url") or None, p.get("cable_id"),
             p.get("landing_total") or len(lps), len(p.get("countries") or []),
-            (p.get("notes") or "").strip()[:200] or None,
+            (p.get("notes") or "").strip()[:400] or None,
             lps or None, isos or None, geoms,
+            0 if p.get("length_km") else 1,
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "rfs", "planned", "km", "owners",
-                     "suppliers", "url", "cid", "lp_total", "n_cts", "notes", "lps", "isos", "g"],
+                     "suppliers", "url", "cid", "lp_total", "n_cts", "notes", "lps", "isos", "g", "km_est"],
             "rows": rows}
 
 
@@ -529,7 +538,7 @@ def build_china(idx, simp=simplify_line, rnd=r, cap=60, min_extent=0.02):
             geoms = _decimate(geoms, cap) if geoms else None
         lon, lat = p["lon"], p["lat"]
         iso = p.get("country") or locate(lon, lat, idx)[0]
-        amt = p.get("amount_usd_2021")
+        amt, pub = p.get("amount_usd_2021"), p.get("amount_usd_2021_published")
         # the OSM link without its host and map fragment: "way/1164438280"
         osm = re.sub(r"^https?://www\.openstreetmap\.org/|#.*$", "", (p.get("osm_links") or [""])[0]) or None
         rows.append([
@@ -539,18 +548,21 @@ def build_china(idx, simp=simplify_line, rnd=r, cap=60, min_extent=0.02):
             CHINA_PREC.get(p.get("geo_precision"), 3), (p.get("place") or "")[:50] or None,
             p.get("aiddata_id"), p.get("sector_code"),
             p.get("flow_simple"), p.get("flow_class"),
-            (p.get("funders") or "")[:110] or None, (p.get("implementers") or "")[:110] or None,
+            # whole lists: the Methodology tallies funders and implementers
+            p.get("funders") or None, p.get("implementers") or None,
             p.get("commitment_year"), p.get("start_year"), p.get("completion_year"),
             p.get("interest_rate"), p.get("maturity_years"),
             1 if p.get("financial_distress") else 0,
-            (p.get("cofinanciers") or "")[:100] if p.get("cofinanced") else None,
+            # co-financed by AidData's flag; some flagged records name no co-financier
+            ((p.get("cofinanciers") or "")[:100] or "unnamed") if p.get("cofinanced") else None,
             # AidData's own word only where the shared status does not imply it
             p.get("raw_status") if p["dash_status"] == "stalled" else None,
             1 if p.get("amount_estimated") else 0, osm, geoms,
+            round(pub / 1e6, 2) if pub else None, p.get("counted_note"),
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m", "prec", "place", "aid",
                      "sc", "flow", "cls", "funders", "impl", "cyr", "syr", "eyr", "rate", "mat",
-                     "distress", "cofin", "raw", "est", "osm", "g"],
+                     "distress", "cofin", "raw", "est", "osm", "g", "pub_m", "cnote"],
             "rows": rows}
 
 
@@ -575,7 +587,7 @@ def build_eu(idx, rnd=r):
                         break
                 if sector:
                     break
-        com, dis = p.get("commitment"), p.get("disbursed")
+        com, dis, pub = p.get("commitment"), p.get("disbursed"), p.get("commitment_published")
         locs = p.get("locations") or None
         if locs:
             locs = [[rnd(x), rnd(y), (n or "")[:40]] for x, y, n in locs[:16]]
@@ -589,13 +601,14 @@ def build_eu(idx, rnd=r):
             p.get("geo_precision"), (p.get("location_name") or "")[:40] or None,
             p.get("iati_id"), codes[0] if codes else None, (p.get("sector_label") or "")[:60] or None,
             p.get("publisher"), p.get("kind"), (p.get("parent_name") or "")[:110] or None,
-            (p.get("implementers") or "")[:120] or None, p.get("instrument"), p.get("aid_type_name"),
+            (p.get("implementers") or "")[:400] or None, p.get("instrument"), p.get("aid_type_name"),
             p.get("start_year"), p.get("end_year"), p.get("project_url"), locs,
             1 if p.get("mixed_currency") else 0, cts if len(cts) > 1 else None, p.get("region"),
+            round(pub / 1e6, 2) if pub else None, p.get("counted_note"),
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m", "eur_m", "dis_m", "prec",
                      "place", "iid", "dac", "slabel", "pub", "kind", "parent", "impl", "instr", "aid",
-                     "syr", "eyr", "purl", "locs", "mixed", "isos", "region"],
+                     "syr", "eyr", "purl", "locs", "mixed", "isos", "region", "pub_eur", "cnote"],
             "rows": rows}
 
 
@@ -632,8 +645,9 @@ def build_mattei(idx, rnd=r):
             p.get("geo_precision"), (p.get("location_name") or "")[:48] or None,
             p.get("id"), " · ".join(p.get("directives") or []) or None,
             (p.get("objective") or "")[:140] or None, p.get("stage"),
-            (p.get("implementer") or "")[:160] or None, (p.get("partnerships") or "")[:160] or None,
-            (p.get("international_partners") or "")[:120] or None, (p.get("resources") or "")[:160] or None,
+            # implementer and resources whole: the Methodology tallies them
+            (p.get("implementer") or "") or None, (p.get("partnerships") or "")[:160] or None,
+            (p.get("international_partners") or "")[:120] or None, (p.get("resources") or "") or None,
             (p.get("amount_text") or "")[:120] or None, 1 if p.get("amount_shared") else 0,
             locs, cts if len(cts) > 1 else None, p.get("url_en") or p.get("url"), p.get("url"),
             (p.get("description") or "")[:360] or None, (p.get("name_it") or "").strip()[:120] or None,
@@ -719,9 +733,11 @@ def main():
     names.update(ISO_TO_NAME)
     # ISO_TO_NAME is built by first-wins from the GEM alias table, which
     # yields some exonyms. Prefer the official forms for display.
-    names.update({"CI": "Côte d'Ivoire", "CV": "Cabo Verde",
+    # the same display names as the map's (build_map.py), so the two rails read alike
+    names.update({"CI": "Côte d'Ivoire", "CV": "Cabo Verde", "CD": "DR Congo",
                   "CG": "Republic of the Congo", "-99": "Somaliland",
-                  "EH": "Western Sahara"})
+                  "EH": "Western Sahara", "TZ": "Tanzania", "SZ": "Eswatini",
+                  "ST": "São Tomé and Príncipe", "GM": "The Gambia"})
     # Natural Earth draws Somaliland (no ISO code, hence "-99") and Western
     # Sahara as polygons separate from Somalia and Morocco. That is the
     # boundary source's cartographic choice; label them plainly rather than

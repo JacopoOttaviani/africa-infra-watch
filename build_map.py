@@ -99,6 +99,8 @@ def build_assets():
 # (IMF SDR); the World Bank in USD.
 FINANCE_FILES = [("iati_afdb_finance.geojson", "AfDB"), ("iati_worldbank_finance.geojson", "WB")]
 TO_USD = {"XDR": SDR_USD, "USD": 1.0}
+# raw layers drawn on the map but not offered as downloads in docs/data
+NOT_REDISTRIBUTED = {"telegeography_cables.geojson"}
 
 
 def build_finance():
@@ -144,6 +146,7 @@ def build_finance():
             if sector:
                 break
         com, dis = p.get("commitment"), p.get("disbursed")
+        pub, pub_dis = p.get("commitment_published"), p.get("disbursed_published")
         rate = TO_USD.get(p.get("currency") or ("XDR" if ln == "AfDB" else "USD"))
         locs = rec["locs"]
         if len(locs) <= 1:
@@ -157,9 +160,12 @@ def build_finance():
             round(dis * rate / 1e6, 2) if dis and rate else None,
             rec["rank"], (p.get("location_name") or "")[:40] or None,
             pid, codes[0] if codes else None, locs, ln, p.get("project_url") or None,
+            # the lender's own figures where the counted ones differ, and why
+            round(pub * rate / 1e6, 2) if pub and rate else None,
+            round(pub_dis * rate / 1e6, 2) if pub_dis and rate else None, p.get("counted_note"),
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m",
-                     "dis_m", "prec", "place", "iid", "dac", "locs", "ln", "purl"],
+                     "dis_m", "prec", "place", "iid", "dac", "locs", "ln", "purl", "pub_m", "pub_dis_m", "cnote"],
             "rows": rows}
 
 
@@ -197,7 +203,11 @@ def build_ground(idx):
                 dx = (b[0] - a[0]) * 111.32 * abs(__import__("math").cos(__import__("math").radians(a[1])))
                 dy = (b[1] - a[1]) * 110.57
                 length_km += (dx * dx + dy * dy) ** 0.5
-        mid = geoms[0][len(geoms[0]) // 2]
+        # the middle vertex of the longest raw part, as build_dashboard
+        # takes it, so a coastal or border work lands in the same country on
+        # both pages (a simplified line's middle can fall at sea)
+        raw_mid = parts[0][len(parts[0]) // 2]
+        mid = [r(raw_mid[0]), r(raw_mid[1])]
         iso, _ = locate(mid[0], mid[1], idx)
         rows.append([
             (p.get("name") or "").strip()[:90] or None, iso, mid[0], mid[1],
@@ -349,7 +359,12 @@ async function loadPayload(){{
                     "(TeleGeography). Filter by country, status and sector."))
     write_site_index(facts)
     (DOCS / "data" / "map.json").write_text(blob)
+    # every raw layer as a download, except TeleGeography's: its terms put
+    # the map under CC BY-SA but keep the underlying data for subscribers
     for f in sorted(DATA.glob("*.geojson")) + [DATA / "meta.json", DATA / "africa_basemap_10m.json"]:
+        if f.name in NOT_REDISTRIBUTED:
+            (DOCS / "data" / f.name).unlink(missing_ok=True)
+            continue
         shutil.copy(f, DOCS / "data" / f.name)
     (DOCS / ".nojekyll").write_text("")
     total = sum(p.stat().st_size for p in DOCS.rglob("*") if p.is_file()) / 1024 / 1024

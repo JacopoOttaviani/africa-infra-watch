@@ -65,7 +65,7 @@ bloc (twelve so far: Russia, Turkey, Italy, China, the EU, the United States, Ge
 
 ## Sources
 
-Ten open datasets in eight layers, deliberately kept apart because they share no
+Ten public datasets in eight layers, deliberately kept apart because they share no
 project identifier. Summing across them double-counts. Both pages show the same
 eight layers over the same records; the finance layer holds both lenders on each,
 drawn as squares (AfDB) and diamonds (World Bank), the EU finance layer holds
@@ -75,29 +75,53 @@ as hexagons.
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|
-| Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,274 power units | what asset is being built |
-| Finance | African Development Bank, IATI 2.03 activity files | 1,710 projects | who is paying, and how much |
-| Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 1,121 projects | the same, for the other big multilateral lender |
+| Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,295 power units | what asset is being built |
+| Finance | African Development Bank, IATI 2.03 activity files | 1,683 projects | who is paying, and how much |
+| Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 890 projects | the same, for the other big multilateral lender |
 | Ground truth | OpenStreetMap via Overpass | 3,680 works | what has physically broken ground |
-| Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 324 routed segments | where oil, NGL and gas move, or are meant to |
+| Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 323 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
-| Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,324 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
-| EU finance | European Commission (DG INTPA, DG NEAR), IATI 2.03 activity files (57 African country and regional files) + European Investment Bank, IATI 2.02 global activity file | 1,992 records | what the EU's own institutions have contracted and signed for infrastructure, through whom, and how much is paid out |
+| Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,345 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
+| EU finance | European Commission (DG INTPA, DG NEAR), IATI 2.03 activity files (61 African country and regional files) + European Investment Bank, IATI 2.02 global activity file | 2,008 records | what the EU's own institutions have contracted and signed for infrastructure, through whom, and how much is paid out |
 | Piano Mattei | Italian Government (Presidency of the Council of Ministers), Piano Mattei per l'Africa project portal, 76 project pages in Italian and English | 76 projects | what Italy counts under its Mattei Plan, where, at what stage, through whom, and for how much as the Government states it |
 
 The two line layers and the World Bank lender were added in September 2026
 (`fetch_sources.py pipes cables wb`), the Chinese finance layer on
 2026-09-19 (`fetch_sources.py china`). The finance layer carries a `ln` column
 (`AfDB` / `WB`) and a lender filter (`ln=` in the hash); World Bank markers are
-diamonds, AfDB squares, and the two are never summed. The EU finance layer was
+diamonds, AfDB squares, and the two are never added into one project cost. The EU finance layer was
 added on 2026-10-02 (`fetch_sources.py eu`); the Piano Mattei layer on 2026-10-07
 (`fetch_sources.py mattei`), its records joining the lender filter as "Piano
 Mattei (Italy)" (`ln=IT`). The EU layer was; its records join the lender filter
 as "European Union institutions" (`ln=EU`).
 
+**Counting rules for money** (since the fact-check of 14 Oct 2026, see
+`factcheck/2026-10-14-homepage/`). The fetchers write the amount the totals add
+up into `commitment` (`amount_usd_2021` for AidData) and, where it differs, the
+lender's own figure into `commitment_published` with a `counted_note` saying
+why; the cards show both. Counted is:
+
+- the **lender's own money**: the AfDB files the borrowing government's
+  counterpart funds as a commitment beside its own loans (provider-org
+  `XX-COA-GOV`; South Africa's UA 5.44 billion for Medupi), and those are left
+  out, as MapAfrica's own `total_commitments_nongov` leaves them out;
+- the **infrastructure share**, by the publisher's own sector percentages: a
+  World Bank project that is 60% schools and 40% roads counts 40%; an EIB
+  operation's share by its vocabulary-99 percentages, and, for one that spans
+  several regions, its African share by its recipient percentages;
+- **nothing for budget support** (IATI aid-type A01/A02, AfDB and World Bank),
+  EIB fund investments and credit lines to banks (`EIB_NOT_INFRA`, by project
+  number), EIB operations funded by the Commission or a member state
+  (`EIB_OTHER_FUNDERS`) and AidData's acquisition loans (its M&A flag);
+- **nothing for a cancelled or suspended record**, which stays on the map,
+  hollow, with its published amount on the card.
+
+Each lender's total is shown on its own line; none is added to another.
+
 **The EU finance layer** is what the Union's own two publishing institutions
 disclose to IATI: the European Commission's files (DG International Partnerships
-for sub-Saharan Africa and the 289/298 regional programmes, DG Neighbourhood and
+for sub-Saharan Africa, the 289/298 regional programmes and the Eastern, Middle,
+Southern and Western Africa files (1027–1030), DG Neighbourhood and
 Enlargement for Algeria, Egypt, Libya, Morocco, Tunisia and the 189 regional
 file) and the European Investment Bank's single global file. Member states'
 agencies (AFD, KfW, Enabel…) are national, not EU, and are not here; nor are
@@ -106,10 +130,17 @@ publishes two levels in one file, financing decisions (hierarchy 1, the whole
 envelope) and the contracts under them (hierarchy 2), linked by
 `related-activity type="1"`, with money at both; one record is a **contract**,
 and a decision is kept only when none of its contracts is in the set, so a
-pipeline action is one *announced* record and no euro is counted twice. The
+pipeline action is one *announced* record and no euro is counted twice. A
+decision for several countries is published as sub-activities (`-01`, `-02`…)
+that each repeat the whole envelope under the same commitment ref: copies that
+share a ref are one envelope, dropped when any copy has contracts and kept once
+otherwise. The
 same DAC infrastructure filter as the finance layer applies to the Commission;
 the EIB's own NACE-like sector codes (vocabulary 99) are mapped to the same
-buckets, which drops its global loans, SME credit lines and fund investments.
+buckets, which drops its global loans and SME credit lines; its fund
+investments and framework credit lines carry their target sectors' codes, so
+they are left out by hand (`EIB_NOT_INFRA`), and so are the operations it runs
+with the Commission's or a member state's money (`EIB_OTHER_FUNDERS`).
 Amounts are euros, converted at a stated rate (`EUR_USD` in `shared.py`, the
 ECB reference rate on the fetch day) and never added to the other lenders.
 Location comes in three tiers, stated on every card: a named place (the
@@ -126,7 +157,7 @@ content CC BY 3.0 IT): one record per project page, with the plan's
 directive(s), objective, countries, implementing body, partners, funding
 source, a stated amount and the portal's five-step progress bar. It is the
 whole plan as published, not an infrastructure subset: 40 of the 76 projects
-carry the education, training and culture directive, and the map's sector
+carry the education, training and culture pillar, and the map's sector
 filter is what narrows it to works. The map's sector bucket follows a project's
 first directive; "physical and digital infrastructure" projects are sorted by
 what they build (`MATTEI_SECTOR_BY_ID` in `fetch_sources.py`), and a
@@ -139,7 +170,9 @@ dollars), converted at the same rate as the EU layer; the portal does not say
 whether it is Italy's share or the whole project's value (ELMED's €1.4 billion
 is mostly European and Tunisian money), so the figures are shown on their own
 and never added to the lenders' commitments. Four education memoranda share one
-stated €5 million envelope; only their country-specific parts are counted. The
+stated €5 million envelope; only their country-specific parts are counted, not
+the envelope. Amounts the portal prints as two parts joined by " / " (TANIT's
+€250 million and €36.5 million) are added. The
 portal publishes no coordinates. Location comes in four tiers, stated on every
 card: a site or town the project's description names, a named administrative
 area at its centre (both from a hand-kept gazetteer in `fetch_sources.py`,
@@ -154,8 +187,10 @@ and the four of 2026 (DR Congo, Gabon, Rwanda, Zambia).
 Status vocabulary for them: GEM `proposed` is *announced*, `construction`, `operating`
 and `shelved`/`cancelled`/`idle` as *stalled*; TeleGeography's *in service* is
 *operating*, and a *planned* cable is *under construction* when its ready-for-service
-year is within a year of the snapshot, *announced* otherwise. The Methodology tab
-states the inference.
+year is no later than the year after the snapshot, *announced* otherwise. The Methodology tab
+states the inference. TeleGeography puts its map under CC BY-SA 4.0 but keeps the
+data behind it for subscribers, so the cable layer is drawn but not published as
+a download (`NOT_REDISTRIBUTED` in `build_map.py`).
 
 **The Chinese finance layer** is AidData's GCDF 3.0 workbook (26 MB Excel,
 ODC-By) joined with the per-project footprints of its Geospatial companion
@@ -166,14 +201,18 @@ physical structure: power plants and highways, but also hospitals, stadiums and
 ministry buildings). Left out: 835 umbrella agreements (their money reappears in
 the projects under them), 489 pledges (MoUs and letters of intent, which AidData
 excludes from its own aggregates and never geocodes, so the layer has no
-*announced* records) and 5,674 records that are not physical infrastructure
-(cash, equipment and vehicle donations, scholarships, medical teams, oil-backed
-corporate loans). Status: *Pipeline: Commitment* is **approved**,
+*announced* records), 5,674 records that are not physical infrastructure
+(cash, equipment and vehicle donations, scholarships, medical teams, most
+oil-backed credit lines to state companies) and the loans that buy a stake
+(AidData's M&A flag). Infrastructure loans secured on oil or mineral exports are
+kept and counted in `meta.json`. AidData has since published a successor, China's
+Global Loans and Grants Dataset 1.0 (November 2025, to 2023, constant 2023 USD),
+not yet used here; china.aiddata.org now shows its records. Status: *Pipeline: Commitment* is **approved**,
 *Implementation* **under construction**, *Completion* **operating**,
 *Suspended*/*Cancelled* **stalled**. Amounts are AidData's constant 2021 USD and
 are never added to the IATI figures; the map's lender filter offers "Chinese
 official lenders" beside AfDB and the World Bank. Location comes in four tiers,
-stated on every card: precise (on the OSM feature; 894 of these carry a footprint
+stated on every card: precise (on the OSM feature; 892 of these carry a footprint
 that both pages outline), within 5 km, administrative area (the centre of the
 district or province AidData names), and country only (the country's interior
 point, computed from the 1:110m basemap). It is a **2000–2021 baseline**, which
@@ -269,7 +308,7 @@ net, all resident units, immediate counterpart) and the World Bank IDS for
 creditor `055`. Hand-kept, in the script: 58 placed works read from Türk
 Eximbank's "sample transactions" page and the project pages of Summa, Yapı
 Merkezi and Karpowership, with the company's coordinates where its page gives
-them and a hand-placed town, corridor or port otherwise; the 13 Turkish-owned
+them and a hand-placed town, corridor or port otherwise; the 15 Turkish-owned
 power units come from the site's own GEM layer, matched on the owner field.
 Two things bite in the CRS feed: each activity arrives as four rows
 (commitment and disbursement, current and constant prices) and the commitment
@@ -437,7 +476,7 @@ logo sheet: the continent traced from the basemap with a compass rose cut out).
 `brand/README.md`.
 
 `fetch_sources.py gem` / `iati` / `wb` / `osm` / `pipes` / `cables` / `china` / `eu` / `mattei` runs a single source.
-The eu pass reads 57 Commission files and the EIB's 6 MB file (about a quarter of an hour).
+The eu pass reads 61 Commission files and the EIB's 6 MB file (about a quarter of an hour).
 The mattei pass reads the portal's list page and 152 project pages, four at a
 time (about a minute); the gazetteer of named places is in the script, so no
 geocoder is called at fetch time.
@@ -516,7 +555,7 @@ GeoJSON layers, the basemap, `meta.json` and `donors/` with each profile's
 pack — the site publishes its data, linked from the Methodology tab and from
 each profile), `social.png`, `favicon.svg` and the two PNG
 icons, `sitemap.xml`, `llms.txt`, and `.nojekyll` so Pages serves the folder
-as-is. About 50 MB per snapshot.
+as-is. About 59 MB per snapshot.
 
 ## Search engines, link previews and AI crawlers
 
@@ -652,14 +691,24 @@ These each cost real time to find. They are not in any of the upstream docs.
 - **OSM raw tag counts are not project counts.** 15,291 of 21,470 African
   `highway=construction` ways are `construction=residential` — street stubs in
   housing estates. Filter to motorway/trunk/primary/secondary + rail or your
-  headline number is 6× too high.
+  headline number is 6× too high. (In October 2026 the unfiltered query
+  returned about nine times as many segments as the filtered one.)
 - **AfDB `<budget>` elements repeat the same value every quarter.** Taking the
   first understates; summing them is only accidentally right. Commitments live
   in `<transaction>` with `transaction-type` code 2. Values carry no currency
   attribute — they inherit the activity's `default-currency`, which is XDR
   (IMF SDR), converted here at a rate stated on the page.
+- **AfDB commitments include the borrower's own money.** An activity's type-2
+  transactions can come from `provider-org` `XX-COA-GOV`, the borrowing
+  government's counterpart funds (Medupi: two AfDB loans, UA 1.27 billion, and
+  South Africa's UA 5.44 billion). Summing every type-2 transaction inflated
+  the AfDB total by a fifth; skip those providers.
+- **Budget support hides behind infrastructure codes.** A World Bank
+  development-policy loan can carry one energy code at 10% and enter any
+  "infrastructure" filter at 100%. Drop aid-type A01/A02 and weight by the
+  sector `percentage` attributes.
 - **AfDB multinational activities have no country.** Their IATI identifiers
-  carry the `Z1` region code and an empty recipient country; 398 activities.
+  carry the `Z1` region code and an empty recipient country; 395 activities.
   They are labelled "Multinational" on the map and excluded from the country
   filter rather than dropped.
 - **`overpass-api.de` will block you** after a few dozen queries (429, then
@@ -722,6 +771,19 @@ These each cost real time to find. They are not in any of the upstream docs.
   ISO suffix of the dataset name.
 - **GEM's own map config points at a deleted file.** Resolve releases from the
   listable bucket under `Current_maps/`, never from their front-end source.
+  List the release folders with `delimiter=/` and follow continuation tokens:
+  one page holds 1,000 keys and a single release ships thousands of map tiles,
+  so the first page alone never reaches the next release. Order folders as
+  versions (`2026-08` < `2026-08-v2` < `2026-08-v3` < `2026-09`); a string sort
+  puts `2026-08/` last. `GEM_RELEASE=2026-08-v2` pins one.
+- **GEM writes "The Gambia".** The country list must carry both spellings, or
+  the power tracker loses The Gambia's units without a word.
+- **GEM's pipeline lengths have typos.** Wafa–Mellitah Pipeline 1 reads 5,246 km
+  for a 525 km line (its own estimate field says 525.7), and AKK carries the
+  whole system's 1,300 km. `PIPE_LENGTH_FIX` corrects them by ProjectID with a
+  source each; the fetch prints any segment whose stated length is more than
+  three times, or under a third of, GEM's estimate. Medgaz's "offshore" route
+  is drawn overland across Algeria and is left undrawn (`PIPE_ROUTE_DROP`).
 - **GEM's pipeline routes are not under `Current_maps/`.** The gas and oil
   trackers' GeoJSON lives under `Input_geojson_files/ggit/<release>/` and
   `Input_geojson_files/goit/<release>/` in the same public bucket (the official
@@ -744,7 +806,7 @@ These each cost real time to find. They are not in any of the upstream docs.
   cables like Umoja whose only African landing is TBD.
 - **TeleGeography has two statuses, planned and in service.** The
   under-construction reading here is inferred from the ready-for-service year
-  (due within a year of the snapshot). Landing-point names read
+  (due no later than the year after the snapshot). Landing-point names read
   "City, Country" and the country can hold a comma ("Muanda, Congo, Dem. Rep."):
   use the `country` field of the cable detail, or match by suffix.
 - **A cable's route is its whole route.** 2Africa runs from Europe to India.

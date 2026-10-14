@@ -1,0 +1,124 @@
+total rows in release: 183404
+
+Country names that look African but are NOT in AFRICA_NAMES:
+   'Mayotte' 5
+   'Réunion' 53
+   'Saint Helena, Ascension, and Tristan da Cunha' 1
+   'The Gambia' 11
+AFRICA_NAMES not present in GEM: ['Cape Verde', 'Congo', "Cote d'Ivoire", 'Democratic Republic of Congo', 'Gambia', 'Ivory Coast']
+
+African rows 4284, dropped for no coords 0, kept 4284
+countries: 54
+projects (distinct project-id): 2909
+distinct unit-id: 4284 blank unit-id: 0
+
+raw status: {'announced': 601, 'shelved': 301, 'pre-construction': 595, 'construction': 263, 'cancelled': 418, 'operating': 2025, 'mothballed': 47, 'retired': 34}
+dash status: {'announced': 601, 'stalled': 766, 'approved': 595, 'under_construction': 263, 'operating': 2059}
+total GW 1093.1; pipeline GW 593.2 in 1459 units
+location-accuracy: {'approximate': 1964, 'exact': 2320} exact share 54.2%
+top tech: [('PV', 1073), ('Assumed PV', 696), ('gas turbine', 486), ('Onshore', 359), ('unknown', 338), ('subcritical', 255), ('combined cycle', 207), ('conventional storage', 165)]
+asset types: {'wind': 414, 'utility-scale solar': 1805, 'hydropower': 299, 'oil/gas': 1031, 'coal': 479, 'nuclear': 46, 'geothermal': 71, 'bioenergy': 139}
+GW by raw status: {'announced': 250.1, 'shelved': 93.0, 'pre-construction': 267.7, 'construction': 75.4, 'cancelled': 131.1, 'operating': 268.5, 'mothballed': 4.6, 'retired': 2.7}
+
+Top 70 African units by capacity:
+   29,400.0 | announced       | Mauritania     | Megaton Moon Hybrid Wind project                 | unit='Future phases' | G100001020560 | L100001018418 | Unknown | approximate
+   29,400.0 | announced       | Mauritania     | Megaton Moon Hybrid Solar project                | unit='Future phases' | G100001021091 | L100001018417 | PV | approximate
+   25,000.0 | shelved         | Libya          | Special Economic Zone Topeka solar farm          | unit='' | G100000831183 | L100000827652 | Assumed PV | approximate
+   18,000.0 | pre-construction | Mauritania     | AMAN Green Hydrogen wind farm                    | unit='' | G100001018734 | L100001016797 | Unknown | approximate
+   12,000.0 | announced       | Mozambique     | JER Green Hydrogen Solar PV Project  (Mozambique | unit='' | G100001018729 | L100001016793 | PV | approximate
+   12,000.0 | announced       | South Africa   | JER Green Hydrogen Solar PV Project (South Afric | unit='' | G100001064348 | L100001056325 | Assumed PV | approximate
+   12,000.0 | pre-construction | Mauritania     | AMAN Green Hydrogen solar farm                   | unit='' | G100001018733 | L100001016796 | Assumed PV | approximate
+   10,000.0 | pre-construction | Djibouti       | Djibouti Green Hydrogen hybrid solar farm        | unit='' | G100000831149 | L100000827622 | PV | approximate
+   10,000.0 | announced       | Egypt          | China Electric solar farm                        | unit='' | G100001050955 | L100001045294 | PV | approximate
+   10,000.0 | pre-construction | Western Sahara | White Dunes wind farm                            | unit='' | G100001018739 | L100001016803 | Unknown | approximate
+   10,000.0 | construction    | Egypt          | ACWA wind farm                                   | unit='2-  محطة طاقة رياح سوهاج' | G100000927394 | L100000900062 | Unknown | approximate
+    8,000.0 | pre-construction | Egypt          | Masdar -Infinity wind farm                       | unit='2' | G100000927401 | L100000921991 | Onshore | approximate
+    7,500.0 | pre-construction | Morocco        | Morocco-Germany wind farm                        | unit='' | G100001073027 | L100001063531 | Onshore | approximate
+    7,500.0 | pre-construction | Morocco        | Morocco-Germany solar farm                       | unit='' | G100001073061 | L100001063566 | Assumed PV | approximate
+    7,500.0 | pre-construction | Morocco        | AMUN solar farm                                  | unit='' | G100000831223 | L100000827679 | Assumed PV | approximate
+    7,500.0 | pre-construction | Morocco        | AMUN wind farm                                   | unit='' | G100000927415 | L100000922003 | Onshore | approximate
+    7,000.0 | cancelled       | Morocco        | Morocco-UK Solar Power                           | unit='' | G100000800001 | L100000800001 | PV | approximate
+    7,000.0 | announced       | Western Sahara | White Dunes solar farm                           | unit='' | G100001018740 | L100001016804 | PV | approximate
+    6,875.0 | announced       | Egypt          | Renergy Sinia solar farm                         | unit='2' | G100001072895 | L100001063346 | Assumed PV | approximate
+    6,875.0 | announced       | Egypt          | Renergy Sinia solar farm                         | unit='3' | G100001072896 | L100001063346 | Assumed PV | approximate
+    5,150.0 | operating       | Ethiopia       | Grand Ethiopian Renaissance hydroelectric plant  | unit='' | G100000601615 | L100000601596 | conventional storage | exact
+    5,000.0 | pre-construction | Egypt          | West Sohag wind farm                             | unit='' | G100000927402 | L100000921992 | Onshore | approximate
+    5,000.0 | pre-construction | Morocco        | Total Eren-Guelmim-Oued Noun Solar               | unit='' | G100000800402 | L100000800331 | PV | approximate
+    4,900.0 | announced       | Mauritania     | Conjuncta and Infinity hybrid wind farm          | unit='future potential' | G100000927411 | L100000922000 | Unknown | approximate
+    4,800.0 | pre-construction | DR Congo       | Inga III hydroelectric plant                     | unit='' | G100000604449 | L100000601479 | conventional storage | exact
+    4,800.0 | announced       | Mauritania     | Conjuncta and Infinity hybrid solar farm         | unit='future phases' | G100000831193 | L100000827660 | Assumed PV | approximate
+    4,600.0 | announced       | Egypt          | Fortescue Green Hydrogen solar farm              | unit='' | G100000814092 | L100000811584 | PV | approximate
+    4,600.0 | shelved         | Egypt          | Fortescue Green Hydrogen wind farm               | unit='' | G100000920638 | L100000916610 | Onshore | approximate
+    4,000.0 | pre-construction | Morocco        | Energy China wind farm                           | unit='' | G100000927416 | L100000922004 | Onshore | approximate
+    3,500.0 | pre-construction | Namibia        | SCDI Green Hydrogen wind farm                    | unit='' | G100000920663 | L100000916625 | Onshore | approximate
+    3,500.0 | announced       | Mauritania     | Project Nour hybrid solar farm                   | unit='Future Phases' | G100001020552 | L100000827661 | Assumed PV | approximate
+    3,500.0 | construction    | Namibia        | Daures Green Hydrogen Village wind farm          | unit='' | G100001020644 | L100001018490 | Onshore | approximate
+    3,500.0 | announced       | Mauritania     | Project Nour hybrid wind farm                    | unit='Future Phases' | G100001020551 | L100000922001 | Unknown | exact
+    3,500.0 | construction    | Namibia        | Daures Green Hydrogen Village solar farm         | unit='' | G100001020643 | L100001018489 | Assumed PV | exact
+    3,500.0 | cancelled       | Morocco        | Morocco-UK wind farm                             | unit='' | G100000920661 | L100000916623 | Onshore | approximate
+    3,500.0 | pre-construction | Namibia        | SCDI Green Hydrogen solar farm                   | unit='' | G100000814180 | L100000811633 | PV | approximate
+    3,300.0 | shelved         | South Africa   | Richards Bay (Mhlathuze Energy) power station    | unit='1' | G100000407264 | L100000406819 | combined cycle | approximate
+    3,050.0 | pre-construction | Nigeria        | Mambilla hydroelectric plant                     | unit='' | G100000604595 | L100000602856 | conventional storage | exact
+    3,000.0 | pre-construction | South Africa   | Richards Bay (Eskom) power station               | unit='1' | G100000409408 | L100000407360 | combined cycle | exact
+    3,000.0 | construction    | Egypt          | Orascom-Engie West Sohag wind farm               | unit='' | G100001050934 | L100001045285 | Onshore | exact
+    3,000.0 | pre-construction | Namibia        | Zhero Molecules Walvis Bay green hydrogen solar  | unit='' | G100001090906 | L100001080919 | Assumed PV | approximate
+    2,820.0 | pre-construction | Egypt          | ReNew Green Hydrogen solar farm                  | unit='2' | G100000814107 | L100000811593 | PV | exact
+    2,820.0 | pre-construction | Egypt          | ReNew Green Hydrogen wind farm                   | unit='2' | G100000920645 | L100000916613 | Onshore | exact
+    2,500.0 | shelved         | Morocco        | Adani Green solar farm                           | unit='2' | G100000831222 | L100000827678 | Assumed PV | approximate
+    2,500.0 | shelved         | Morocco        | Adani Green solar farm                           | unit='1' | G100000831221 | L100000827678 | Assumed PV | approximate
+    2,500.0 | shelved         | Morocco        | Adani Green wind farm                            | unit='1' | G100000927413 | L100000922002 | Unknown | approximate
+    2,500.0 | shelved         | Morocco        | Adani Green wind farm                            | unit='2' | G100000927414 | L100000922002 | Unknown | approximate
+    2,400.0 | pre-construction | Zambia         | Batoka Gorge hydroelectric plant                 | unit='' | G100000604238 | L100000604109 | run-of-river | exact
+    2,250.0 | construction    | Tunisia        | TuNur solar farm                                 | unit='PV-1' | G100000814241 | L100000811681 | PV | exact
+    2,172.0 | construction    | Angola         | Caculo Cabaça hydroelectric plant                | unit='' | G100000600012 | L100000600012 | run-of-river | approximate
+    2,160.0 | construction    | Ethiopia       | Koysha hydroelectric plant                       | unit='' | G100000601618 | L100000601599 | conventional storage | exact
+    2,130.0 | operating       | Zambia         | Kariba Dam hydroelectric plant                   | unit='' | G100000604149 | L100000604110 | conventional storage | exact
+    2,115.0 | operating       | Tanzania       | Julius Nyerere hydroelectric plant               | unit='' | G100000603595 | L100000603560 | conventional storage | exact
+    2,100.0 | pre-construction | Egypt          | Gabal Ataqah hydroelectric plant                 | unit='' | G100000601583 | L100000601565 | pumped storage | approximate
+    2,100.0 | operating       | Egypt          | Aswan High Dam hydroelectric plant               | unit='' | G100000601579 | L100000601561 | conventional storage | exact
+    2,100.0 | construction    | Egypt          | Voltalia-TAQA Project solar farm                 | unit='1' | G100001018748 | L100001016812 | Assumed PV | approximate
+    2,075.0 | operating       | Mozambique     | Cahora Bassa hydroelectric plant                 | unit='' | G100000602539 | L100000602508 | conventional storage | exact
+    2,070.0 | operating       | Angola         | Laúca hydroelectric plant                        | unit='' | G100000600017 | L100000600017 | run-of-river | exact
+    2,000.0 | pre-construction | Egypt          | Masdar -Infinity wind farm                       | unit='1' | G100000927400 | L100000921991 | Onshore | approximate
+    2,000.0 | pre-construction | South Africa   | Phakwe Richards Bay Power Plant                  | unit='1' | G100000410487 | L100000407851 | combined cycle | exact
+    2,000.0 | pre-construction | Ethiopia       | Tams hydroelectric plant                         | unit='' | G100000604858 | L100000604368 | conventional storage | approximate
+    2,000.0 | pre-construction | Morocco        | Energy China solar farm                          | unit='' | G100000831224 | L100000827680 | PV | approximate
+    2,000.0 | pre-construction | Egypt          | ACWA Hurghada wind farm                          | unit='' | G100001072801 | L100001063368 | Onshore | approximate
+    2,000.0 | construction    | Tunisia        | TuNur solar farm                                 | unit='Solar Thermal-2' | G100000814243 | L100000811681 | Solar Thermal | exact
+    2,000.0 | pre-construction | Mozambique     | Beluluane power station                          | unit='1' | G100000407109 | L100000406765 | combined cycle | approximate
+    1,980.0 | shelved         | South Africa   | Musina-Makhado power station                     | unit='Other capacity' | G100000115768 | L100000104479 | unknown | approximate
+    1,870.0 | operating       | Ethiopia       | Gilgel Gibe III hydroelectric plant              | unit='' | G100000601612 | L100000601594 | conventional storage | exact
+    1,800.0 | pre-construction | Cameroon       | Grand Eweng hydroelectric plant                  | unit='' | G100000600389 | L100000600388 | unknown | exact
+    1,800.0 | shelved         | Nigeria        | Egbin power station                              | unit='B' | G100000407170 | L100000406784 | gas turbine | exact
+    1,800.0 | announced       | Guinea         | West Africa Kamsar power station                 | unit='1' | G100001090777 | L100001080831 | unknown | approximate
+
+Same name + same capacity pairs among units >= 1000 MW:
+  ('Renergy Sinia solar farm', 6875.0) [('2', 'G100001072895', 'announced', '', '28.2514', '33.6539'), ('3', 'G100001072896', 'announced', '', '28.2514', '33.6539')]
+  ('Adani Green solar farm', 2500.0) [('2', 'G100000831222', 'shelved', '', '31.8288', '-5.305'), ('1', 'G100000831221', 'shelved', '', '31.8288', '-5.305')]
+  ('Adani Green wind farm', 2500.0) [('1', 'G100000927413', 'shelved', '', '32.8868', '-5.9422'), ('2', 'G100000927414', 'shelved', '', '32.8868', '-5.9422')]
+  ('Duynefontein nuclear power plant', 1650.0) [('1', 'G100000501272', 'cancelled', '', '-33.6866', '18.4402'), ('2', 'G100000501273', 'cancelled', '', '-33.6866', '18.4402')]
+  ('Globeleq Green Hydrogen wind farm', 1500.0) [('1', 'G100000920639', 'pre-construction', '2028', '29.7135', '32.3048'), ('2', 'G100000920640', 'pre-construction', '2028', '29.7135', '32.3048'), ('3', 'G100000920641', 'pre-construction', '2028', '29.7135', '32.3048')]
+  ('Globeleq Green Hydrogen solar farm', 1500.0) [('1', 'G100000814093', 'pre-construction', '2028', '29.7135', '32.3048'), ('2', 'G100000814094', 'pre-construction', '2028', '29.7135', '32.3048'), ('3', 'G100000814095', 'pre-construction', '2028', '29.7135', '32.3048')]
+  ('Scatec wind farm', 1500.0) [('2', 'G100000920647', 'pre-construction', '2026', '29.7135', '32.3048'), ('1', 'G100000920646', 'pre-construction', '2026', '29.7135', '32.3048')]
+  ('Geregu nuclear power plant', 1200.0) [('2', 'G100000500891', 'announced', '', '7.5649', '6.6847'), ('1', 'G100000500890', 'announced', '', '7.5649', '6.6847')]
+  ('Itu nuclear power plant', 1200.0) [('1', 'G100000500892', 'shelved', '', '5.2016', '7.9861'), ('2', 'G100000500893', 'shelved', '', '5.2016', '7.9861')]
+  ('Beni Suef power plant', 1200.0) [('2', 'G100000407629', 'operating', '2018', '28.921806', '30.984389'), ('1', 'G100000407630', 'operating', '2018', '28.921806', '30.984389'), ('4', 'G100000407627', 'operating', '2017', '28.921806', '30.984389'), ('3', 'G100000407628', 'operating', '2017', '28.921806', '30.984389')]
+  ('Burullus power plant', 1200.0) [('2', 'G100000407625', 'operating', '2018', '31.530299', '30.807289'), ('4', 'G100000407623', 'operating', '2018', '31.530299', '30.807289'), ('3', 'G100000407624', 'operating', '2018', '31.530299', '30.807289'), ('1', 'G100000407626', 'operating', '2018', '31.530299', '30.807289')]
+  ('New Capital power station', 1200.0) [('4', 'G100000407576', 'operating', '2018', '29.909117', '31.755558'), ('1', 'G100000407579', 'operating', '2018', '29.909117', '31.755558'), ('3', 'G100000407577', 'operating', '2018', '29.909117', '31.755558'), ('2', 'G100000407578', 'operating', '2018', '29.909117', '31.755558')]
+  ('Kiruhura nuclear power plant', 1200.0) [('4', 'G100001055204', 'announced', '', '-0.19711', '30.843677'), ('3', 'G100001055203', 'announced', '', '-0.19711', '30.843677'), ('1', 'G100001055201', 'announced', '', '-0.19711', '30.843677'), ('2', 'G100001055202', 'announced', '', '-0.19711', '30.843677')]
+  ('Nakasongola nuclear power plant', 1200.0) [('2', 'G100001055196', 'announced', '', '1.313748', '32.462563'), ('3', 'G100001055197', 'announced', '', '1.313748', '32.462563'), ('6', 'G100001055200', 'announced', '', '1.313748', '32.462563'), ('5', 'G100001055199', 'announced', '', '1.313748', '32.462563'), ('1', 'G100001055195', 'announced', '', '1.313748', '32.462563'), ('4', 'G100001055198', 'announced', '', '1.313748', '32.462563')]
+  ('El Dabaa nuclear power plant', 1200.0) [('2', 'G100000500705', 'construction', '2029', '31.0442', '28.4978'), ('3', 'G100000500706', 'construction', '2029', '31.0442', '28.4978'), ('1', 'G100000500180', 'construction', '2028', '31.0442', '28.4978'), ('4', 'G100000500707', 'construction', '2030', '31.0442', '28.4978')]
+  ('Mega Solar Initiative solar farm (Botswana)', 1125.0) [('future PV phases', 'G100000814075', 'pre-construction', '', '-22.2595', '20.4389'), ('future CSP phases', 'G100000814074', 'pre-construction', '', '-22.2595', '20.4389')]
+  ('Mega Solar Initiative solar farm (Namibia)', 1125.0) [('future PV phases', 'G100000814179', 'pre-construction', '', '-22.0892', '19.9039'), ('future CSP phases', 'G100000814178', 'pre-construction', '', '-22.0892', '19.9039')]
+  ('Hamarawein IPP coal project', 1100.0) [('Unit 1', 'G100000113124', 'cancelled', '', '26.25', '34.2'), ('Unit 4', 'G100000113977', 'cancelled', '', '26.25', '34.2'), ('Unit 3', 'G100000113976', 'cancelled', '', '26.25', '34.2'), ('Unit 5', 'G100000113978', 'cancelled', '', '26.25', '34.2'), ('Unit 2', 'G100000113975', 'cancelled', '', '26.25', '34.2'), ('Unit 6', 'G100000113979', 'cancelled', '', '26.25', '34.2')]
+  ('Marsa Matruh power station', 1000.0) [('Unit 4', 'G100000106695', 'cancelled', '', '31.35', '27.233333'), ('Unit 3', 'G100000106694', 'cancelled', '', '31.35', '27.233333'), ('Unit 1', 'G100000106692', 'cancelled', '', '31.35', '27.233333'), ('Unit 2', 'G100000106693', 'cancelled', '', '31.35', '27.233333')]
+  ('Safaga power station', 1000.0) [('Unit 2', 'G100000108699', 'cancelled', '', '26.733333', '33.933333'), ('Unit 1', 'G100000108698', 'cancelled', '', '26.733333', '33.933333')]
+  ('Coega power station', 1000.0) [('2', 'G100000407260', 'pre-construction', '2030', '-33.78342', '25.707426'), ('1', 'G100000407259', 'pre-construction', '2026', '-33.78342', '25.707426'), ('3', 'G100000407261', 'pre-construction', '2030', '-33.78342', '25.707426')]
+  ('Buyende nuclear power plant', 1000.0) [('1', 'G100001055193', 'announced', '2031', '1.243964', '33.114454'), ('2', 'G100001055194', 'announced', '', '1.243964', '33.114454')]
+  ('Tana River nuclear power plant', 1000.0) [('2', 'G100001017765', 'pre-construction', '2035', '-4.1803391', '39.4627833'), ('3', 'G100001055122', 'pre-construction', '2035', '-4.1803391', '39.4627833'), ('1', 'G100000501009', 'pre-construction', '2034', '-4.1803391', '39.4627833'), ('4', 'G100001055123', 'pre-construction', '2035', '-4.1803391', '39.4627833')]
+  ('Lamwo nuclear power plant', 1000.0) [('4', 'G100001055208', 'announced', '', '3.499393', '32.796721'), ('2', 'G100001055206', 'announced', '', '3.499393', '32.796721'), ('1', 'G100001055205', 'announced', '', '3.499393', '32.796721'), ('3', 'G100001055207', 'announced', '', '3.499393', '32.796721')]
+  ('Masdar Green Hydrogen solar farm', 1000.0) [('2', 'G100000814101', 'pre-construction', '', '31.2165', '26.9896'), ('1', 'G100000814100', 'pre-construction', '', '29.7135', '32.3048')]
+
+Rows identical in every field except unit-id:
+  groups: 0 extra rows: 0 extra MW: 0
+duplicate unit-ids: []

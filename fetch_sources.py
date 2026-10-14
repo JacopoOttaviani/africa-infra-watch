@@ -24,6 +24,7 @@ import csv
 import html as html_mod
 import io
 import json
+import os
 import pathlib
 import re
 import sys
@@ -55,7 +56,7 @@ AFRICA_NAMES = {
     "Cameroon", "Cape Verde", "Cabo Verde", "Central African Republic", "Chad",
     "Comoros", "Congo", "Democratic Republic of Congo", "DR Congo", "Djibouti",
     "Egypt", "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia", "Gabon",
-    "Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Ivory Coast", "Cote d'Ivoire",
+    "Gambia", "The Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Ivory Coast", "Cote d'Ivoire",
     "Côte d'Ivoire", "Kenya", "Lesotho", "Liberia", "Libya", "Madagascar",
     "Malawi", "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique",
     "Namibia", "Niger", "Nigeria", "Rwanda", "Sao Tome and Principe", "Senegal",
@@ -111,25 +112,58 @@ def write_layer(name, features):
 GEM_BUCKET = "https://publicgemdata.nyc3.cdn.digitaloceanspaces.com"
 
 
+def _bucket_list(prefix, delimiter=None):
+    """Every <Contents> (key, LastModified day) and <CommonPrefixes> under a
+    prefix, following continuation tokens: one page holds 1,000 keys, and a
+    single power release ships thousands of map tiles, so the first page alone
+    never reaches the next release's folder."""
+    keys, prefixes, token = {}, [], None
+    while True:
+        q = f"{GEM_BUCKET}/?list-type=2&prefix={urllib.parse.quote(prefix)}&max-keys=1000"
+        if delimiter:
+            q += f"&delimiter={urllib.parse.quote(delimiter)}"
+        if token:
+            q += f"&continuation-token={urllib.parse.quote(token)}"
+        listing = get(q, timeout=90).decode("utf-8", "replace")
+        for c in re.findall(r"<Contents>(.*?)</Contents>", listing, re.S):
+            k = re.search(r"<Key>([^<]+)</Key>", c)
+            m = re.search(r"<LastModified>(\d{4}-\d\d-\d\d)", c)
+            if k:
+                keys[html_mod.unescape(k.group(1))] = m.group(1) if m else None
+        prefixes += [html_mod.unescape(p) for p in re.findall(
+            r"<CommonPrefixes>\s*<Prefix>([^<]+)</Prefix>", listing)]
+        t = re.search(r"<NextContinuationToken>([^<]+)</NextContinuationToken>", listing)
+        if not t or "<IsTruncated>true</IsTruncated>" not in listing:
+            return keys, prefixes
+        token = html_mod.unescape(t.group(1))
+
+
+def _release_key(folder):
+    """Order GEM release folders: 2026-08 < 2026-08-v2 < 2026-08-v3 < 2026-09.
+    A plain string sort puts 2026-08/ after 2026-08-v3/ ('-' < '/')."""
+    m = re.match(r"(\d{4})-(\d\d)(?:-v(\d+))?$", folder)
+    return (int(m.group(1)), int(m.group(2)), int(m.group(3) or 1)) if m else (0, 0, 0)
+
+
 def gem_latest_csv():
     """Resolve the current release from the listable bucket.
 
     GEM's own map config still points at a deleted 2026-03 path, so never
-    hardcode a release URL — discover it.
+    hardcode a release URL — discover it. GEM_RELEASE=2026-08-v2 in the
+    environment pins a release, so a rebuild can reproduce an earlier one.
     """
-    listing = get(
-        f"{GEM_BUCKET}/?list-type=2&prefix=Current_maps/integrated-power/"
-        "&max-keys=1000", timeout=90).decode("utf-8", "replace")
-    keys = {}
-    for c in re.findall(r"<Contents>(.*?)</Contents>", listing, re.S):
-        k = re.search(r"<Key>([^<]+)</Key>", c)
-        m = re.search(r"<LastModified>(\d{4}-\d\d-\d\d)", c)
-        if k and k.group(1).endswith(".csv"):
-            keys[k.group(1)] = m.group(1) if m else None
-    if not keys:
-        raise RuntimeError("no integrated-power CSV found in GEM bucket")
-    key = sorted(keys)[-1]
-    return f"{GEM_BUCKET}/{urllib.parse.quote(key)}", keys[key]
+    root = "Current_maps/integrated-power/"
+    _, folders = _bucket_list(root, delimiter="/")
+    names = [f[len(root):].strip("/") for f in folders if f.startswith(root) and f != root]
+    pin = (os.environ.get("GEM_RELEASE") or "").strip()
+    order = [pin] if pin else sorted((n for n in names if _release_key(n) != (0, 0, 0)),
+                                     key=_release_key, reverse=True)
+    for release in order:
+        keys, _ = _bucket_list(f"{root}{release}/")
+        csvs = sorted(k for k in keys if k.endswith(".csv"))
+        if csvs:
+            return f"{GEM_BUCKET}/{urllib.parse.quote(csvs[-1])}", keys[csvs[-1]]
+    raise RuntimeError(f"no integrated-power CSV found in GEM bucket ({pin or 'any release'})")
 
 
 def fetch_gem():
@@ -271,7 +305,7 @@ def fetch_iati(publisher="afdb", infra_only=True):
     urls = [r["url"] for pk in pkgs for r in pk["resources"]]
     print(f"IATI {publisher}: {len(urls)} datasets")
 
-    feats = []
+    feats, n_budget, n_counterpart = [], 0, 0
     for i, u in enumerate(urls, 1):
         try:
             xml = get(u, timeout=300)
@@ -293,6 +327,34 @@ def fetch_iati(publisher="afdb", infra_only=True):
             if infra_only and not any(
                     c.startswith(IATI_INFRA_DAC) for c in sectors):
                 continue
+            # Budget support (aid-type A01 general, A02 sector) is left out:
+            # a development-policy loan tagged with one energy code is a loan
+            # to a treasury, not a project. The World Bank tags 230-odd of
+            # its African activities so, the AfDB a few dozen.
+            aid = {d.get("code") for d in act.iter("default-aid-type") if d.get("vocabulary") in (None, "1")}
+            aid |= {d.get("code") for tx in act.iter("transaction") for d in tx.iter("aid-type")
+                    if d.get("vocabulary") in (None, "1")}
+            if infra_only and aid & {"A01", "A02"}:
+                n_budget += 1
+                continue
+            # The share of the activity that is infrastructure, by the
+            # publisher's own sector percentages (5-digit codes, else 3-digit).
+            # A project that is 60% schools and 40% roads counts 40% of its
+            # commitment; the card shows the whole figure beside it.
+            pct = []
+            for vocab in ((None, "1"), ("2",)):
+                pct = [(s.get("code"), _num(s.get("percentage"))) for s in act.iter("sector")
+                       if s.get("code") and s.get("vocabulary") in vocab and _num(s.get("percentage"))]
+                if pct:
+                    break
+            pct_total = sum(p for _, p in pct)
+            share = (sum(p for c, p in pct if c.startswith(IATI_INFRA_DAC)) / pct_total) if pct_total else 1.0
+            share = min(1.0, share)
+            # list the codes largest share first, so the label and the code
+            # the card shows are the activity's main infrastructure sector
+            weight = {c: p for c, p in pct}
+            sectors = sorted(dict.fromkeys(sectors), key=lambda c: (not c.startswith(IATI_INFRA_DAC),
+                                                                   -weight.get(c, 0)))
 
             st = act.find("activity-status")
             code = st.get("code") if st is not None else None
@@ -309,8 +371,13 @@ def fetch_iati(publisher="afdb", infra_only=True):
             # Values carry no currency attribute — they inherit the
             # activity's default-currency: XDR (IMF SDR) for AfDB, USD for
             # the World Bank.
+            # The AfDB also files the borrowing government's own counterpart
+            # funds as a commitment (provider-org XX-COA-GOV): Medupi's three
+            # are two AfDB loans and South Africa's UA 5.44bn. That money is
+            # not the Bank's and is left out, as MapAfrica's own
+            # total_commitments_nongov leaves it out.
             currency = act.get("default-currency")
-            commitment = disbursed = 0.0
+            commitment = disbursed = counterpart = 0.0
             for tx in act.iter("transaction"):
                 tt = tx.find("transaction-type")
                 v = tx.find("value")
@@ -321,10 +388,34 @@ def fetch_iati(publisher="afdb", infra_only=True):
                 except ValueError:
                     continue
                 if tt.get("code") == "2":
+                    prov = tx.find("provider-org")
+                    if prov is not None and (prov.get("ref") or "").upper().endswith("-COA-GOV"):
+                        counterpart += amt
+                        continue
                     commitment += amt
                 elif tt.get("code") == "3":
                     disbursed += amt
                 currency = v.get("currency") or currency
+            # What the totals add up: the infrastructure share of the
+            # lender's own commitment, nothing for a cancelled or suspended
+            # activity (the money was promised, then withdrawn or frozen).
+            stalled = IATI_STATUS.get(code) == STALLED
+            # The AfDB leaves an activity at status 1 (pipeline) after its
+            # board has approved it: a commitment transaction is on record,
+            # often signed. That is approved, not a record of intent.
+            dash = IATI_STATUS.get(code)
+            if code == "1" and commitment > 0:
+                dash = APPROVED
+            counted = None if stalled else commitment * share
+            counted_dis = None if stalled else disbursed * share
+            notes = []
+            if stalled:
+                notes.append("cancelled or suspended, so not counted in totals")
+            elif share < 0.995:
+                notes.append(f"{share:.0%} of its sectors are infrastructure; that share is counted")
+            if counterpart:
+                notes.append("the borrowing government's own contribution is not counted")
+            n_counterpart += bool(counterpart)
 
             iid = ident.text.strip() if ident is not None and ident.text else None
             project_url = None
@@ -357,15 +448,24 @@ def fetch_iati(publisher="afdb", infra_only=True):
                         "sector": "infrastructure",
                         "dac_sectors": sectors,
                         "raw_status": code,
-                        "dash_status": IATI_STATUS.get(code),
+                        "dash_status": dash,
                         # exactness 1 = exact; 2 = approximate (often a country
                         # centroid). Filter to "1" for a map that isn't pinned
                         # to the middle of each country. The World Bank marks
                         # everything 2 and says how close in location-class.
                         "geo_precision": ex.get("code") if ex is not None else None,
                         "location_class": lc.get("code") if lc is not None else None,
-                        "commitment": round(commitment, 2) or None,
-                        "disbursed": round(disbursed, 2) or None,
+                        # counted (what totals add up) and, where it differs,
+                        # the lender's own figure as published
+                        "commitment": round(counted, 2) if counted else None,
+                        "disbursed": round(counted_dis, 2) if counted_dis else None,
+                        "commitment_published": round(commitment, 2) or None
+                            if (counted is None or abs(commitment - counted) > 0.5) else None,
+                        "disbursed_published": round(disbursed, 2) or None
+                            if (counted_dis is None or abs(disbursed - counted_dis) > 0.5) else None,
+                        "infra_share": round(share, 3) if share < 0.995 else None,
+                        "counterpart": round(counterpart, 2) or None,
+                        "counted_note": "; ".join(notes) or None,
                         "currency": currency,
                         "iati_id": iid,
                         "project_url": project_url,
@@ -374,10 +474,12 @@ def fetch_iati(publisher="afdb", infra_only=True):
         if i % 15 == 0:
             print(f"  … {i}/{len(urls)} files, {len(feats):,} located so far")
 
+    print(f"  left out {n_budget:,} budget-support activities (aid-type A01/A02); "
+          f"{n_counterpart:,} carry a government counterpart commitment, not counted")
     feats = place_iati(feats)
     out = write_layer(f"iati_{publisher}_finance", feats)
     update_meta(conf["meta"], fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
-                activities=len({f["properties"]["iati_id"] for f in feats}))
+                activities=len({f["properties"]["iati_id"] for f in feats}), budget_support=n_budget)
     return out
 
 
@@ -396,9 +498,10 @@ OSM_STATUS = {"construction": BUILDING, "proposed": ANNOUNCED}
 
 
 # Only classes that represent an infrastructure project. Without this filter
-# the query is dominated by residential street stubs inside housing estates —
-# 15,291 of 21,470 in an unfiltered run — which would badly overstate any
-# "projects under construction" headline.
+# the query is dominated by residential street stubs inside housing estates:
+# in October 2026 an unfiltered run found about nine times as many road
+# segments (47,830 against 5,328), two thirds of them residential, which
+# would badly overstate any "projects under construction" headline.
 SIGNIFICANT = "motorway|trunk|primary|secondary|motorway_link|trunk_link|primary_link"
 
 
@@ -417,7 +520,13 @@ def fetch_osm(retries=5):
     AFRICA_BBOX = "-36,-18,39,52"
     queries = [
         ("rail", f'way["railway"~"^(construction|proposed)$"]({AFRICA_BBOX});'),
-        ("air", f'way["aeroway"="construction"]({AFRICA_BBOX});'),
+        # a runway or terminal outline under works is aeroway=construction;
+        # a whole new airport is usually landuse=construction with
+        # construction=aerodrome, or construction:aeroway=*
+        ("air", f'way["aeroway"~"^(construction|proposed)$"]({AFRICA_BBOX});'
+                f'way["construction"="aerodrome"]({AFRICA_BBOX});'
+                f'way["construction:aeroway"]({AFRICA_BBOX});'
+                f'way["proposed:aeroway"]({AFRICA_BBOX});'),
     ]
     lat = -36.0
     while lat < 39.0:
@@ -474,9 +583,15 @@ def fetch_osm(retries=5):
             if v in ("construction", "proposed"):
                 kind = v
                 break
+        airport = bool(t.get("aeroway") or t.get("construction") == "aerodrome"
+                       or t.get("construction:aeroway") or t.get("proposed:aeroway"))
+        if not kind and airport and (t.get("landuse") == "construction" or t.get("construction:aeroway")):
+            kind = "construction"
+        if not kind and t.get("proposed:aeroway"):
+            kind = "proposed"
         kind = kind or t.get("highway") or t.get("railway") or ""
         sector = ("rail" if t.get("railway")
-                  else "air" if t.get("aeroway") else "road")
+                  else "air" if airport else "road")
         feats.append({
             "type": "Feature",
             "geometry": {
@@ -554,16 +669,34 @@ def _ring(x, y, ring):
 # (CC BY 4.0), same status vocabulary, plus "proposed".
 PIPE_TRACKERS = {"ggit": "gas", "goit": "oil"}
 PIPE_STATUS = {**GEM_STATUS, "proposed": ANNOUNCED, "idle": STALLED}
+# Lengths that are wrong in the releases the site reads, by GEM ProjectID,
+# with where the corrected figure comes from. Each is GEM's own error; report
+# it through the error form on the tracker's page and drop the entry once a
+# release fixes it. fetch_pipelines() also prints any segment whose stated
+# length is more than three times, or under a third of, GEM's own estimate,
+# so the next one surfaces.
+PIPE_LENGTH_FIX = {
+    "P0484": (524.6, "GEM wiki, Wafa-Mellitah gas pipeline: 524.6 km; the tracker's 5,246 km "
+                     "drops a decimal (its own estimate is 525.7 km)"),
+    "P1313": (614.0, "GEM wiki, Trans Nigeria Gas Pipeline: the AKK pipeline is 614 km; the tracker's "
+                     "1,300 km is the whole system, whose phases 2 and 3 are a record of their own"),
+    "P1879": (40.0, "GEM wiki, Egbin Node-Alagbado gas pipeline: 40 km"),
+    "P6647": (427.0, "Medgaz's onshore leg is 547 km from Hassi R'Mel to Beni Saf (GEM wiki), "
+                     "less the 120 km Mocta Douz-Beni Saf segment"),
+}
+# Segments whose published route is not the pipeline. They are left undrawn
+# and counted with the unrouted ones rather than drawn somewhere they are not.
+PIPE_ROUTE_DROP = {
+    "P2055": "Medgaz offshore (Beni Saf-Almería): the tracker's route runs 805 km overland "
+             "from near Hassi Messaoud to Oran and never crosses the sea",
+}
 
 
 def gem_latest_pipeline_geojson(tracker):
     """Newest release folder, newest GeoJSON inside it. Folder names carry the
     release month (2026-07), so a plain sort finds the latest."""
-    listing = get(
-        f"{GEM_BUCKET}/?list-type=2&prefix=Input_geojson_files/{tracker}/"
-        "&max-keys=1000", timeout=90).decode("utf-8", "replace")
-    keys = [k for k in re.findall(r"<Key>([^<]+)</Key>", listing)
-            if k.lower().endswith(".geojson")]
+    listing, _ = _bucket_list(f"Input_geojson_files/{tracker}/")
+    keys = [k for k in listing if k.lower().endswith(".geojson")]
     if not keys:
         raise RuntimeError(f"no {tracker} GeoJSON found in GEM bucket")
     # sort by the release folder, then by file name, so 2026-07 beats 2026-06.1
@@ -596,7 +729,7 @@ def _num(s):
 
 
 def fetch_pipelines():
-    feats, unrouted, releases = [], 0, []
+    feats, unrouted, releases, updated, fixed = [], 0, [], [], 0
     for tracker, fuel_group in PIPE_TRACKERS.items():
         url, release = gem_latest_pipeline_geojson(tracker)
         releases.append(f"{tracker.upper()} {release}")
@@ -613,13 +746,26 @@ def fetch_pipelines():
             if not any(c in AFRICA_NAMES or c == "The Gambia" for c in countries):
                 continue
             n_af += 1
-            parts = _line_parts(f.get("geometry"))
+            pid = (p.get("ProjectID") or "").strip()
+            parts = [] if pid in PIPE_ROUTE_DROP else _line_parts(f.get("geometry"))
             if not parts:
                 unrouted += 1
                 continue
             status = (p.get("Status") or "").strip().lower()
             name = (p.get("PipelineName") or "").strip()
             seg = (p.get("SegmentName") or "").strip()
+            length = _num(p.get("LengthMergedKm")) or _num(p.get("LengthKnownKm")) \
+                or _num(p.get("LengthEstimateKm"))
+            length_note = None
+            if pid in PIPE_LENGTH_FIX:
+                length, length_note = PIPE_LENGTH_FIX[pid]
+                fixed += 1
+            else:
+                known, est = _num(p.get("LengthKnownKm")), _num(p.get("LengthEstimateKm"))
+                if known and est and not 1 / 3 <= known / est <= 3:
+                    print(f"  ? {pid} {name} {seg}: stated {known:,.0f} km, GEM's estimate {est:,.0f} km")
+            if p.get("LastUpdated"):
+                updated.append(str(p["LastUpdated"])[:10])
             feats.append({
                 "type": "Feature",
                 "geometry": {"type": "MultiLineString", "coordinates": parts},
@@ -640,8 +786,8 @@ def fetch_pipelines():
                     "capacity_units": (p.get("CapacityUnits") or "").strip() or None,
                     "capacity_bcm_y": _num(p.get("CapacityBcm/y")),
                     "capacity_boed": _num(p.get("CapacityBOEd")),
-                    "length_km": _num(p.get("LengthMergedKm")) or _num(p.get("LengthKnownKm"))
-                                 or _num(p.get("LengthEstimateKm")),
+                    "length_km": length,
+                    "length_note": length_note,
                     "diameter": (f"{p.get('Diameter')} {p.get('DiameterUnits') or ''}".strip()
                                  if p.get("Diameter") else None),
                     "start_location": (p.get("StartLocation") or "").strip() or None,
@@ -655,10 +801,16 @@ def fetch_pipelines():
                 },
             })
         print(f"     {n_af:,} African segments in {tracker.upper()}")
-    print(f"  {unrouted:,} African segments have no published route and are not drawn")
+    print(f"  {unrouted:,} African segments have no usable route and are not drawn "
+          f"({len(PIPE_ROUTE_DROP)} of them by hand: a published route that is not the pipeline); "
+          f"{fixed} length(s) corrected from PIPE_LENGTH_FIX")
     out = write_layer("gem_oil_gas_pipelines", feats)
-    update_meta("pipelines", fetched=today(), fresh=None, release=" · ".join(releases),
-                records=len(feats), unrouted=unrouted)
+    # "data as of" is the newest record update in the two files, not the
+    # download day: GEM's map files carry no release date of their own
+    newest = max((d for d in updated if re.match(r"\d{4}-\d\d-\d\d$", d)), default=None)
+    update_meta("pipelines", fetched=today(), fresh=fmt_date(newest) if newest else None,
+                release=" · ".join(releases), records=len(feats), unrouted=unrouted,
+                length_fixes=fixed, route_drops=len(PIPE_ROUTE_DROP))
     return out
 
 
@@ -668,8 +820,13 @@ def fetch_pipelines():
 # every endpoint here was tested live on 2026-09-18. Cable routes come as one
 # GeoJSON, landing points as another, and the per-cable detail (owners,
 # suppliers, ready-for-service year, planned flag, landing points with
-# country) as one small JSON per cable. Licence: CC BY-SA 4.0 (TeleGeography's
-# FAQ), attribution "TeleGeography".
+# country) as one small JSON per cable. Licence: TeleGeography puts its maps,
+# map URLs and screen captures under CC BY-SA 4.0, attribution "TeleGeography"
+# (www2.telegeography.com/cite-telegeography-map), but says its underlying
+# databases are for paying subscribers and sells the map's JSON under an
+# annual licence (its submarine cable FAQ, checked 14 Oct 2026). The site
+# therefore draws the routes and cards from this feed and does not publish
+# the layer as a download.
 TG_API = "https://www.submarinecablemap.com/api/v3"
 # TeleGeography's own spellings for Africa and its islands -> ISO 3166-1. The
 # cable detail carries a country per landing point; landing-point names read
@@ -687,6 +844,18 @@ TG_ISO = {
     "Somalia": "SO", "South Africa": "ZA", "Sudan": "SD", "Tanzania": "TZ", "Togo": "TG",
     "Tunisia": "TN", "Uganda": "UG", "Western Sahara": "EH",
 }
+
+
+def _route_km(parts):
+    """Great-circle length of a route's parts, in km."""
+    import math
+    total = 0.0
+    for part in parts:
+        for (x0, y0, *_), (x1, y1, *_) in zip(part, part[1:]):
+            p0, p1, dl = math.radians(y0), math.radians(y1), math.radians(x1 - x0)
+            a = math.sin((p1 - p0) / 2) ** 2 + math.cos(p0) * math.cos(p1) * math.sin(dl / 2) ** 2
+            total += 2 * 6371.0 * math.asin(min(1.0, math.sqrt(a)))
+    return total
 
 
 def _tg_country(name):
@@ -758,8 +927,9 @@ def fetch_cables(pause=0.1):
         planned = bool(d.get("is_planned"))
         rfs = d.get("rfs_year")
         # TeleGeography has two states, planned and in service. A planned
-        # cable due within about a year is being manufactured or laid; one
-        # further out is a record of intent. Documented in the Methodology.
+        # cable due by the end of next year (the fetch year + 1) is being
+        # manufactured or laid; one further out is a record of intent.
+        # Documented in the Methodology.
         if not planned:
             status = OPERATING
         elif isinstance(rfs, int) and rfs <= year + 1:
@@ -780,6 +950,11 @@ def fetch_cables(pause=0.1):
                 "rfs": d.get("rfs") or None,
                 "is_planned": planned,
                 "length_km": _num((d.get("length") or "").replace("km", "")),
+                # TeleGeography leaves the length blank for a few systems
+                # (Umoja, FEA, ReuNION…): the drawn route's length stands in
+                # for ranking and is labelled an estimate wherever it shows
+                "length_km_est": None if _num((d.get("length") or "").replace("km", ""))
+                                 else round(_route_km(parts)),
                 "owners": d.get("owners") or None,
                 "suppliers": d.get("suppliers") or None,
                 "url": d.get("url") or None,
@@ -797,8 +972,12 @@ def fetch_cables(pause=0.1):
     if missing:
         print(f"  ! {missing} cable(s) had no route geometry and were skipped")
     out = write_layer("telegeography_cables", feats)
+    # landings count a cable at a point (282 in Oct 2026); landing sites count
+    # each point once however many cables come ashore there (127)
     update_meta("cables", fetched=today(), fresh=None, records=len(feats),
-                landing_points=sum(len(f["properties"]["landing_points"]) for f in feats))
+                landing_points=sum(len(f["properties"]["landing_points"]) for f in feats),
+                landing_sites=len({lp["id"] for f in feats for lp in f["properties"]["landing_points"]}),
+                length_estimated=sum(1 for f in feats if f["properties"]["length_km_est"]))
     return out
 
 
@@ -1072,9 +1251,12 @@ def fetch_aiddata(workers=8):
     Left out: umbrella agreements (their money reappears in the projects
     under them), pledges (MoUs and letters of intent, which AidData excludes
     from aggregates and never geocodes, so the layer has no "announced"
-    records) and everything that is not physical infrastructure: cash,
-    equipment and vehicle donations, scholarships, corporate and
-    commodity-backed loans. Location: the GeoGCDF footprint where one exists
+    records), everything AidData does not flag as physical infrastructure
+    (cash, equipment and vehicle donations, scholarships, most oil-backed
+    credit lines to state companies) and the loans that buy a stake (M&A).
+    An infrastructure loan secured on oil or mineral exports is kept and
+    counted in meta. Suspended and cancelled commitments stay on the map but
+    out of the totals. Location: the GeoGCDF footprint where one exists
     (precise, or approximate at 5 km or administrative level), else the
     country's centre, flagged."""
     AIDDATA_CACHE.mkdir(parents=True, exist_ok=True)
@@ -1105,7 +1287,7 @@ def fetch_aiddata(workers=8):
     hdr = [str(h) for h in next(rows)]
     ix = {h: i for i, h in enumerate(hdr)}
     col = lambda r, name: r[ix[name]] if ix[name] < len(r) else None  # noqa: E731
-    keep, skipped = [], {"pledge": 0, "umbrella": 0, "not_infra": 0}
+    keep, skipped = [], {"pledge": 0, "umbrella": 0, "not_infra": 0, "acquisition": 0}
     for r in rows:
         if not r or r[0] is None or col(r, "Recipient Region") != "Africa":
             continue
@@ -1119,10 +1301,15 @@ def fetch_aiddata(workers=8):
         if col(r, "Infrastructure") != "Yes":
             skipped["not_infra"] += 1
             continue
+        # a loan to buy a stake in a mine or an LNG vessel builds nothing,
+        # whatever the sector of what it buys: AidData flags those M&A
+        if col(r, "M&A") == "Yes":
+            skipped["acquisition"] += 1
+            continue
         keep.append(r)
     print(f"  {len(keep):,} African infrastructure commitments "
           f"(left out: {skipped['umbrella']:,} umbrella agreements, {skipped['pledge']:,} pledges, "
-          f"{skipped['not_infra']:,} not physical infrastructure)")
+          f"{skipped['not_infra']:,} not physical infrastructure, {skipped['acquisition']:,} acquisitions)")
 
     with_geo = [int(r[0]) for r in keep if col(r, "Geospatial Feature Available") == "Yes"]
     print(f"  fetching {len(with_geo):,} GeoGCDF footprints ({workers} at a time, cached in "
@@ -1143,6 +1330,7 @@ def fetch_aiddata(workers=8):
         print(f"  ! {failed} footprint(s) could not be read")
 
     feats, n_fp, n_prec, n_approx, n_country, unlocated, mislinked = [], 0, 0, 0, 0, 0, 0
+    n_coll, coll_usd = 0, 0.0
     for r in keep:
         pid = int(r[0])
         iso = ISO3_TO_ISO2.get(col(r, "Recipient ISO-3") or "")
@@ -1189,7 +1377,8 @@ def fetch_aiddata(workers=8):
             if not iso:
                 unlocated += 1
                 continue
-            lon, lat = _country_centre(iso)
+            # the 1:110m basemap has no polygon for the island states
+            lon, lat = ISLAND_POINT.get(iso) or _country_centre(iso)
             place = None
             if lon is None:
                 unlocated += 1
@@ -1215,6 +1404,15 @@ def fetch_aiddata(workers=8):
         yr = lambda name: int(col(r, name)) if isinstance(col(r, name), (int, float)) else None  # noqa: E731
         num = lambda name: float(col(r, name)) if isinstance(col(r, name), (int, float)) else None  # noqa: E731
         status = col(r, "Status")
+        amount = round(float(amount), 2) if isinstance(amount, (int, float)) else None
+        # a suspended or cancelled commitment stays on the map but out of the
+        # totals, as AidData's own Recommended For Aggregates leaves it out
+        withdrawn = CHINA_STATUS.get(status) == STALLED and amount is not None
+        collateral = col(r, "Collateralized") == "Yes" and bool(re.search(
+            r"\boil\b|crude|petrol|commodit|copper|cobalt|mineral|iron ore|bauxite|cocoa|sesame|manganese|chrome",
+            str(col(r, "Collateral") or ""), re.I))
+        n_coll += collateral
+        coll_usd += (amount or 0) if collateral and not withdrawn else 0
         feats.append({
             "type": "Feature",
             "geometry": geom or {"type": "Point", "coordinates": [round(lon, 5), round(lat, 5)]},
@@ -1245,7 +1443,10 @@ def fetch_aiddata(workers=8):
                 "implementers": _pipe(col(r, "Implementing Agencies"), 200),
                 "cofinanced": col(r, "Co-financed") == "Yes",
                 "cofinanciers": _pipe(col(r, "Co-financing Agencies"), 160),
-                "amount_usd_2021": round(float(amount), 2) if isinstance(amount, (int, float)) else None,
+                "amount_usd_2021": None if withdrawn else amount,
+                "amount_usd_2021_published": amount if withdrawn else None,
+                "counted_note": f"{status.lower()}, so not counted in totals" if withdrawn else None,
+                "commodity_collateral": collateral or None,
                 "amount_nominal_usd": round(float(col(r, "Amount (Nominal USD)")), 2)
                                       if isinstance(col(r, "Amount (Nominal USD)"), (int, float)) else None,
                 "amount_estimated": col(r, "Amount Estimated") == "Yes",
@@ -1269,7 +1470,9 @@ def fetch_aiddata(workers=8):
                 release=f"GCDF 3.0 · GeoGCDF {geo_release or geo_version}", records=len(feats),
                 footprints=n_fp, precise=n_prec, approximate=n_approx, country_level=n_country,
                 unlocated=unlocated, mislinked=mislinked, umbrella=skipped["umbrella"],
-                pledges=skipped["pledge"], not_infrastructure=skipped["not_infra"])
+                pledges=skipped["pledge"], not_infrastructure=skipped["not_infra"],
+                acquisitions=skipped["acquisition"], commodity_collateral=n_coll,
+                commodity_collateral_usd=round(coll_usd))
     return out
 
 
@@ -1311,12 +1514,14 @@ def ring_area_deg(ring):
 # buckets the DAC filter yields for the other lenders.
 EU_PUBLISHERS = {
     "ec-intpa": {"pub": "INTPA", "lender": "European Commission",
-                 "files": [c.lower() for c in AFRICA_ISO] + ["289", "298"]},
+                 "files": [c.lower() for c in AFRICA_ISO] + ["289", "298", "1027", "1028", "1029", "1030"]},
     "ec-near": {"pub": "NEAR", "lender": "European Commission",
                 "files": ["dz", "eg", "ly", "ma", "tn", "189"]},
     "eib": {"pub": "EIB", "lender": "European Investment Bank", "files": ["act"]},
 }
-EU_REGIONS = {"189", "289", "298"}            # North of Sahara, South of Sahara, Africa regional
+# North of Sahara, South of Sahara, Africa regional, and the DAC's Eastern,
+# Middle, Southern and Western Africa, which INTPA publishes as files of their own
+EU_REGIONS = {"189", "289", "298", "1027", "1028", "1029", "1030"}
 EU_AFRICA_POINT = (17.7578122, 11.5024338)   # lon, lat: the Commission's point for Africa-wide activities
 # island states the 1:110m basemap has no polygon for: a point on the main island
 ISLAND_POINT = {"CV": (-23.6, 15.1), "ST": (6.6, 0.3), "SC": (55.45, -4.65), "MU": (57.55, -20.3), "KM": (43.35, -11.7)}
@@ -1325,6 +1530,63 @@ ISLAND_POINT = {"CV": (-23.6, 15.1), "ST": (6.6, 0.3), "SC": (55.45, -4.65), "MU
 # is left out, as the DAC filter leaves it out for the other lenders.
 EIB_SECTOR = [((5, 9), "industry"), ((10, 33), "industry"), ((35, 35), "energy"), ((36, 38), "water"),
               ((39, 39), "environment"), ((41, 43), "industry"), ((49, 52), "transport"), ((60, 63), "ict")]
+# EIB operations that are not infrastructure although their sector codes say
+# so: investments in funds (the codes are the fund's target sectors) and
+# framework loans that are credit lines to banks. Left out, as the DAC filter
+# leaves funds and credit lines out for the other lenders. By EIB project
+# number; each is https://www.eib.org/en/projects/all/<number>. Checked
+# 14 Oct 2026 against the Bank's project pages.
+EIB_NOT_INFRA = {
+    "20230942": "fund: Global Gateway Copenhagen Growth Markets Fund II",
+    "20210726": "fund: African Infrastructure Investment Fund 4",
+    "20210671": "fund: Alcazar Energy Partners II",
+    "20220074": "fund: SunFunder Gigaton Clean Energy SME Fund",
+    "20220585": "fund: Pembani Remgro Infrastructure Fund II",
+    "20230725": "fund: LeapFrog Asia and Africa Climate Transition Fund",
+    "20200816": "fund: Emerging Market Climate Action Fund (EMCAF)",
+    "20210191": "fund: EMCAF, junior participation",
+    "20200085": "fund: The Urban Resilience Fund (TURF) B",
+    "20200800": "fund: The Urban Resilience Fund (TURF) B, local-currency facility",
+    "20230795": "fund: ACP Infrastructure Climate Resilient Fund",
+    "20220394": "fund: Evolution III",
+    "20170177": "fund: Evolution II",
+    "20190120": "fund: Metier Sustainable Capital Fund II",
+    "20220159": "fund: ACRE Export Finance Fund I",
+    "20210690": "fund: Eiffel Energy Transition Africa Fund",
+    "20170404": "fund: Denham International Power Fund",
+    "20170638": "fund: Arch Africa Renewable Power Fund",
+    "20190170": "fund: Arch Cold Chain Solutions East Africa Fund",
+    "20140518": "fund: Meridiam Infrastructure Africa Fund",
+    "20180638": "fund: Meridiam Infrastructure Africa Fund, top-up",
+    "20180476": "fund: responsAbility Access to Clean Power Fund",
+    "20190011": "fund: responsAbility Access to Clean Power Fund, local-currency facility",
+    "20230258": "fund: Amethis Africa Fund III",
+    "20210485": "fund: AfriGreen Debt Fund",
+    "20190307": "fund: Green for Growth Fund IV",
+    "20160492": "fund: Green for Growth Fund III",
+    "20170817": "fund: Green for Growth Fund, local-currency facility",
+    "20160182": "fund: Green for Growth Fund, CAMENA",
+    "20160898": "fund: International Housing Solutions Fund II",
+    "20190782": "fund: Convergence Partners Digital Fund III",
+    "20140272": "fund: Agri-Vie Fund II",
+    "20170443": "fund: Africa Food Security Fund",
+    "20200522": "fund: Water Access Acceleration Fund",
+    "20210788": "fund: SSA Sustainable Energy Platform",
+    "20230046": "fund: Mirova Gigaton Fund, local-currency facility",
+    "20230334": "fund: Seedstars Africa Ventures 1",
+    "20200199": "fund: DWS Universal Green Energy Access Programme",
+    "20220361": "credit line: EBID ECOWAS Climate Action framework loan",
+    "20220180": "credit line: Afreximbank Africa Health Resilience framework loan",
+    "20220792": "credit line: BRD Green Finance framework loan",
+    "20130648": "credit line: PAMIGA, through microfinance institutions",
+}
+# EIB operations whose money is not the Bank's (participating-org role 1):
+# the Commission's blending grants, which the Commission publishes again as
+# its own contracts with the EIB, and a member state's agency (AECID, Spain),
+# which is national money like AFD's or KfW's.
+EIB_OTHER_FUNDERS = {"MS-EC", "AECID"}
+# implementing organisations the Commission names only by their IATI ref
+EU_IMPL_REF = {"XM-DAC-42004": "European Investment Bank"}
 EU_INSTRUMENT = {"110": "grant", "111": "grant", "210": "grant", "411": "loan", "412": "loan", "421": "loan",
                  "510": "equity", "511": "equity", "512": "equity", "520": "equity"}
 EU_AID_TYPE = {"A01": "general budget support", "A02": "sector budget support", "B01": "core contribution",
@@ -1369,21 +1631,42 @@ def _clean_place(name, iso):
 def _eu_activity(act, conf):
     """One parsed activity, or None when it is not infrastructure in Africa."""
     pub = conf["pub"]
+    share = 1.0              # the infrastructure share, by the publisher's sector percentages
+    iid0 = _narr(act, "iati-identifier") or ""
+    excluded = None
     if pub == "EIB":
-        codes = [(s.get("code") or "", _narr(s, "narrative")) for s in act.iter("sector")
-                 if s.get("vocabulary") == "99"]
-        buckets = [b for b in (_eib_bucket(c) for c, _ in codes) if b]
+        m = re.match(r"XM-DAC-918-3-(\d{8})", iid0)
+        funders = {(_narr(po, "narrative") or "").strip() for po in act.iter("participating-org")
+                   if po.get("role") == "1"}
+        if m and m.group(1) in EIB_NOT_INFRA:
+            excluded = "left_out"
+        elif funders & EIB_OTHER_FUNDERS:
+            excluded = "other_funder"
+        codes = [(s.get("code") or "", _narr(s, "narrative"), _num(s.get("percentage")))
+                 for s in act.iter("sector") if s.get("vocabulary") == "99"]
+        buckets = [b for b in (_eib_bucket(c) for c, _, _ in codes) if b]
         if not buckets:
             return None
-        sector, sector_codes = buckets[0], [c for c, _ in codes]
-        sector_label = next((n for c, n in codes if _eib_bucket(c)), None)
+        # the largest infrastructure code names the sector
+        main = max((c for c in codes if _eib_bucket(c[0])), key=lambda c: c[2] or 0)
+        sector, sector_codes = _eib_bucket(main[0]), [c for c, _, _ in codes]
+        sector_label = main[1]
         if sector_label:                        # the Bank's file carries cp1252 dashes
             sector_label = sector_label.replace("\x96", "–").replace("\x97", "—")
+        total = sum(c[2] or 0 for c in codes)
+        if total:
+            share = min(1.0, sum(c[2] or 0 for c in codes if _eib_bucket(c[0])) / total)
     else:
-        sector_codes = [s.get("code") for s in act.iter("sector")
-                        if s.get("code") and s.get("vocabulary") in (None, "1")]
+        pct = [(s.get("code"), _num(s.get("percentage"))) for s in act.iter("sector")
+               if s.get("code") and s.get("vocabulary") in (None, "1")]
+        sector_codes = [c for c, _ in pct]
         if not any(c.startswith(IATI_INFRA_DAC) for c in sector_codes):
             return None
+        total = sum(p or 0 for _, p in pct)
+        if total:
+            share = min(1.0, sum(p or 0 for c, p in pct if c.startswith(IATI_INFRA_DAC)) / total)
+            weight = dict(pct)
+            sector_codes = sorted(sector_codes, key=lambda c: (not c.startswith(IATI_INFRA_DAC), -(weight.get(c) or 0)))
         sector, sector_label = None, None       # the builder maps DAC codes
 
     countries = []
@@ -1393,11 +1676,21 @@ def _eu_activity(act, conf):
         except ValueError:
             pct = 100.0
         countries.append((rc.get("code"), pct))
-    regions = [rr.get("code") for rr in act.iter("recipient-region")]
+    regions = [(rr.get("code"), _num(rr.get("percentage"))) for rr in act.iter("recipient-region")]
     african = [c for c in countries if c[0] in AFRICA_ISO]
-    if not african and not (set(regions) & EU_REGIONS):
+    if not african and not ({r for r, _ in regions} & EU_REGIONS):
         return None
+    if excluded:              # counted only once it is known to be African infrastructure
+        return excluded
     iso = max(african, key=lambda c: c[1])[0] if african else None
+    # the African share, by the publisher's recipient percentages: an EIB
+    # loan to IFAD is 50% Africa, 12% America and 38% Asia
+    rec = [(c, p) for c, p in countries] + [(r, p if p is not None else 100.0) for r, p in regions]
+    rec_total = sum(p for _, p in rec)
+    africa_share = 1.0
+    if rec_total and len(rec) > 1:
+        africa_share = min(1.0, sum(p for c, p in rec if c in AFRICA_ISO or c in EU_REGIONS) / rec_total)
+    regions = [r for r, _ in regions]
 
     st = act.find("activity-status")
     code = st.get("code") if st is not None else None
@@ -1405,7 +1698,7 @@ def _eu_activity(act, conf):
         return None
 
     currency = act.get("default-currency") or "EUR"
-    seen, commitment, disbursed, mixed = set(), 0.0, 0.0, False
+    seen, commitment, disbursed, mixed, refs2 = set(), 0.0, 0.0, False, set()
     for tx in act.iter("transaction"):
         tt, v = tx.find("transaction-type"), tx.find("value")
         if tt is None or v is None or not v.text:
@@ -1427,6 +1720,11 @@ def _eu_activity(act, conf):
         seen.add(key)
         if tt.get("code") == "2":
             commitment += amt
+            ref = tx.get("ref") or ""
+            if ref.startswith(iid0 + "-"):       # the Commission prefixes each copy's own id
+                ref = ref[len(iid0) + 1:]
+            if ref:
+                refs2.add(ref)
         elif tt.get("code") == "3":
             disbursed += amt
 
@@ -1445,7 +1743,7 @@ def _eu_activity(act, conf):
     impl = []
     for po in act.iter("participating-org"):
         if po.get("role") == "4":
-            n = (_narr(po, "narrative") or "").strip(" *")
+            n = (_narr(po, "narrative") or "").strip(" *") or EU_IMPL_REF.get(po.get("ref") or "", "")
             if n and n.title() not in impl:
                 impl.append(n.title() if n.isupper() else n)
     aid = next((d.get("code") for d in act.iter("default-aid-type")), None)
@@ -1467,9 +1765,10 @@ def _eu_activity(act, conf):
         "sector": sector, "sector_codes": sector_codes, "sector_label": sector_label,
         "raw_status": code, "dash_status": IATI_STATUS.get(code),
         "commitment": round(commitment, 2) or None, "disbursed": round(disbursed, 2) or None,
+        "share": share, "africa_share": africa_share, "refs2": sorted(refs2),
         "mixed_currency": mixed, "locs": locs,
         "start_year": dates.get("2") or dates.get("1"), "end_year": dates.get("4") or dates.get("3"),
-        "implementers": "; ".join(impl)[:200] or None,
+        "implementers": "; ".join(impl)[:600] or None,
         "aid_type": aid, "instrument": EU_INSTRUMENT.get(fin or "", "budget support" if (aid or "").startswith("A") else None),
         "project_url": purl,
     }
@@ -1478,7 +1777,7 @@ def _eu_activity(act, conf):
 def fetch_eu():
     """European Commission (INTPA, NEAR) and EIB activities in Africa, one
     GeoJSON point per record, from the publishers' IATI files via the registry."""
-    acts, n_files = [], 0
+    acts, n_files, dropped, generated = [], 0, {"left_out": 0, "other_funder": 0}, {}
     for publisher, conf in EU_PUBLISHERS.items():
         meta = json.loads(get(f"{REGISTRY}?q=organization:{publisher}&rows=300", timeout=90))
         pkgs = [pk for pk in meta["result"]["results"]
@@ -1497,9 +1796,14 @@ def fetch_eu():
                 print(f"  ! unparseable {u.rsplit('/', 1)[-1]}: {e}")
                 continue
             n_files += 1
+            g = (root.get("generated-datetime") or "")[:10]
+            if g:
+                generated.setdefault(conf["pub"], []).append(g)
             for act in root.iter("iati-activity"):
                 a = _eu_activity(act, conf)
-                if a:
+                if isinstance(a, str):
+                    dropped[a] += 1
+                elif a:
                     acts.append(a)
             if i % 15 == 0 or i == len(urls):
                 print(f"  … {i}/{len(urls)} files, {len(acts):,} infrastructure activities in Africa so far")
@@ -1509,9 +1813,52 @@ def fetch_eu():
     parents = {p for a in ec if a["hierarchy"] == "2" for p in a["parents"]}
     by_id = {a["id"]: a for a in ec}
     kept = [a for a in acts if a["pub"] == "EIB" or a["hierarchy"] == "2" or a["id"] not in parents]
+    # A multi-country decision is published as sub-activities (-01, -02…),
+    # and each repeats the whole envelope under the same commitment
+    # transaction ref. Copies that share a ref are one envelope: when any of
+    # them has contracts, the contracts carry the money and every uncontracted
+    # copy goes; when none has, one copy stays, for all the copies' countries.
+    root_of = lambda i: (re.match(r"(.*ACT-D-\d+)-\d\d$", i or "") or [None, i])[1]  # noqa: E731
+    decisions = [a for a in ec if a["hierarchy"] != "2" and a["refs2"]]
+    group = {a["id"]: a["id"] for a in decisions}
+
+    def find(i):
+        while group[i] != i:
+            group[i] = group[group[i]]
+            i = group[i]
+        return i
+    by_ref = {}
+    for a in decisions:
+        for ref in a["refs2"]:
+            other = by_ref.setdefault((root_of(a["id"]), ref), a["id"])
+            group[find(a["id"])] = find(other)
+    members = {}
+    for a in decisions:
+        members.setdefault(find(a["id"]), []).append(a)
+    drop, n_env = set(), 0
+    for mem in members.values():
+        if len(mem) < 2:
+            continue
+        live = [a for a in mem if a["id"] not in parents]
+        if not live:
+            continue
+        if any(a["id"] in parents for a in mem):
+            drop |= {a["id"] for a in live}
+        else:
+            keep1 = max(live, key=lambda a: a["commitment"] or 0)
+            cts = [c for a in mem for c in (a["countries"] or [])]
+            keep1["countries"] = list(dict.fromkeys(cts)) or None
+            if keep1["countries"] and len(keep1["countries"]) > 1:
+                keep1["country"] = None          # drawn at the Commission's Africa-wide point
+            drop |= {a["id"] for a in live if a is not keep1}
+        n_env += 1
+    kept = [a for a in kept if a["id"] not in drop]
+    print(f"  {len(drop):,} repeated copies of {n_env:,} multi-country envelopes dropped; "
+          f"{dropped['left_out']:,} EIB fund investments and credit lines and "
+          f"{dropped['other_funder']:,} EIB operations funded by the Commission or a member state left out")
     n_contracts = sum(1 for a in kept if a["pub"] != "EIB" and a["hierarchy"] == "2")
     n_decisions = sum(1 for a in kept if a["pub"] != "EIB" and a["hierarchy"] != "2")
-    n_folded = len(ec) - n_contracts - n_decisions
+    n_folded = len(ec) - n_contracts - n_decisions - len(drop)
     print(f"  {n_contracts:,} contracts, {n_decisions:,} decisions without a contract, "
           f"{n_folded:,} decisions folded into their contracts; {len(kept) - n_contracts - n_decisions:,} EIB operations")
 
@@ -1558,6 +1905,23 @@ def fetch_eu():
             prec = 3
         prec_n[prec] += 1
         parent = next((by_id[p] for p in a["parents"] if p in by_id), None)
+        # What the totals add up: the infrastructure share of the African
+        # share of the commitment; nothing for a cancelled or suspended record
+        stalled = a["dash_status"] == STALLED
+        factor = a["share"] * a["africa_share"]
+        com, dis = a["commitment"], a["disbursed"]
+        counted = None if stalled or com is None else round(com * factor, 2)
+        counted_dis = None if stalled or dis is None else round(dis * factor, 2)
+        notes = []
+        if stalled:
+            notes.append("cancelled or suspended, so not counted in totals")
+        else:
+            if a["share"] < 0.995:
+                notes.append(f"{a['share']:.0%} of its sectors are infrastructure")
+            if a["africa_share"] < 0.995:
+                notes.append(f"{a['africa_share']:.0%} of it goes to Africa")
+            if notes:
+                notes = ["; ".join(notes) + "; that share is counted"]
         feats.append({
             "type": "Feature",
             "geometry": {"type": "Point", "coordinates": [round(lon, 5), round(lat, 5)]},
@@ -1572,7 +1936,10 @@ def fetch_eu():
                 "sector": a["sector"], "sector_codes": a["sector_codes"], "sector_label": a["sector_label"],
                 "raw_status": a["raw_status"], "dash_status": a["dash_status"],
                 "geo_precision": prec, "location_name": place, "locations": locs,
-                "commitment": a["commitment"], "disbursed": a["disbursed"], "currency": "EUR",
+                "commitment": counted or None, "disbursed": counted_dis or None, "currency": "EUR",
+                "commitment_published": com if com and counted != com else None,
+                "disbursed_published": dis if dis and counted_dis != dis else None,
+                "counted_note": "; ".join(notes) or None,
                 "mixed_currency": a["mixed_currency"] or None,
                 "implementers": a["implementers"], "aid_type": a["aid_type"],
                 "aid_type_name": EU_AID_TYPE.get(a["aid_type"] or ""), "instrument": a["instrument"],
@@ -1583,7 +1950,15 @@ def fetch_eu():
     print(f"  placed: {prec_n[1]:,} on a named place, {prec_n[2]:,} at the country's point, "
           f"{prec_n[3]:,} Africa-wide at the Commission's regional point; {unplaced} could not be placed")
     out = write_layer("iati_eu_finance", feats)
-    update_meta("eu", fetched=today(), fresh=None, datasets=n_files, records=len(feats),
+    # "data as of": the oldest file's own generation date, since the EIB's
+    # and DG NEAR's files can be more than a year older than the download
+    gen = {k: (min(v), max(v)) for k, v in generated.items()}
+    oldest = min((v[0] for v in gen.values()), default=None)
+    update_meta("eu", fetched=today(), fresh=fmt_date(oldest) if oldest else None,
+                generated={k: v[1] for k, v in gen.items()},
+                envelopes_dropped=len(drop), eib_left_out=dropped["left_out"],
+                eib_other_funder=dropped["other_funder"],
+                datasets=n_files, records=len(feats),
                 contracts=n_contracts, decisions=n_decisions, decisions_folded=n_folded,
                 eib=len(feats) - n_contracts - n_decisions, named_place=prec_n[1],
                 country_point=prec_n[2], regional=prec_n[3], unplaced=unplaced, eur_usd=EUR_USD)
@@ -1757,7 +2132,14 @@ def _mattei_page(lang, slug):
 
 def _mattei_amount(text):
     """"EUR 1.4 billion" -> (1.4e9, "EUR"); "$75 million" -> (75e6, "USD");
-    the first figure in the text, or None."""
+    the first figure in the text, or None. Parts joined by " / " are summed
+    when each states its own amount in one currency: TANIT prints "EUR 250
+    million for TANIT infrastructure / EUR 36.5 million for TANIT KT"."""
+    parts = [x for x in (text or "").split(" / ") if x.strip()]
+    if len(parts) > 1:
+        got = [_mattei_amount(x) for x in parts]
+        if all(v for v, _ in got) and len({c for _, c in got}) == 1:
+            return sum(v for v, _ in got), got[0][1]
     t = (text or "").replace(" ", " ")
     m = re.search(r"(EUR|USD|€|\$)?\s*(\d[\d,]*(?:\.\d+)?)\s*(billion|million|thousand)?", t)
     if not m or not m.group(2):
@@ -1855,7 +2237,11 @@ def fetch_mattei(workers=4):
                 "stage": stage_en, "stage_it": stage_it, "dash_status": status,
                 "amount_text": amount_text or None, "amount_eur": eur, "amount_currency": cur,
                 "amount_shared": shared or None,
-                "implementer": en.get("Implementing body") or it.get("Ente esecutore") or None,
+                # a line break in this field is the portal wrapping a long
+                # name ("United Nations Development Programme / (UNDP)"),
+                # never a separator between bodies
+                "implementer": re.sub(r"\s*\n\s*", " ", en.get("Implementing body") or it.get("Ente esecutore") or "")
+                               or None,
                 "partnerships": en.get("Partnerships") or it.get("Partenariati") or None,
                 "international_partners": en.get("International partners") or it.get("Partner internazionali") or None,
                 "resources": en.get("Resources") or it.get("Risorse") or None,

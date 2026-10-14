@@ -1,0 +1,136 @@
+African segments: {'GGIT': 306, 'GOIT': 194} total 500
+unrouted: 176 Counter({'GGIT': 156, 'GOIT': 20})
+routed: 324
+non-numeric length strings: Counter()
+routed but unmapped status (dropped by build): 0 Counter()
+KEPT (site records): 324
+raw status: Counter({'operating': 264, 'proposed': 27, 'construction': 21, 'shelved': 7, 'cancelled': 5})
+dash status: Counter({'operating': 264, 'announced': 27, 'under_construction': 21, 'stalled': 12})
+fuel: Counter({'Gas': 150, 'Oil': 148, 'NGL': 26})
+systems (distinct PipelineName): 273
+African countries on routes: 35
+all countries on routes (incl. non-African): 41
+segments without a GEM length (site falls back to drawn route): 0
+total km (GEM length, else raw-geometry): 115,011.4
+  under_construction: 21 segments, 5,821.5 km
+  announced: 27 segments, 21,257.9 km
+  operating: 264 segments, 74,622.8 km
+  stalled: 12 segments, 13,309.3 km
+
+Length vs raw route geometry (ratio = GEM length / drawn route length), flagged if >2.5 or <0.4 with drawn >20 km:
+  ratio   0.01 | GEM       8.5 km | drawn    751.1 km | merged=8.5 known=8.5 (None None) est=749.34 | GGIT construction | DP3–DP4–Sabratha Gas Pipeline · DP3–DP4 | low | P6716
+  ratio  15.52 | GEM     216.0 km | drawn     13.9 km | merged=216.0 known=216.0 (None None) est=13.93 | GGIT operating    | Zohr–Al Gamil Pipelines · Pipeline 1 | low | P5132
+  ratio   0.07 | GEM      16.0 km | drawn    245.5 km | merged=16.0 known=16.0 (None None) est=245.65 | GGIT operating    | Oben-Ajaokuta Steel Gas Pipeline ·  | low | P1877
+  ratio  15.09 | GEM     210.0 km | drawn     13.9 km | merged=210.0 known=210.0 (None None) est=13.93 | GGIT operating    | Zohr–Al Gamil Pipelines · Pipeline 2 | low | P6036
+  ratio  13.33 | GEM     177.0 km | drawn     13.3 km | merged=177.0 known=177.0 (None None) est=13.3 | GGIT operating    | Farigh-Intesar Gas Pipeline ·  | low | P1861
+  ratio   0.10 | GEM      51.0 km | drawn    515.1 km | merged=51.0 known=51.0 (51.0 km) est=513.98 | GOIT operating    | North Hamada-El Feel Oil Pipeline ·  | low | P6444
+  ratio   0.10 | GEM      25.0 km | drawn    249.2 km | merged=25.0 known=25.0 (None None) est=249.58 | GGIT operating    | Khoms-Melita Pipeline ·  | medium | P1789
+  ratio   9.96 | GEM   5,246.0 km | drawn    526.6 km | merged=5246.0 known=5246.0 (None None) est=525.69 | GGIT operating    | Wafa-Mellitah Gas Pipeline · Pipeline 1 | high | P0484
+  ratio   8.23 | GEM     447.0 km | drawn     54.3 km | merged=447.0 known=447.0 (None None) est=54.27 | GGIT operating    | Egbin Node-Alagbado Gas Pipeline ·  | low | P1879
+  ratio   7.26 | GEM     108.0 km | drawn     14.9 km | merged=108.0 known=108.0 (108.0 km) est=14.8 | GOIT operating    | Idoho-Qua Iboe Terminal Oil Pipeline ·  | low | P0619
+  ratio   0.15 | GEM      49.5 km | drawn    327.1 km | merged=49.5 known=49.5 (None None) est=327.59 | GGIT operating    | Obaiyed-Amreya Northern Gas Pipeline · Obaiyed-Tarek Gas Pipelin | high | P0474
+  ratio   0.15 | GEM      75.0 km | drawn    486.8 km | merged=75.0 known=75.0 (None None) est=485.3 | GGIT operating    | Salam–Matruh Terminal Gas Pipeline ·  | low | P3935
+  ratio   0.16 | GEM     130.0 km | drawn    795.3 km | merged=130.0 known=130.0 (None None) est=793.66 | GGIT construction | NC 41-Mellitah Gas Pipeline ·  | medium | P6708
+  ratio   4.89 | GEM     107.0 km | drawn     21.9 km | merged=107.0 known=107.0 (107.0 km) est=21.93 | GOIT operating    | Sabratha-Mellitah Condensate Pipeline ·  | low | P6457
+  ratio   0.21 | GEM      58.3 km | drawn    272.2 km | merged=58.3 known=58.3 (None None) est=272.41 | GGIT operating    | Bordj Ménail-Algiers Gas Pipeline ·  | no route | P6623
+  ratio   0.25 | GEM      70.0 km | drawn    283.4 km | merged=70.0 known=70.0 (None None) est=283.23 | GGIT operating    | Raven-Western Desert Cmplex Gas Pipeline ·  | low | P6703
+  ratio   0.25 | GEM     614.0 km | drawn  2,465.7 km | merged=614.0 known=614.0 (None None) est=2460.56 | GGIT proposed     | African Renaissance Gas Pipeline ·  | high | P2249
+  ratio   0.26 | GEM     210.0 km | drawn    804.9 km | merged=210.0 known=210.0 (None None) est=805.04 | GGIT operating    | Medgaz Gas Pipeline · Offshore Segment (Beni Sa | high | P2055
+  ratio   3.73 | GEM      23.0 km | drawn      6.2 km | merged=23.0 known=23.0 (23.0 km) est=6.17 | GOIT construction | Musturad-Huckstep Oil Pipeline ·  | low | P7914
+  ratio   0.28 | GEM      80.0 km | drawn    290.8 km | merged=80.0 known=80.0 (None None) est=290.62 | GGIT operating    | Petroci Foxtrot Gas Pipeline ·  | medium | P0472
+  ratio   3.58 | GEM   1,300.0 km | drawn    362.8 km | merged=1300.0 known=1300.0 (None None) est=361.32 | GGIT construction | Trans Nigeria Gas Pipeline · Phase 1: Ajaokuta–Kaduna– | medium | P1313
+  ratio   0.29 | GEM      68.0 km | drawn    236.6 km | merged=68.0 known=68.0 (68.0 km) est=236.41 | GOIT operating    | Nafoora–Zueitina Oil Pipeline ·  | low | P5237
+  ratio   0.29 | GEM      85.0 km | drawn    295.0 km | merged=85.0 known=85.0 (None None) est=294.44 | GGIT proposed     | Genser Natural Gas Pipeline · Prestea-Edikan and Wassa | medium | P4216
+  ratio   0.29 | GEM      68.5 km | drawn    236.6 km | merged=68.5 known=68.5 (68.5 km) est=236.41 | GOIT shelved      | Nafoora–Zueitina Oil Pipeline · Replacement Pipeline | low | P5238
+  ratio   0.30 | GEM      59.0 km | drawn    195.6 km | merged=59.0 known=59.0 (None None) est=195.24 | GGIT operating    | Jubilee–Atuabo Gas Pipeline ·  | medium | P2208
+  ratio   0.31 | GEM      79.1 km | drawn    254.1 km | merged=79.1 known=79.1 (None None) est=253.8 | GGIT operating    | Sidi Aïssa-Boughezoul Gas Pipeline ·  | high | P6622
+  ratio   0.34 | GEM      15.0 km | drawn     44.7 km | merged=15.0 known=15.0 (15.0 km) est=44.69 | GOIT operating    | October-El-Tibeen Oil Pipeline ·  | medium | P7965
+  ratio   2.96 | GEM     700.0 km | drawn    236.7 km | merged=700.0 known=700.0 (700.0 km) est=236.98 | GOIT construction | Sirte-Ras Lanuf Terminal-Sidra Terminal Oil P ·  | low | P6433
+  ratio   2.91 | GEM     460.0 km | drawn    158.2 km | merged=460.0 known=460.0 (460.0 km) est=157.36 | GOIT operating    | Eni Kwale-Brass Oil Pipeline Network ·  | low | P0617
+  ratio   2.88 | GEM      50.0 km | drawn     17.3 km | merged=50.0 known=50.0 (50.0 km) est=17.3 | GOIT operating    | Pennington Oilfield-Pennington Export Termina ·  | low | P0624
+  ratio   0.35 | GEM      65.0 km | drawn    186.3 km | merged=65.0 known=65.0 (65.0 km) est=186.64 | GOIT construction | Rhoud El Baguel-Hassi Massaoud NGL Pipeline ·  | low | P7357
+  ratio   0.36 | GEM      55.0 km | drawn    152.3 km | merged=55.0 known=55.0 (55.0 km) est=151.85 | GOIT operating    | Brass Creek-Forcados Oil Pipeline ·  | low | P0614
+  ratio   2.53 | GEM     177.0 km | drawn     69.9 km | merged=177.0 known=177.0 (None None) est=69.73 | GGIT operating    | Waha-Nasser Gas Pipeline ·  | low | P1860
+
+Known vs estimate disagreement (known/estimate > 3 or < 1/3):
+  known      80.0 est     290.6 | merged 80.0 | drawn 290.8 | GGIT operating | Petroci Foxtrot Gas Pipeline ·  | P0472
+  known      49.5 est     327.6 | merged 49.5 | drawn 327.1 | GGIT operating | Obaiyed-Amreya Northern Gas Pipeline · Obaiyed-Tarek Gas Pipelin | P0474
+  known   5,246.0 est     525.7 | merged 5246.0 | drawn 526.6 | GGIT operating | Wafa-Mellitah Gas Pipeline · Pipeline 1 | P0484
+  known   1,300.0 est     361.3 | merged 1300.0 | drawn 362.8 | GGIT construction | Trans Nigeria Gas Pipeline · Phase 1: Ajaokuta–Kaduna– | P1313
+  known      25.0 est     249.6 | merged 25.0 | drawn 249.2 | GGIT operating | Khoms-Melita Pipeline ·  | P1789
+  known     177.0 est      13.3 | merged 177.0 | drawn 13.3 | GGIT operating | Farigh-Intesar Gas Pipeline ·  | P1861
+  known      16.0 est     245.7 | merged 16.0 | drawn 245.5 | GGIT operating | Oben-Ajaokuta Steel Gas Pipeline ·  | P1877
+  known     447.0 est      54.3 | merged 447.0 | drawn 54.3 | GGIT operating | Egbin Node-Alagbado Gas Pipeline ·  | P1879
+  known     210.0 est     805.0 | merged 210.0 | drawn 804.9 | GGIT operating | Medgaz Gas Pipeline · Offshore Segment (Beni Sa | P2055
+  known      59.0 est     195.2 | merged 59.0 | drawn 195.6 | GGIT operating | Jubilee–Atuabo Gas Pipeline ·  | P2208
+  known     614.0 est   2,460.6 | merged 614.0 | drawn 2,465.7 | GGIT proposed | African Renaissance Gas Pipeline ·  | P2249
+  known      75.0 est     485.3 | merged 75.0 | drawn 486.8 | GGIT operating | Salam–Matruh Terminal Gas Pipeline ·  | P3935
+  known      85.0 est     294.4 | merged 85.0 | drawn 295.0 | GGIT proposed | Genser Natural Gas Pipeline · Prestea-Edikan and Wassa | P4216
+  known     216.0 est      13.9 | merged 216.0 | drawn 13.9 | GGIT operating | Zohr–Al Gamil Pipelines · Pipeline 1 | P5132
+  known     210.0 est      13.9 | merged 210.0 | drawn 13.9 | GGIT operating | Zohr–Al Gamil Pipelines · Pipeline 2 | P6036
+  known      79.1 est     253.8 | merged 79.1 | drawn 254.1 | GGIT operating | Sidi Aïssa-Boughezoul Gas Pipeline ·  | P6622
+  known      58.3 est     272.4 | merged 58.3 | drawn 272.2 | GGIT operating | Bordj Ménail-Algiers Gas Pipeline ·  | P6623
+  known      70.0 est     283.2 | merged 70.0 | drawn 283.4 | GGIT operating | Raven-Western Desert Cmplex Gas Pipeline ·  | P6703
+  known     130.0 est     793.7 | merged 130.0 | drawn 795.3 | GGIT construction | NC 41-Mellitah Gas Pipeline ·  | P6708
+  known       8.5 est     749.3 | merged 8.5 | drawn 751.1 | GGIT construction | DP3–DP4–Sabratha Gas Pipeline · DP3–DP4 | P6716
+  known     320.0 est      67.4 | merged 320.0 | drawn 320.8 | GOIT operating | Sumed Oil Pipeline · Pipeline 1 | P0530
+  known      68.5 est     236.4 | merged 68.5 | drawn 236.6 | GOIT shelved | Nafoora–Zueitina Oil Pipeline · Replacement Pipeline | P5238
+  known      23.0 est       6.2 | merged 23.0 | drawn 6.2 | GOIT construction | Musturad-Huckstep Oil Pipeline ·  | P7914
+  known     108.0 est      14.8 | merged 108.0 | drawn 14.9 | GOIT operating | Idoho-Qua Iboe Terminal Oil Pipeline ·  | P0619
+  known      68.0 est     236.4 | merged 68.0 | drawn 236.6 | GOIT operating | Nafoora–Zueitina Oil Pipeline ·  | P5237
+  known      51.0 est     514.0 | merged 51.0 | drawn 515.1 | GOIT operating | North Hamada-El Feel Oil Pipeline ·  | P6444
+  known     107.0 est      21.9 | merged 107.0 | drawn 21.9 | GOIT operating | Sabratha-Mellitah Condensate Pipeline ·  | P6457
+
+Top 25 by site length:
+    5,660.0 | drawn  6,889.1 | proposed     | Nigeria-Morocco Gas Pipeline ·  | Nigeria,Benin,Togo,Ghana,Côte d'Ivoire,Liberia,Sierra Leone,Guinea,Gui | bbox lon -18.4..-1.4 lat 3.6..36.6 | https://www.gem.wiki/Nigeria-Morocco_Gas_Pipeline
+    5,246.0 | drawn    526.6 | operating    | Wafa-Mellitah Gas Pipeline · Pipeline 1 | Libya | bbox lon 10.0..12.2 lat 28.9..32.9 | https://www.gem.wiki/Wafa-Mellitah_gas_pipeline
+    4,128.0 | drawn  2,398.0 | shelved      | Trans-Sahara Gas Pipeline ·  | Nigeria,Niger,Algeria | bbox lon 3.3..8.5 lat 12.0..32.9 | https://www.gem.wiki/Trans-Sahara_Gas_Pipeline
+    3,187.7 | drawn  3,199.8 | proposed     | Nigeria–Libya Gas Pipeline ·  | Nigeria,Niger,Libya | bbox lon 5.7..13.0 lat 5.6..32.9 | https://www.gem.wiki/Nigeria%E2%80%93Libya_Gas_Pipeline
+    2,600.0 | drawn  2,079.7 | shelved      | GasNosu North–South Gas Pipeline ·  | Mozambique,South Africa | bbox lon 32.3..40.5 lat -25.9..-10.8 | https://www.gem.wiki/GasNosu_North%E2%80%93South_Gas_Pipeline
+    1,950.0 | drawn  1,889.7 | operating    | Niger–Benin Oil Pipeline ·  | Niger,Benin | bbox lon 2.6..13.3 lat 6.4..15.3 | https://www.gem.wiki/Niger%E2%80%93Benin_Oil_Pipeline
+    1,710.0 | drawn  1,554.4 | proposed     | Tazama Oil Pipeline · Parallel pipeline | Tanzania,Zambia | bbox lon 28.4..38.8 lat -13.8..-6.6 | https://www.gem.wiki/Tazama_Oil_Pipeline
+    1,710.0 | drawn  1,554.4 | operating    | Tazama Oil Pipeline ·  | Tanzania,Zambia | bbox lon 28.4..38.8 lat -13.8..-6.6 | https://www.gem.wiki/Tazama_Oil_Pipeline
+    1,600.0 | drawn  2,426.7 | operating    | Greater Nile Oil Pipeline ·  | South Sudan,Sudan | bbox lon 29.3..37.2 lat 8.5..19.4 | https://www.gem.wiki/Greater_Nile_Oil_Pipeline
+    1,500.0 | drawn  1,232.5 | cancelled    | Uganda–Kenya Crude Oil Pipeline (UKCOP) ·  | Uganda,Kenya | bbox lon 31.3..41.0 lat -2.0..1.5 | https://www.gem.wiki/Uganda%E2%80%93Kenya_Crude_Oil_Pipeline_(UKCOP)
+    1,443.0 | drawn  1,452.1 | construction | East African Crude Oil Pipeline (EACOP) ·  | Uganda,Tanzania | bbox lon 31.1..39.1 lat -5.4..1.5 | https://www.gem.wiki/East_African_Crude_Oil_Pipeline_(EACOP)
+    1,350.0 | drawn  1,094.8 | operating    | Maghreb-Europe Gas Pipeline ·  | Algeria,Morocco,Spain,Portugal | bbox lon -5.8..3.3 lat 32.9..36.1 | https://www.gem.wiki/Maghreb-Europe_Gas_Pipeline
+    1,300.0 | drawn    362.8 | construction | Trans Nigeria Gas Pipeline · Phase 1: Ajaokuta–Kaduna–Kano  | Nigeria | bbox lon 7.4..8.5 lat 9.1..12.0 | https://www.gem.wiki/Trans_Nigeria_Gas_Pipeline
+    1,274.7 | drawn  1,276.1 | shelved      | Uganda Tanzania Pipeline ·  | Uganda,Tanzania | bbox lon 30.5..39.2 lat -6.9..-0.7 | https://www.gem.wiki/Tanzania_Uganda_Pipeline
+    1,164.0 | drawn  1,024.6 | operating    | Libya Coastal Gas Pipeline ·  | Libya | bbox lon 12.2..20.3 lat 30.2..32.9 | https://www.gem.wiki/Libya_Coastal_Gas_Pipeline
+    1,080.0 | drawn  1,082.5 | operating    | Nigeria Crude and Oil Products Pipeline Netwo · Lagos-Kano Pipeline | Nigeria | bbox lon 3.2..8.5 lat 6.3..12.0 | 
+    1,077.3 | drawn  1,080.1 | proposed     | Lamu Port-South Sudan (LAPSSET) Pipeline · South Sudan–Lokichar Oil Pipel | South Sudan,Kenya | bbox lon 35.5..40.9 lat -2.3..2.4 | https://www.gem.wiki/Lamu_Port-South_Sudan_(LAPSSET)_Pipeline
+    1,070.0 | drawn  1,067.3 | operating    | Chad–Cameroon Oil Pipeline ·  | Chad,Cameroon | bbox lon 9.9..16.8 lat 2.9..8.5 | https://www.gem.wiki/Chad%E2%80%93Cameroon_Oil_Pipeline
+      989.0 | drawn    610.1 | operating    | Alrar-Hassi R'Mel LPG Pipeline ·  | Algeria | bbox lon 6.1..9.5 lat 28.4..31.5 | https://www.gem.wiki/Alrar-Hassi_R%27mel_LPG_Pipeline
+      986.1 | drawn    987.7 | shelved      | Sudan–Ethiopia Oil Pipeline ·  | Sudan,Ethiopia | bbox lon 32.0..38.7 lat 9.0..15.0 | https://www.gem.wiki/Sudan%E2%80%93Ethiopia_Oil_Pipeline
+      930.0 | drawn    685.2 | operating    | South Valley Gas Pipeline · SYSTEM/NETWORK INFO | Egypt | bbox lon 30.8..32.9 lat 24.1..29.8 | https://www.gem.wiki/South_Valley_Gas_Pipeline
+      865.0 | drawn    823.6 | operating    | Mozambique-South Africa Gas Pipeline ·  | Mozambique,South Africa | bbox lon 29.1..34.9 lat -26.6..-21.8 | https://www.gem.wiki/Mozambique-South_Africa_Gas_Pipeline
+      861.0 | drawn    781.4 | shelved      | GALSI Pipeline ·  | Algeria,Italy | bbox lon 7.9..10.6 lat 36.8..43.0 | https://www.gem.wiki/GALSI_Pipeline
+      851.0 | drawn    658.5 | proposed     | Lamu Port-South Sudan (LAPSSET) Pipeline · Lokichar–Lamu Oil Pipeline Seg | Kenya | bbox lon 31.6..35.7 lat 2.4..4.8 | https://www.gem.wiki/Lamu_Port-South_Sudan_(LAPSSET)_Pipeline
+      845.0 | drawn    470.8 | operating    | Medgaz Gas Pipeline · Onshore Segment (Hassi R'Mel-M | Algeria | bbox lon -0.0..3.2 lat 33.0..35.7 | https://www.gem.wiki/Medgaz_Gas_Pipeline
+
+Named checks:
+  [Medgaz] Medgaz Gas Pipeline · Onshore Segment (Mocta Douz–Beni Saf) | operating | L=120.0 (merged 120.0, known 120.0, est 121.87) | drawn 121.7 | Algeria | lon -1.27..-0.04 lat 35.31..35.61 | parts 1
+  [Medgaz] Medgaz Gas Pipeline · Offshore Segment (Beni Saf–Almería) | operating | L=210.0 (merged 210.0, known 210.0, est 805.04) | drawn 804.9 | Algeria,Spain | lon -0.26..5.98 lat 31.88..35.81 | parts 1
+  [Medgaz] Medgaz Gas Pipeline · Onshore Segment (Hassi R'Mel-Mocta Douz) | operating | L=845.0 (merged 845.0, known 845.0, est 470.66) | drawn 470.8 | Algeria | lon -0.04..3.25 lat 32.96..35.66 | parts 1
+  [Trans-Mediterranean] Trans-Mediterranean Gas Pipeline · Hassi R'Mel-Oued Safsaf Gas Pipeline (GO1) | operating | L=548.0 (merged 548.0, known 548.0, est 547.69) | drawn 547.2 | Algeria | lon 3.24..8.28 lat 32.95..34.77 | parts 1
+  [Trans-Mediterranean] Trans-Mediterranean Gas Pipeline · Hassi R'Mel-Oued Safsaf Gas Pipeline (GO2) | operating | L=548.0 (merged 548.0, known 548.0, est 547.69) | drawn 547.2 | Algeria | lon 3.24..8.28 lat 32.95..34.77 | parts 1
+  [Trans-Mediterranean] Trans-Mediterranean Gas Pipeline · Hassi R'Mel-Oued Safsaf Gas Pipeline (GO3) | operating | L=548.0 (merged 548.0, known 548.0, est 547.69) | drawn 547.2 | Algeria | lon 3.24..8.28 lat 32.95..34.77 | parts 1
+  [Trans-Mediterranean] Trans-Mediterranean Gas Pipeline · TTP: Phase 1 | operating | L=370.0 (merged 370.0, known 370.0, est 367.96) | drawn 367.9 | Algeria,Tunisia | lon 8.28..11.06 lat 34.77..37.02 | parts 1
+  [Trans-Mediterranean] Trans-Mediterranean Gas Pipeline ·  | operating | L=155.0 (merged 155.0, known 155.0, est 150.18) | drawn 150.0 | Tunisia,Italy | lon 11.06..12.54 lat 37.02..37.67 | parts 1
+  [Trans-Mediterranean] UNROUTED ('GGIT', 'Trans-Mediterranean Gas Pipeline', 'SYSTEM/NETWORK INFO', 'operating', 'Included in other ProjectID')
+  [Trans-Mediterranean] UNROUTED ('GGIT', 'Trans-Mediterranean Gas Pipeline', 'TTPC: Phase 2', 'operating', 'Capacity expansion only')
+  [Greenstream] Greenstream Gas Pipeline ·  | operating | L=520.0 (merged 520.0, known 520.0, est 522.47) | drawn 523.2 | Libya,Italy | lon 12.11..14.26 lat 32.91..37.05 | parts 1
+  [Nigeria-Morocco] Nigeria-Morocco Gas Pipeline ·  | proposed | L=5660.0 (merged 5660.0, known 5660.0, est 6878.48) | drawn 6,889.1 | Nigeria,Benin,Togo,Ghana,Côte d'Ivoire,Liberia,Sierra Leone,Guinea,Guinea-Bissau,The Gambia,Senegal,Mauritania,Morocco,Spain | lon -18.35..-1.45 lat 3.57..36.64 | parts 21
+  [Trans-Sahara] Trans-Sahara Gas Pipeline ·  | shelved | L=4128.0 (merged 4128.0, known 4128.0, est 2389.11) | drawn 2,398.0 | Nigeria,Niger,Algeria | lon 3.25..8.54 lat 11.99..32.94 | parts 1
+  [Nigeria–Libya] Nigeria–Libya Gas Pipeline ·  | proposed | L=3187.74 (merged 3187.74, known --, est 3187.74) | drawn 3,199.8 | Nigeria,Niger,Libya | lon 5.71..13.00 lat 5.57..32.91 | parts 1
+  [GasNosu] GasNosu North–South Gas Pipeline ·  | shelved | L=2600.0 (merged 2600.0, known 2600.0, est 2074.38) | drawn 2,079.7 | Mozambique,South Africa | lon 32.31..40.47 lat -25.85..-10.78 | parts 1
+  [Tazama] Tazama Oil Pipeline · Parallel pipeline | proposed | L=1710.0 (merged 1710.0, known 1710.0, est 1552.17) | drawn 1,554.4 | Tanzania,Zambia | lon 28.41..38.75 lat -13.79..-6.64 | parts 1
+  [Tazama] Tazama Oil Pipeline ·  | operating | L=1710.0 (merged 1710.0, known 1710.0, est 1552.17) | drawn 1,554.4 | Tanzania,Zambia | lon 28.41..38.75 lat -13.79..-6.64 | parts 1
+  [Niger–Benin] Niger–Benin Oil Pipeline ·  | operating | L=1950.0 (merged 1950.0, known 1950.0, est 1886.56) | drawn 1,889.7 | Niger,Benin | lon 2.58..13.29 lat 6.36..15.34 | parts 2
+  [Greater Nile] Greater Nile Oil Pipeline ·  | operating | L=1600.0 (merged 1600.0, known 1600.0, est 2419.67) | drawn 2,426.7 | South Sudan,Sudan | lon 29.33..37.25 lat 8.47..19.42 | parts 4
+  [Maghreb] Maghreb-Europe Gas Pipeline ·  | operating | L=1350.0 (merged 1350.0, known 1350.0, est 1095.72) | drawn 1,094.8 | Algeria,Morocco,Spain,Portugal | lon -5.76..3.25 lat 32.93..36.07 | parts 1
+  [Galsi] GALSI Pipeline ·  | shelved | L=861.0 (merged 861.0, known 861.0, est 780.93) | drawn 781.4 | Algeria,Italy | lon 7.92..10.61 lat 36.84..42.96 | parts 1
+  [Arab Gas] Arab Gas Pipeline · Arish-Taba Gas Pipeline | operating | L=250.0 (merged 250.0, known 250.0, est 235.72) | drawn 236.1 | Egypt | lon 33.87..34.83 lat 29.42..31.14 | parts 1
+  [Arab Gas] Arab Gas Pipeline · Taba-Aqaba Sea Gas Pipeline | operating | L=18.0 (merged 18.0, known 18.0, est 18.72) | drawn 18.7 | Egypt,Jordan | lon 34.83..35.01 lat 29.38..29.42 | parts 1
+  [EACOP] East African Crude Oil Pipeline (EACOP) ·  | construction | L=1443.0 (merged 1443.0, known 1443.0, est 1449.46) | drawn 1,452.1 | Uganda,Tanzania | lon 31.09..39.13 lat -5.38..1.46 | parts 4
+  [East African Crude] East African Crude Oil Pipeline (EACOP) ·  | construction | L=1443.0 (merged 1443.0, known 1443.0, est 1449.46) | drawn 1,452.1 | Uganda,Tanzania | lon 31.09..39.13 lat -5.38..1.46 | parts 4

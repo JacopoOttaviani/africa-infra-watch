@@ -270,6 +270,9 @@ def main():
           (DOCS / "data" / "debt.json").read_bytes() == (DATA / "debt.json").read_bytes(), True)
     check("docs/data/meta.json == data/meta.json", json.loads((DOCS / "data" / "meta.json").read_text()) == meta, True)
     for stem in feats:
+        if key_of[stem] in shared.NO_DOWNLOAD:     # drawn, not offered as a file
+            check(f"docs/data/{stem}.geojson is not published", (DOCS / "data" / f"{stem}.geojson").exists(), False)
+            continue
         check(f"docs/data/{stem}.geojson ships data/'s features",
               len(json.loads((DOCS / "data" / f"{stem}.geojson").read_text())["features"]), len(feats[stem]))
     cont = sum(c["total"].get(y_debt, 0) for c in debt["countries"].values())
@@ -370,15 +373,25 @@ def main():
     llms = (DOCS / "llms.txt").read_text(encoding="utf-8")
     dtpl = (ROOT / "dashboard.template.html").read_text(encoding="utf-8")
     mtpl = (ROOT / "map.template.html").read_text(encoding="utf-8")
-    afdb = feats["iati_afdb_finance"]
-    afdb_approx = sum(1 for f in afdb if f["properties"].get("geo_precision") != "1") / len(afdb)
     china_cty = ch["country_level"] / ch["records"]
     unrouted = meta["pipelines"]["unrouted"] / (meta["pipelines"]["records"] + meta["pipelines"]["unrouted"])
-    share("noscript: Chinese projects at a country point", noscript, r"about (a \w+) of the Chinese-financed", china_cty)
-    share("llms.txt: Chinese projects at a country point", llms, r"kept; about (a \w+) have no published location", china_cty)
-    share("dashboard: Chinese projects at a country point", dtpl, r"about (a \w+) of the records have no published location", china_cty)
-    share("noscript: AfDB locations approximate", noscript, r"about (two thirds|half|a third) of AfDB locations", afdb_approx)
-    share("llms.txt: AfDB locations approximate", llms, r"About (two thirds|half|a third) of AfDB locations", afdb_approx)
+    # the crawler text states these two as computed percentages, of markers
+    # (one per activity, as the map draws them), not of location points; the
+    # dashboard fills its own from the payload at run time
+    fl = mp["finance"]
+    afdb_marks = [pr for pr, l in zip(col(fl, "prec"), col(fl, "ln")) if l == "AfDB"]
+    afdb_marker_approx = sum(1 for pr in afdb_marks if (pr or 0) > 0) / len(afdb_marks)
+
+    def pct(label, text, pat, actual):
+        m = re.search(pat, text, re.S)
+        if not m:
+            check(label, "pattern not found", actual, ok=False)
+            return
+        check(f"{label}: {m.group(1)}% (the data: {actual:.1%})", int(m.group(1)), round(100 * actual))
+    pct("noscript: Chinese projects at a country point", noscript, r"about (\d+)% of the Chinese-financed", china_cty)
+    pct("llms.txt: Chinese projects at a country point", llms, r"about (\d+)% have no published location", china_cty)
+    pct("noscript: AfDB markers approximate", noscript, r"about (\d+)%\s+of AfDB locations", afdb_marker_approx)
+    pct("llms.txt: AfDB markers approximate", llms, r"About (\d+)% of AfDB locations", afdb_marker_approx)
     share("llms.txt: pipeline segments without a route", llms, r"\(about (a \w+) of GEM's African segments\)", unrouted)
     share("map: pipeline segments without a route", mtpl, r"About (a \w+) of GEM's African segments carry no route", unrouted)
     share("map: Mattei multi-country", mtpl, r"(A third) are programmes across several countries",

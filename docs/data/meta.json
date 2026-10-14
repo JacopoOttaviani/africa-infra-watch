@@ -1,16 +1,17 @@
 {
   "assets": {
-    "fetched": "2026-10-12",
-    "fresh": "24 Aug 2026",
-    "release": "2026-08-v2",
-    "records": 4274
+    "fetched": "2026-10-14",
+    "fresh": "24 Sep 2026",
+    "release": "2026-09",
+    "records": 4295
   },
   "finance": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "datasets": 57,
-    "records": 8087,
-    "activities": 1710,
-    "fresh": null
+    "records": 7953,
+    "activities": 1683,
+    "fresh": null,
+    "budget_support": 37
   },
   "ground": {
     "fetched": "2026-10-12",
@@ -18,57 +19,73 @@
     "fresh": null
   },
   "pipelines": {
-    "fetched": "2026-10-12",
-    "fresh": null,
+    "fetched": "2026-10-14",
+    "fresh": "19 Mar 2026",
     "release": "GGIT 2025-11 · GOIT 2026-07",
-    "records": 324,
-    "unrouted": 176
+    "records": 323,
+    "unrouted": 177,
+    "length_fixes": 4,
+    "route_drops": 1
   },
   "cables": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "fresh": null,
     "records": 81,
-    "landing_points": 282
+    "landing_points": 282,
+    "landing_sites": 127,
+    "length_estimated": 9
   },
   "finance_wb": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "fresh": null,
     "datasets": 52,
-    "records": 10255,
-    "activities": 1121
+    "records": 10024,
+    "activities": 890,
+    "budget_support": 235
   },
   "china": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "fresh": "Nov 2023 · to 2021",
     "release": "GCDF 3.0 · GeoGCDF v3.0.1",
-    "records": 2324,
-    "footprints": 894,
-    "precise": 1168,
+    "records": 2345,
+    "footprints": 892,
+    "precise": 1166,
     "approximate": 728,
-    "country_level": 428,
-    "unlocated": 26,
+    "country_level": 451,
+    "unlocated": 2,
     "umbrella": 835,
     "pledges": 489,
     "mislinked": 1,
-    "not_infrastructure": 5674
+    "not_infrastructure": 5674,
+    "acquisitions": 3,
+    "commodity_collateral": 242,
+    "commodity_collateral_usd": 45439765559
   },
   "eu": {
-    "fetched": "2026-10-12",
-    "fresh": null,
-    "datasets": 58,
-    "records": 1992,
-    "contracts": 1565,
-    "decisions": 147,
-    "decisions_folded": 433,
-    "eib": 280,
-    "named_place": 584,
-    "country_point": 1089,
-    "regional": 319,
+    "fetched": "2026-10-14",
+    "fresh": "30 Jan 2025",
+    "datasets": 62,
+    "records": 2008,
+    "contracts": 1674,
+    "decisions": 137,
+    "decisions_folded": 458,
+    "eib": 197,
+    "named_place": 631,
+    "country_point": 1044,
+    "regional": 333,
     "unplaced": 0,
-    "eur_usd": 1.1206
+    "eur_usd": 1.1206,
+    "generated": {
+      "INTPA": "2026-09-29",
+      "NEAR": "2025-01-30",
+      "EIB": "2025-05-16"
+    },
+    "envelopes_dropped": 7,
+    "eib_left_out": 45,
+    "eib_other_funder": 38
   },
   "mattei": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "fresh": null,
     "records": 76,
     "stages": {
@@ -83,7 +100,7 @@
     "country_point": 24,
     "multi_country": 26,
     "with_amount": 71,
-    "total_eur": 4352135431,
+    "total_eur": 4388635431,
     "partner_countries": 18,
     "eur_usd": 1.1206,
     "continent_point": [
@@ -92,7 +109,7 @@
     ]
   },
   "russia": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "ids_updated": "2025-12-03",
     "data_to": 2024,
     "countries": 34,
@@ -100,17 +117,17 @@
     "nuclear": 15
   },
   "turkey": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 4298,
     "ids_updated": "2025-12-03",
     "data_to": 2024,
     "works": 58,
-    "gem": 13
+    "gem": 15
   },
   "italy": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 10068,
@@ -122,11 +139,11 @@
     "cables": 8
   },
   "china_profile": {
-    "fetched": "2026-10-12",
-    "projects": 2324,
+    "fetched": "2026-10-14",
+    "projects": 2345,
     "ids_updated": "2025-12-03",
     "data_to": 2024,
-    "gem": 64,
+    "gem": 62,
     "pipelines": 9,
     "cables": 9
   },
@@ -138,7 +155,7 @@
     "creditors": 137
   },
   "germany_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 28650,
@@ -149,7 +166,7 @@
     "cables": 1
   },
   "usa_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 133146,
@@ -160,16 +177,16 @@
     "cables": 11
   },
   "eu_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 22114,
     "ids_updated": "2025-12-03",
     "data_to": 2024,
-    "layer_records": 1992
+    "layer_records": 2008
   },
   "france_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 39097,
@@ -180,18 +197,18 @@
     "cables": 15
   },
   "spain_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 12494,
     "ids_updated": "2025-12-03",
     "data_to": 2024,
     "gem": 13,
-    "pipelines": 6,
+    "pipelines": 5,
     "cables": 1
   },
   "japan_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 32502,
@@ -202,7 +219,7 @@
     "cables": 0
   },
   "gulf_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 6010,
@@ -213,7 +230,7 @@
     "cables": 18
   },
   "nordics_profile": {
-    "fetched": "2026-10-12",
+    "fetched": "2026-10-14",
     "crs_from": 2018,
     "crs_to": 2024,
     "crs_activities": 18216,

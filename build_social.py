@@ -228,14 +228,15 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     for i, word in enumerate(SITE_NAME.split()):   # one word a line
         out.append(f'<text x="62" y="{200 + 76 * i}" class="title">{word}</text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
-    out.append('<text x="64" y="430" class="sub">the continent, from ten open datasets.</text>')
+    out.append('<text x="64" y="430" class="sub">the continent, from ten public datasets.</text>')
 
     n_a, n_f, n_g, n_c, n_e = (len(assets["rows"]), len(finance["rows"]), len(ground["rows"]),
                                len(china["rows"]), len(eu["rows"]))
     y = 466
     for glyph, num, src in (
         ("circle", f"{n_a:,} power units", "Global Energy Monitor"),
-        ("rect", f"{n_f + n_e:,} AfDB, World Bank and EU projects", "via IATI"),
+        # two layers, two counts: the bank projects and the EU's own records are never added
+        ("rect", f"{n_f:,} AfDB and World Bank projects · {n_e:,} EU records", "via IATI"),
         ("tri", f"{n_c:,} Chinese-financed projects", "AidData, 2000–2021"),
         ("line", f"{n_g:,} construction works", "OpenStreetMap"),
     ):
