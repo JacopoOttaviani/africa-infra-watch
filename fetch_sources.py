@@ -514,51 +514,66 @@ def fetch_osm(retries=5):
     locally against the same country polygons the dashboard draws — which
     removes the Turkey/Spain/Gulf overspill a raw bbox count suffers from.
     """
-    # Calibrated against the mirrors: rail and aeroway are cheap enough for a
-    # single continental bbox, but the road regex over the whole continent
-    # times out (504). Roads therefore go band by band.
-    AFRICA_BBOX = "-36,-18,39,52"
-    queries = [
-        ("rail", f'way["railway"~"^(construction|proposed)$"]({AFRICA_BBOX});'),
-        # a runway or terminal outline under works is aeroway=construction;
-        # a whole new airport is usually landuse=construction with
-        # construction=aerodrome, or construction:aeroway=*
-        ("air", f'way["aeroway"~"^(construction|proposed)$"]({AFRICA_BBOX});'
-                f'way["construction"="aerodrome"]({AFRICA_BBOX});'
-                f'way["construction:aeroway"]({AFRICA_BBOX});'
-                f'way["proposed:aeroway"]({AFRICA_BBOX});'),
-    ]
+    # Every query covers a latitude band of the continent's box, so one the
+    # mirrors keep timing out on can be split and asked again.
+    def band(kind, lo, hi):
+        box = f"({lo},-18,{hi},52)"
+        body = {
+            "rail": f'way["railway"~"^(construction|proposed)$"]{box};',
+            # a runway or terminal outline under works is aeroway=construction;
+            # a whole new airport is usually landuse=construction with
+            # construction=aerodrome, or construction:aeroway=*
+            "air": (f'way["aeroway"~"^(construction|proposed)$"]{box};'
+                    f'way["construction"="aerodrome"]{box};'
+                    f'way["construction:aeroway"]{box};'
+                    f'way["proposed:aeroway"]{box};'),
+            "road": (f'way["highway"="construction"]["construction"~"^({SIGNIFICANT})$"]{box};'
+                     f'way["highway"="proposed"]["proposed"~"^({SIGNIFICANT})$"]{box};'),
+        }[kind]
+        return (f"{kind} {lo:g}..{hi:g}", body, (kind, lo, hi))
+
+    # rail and aeroway are cheap enough for one continental band; the road
+    # regex over the whole continent times out (504), so roads start in bands
+    queries = [band("rail", -36.0, 39.0), band("air", -36.0, 39.0)]
     lat = -36.0
     while lat < 39.0:
         hi = min(lat + 7.5, 39.0)
-        queries.append((
-            f"road {lat:.0f}..{hi:.0f}",
-            f'way["highway"="construction"]["construction"~"^({SIGNIFICANT})$"]'
-            f'({lat},-18,{hi},52);'
-            f'way["highway"="proposed"]["proposed"~"^({SIGNIFICANT})$"]'
-            f'({lat},-18,{hi},52);'))
+        queries.append(band("road", lat, hi))
         lat = hi
 
-    raw = []
-    for label, body in queries:
+    # A band the mirrors keep timing out on is split in two and queued again,
+    # down to bands of under two degrees; past that the fetch stops without
+    # writing, so a gap never replaces a complete layer.
+    raw, seen = [], set()
+    while queries:
+        label, body, where = queries.pop(0)
         q = f"[out:json][timeout:280];({body});out tags geom;"
         print(f"OSM  {label}")
         res = None
-        for attempt in range(retries + 1):
+        # a wide band gets three tries before it is split; the narrowest, all of them
+        tries = retries + 1 if where[2] - where[1] <= 2 else 3
+        for attempt in range(tries):
             ep = OVERPASS_ENDPOINTS[attempt % len(OVERPASS_ENDPOINTS)]
             try:
                 res = json.loads(get(ep, timeout=320, data=q.encode()))
                 break
             except Exception as e:                           # noqa: BLE001
                 print(f"  ! {ep.split('/')[2]} attempt {attempt + 1}: {e}")
-                if attempt < retries:
+                if attempt < tries - 1:
                     wait = 10 * (2 ** min(attempt, 3))
                     print(f"    backing off {wait}s, rotating mirror")
                     time.sleep(wait)
         if res is None:
-            print(f"  !! GIVING UP on {label}")
-            continue
-        got = res.get("elements", [])
+            kind, lo, hi = where
+            if hi - lo > 2:
+                mid = round((lo + hi) / 2, 2)
+                print(f"  !! {label} failed; splitting it into {lo:g}..{mid:g} and {mid:g}..{hi:g}")
+                queries[:0] = [band(kind, lo, mid), band(kind, mid, hi)]
+                continue
+            raise SystemExit(f"OSM: {label} failed on every mirror; nothing written, the previous layer stays")
+        # a way that crosses a band's edge comes back from both bands
+        got = [el for el in res.get("elements", []) if el.get("id") not in seen]
+        seen.update(el.get("id") for el in got)
         raw.extend(got)
         print(f"     +{len(got):,} ways (raw, pre-clip)")
         time.sleep(3)

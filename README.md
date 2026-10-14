@@ -78,7 +78,7 @@ as hexagons.
 | Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,295 power units | what asset is being built |
 | Finance | African Development Bank, IATI 2.03 activity files | 1,683 projects | who is paying, and how much |
 | Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 890 projects | the same, for the other big multilateral lender |
-| Ground truth | OpenStreetMap via Overpass | 3,680 works | what has physically broken ground |
+| Ground truth | OpenStreetMap via Overpass | 3,700 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 323 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
 | Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,345 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
