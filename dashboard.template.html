@@ -97,6 +97,20 @@
   input[type=search]{width:100%;padding:8px 10px 8px 30px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink);
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371827A' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");background-repeat:no-repeat;background-position:9px 50%}
   input[type=search]::placeholder{color:var(--ink-3)}
+  /* find: countries and projects whose name matches what is typed */
+  .qlist{margin-top:6px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);max-height:min(430px,58vh);overflow-y:auto;scrollbar-width:thin}
+  .qlist:focus{outline:none}
+  .qlist .qh{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:9px 10px 3px}
+  .qopt{display:grid;grid-template-columns:16px 1fr;gap:9px;align-items:center;padding:6px 10px;cursor:pointer}
+  .qopt[aria-selected="true"]{background:var(--accent-soft)}
+  .qopt .g{width:16px;height:16px;display:flex;align-items:center;justify-content:center;color:var(--ink-2)}
+  .qopt .g svg.pin{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+  .qopt .t{min-width:0;line-height:1.25}
+  .qopt b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;font-size:12.5px;overflow-wrap:anywhere}
+  .qopt b mark{background:none;color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+  .qopt i{display:block;font-style:normal;font-size:11px;color:var(--ink-3);margin-top:1px}
+  .qlist .qnone,.qlist .qfoot{font-size:11px;color:var(--ink-3);padding:8px 10px;line-height:1.4}
+  .qlist .qfoot{border-top:1px solid var(--rule-soft)}
 
   /* source cards, layers and lenders alike, carry no colour: on the map colour
      means status, so the shape alone names the source and the icon takes the text colour */
@@ -480,7 +494,9 @@
     </div>
 
     <div class="panel">
-      <input type="search" id="q" placeholder="Search projects, owners, places…" aria-label="Search project names, owners and places">
+      <input type="search" id="q" placeholder="Find a country or project…" aria-label="Find a country or project, or filter the dashboard by any word"
+        role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="qlist" autocomplete="off" spellcheck="false">
+      <div class="qlist" id="qbox" tabindex="-1" hidden><div id="qlist" role="listbox" aria-label="Countries and projects"></div><div id="qnote"></div></div>
     </div>
 
     <div class="panel">
@@ -2039,6 +2055,180 @@ el("q").oninput = e => {
   clearTimeout(qt);
   qt = setTimeout(()=>{ S.q = e.target.value.trim().toLowerCase(); apply(); }, 160);
 };
+
+/* ---------------- find a country or project ----------------
+   As on the map: the box still filters by any word as you type; under it a
+   list offers the countries and the projects whose name matches. A country
+   becomes the country filter and is framed; a project is selected and the
+   map flies to its marker, after switching back on whatever filter hides it.
+   Either way the typed filter is cleared. The units of one power plant are
+   one entry, and works OpenStreetMap leaves unnamed are not offered. */
+const Q_COUNTRIES = 3, Q_PROJECTS = 8;
+const COUNTRY_ALIAS = {CD:"democratic republic of the congo drc congo kinshasa zaire", CG:"congo brazzaville",
+  CI:"ivory coast", CV:"cape verde", SZ:"swaziland", GM:"gambia", EH:"sahrawi"};
+const PIN = `<svg class="pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.7-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 15.3 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.3"/></svg>`;
+let QIX = null, qOpts = [], qAct = -1;
+function qIndex(){
+  if(QIX) return QIX;
+  const isos = new Set();
+  for(const r of ALL) for(const i of (r.isos||[r.iso])) if(i) isos.add(i);
+  const countries = [...isos].map(iso => ({iso, n:NAMES[iso]||iso, f:foldName((NAMES[iso]||iso)+" "+(COUNTRY_ALIAS[iso]||""))}));
+  /* a size normaliser per layer, so plants, loans and cables rank together */
+  const p95 = {};
+  for(const L of LAYER_ORDER){
+    const v = ALL.filter(r=>r.layer===L && r.size!=null).map(r=>r.size).sort((a,b)=>a-b);
+    p95[L] = v.length ? v[Math.floor(v.length*0.95)] || 1 : 1;
+  }
+  const projects = [], plants = new Map();
+  for(const r of ALL){
+    if(!r.ref.name) continue;
+    const k = r.layer==="assets" ? r.ref.pid || r.name : null, p = k && plants.get(k);
+    if(p){ p.units.push(r); continue; }
+    const o = {r, units:[r], f:foldName(r.name)};
+    projects.push(o); if(k) plants.set(k, o);
+  }
+  return (QIX = {countries, projects, p95});
+}
+/* what the filters show, leaving out the typed words the list replaces */
+const qShown = r => { const was = S.q; S.q = ""; const ok = pass(r); S.q = was; return ok; };
+function qCount(iso){
+  const was = S.q; S.q = ""; let n = 0;
+  for(const r of ALL) if((r.isos ? r.isos.includes(iso) : r.iso===iso) && passBut(r, "country")) n++;
+  S.q = was; return n;
+}
+/* a plant opens its largest unit the filters show, else its largest unit */
+const bySize = (a,b) => (b.size||0)-(a.size||0);
+const qUnit = o => o.units.length===1 ? o.r : (o.units.filter(qShown).sort(bySize)[0] || [...o.units].sort(bySize)[0]);
+/* 0 the name starts with the query, 1 a word does, 2 it sits inside a word; null when a word is missing */
+function qMatch(f, toks, whole){
+  for(const t of toks) if(!f.includes(t)) return null;
+  if(f.startsWith(whole)) return 0;
+  return f.split(/[^\p{L}\p{N}]+/u).some(w => w.startsWith(toks[0])) ? 1 : 2;
+}
+/* underline the typed words, when folding kept the name's length */
+function qMark(name, toks){
+  const f = foldName(name);
+  if(f.length!==name.length) return esc(name);
+  const rs = toks.map(t => [f.indexOf(t), t.length]).filter(x => x[0]>=0).map(([i,n]) => [i, i+n]).sort((a,b)=>a[0]-b[0]);
+  let out = "", at = 0;
+  for(const [a,b] of rs){
+    if(b<=at) continue;
+    const s = Math.max(a, at);
+    out += esc(name.slice(at, s)) + `<mark>${esc(name.slice(s, b))}</mark>`; at = b;
+  }
+  return out + esc(name.slice(at));
+}
+function qRender(){
+  const raw = el("q").value.trim(), whole = foldName(raw).replace(/\s+/g, " ");
+  if(whole.length<2){ qClose(); return; }
+  const toks = whole.split(" "), ix = qIndex(), cs = [], ps = [];
+  for(const c of ix.countries){ const m = qMatch(c.f, toks, whole); if(m!=null) cs.push({c, m}); }
+  for(const p of ix.projects){ const m = qMatch(p.f, toks, whole); if(m!=null) ps.push({p, m, s:(p.r.size||0)/ix.p95[p.r.layer]}); }
+  cs.sort((a,b) => a.m-b.m || a.c.n.localeCompare(b.c.n));
+  ps.sort((a,b) => a.m-b.m || b.s-a.s || a.p.r.name.length-b.p.r.name.length);
+  const nC = Math.min(cs.length, Q_COUNTRIES);
+  qOpts = [...cs.slice(0, nC).map(x => ({c:x.c})), ...ps.slice(0, Q_PROJECTS).map(x => ({p:x.p, r:qUnit(x.p)}))];
+  const row = (o, i) => `<div class="qopt" role="option" id="qo${i}" data-i="${i}" aria-selected="false">` + (o.c
+    ? `<span class="g">${PIN}</span><span class="t"><b>${qMark(o.c.n, toks)}</b><i>Country · ${fmt(qCount(o.c.iso))} records with these filters</i></span>`
+    : `<span class="g">${glyphOf(o.r)(statusColor(o.r.status))}</span><span class="t"><b>${qMark(o.r.name, toks)}</b>`
+      + `<i>${esc(o.r.country)} · ${esc(twinSource(o.r))}${o.p.units.length>1 ? ` · ${fmt(o.p.units.length)} units` : ""}${qShown(o.r) ? "" : " · hidden by the filters; opening it lifts them"}</i></span>`) + `</div>`;
+  let html = "";
+  if(nC) html += `<div role="group" aria-label="Countries"><div class="qh" aria-hidden="true">Countries</div>${qOpts.slice(0, nC).map(row).join("")}</div>`;
+  if(qOpts.length>nC) html += `<div role="group" aria-label="Projects"><div class="qh" aria-hidden="true">Projects${ps.length>Q_PROJECTS ? ` · ${Q_PROJECTS} of ${fmt(ps.length)}` : ""}</div>`
+    + qOpts.slice(nC).map((o,j) => row(o, nC+j)).join("") + `</div>`;
+  el("qlist").innerHTML = html;
+  el("qnote").innerHTML = (qOpts.length ? "" : `<p class="qnone">No country or project name contains “${esc(raw)}”.</p>`)
+    + `<p class="qfoot">The dashboard meanwhile shows only the records that mention “${esc(raw)}”.</p>`;
+  const box = el("qbox");
+  box.hidden = false; box.scrollTop = 0;
+  el("q").setAttribute("aria-expanded", "true");
+  qSet(qOpts.length ? 0 : -1, false);
+}
+function qSet(i, scroll=true){
+  qAct = i;
+  el("qlist").querySelectorAll(".qopt").forEach(o => o.setAttribute("aria-selected", String(+o.dataset.i===i)));
+  const a = i>=0 && el("qo"+i);
+  if(a){ el("q").setAttribute("aria-activedescendant", a.id); if(scroll) a.scrollIntoView({block:"nearest"}); }
+  else el("q").removeAttribute("aria-activedescendant");
+}
+function qClose(){
+  const box = el("qbox");
+  if(box.hidden) return;
+  box.hidden = true; el("qlist").innerHTML = ""; qOpts = []; qAct = -1;
+  el("q").setAttribute("aria-expanded", "false"); el("q").removeAttribute("aria-activedescendant");
+}
+/* switch back on whatever hides the record: its side of the Show switch, its
+   layer or lender, its status, and the country and sector filters */
+function qReveal(r){
+  if(qShown(r)) return;
+  if(!onSide(r)) S.side = "all";
+  if(r.lender){ S.lenders[r.lender] = true; syncLayers(); } else S.layers[r.layer] = true;
+  S.status.add(r.status);
+  if(!inCountry(r)) S.country = "";
+  if(S.sector && r.sector!==S.sector) S.sector = "";
+}
+/* how close to fly, as a canvas scale: deep enough for the record's own
+   marker to leave its donut, or, when the donut holds only the same project
+   (the units of one plant, records on the very same spot), the shallowest
+   donut that holds only them; never past the map's own limit, where the ring
+   marks the donut that holds the record. Never shallower than the map view
+   flies (about 104 pixels a degree, Leaflet zoom 6.2 here). Leaflet's zoom z
+   is lzoom(): base·k = 2^z·256/180 pixels a degree */
+const qSame = (r, m) => m.rec===r || (m.rec.lon===r.lon && m.rec.lat===r.lat)
+  || (r.layer==="assets" && m.rec.layer==="assets" && m.rec.ref.pid===r.ref.pid);
+function qK(r){
+  const kOf = z => Math.pow(2, z)*256/(180*base);
+  let p = S.cluster && r._m && r._m.__parent, z = 6.2;
+  if(p && p._zoom!=null){
+    const own = c => c.getAllChildMarkers().every(m => qSame(r, m));
+    if(!own(p)) z = Math.max(z, p._zoom+0.55);
+    else { while(p.__parent && p.__parent._zoom!=null && own(p.__parent)) p = p.__parent; z = Math.max(z, p._zoom); }
+  }
+  return Math.min(KMAX, Math.max(view.k, kOf(z)));
+}
+/* a project is selected as a click on its marker selects it; a pipeline or a
+   cable frames its countries, as a click does, and a point flies to itself */
+function qPick(r){
+  S.picked = r; renderSel(); renderTable(); draw();
+  if(UNCLUSTERED.has(r.layer)) zoomToIsos(r.isos || [r.iso]);
+  else animateTo(r.lon, r.lat, qK(r));
+  el("sel").scrollIntoView({block:"nearest"});
+}
+function qChoose(i){
+  const o = qOpts[i];
+  if(!o) return;
+  qClose(); clearTimeout(qt);
+  S.q = ""; el("q").value = ""; el("q").blur();
+  railToggle(false);
+  if(o.c){ setCountry(o.c.iso); return; }
+  const was = S.country;
+  qReveal(o.r);
+  /* the country is in the address (#c=), which only setCountry writes */
+  if(S.country!==was) try{ history.replaceState(null, "", location.pathname+location.search); }catch{ /* sandboxed */ }
+  apply(); qPick(o.r);
+}
+el("q").addEventListener("input", qRender);
+el("q").addEventListener("focus", () => { if(el("q").value.trim()) qRender(); });
+/* the box closes when the focus leaves both it and the list: a click on an
+   option keeps the focus in the box, one on the list's scrollbar moves it to
+   the list (tabindex -1), so either can be used without the list closing */
+const qAway = e => e.relatedTarget!==el("q") && !el("qbox").contains(e.relatedTarget);
+el("q").addEventListener("blur", e => { if(qAway(e)) qClose(); });
+el("qbox").addEventListener("blur", e => { if(qAway(e)) qClose(); });
+el("q").addEventListener("keydown", e => {
+  const open = !el("qbox").hidden;
+  if(e.key==="ArrowDown" || e.key==="ArrowUp"){
+    e.preventDefault();
+    if(!open) qRender();
+    else if(qOpts.length) qSet((qAct + (e.key==="ArrowDown" ? 1 : -1) + qOpts.length) % qOpts.length);
+  }
+  else if(e.key==="Enter" && open && qAct>=0){ e.preventDefault(); qChoose(qAct); }
+  else if(e.key==="Escape" && open){ e.preventDefault(); qClose(); }
+});
+el("qbox").addEventListener("mousedown", e => { if(e.target.closest(".qopt")) e.preventDefault(); });
+el("qbox").addEventListener("click", e => { const o = e.target.closest(".qopt"); if(o) qChoose(+o.dataset.i); });
+el("qbox").addEventListener("mousemove", e => { const o = e.target.closest(".qopt"); if(o && +o.dataset.i!==qAct) qSet(+o.dataset.i, false); });
+
 el("reset").onclick = () => {
   S.layers = Object.fromEntries(LAYER_ORDER.map(k=>[k,true])); S.lenders = allLendersOn();
   S.status=new Set(STATUS_ORDER); S.country=""; S.sector=""; S.q=""; S.side="all";

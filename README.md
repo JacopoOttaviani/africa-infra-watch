@@ -29,7 +29,15 @@ the amount the Government's portal states), thin lines
 (construction ways traced in OpenStreetMap), haloed lines (oil and gas pipeline
 routes) and lines ending in dots (submarine cables, dots at their African
 landing points). Filters, a viewport summary, a "largest in view" list, per-record
-detail cards linking back to the source record, and a shareable URL hash. A
+detail cards linking back to the source record, and a shareable URL hash. The
+**search box** at the top of the rail, on map and dashboard alike, still filters
+by any word as you type (`q=`), and lists the countries and projects whose name
+matches (accents folded, a few aliases such as "Ivory Coast" or "DRC"; one entry
+per power plant; OpenStreetMap works without a name left out). A country
+becomes the country filter and is framed; a project is flown to and its card
+opened, as a click on its marker would, after switching back on any filter that
+hid it. The flight goes deep enough for the marker to leave its donut, up to
+town scale (`Q_ZOOM`). A
 **Show** switch above the filters, on map and dashboard alike (`show=built` /
 `show=paid` in the map's hash), limits the view to what is built or to the
 lenders' own records, so one project is not drawn twice; the panel it hides
