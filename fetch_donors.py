@@ -845,7 +845,7 @@ CHINESE_OWNER = re.compile(
 
 def fetch_china():
     import collections
-    print("china   … AidData GCDF 3.0 as the map draws it; World Bank IDS counterpart 730 (bilateral and all PPG); "
+    print("china   … AidData CLG 1.0 as the map draws it; World Bank IDS counterpart 730 (bilateral and all PPG); "
           "GEM, pipelines and cables from the site's own layers")
     recs = []
     for f in json.loads((DATA / "aiddata_china_finance.geojson").read_text())["features"]:
@@ -856,11 +856,12 @@ def fetch_china():
                      "sector_name": p["sector_name"], "flow": p["flow_simple"], "flow_class": p["flow_class"],
                      "intent": p["intent"], "funders": p["funders"], "funder_types": p["funder_types"],
                      "implementers": p["implementers"], "cofinanced": p["cofinanced"],
-                     "usd_2021": p["amount_usd_2021"], "usd_nominal": p["amount_nominal_usd"], "estimated": p["amount_estimated"],
+                     # constant dollars of meta.china.base_year; None for a stalled record
+                     "usd_const": p["amount_usd_const"], "usd_nominal": p["amount_nominal_usd"], "estimated": p["amount_estimated"],
                      "year": p["commitment_year"], "start": p["start_year"], "completion": p["completion_year"],
                      "maturity": p["maturity_years"], "rate": p["interest_rate"], "grace": p["grace_years"],
                      "grant_element": p["grant_element"], "distress": p["financial_distress"], "url": p["url"]})
-    amt = lambda r: r["usd_2021"] or 0
+    amt = lambda r: r["usd_const"] or 0
     by_year = collections.defaultdict(lambda: {"n": 0, "usd": 0.0})
     by_c = collections.defaultdict(lambda: {"n": 0, "usd": 0.0, "loans": 0.0})
     by_sec = collections.defaultdict(lambda: {"n": 0, "usd": 0.0})
@@ -888,8 +889,9 @@ def fetch_china():
         d["type"] = next((r["funder_types"] for r in recs if fu in (r["funders"] or "")), "")
     china_meta = (load_meta().get("china") or {})
     aid = {
-        "source": "AidData, Global Chinese Development Finance Dataset 3.0 with the Geospatial GCDF 3.0 footprints, as the map draws it",
-        "url": "https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0",
+        "source": "AidData, China's Global Loans and Grants Dataset 1.0, located with GCDF 3.0 and its Geospatial GCDF 3.0 footprints, as the map draws it",
+        "url": "https://www.aiddata.org/data/chinas-global-loans-and-grants-dataset-1-0",
+        "base_year": china_meta.get("base_year"), "new_records": china_meta.get("new_records"),
         "licence": "ODC-By 1.0 (footprints ODbL)", "release": china_meta.get("release"), "fresh": china_meta.get("fresh"),
         "from": min(by_year), "to": max(by_year), "n": len(recs), "usd": round(sum(amt(r) for r in recs) / 1e6, 1),
         "loans_n": sum(1 for r in recs if r["flow"] == "Loan"), "loans_usd": round(sum(amt(r) for r in recs if r["flow"] == "Loan") / 1e6, 1),
@@ -909,7 +911,7 @@ def fetch_china():
         "left_out": {k: china_meta.get(k) for k in ("umbrella", "pledges", "not_infrastructure", "unlocated")},
         "footprints": china_meta.get("footprints"),
     }
-    print(f"   AidData: {len(recs):,} projects {aid['from']}–{aid['to']}, USD {aid['usd'] / 1000:,.1f} bn (2021 USD); "
+    print(f"   AidData: {len(recs):,} projects {aid['from']}–{aid['to']}, USD {aid['usd'] / 1000:,.1f} bn ({aid['base_year']} USD); "
           f"{aid['loans_n']:,} loans USD {aid['loans_usd'] / 1000:,.1f} bn; {len(by_c)} countries")
 
     ids_all = ids_pack("730", "China", since=2000, kind="DPPG")

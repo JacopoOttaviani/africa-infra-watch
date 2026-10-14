@@ -37,7 +37,7 @@ sys.path.insert(0, str(ROOT))
 
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
 from build_dashboard import build_china, build_eu, build_lookup, build_mattei  # noqa: E402
-from shared import BRAND, DATA, DOCS, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W  # noqa: E402
+from shared import BRAND, DATA, DOCS, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W, china_span  # noqa: E402
 
 W, H = SOCIAL_W, SOCIAL_H
 OUT = DOCS / SOCIAL_IMAGE
@@ -237,7 +237,7 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
         ("circle", f"{n_a:,} power units", "Global Energy Monitor"),
         # two layers, two counts: the bank projects and the EU's own records are never added
         ("rect", f"{n_f:,} AfDB and World Bank projects · {n_e:,} EU records", "via IATI"),
-        ("tri", f"{n_c:,} Chinese-financed projects", "AidData, 2000–2021"),
+        ("tri", f"{n_c:,} Chinese-financed projects", f"AidData, {china_span()[0]}–{china_span()[1]}"),
         ("line", f"{n_g:,} construction works", "OpenStreetMap"),
     ):
         if glyph == "circle":

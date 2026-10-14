@@ -14,7 +14,7 @@ Usage:
     python3 fetch_sources.py gem osm         # only the named layers
     python3 fetch_sources.py pipes cables    # the two line layers added Sep 2026
     python3 fetch_sources.py wb              # World Bank, second lender in the finance layer
-    python3 fetch_sources.py china           # AidData, Chinese official finance 2000-2021
+    python3 fetch_sources.py china           # AidData, Chinese official finance 2000-2023
     python3 fetch_sources.py eu              # European Commission and EIB, via IATI
     python3 fetch_sources.py mattei          # Italy's Piano Mattei, from the Government's project portal
 """
@@ -998,14 +998,22 @@ def fetch_cables(pause=0.1):
 
 # ------------------------------------------------- AidData (Chinese official finance)
 
-# AidData's Global Chinese Development Finance Dataset 3.0 (GCDF 3.0): every
-# known project supported by an official financial or in-kind commitment from
-# China, 2000-2021, one Excel workbook (ODC-By). Its Geospatial companion
-# (GeoGCDF v3, on GitHub) gives 9,405 of those projects a footprint traced in
-# OpenStreetMap: one GeoJSON per project, a MultiPolygon in which points and
-# lines were buffered by about a metre and dissolved, so a road arrives as a
-# two-metre-wide sliver (ODbL, because the geometry is OSM's). The project
-# pages at china.aiddata.org carry the sources behind each record.
+# AidData's China's Global Loans and Grants Dataset 1.0 (CLG-Global 1.0,
+# November 2025): every known project supported by an official loan or grant
+# from China, commitments 2000-2023 and implementation followed to 2025, in
+# constant 2023 US dollars, one Excel workbook (ODC-By). It succeeds the Global
+# Chinese Development Finance Dataset 3.0 (GCDF 3.0, 2000-2021) and keeps its
+# record IDs, but ships no location fields, and AidData has published no
+# geospatial companion for it yet. So GCDF 3.0 is still read, for locations
+# only: its precision field and ADM1/ADM2 centroids, and the footprints of its
+# Geospatial companion (GeoGCDF v3, on GitHub), one GeoJSON per project, a
+# MultiPolygon in which points and lines were buffered by about a metre and
+# dissolved, so a road arrives as a two-metre-wide sliver (ODbL, because the
+# geometry is OSM's). The project pages at china.aiddata.org now show the CLG
+# record behind each ID, with its sources.
+AIDDATA_CLG_ZIP = "https://docs.aiddata.org/ad4/datasets/AidDatas_CLG_Global_Dataset_v1.0.zip"
+AIDDATA_CLG_SHEET = "CLG-Global 1.0_Records"
+CHINA_BASE_YEAR = 2023            # CLG 1.0's constant dollars
 AIDDATA_ZIP = ("https://docs.aiddata.org/ad4/datasets/"
                "AidDatas_Global_Chinese_Development_Finance_Dataset_Version_3_0.zip")
 AIDDATA_SHEET = "GCDF_3.0"
@@ -1256,38 +1264,69 @@ def _pipe(s, n, sep="; "):
     return _clean(sep.join(dict.fromkeys(parts)), n)
 
 
+def _aiddata_zip(url, name):
+    """A cached AidData zip: downloaded once into the cache, read from there
+    after. Delete the file to force a fresh download."""
+    path = AIDDATA_CACHE / name
+    if not path.exists() or not path.stat().st_size:
+        print(f"AidData  downloading {url.rsplit('/', 1)[-1]} …")
+        path.write_bytes(get(url, timeout=900))
+    return zipfile.ZipFile(path)
+
+
+def _xlsx_from(z, name):
+    """Unpack the zip's workbook into the cache (once) and return its path."""
+    xlsx = [n for n in z.namelist() if n.endswith(".xlsx") and "__MACOSX" not in n][0]
+    path = AIDDATA_CACHE / name
+    if not path.exists() or path.stat().st_size != z.getinfo(xlsx).file_size:
+        path.write_bytes(z.read(xlsx))
+    return path
+
+
 def fetch_aiddata(workers=8):
-    """One record per Chinese official commitment to an African recipient in
-    an infrastructure sector, 2000-2021, placed as precisely as AidData can.
+    """One record per Chinese official commitment to an African country in an
+    infrastructure sector, from AidData's China's Global Loans and Grants
+    Dataset 1.0 (commitments 2000-2023), placed as precisely as AidData can.
 
     Kept: every non-umbrella record with a status of Pipeline: Commitment,
     Implementation, Completion, Suspended or Cancelled that AidData flags as
     infrastructure (building, extending or maintaining a physical structure).
     Left out: umbrella agreements (their money reappears in the projects
     under them), pledges (MoUs and letters of intent, which AidData excludes
-    from aggregates and never geocodes, so the layer has no "announced"
-    records), everything AidData does not flag as physical infrastructure
-    (cash, equipment and vehicle donations, scholarships, most oil-backed
-    credit lines to state companies) and the loans that buy a stake (M&A).
-    An infrastructure loan secured on oil or mineral exports is kept and
-    counted in meta. Suspended and cancelled commitments stay on the map but
-    out of the totals. Location: the GeoGCDF footprint where one exists
-    (precise, or approximate at 5 km or administrative level), else the
-    country's centre, flagged."""
+    from aggregates, so the layer has no "announced" records), everything
+    AidData does not flag as physical infrastructure (cash, equipment and
+    vehicle donations, scholarships, most oil-backed credit lines to state
+    companies) and the loans that buy a stake (M_A). An infrastructure loan
+    AidData marks commodity-backed is kept and counted in meta. Suspended and
+    cancelled commitments stay on the map but out of the totals, which is
+    exactly what AidData's Recommended_for_Aggregates does to the kept set.
+
+    Location: CLG 1.0 ships no location fields and has no geospatial
+    companion yet, but keeps GCDF 3.0's record IDs. A record carried over
+    from GCDF 3.0 takes that release's location (its precision field, its
+    ADM1/ADM2 centroids and the GeoGCDF v3 footprint); a record new in CLG
+    sits at its country's centre, flagged as new."""
     AIDDATA_CACHE.mkdir(parents=True, exist_ok=True)
-    print("AidData  GCDF 3.0 workbook …")
-    raw = get(AIDDATA_ZIP, timeout=600)
-    zpath = AIDDATA_CACHE / "gcdf3.zip"
-    zpath.write_bytes(raw)
-    z = zipfile.ZipFile(zpath)
-    xlsx = [n for n in z.namelist() if n.endswith(".xlsx") and "__MACOSX" not in n][0]
-    xpath = AIDDATA_CACHE / "gcdf3.xlsx"
-    xpath.write_bytes(z.read(xlsx))
+    zc = _aiddata_zip(AIDDATA_CLG_ZIP, "clg1.zip")
+    clg_path = _xlsx_from(zc, "clg1.xlsx")
+    zg = _aiddata_zip(AIDDATA_ZIP, "gcdf3.zip")
+    gcdf_path = _xlsx_from(zg, "gcdf3.xlsx")
+
+    # GCDF 3.0, read for locations only: precision and footprint flags by ID,
+    # and the ADM1/ADM2 centroids it publishes beside the workbook
+    old = {}
+    g = read_xlsx_sheet(gcdf_path, AIDDATA_SHEET)
+    gh = {str(h): i for i, h in enumerate(next(g))}
+    gcol = lambda r, name: r[gh[name]] if gh[name] < len(r) else None  # noqa: E731
+    for r in g:
+        if r and r[0] is not None:
+            old[int(r[0])] = (gcol(r, "Geospatial Feature Available"),
+                              gcol(r, "Geographic Level of Precision Available"))
     adm = {}
     for level in ("ADM2", "ADM1"):        # finest first: a project keeps its first hit
-        for n in z.namelist():
+        for n in zg.namelist():
             if n.endswith(f"GCDF_3.0_{level}_Locations.csv") and "__MACOSX" not in n:
-                for r in csv.DictReader(io.StringIO(z.read(n).decode("utf-8-sig"))):
+                for r in csv.DictReader(io.StringIO(zg.read(n).decode("utf-8-sig"))):
                     adm.setdefault(r["id"], []).append(r)
     try:
         geo_release = json.loads(get(GEOGCDF_API, timeout=60)).get("tag_name")
@@ -1296,15 +1335,15 @@ def fetch_aiddata(workers=8):
     geo_version = get(f"{GEOGCDF_RAW}/version.txt", timeout=60).decode().strip()
     cache = AIDDATA_CACHE / geo_version
     cache.mkdir(exist_ok=True)
-    print(f"AidData  GeoGCDF {geo_release or ''} ({geo_version})")
+    print(f"AidData  CLG-Global 1.0 records; locations from GCDF 3.0 and GeoGCDF {geo_release or ''} ({geo_version})")
 
-    rows = read_xlsx_sheet(xpath, AIDDATA_SHEET)
+    rows = read_xlsx_sheet(clg_path, AIDDATA_CLG_SHEET)
     hdr = [str(h) for h in next(rows)]
     ix = {h: i for i, h in enumerate(hdr)}
     col = lambda r, name: r[ix[name]] if ix[name] < len(r) else None  # noqa: E731
     keep, skipped = [], {"pledge": 0, "umbrella": 0, "not_infra": 0, "acquisition": 0}
     for r in rows:
-        if not r or r[0] is None or col(r, "Recipient Region") != "Africa":
+        if not r or r[0] is None or col(r, "Region_of_Activity") != "Africa":
             continue
         if col(r, "Umbrella") == "Yes":
             skipped["umbrella"] += 1
@@ -1317,18 +1356,27 @@ def fetch_aiddata(workers=8):
             skipped["not_infra"] += 1
             continue
         # a loan to buy a stake in a mine or an LNG vessel builds nothing,
-        # whatever the sector of what it buys: AidData flags those M&A
-        if col(r, "M&A") == "Yes":
+        # whatever the sector of what it buys: AidData flags those M_A
+        if col(r, "M_A") == "Yes":
             skipped["acquisition"] += 1
             continue
         keep.append(r)
     print(f"  {len(keep):,} African infrastructure commitments "
           f"(left out: {skipped['umbrella']:,} umbrella agreements, {skipped['pledge']:,} pledges, "
           f"{skipped['not_infra']:,} not physical infrastructure, {skipped['acquisition']:,} acquisitions)")
+    # the kept set's stalled records are exactly the ones AidData's own
+    # Recommended_for_Aggregates leaves out
+    rfa_no = {int(col(r, "AidData_Record_ID")) for r in keep if col(r, "Recommended_for_Aggregates") != "Yes"}
+    stalled = {int(col(r, "AidData_Record_ID")) for r in keep if CHINA_STATUS.get(col(r, "Status")) == STALLED}
+    if rfa_no != stalled:
+        print(f"  ! Recommended_for_Aggregates and the stalled statuses disagree on "
+              f"{len(rfa_no ^ stalled)} record(s); totals follow the statuses")
 
-    with_geo = [int(r[0]) for r in keep if col(r, "Geospatial Feature Available") == "Yes"]
-    print(f"  fetching {len(with_geo):,} GeoGCDF footprints ({workers} at a time, cached in "
-          f"{cache.relative_to(DATA.parent)})")
+    ids = [int(col(r, "AidData_Record_ID")) for r in keep]
+    with_geo = [i for i in ids if i in old and old[i][0] == "Yes"]
+    print(f"  {sum(1 for i in ids if i in old):,} carried over from GCDF 3.0, "
+          f"{sum(1 for i in ids if i not in old):,} new in CLG 1.0; fetching {len(with_geo):,} GeoGCDF "
+          f"footprints ({workers} at a time, cached in {cache.relative_to(DATA.parent)})")
     feats_geo, failed = {}, 0
     with concurrent.futures.ThreadPoolExecutor(workers) as ex:
         futs = {ex.submit(_geogcdf, pid, cache): pid for pid in with_geo}
@@ -1344,12 +1392,13 @@ def fetch_aiddata(workers=8):
     if failed:
         print(f"  ! {failed} footprint(s) could not be read")
 
-    feats, n_fp, n_prec, n_approx, n_country, unlocated, mislinked = [], 0, 0, 0, 0, 0, 0
-    n_coll, coll_usd = 0, 0.0
+    feats, n_fp, n_prec, n_approx, n_country, n_new, unlocated, mislinked = [], 0, 0, 0, 0, 0, 0, 0
+    n_cb, cb_usd = 0, 0.0
     for r in keep:
-        pid = int(r[0])
-        iso = ISO3_TO_ISO2.get(col(r, "Recipient ISO-3") or "")
-        level = col(r, "Geographic Level of Precision Available")
+        pid = int(col(r, "AidData_Record_ID"))
+        iso = ISO3_TO_ISO2.get(col(r, "Country_of_Activity_ISO3") or "")
+        new = pid not in old
+        level = None if new else old[pid][1]
         geom, lon, lat, place, osm_links, n_feat = None, None, None, None, None, None
         bad_geo = False                  # a footprint outside Africa: its ADM rows are as wrong
         fc = feats_geo.get(pid)
@@ -1378,13 +1427,13 @@ def fetch_aiddata(workers=8):
                         if rings:
                             geom = {"type": "MultiLineString", "coordinates": rings}
                             n_fp += 1
-        if lon is None and not bad_geo and str(pid) in adm:
+        if lon is None and not bad_geo and not new and str(pid) in adm:
             best = max(adm[str(pid)], key=lambda a: float(a.get("intersection_ratio") or 0))
             lon, lat = float(best["centroid_longitude"]), float(best["centroid_latitude"])
             level = level if level in ("Admin Level", "Within 5km") else "Admin Level"
             others = len(adm[str(pid)]) - 1
             place = best["shapeName"] + (f" +{others}" if others > 0 else "")
-        elif str(pid) in adm and level != "Precise" and not bad_geo:
+        elif not new and str(pid) in adm and level != "Precise" and not bad_geo:
             best = max(adm[str(pid)], key=lambda a: float(a.get("intersection_ratio") or 0))
             others = len(adm[str(pid)]) - 1
             place = best["shapeName"] + (f" +{others}" if others > 0 else "")
@@ -1405,15 +1454,19 @@ def fetch_aiddata(workers=8):
             precision, n_approx = "within_5km", n_approx + 1
         elif level == "Country":
             precision, n_country = "country", n_country + 1
+            n_new += new
         else:
             precision, n_approx = "admin", n_approx + 1
         if not iso:
             iso = _country_at(lon, lat)      # "Africa, regional" projects with a footprint
-        amount = col(r, "Adjusted Amount (Constant USD 2021)")
+        amount = col(r, "Adjusted_Amount_Constant_USD_2023")
         if amount is None:
-            amount = col(r, "Amount (Constant USD 2021)")
+            amount = col(r, "Amount_Constant_USD_2023")
+        nominal = col(r, "Adjusted_Amount_Nominal_USD")
+        if nominal is None:
+            nominal = col(r, "Amount_Nominal_USD")
         try:
-            sector_code = int(col(r, "Sector Code") or 0)
+            sector_code = int(col(r, "Sector_Code") or 0)
         except (TypeError, ValueError):
             sector_code = 0
         yr = lambda name: int(col(r, name)) if isinstance(col(r, name), (int, float)) else None  # noqa: E731
@@ -1421,13 +1474,11 @@ def fetch_aiddata(workers=8):
         status = col(r, "Status")
         amount = round(float(amount), 2) if isinstance(amount, (int, float)) else None
         # a suspended or cancelled commitment stays on the map but out of the
-        # totals, as AidData's own Recommended For Aggregates leaves it out
+        # totals, as AidData's own Recommended_for_Aggregates leaves it out
         withdrawn = CHINA_STATUS.get(status) == STALLED and amount is not None
-        collateral = col(r, "Collateralized") == "Yes" and bool(re.search(
-            r"\boil\b|crude|petrol|commodit|copper|cobalt|mineral|iron ore|bauxite|cocoa|sesame|manganese|chrome",
-            str(col(r, "Collateral") or ""), re.I))
-        n_coll += collateral
-        coll_usd += (amount or 0) if collateral and not withdrawn else 0
+        backed = col(r, "Commodity_backed") == "Yes"
+        n_cb += backed
+        cb_usd += (amount or 0) if backed and not withdrawn else 0
         feats.append({
             "type": "Feature",
             "geometry": geom or {"type": "Point", "coordinates": [round(lon, 5), round(lat, 5)]},
@@ -1437,9 +1488,10 @@ def fetch_aiddata(workers=8):
                 "aiddata_id": pid,
                 "name": _clean(col(r, "Title"), 200),
                 "country": iso,
-                "recipient": _clean(col(r, "Recipient"), 60),
+                "recipient": _clean(col(r, "Country_of_Activity"), 60),
                 "lon": round(lon, 5), "lat": round(lat, 5),
                 "geo_precision": precision,
+                "new_in_clg": new or None,
                 "place": _clean(place, 60),
                 "osm_links": osm_links,
                 "feature_count": n_feat,
@@ -1447,47 +1499,51 @@ def fetch_aiddata(workers=8):
                 "dash_status": CHINA_STATUS.get(status),
                 "sector_code": sector_code or None,
                 "sector": CHINA_SECTOR.get(sector_code, "other"),
-                "sector_name": _clean(col(r, "Sector Name"), 60),
+                "sector_name": _clean(col(r, "Sector_Name"), 60),
                 "infrastructure": col(r, "Infrastructure") == "Yes",
                 "intent": _clean(col(r, "Intent"), 20),
-                "flow_type": _clean(col(r, "Flow Type"), 60),
-                "flow_simple": _clean(col(r, "Flow Type Simplified"), 20),
-                "flow_class": _clean(col(r, "Flow Class"), 30),
-                "funders": _pipe(col(r, "Funding Agencies"), 200),
-                "funder_types": _pipe(col(r, "Funding Agencies Type"), 120),
-                "implementers": _pipe(col(r, "Implementing Agencies"), 200),
-                "cofinanced": col(r, "Co-financed") == "Yes",
-                "cofinanciers": _pipe(col(r, "Co-financing Agencies"), 160),
-                "amount_usd_2021": None if withdrawn else amount,
-                "amount_usd_2021_published": amount if withdrawn else None,
+                "flow_type": _clean(col(r, "Flow_Type"), 60),
+                "flow_simple": _clean(col(r, "Flow_Type_Simplified"), 20),
+                "flow_class": _clean(col(r, "Flow_Class"), 30),
+                "funders": _pipe(col(r, "Funding_Agencies"), 400),
+                "funder_types": _pipe(col(r, "Funding_Agencies_Type"), 200),
+                "implementers": _pipe(col(r, "Implementing_Agencies"), 400),
+                "cofinanced": col(r, "Cofinanced") == "Yes",
+                "cofinanciers": _pipe(col(r, "Cofinancing_Agencies"), 200),
+                # constant dollars of meta.china.base_year (2023 for CLG 1.0)
+                "amount_usd_const": None if withdrawn else amount,
+                "amount_usd_const_published": amount if withdrawn else None,
                 "counted_note": f"{status.lower()}, so not counted in totals" if withdrawn else None,
-                "commodity_collateral": collateral or None,
-                "amount_nominal_usd": round(float(col(r, "Amount (Nominal USD)")), 2)
-                                      if isinstance(col(r, "Amount (Nominal USD)"), (int, float)) else None,
-                "amount_estimated": col(r, "Amount Estimated") == "Yes",
-                "commitment_year": yr("Commitment Year"),
-                "start_year": yr("Implementation Start Year"),
-                "completion_year": yr("Completion Year"),
+                "commodity_backed": backed or None,
+                "amount_nominal_usd": round(float(nominal), 2) if isinstance(nominal, (int, float)) else None,
+                "amount_estimated": col(r, "Amount_Estimated") == "Yes",
+                "commitment_year": yr("Commitment_Year"),
+                "start_year": yr("Implementation_Start_Year"),
+                "completion_year": yr("Completion_Year"),
                 "maturity_years": num("Maturity"),
-                "interest_rate": num("Interest Rate"),
-                "grace_years": num("Grace Period"),
-                "grant_element": num("Grant Element (OECD Grant-Equiv)"),
-                "financial_distress": col(r, "Financial Distress") == "Yes",
-                "location_narrative": _clean(col(r, "Location Narrative"), 240),
+                # the rate at signing: a fixed rate, or a variable one's
+                # reference rate plus margin on the commitment date
+                "interest_rate": num("Interest_at_T0"),
+                "grace_years": num("Grace_Period"),
+                "grant_element": num("Grant_Element_OECD_Grant_Equiv"),
+                "financial_distress": col(r, "Financial_Distress") == "Yes",
+                "location_narrative": _clean(col(r, "Location_Narrative"), 240),
                 "url": f"https://china.aiddata.org/projects/{pid}/",
             },
         })
+    years = [f["properties"]["commitment_year"] for f in feats if f["properties"]["commitment_year"]]
     print(f"  {n_fp:,} footprints drawn · {n_prec:,} precise, {n_approx:,} approximate (5 km or "
-          f"administrative), {n_country:,} at the country's centre · {unlocated:,} regional records "
-          f"without a location dropped · {mislinked} footprint(s) outside Africa ignored")
+          f"administrative), {n_country:,} at the country's centre ({n_new:,} of them new in CLG 1.0) · "
+          f"{unlocated:,} regional records without a location dropped · {mislinked} footprint(s) outside Africa ignored")
     out = write_layer("aiddata_china_finance", feats)
-    update_meta("china", fetched=today(), fresh="Nov 2023 · to 2021",
-                release=f"GCDF 3.0 · GeoGCDF {geo_release or geo_version}", records=len(feats),
-                footprints=n_fp, precise=n_prec, approximate=n_approx, country_level=n_country,
-                unlocated=unlocated, mislinked=mislinked, umbrella=skipped["umbrella"],
-                pledges=skipped["pledge"], not_infrastructure=skipped["not_infra"],
-                acquisitions=skipped["acquisition"], commodity_collateral=n_coll,
-                commodity_collateral_usd=round(coll_usd))
+    update_meta("china", fetched=today(), fresh="Nov 2025 · to 2023",
+                release=f"CLG-Global 1.0 · locations from GCDF 3.0 and GeoGCDF {geo_release or geo_version}",
+                base_year=CHINA_BASE_YEAR, years=[min(years), max(years)] if years else None,
+                records=len(feats), footprints=n_fp, precise=n_prec, approximate=n_approx,
+                country_level=n_country, new_records=n_new, unlocated=unlocated, mislinked=mislinked,
+                umbrella=skipped["umbrella"], pledges=skipped["pledge"],
+                not_infrastructure=skipped["not_infra"], acquisitions=skipped["acquisition"],
+                commodity_backed=n_cb, commodity_backed_usd=round(cb_usd))
     return out
 
 

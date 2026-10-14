@@ -892,7 +892,7 @@ def site_records(reg):
             if key in seen:
                 continue
             seen.add(key)
-            amt = q.get("commitment") or q.get("amount_usd_2021") or (q.get("amount_eur") and q["amount_eur"] * EUR_USD)
+            amt = q.get("commitment") or q.get("amount_usd_const") or (q.get("amount_eur") and q["amount_eur"] * EUR_USD)
             link = q.get(linkf) if linkf else (f"https://www.openstreetmap.org/{rid}" if rid else None)
             # the EU's IATI export carries a few mis-encoded dashes and apostrophes
             label = re.sub(r"\s¿\s", " – ", re.sub(r"¿s\b", "’s", q.get("name") or ""))

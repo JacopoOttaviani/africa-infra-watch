@@ -21,7 +21,7 @@ Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
 rivers, lakes and cities around Africa), with
 the eight data layers drawn as circles (power units, sized by MW), squares and
 diamonds (AfDB and World Bank projects, sized by commitment), triangles
-(Chinese-financed projects from AidData, 2000–2021, sized by commitment, with
+(Chinese-financed projects from AidData, 2000–2023, sized by commitment, with
 the works' OpenStreetMap footprint outlined from country zoom in), five- and
 four-pointed stars (EU-financed records: European Commission contracts and EIB
 operations, sized by commitment), hexagons (the projects of Italy's Piano Mattei, sized by
@@ -81,7 +81,7 @@ as hexagons.
 | Ground truth | OpenStreetMap via Overpass | 3,700 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 323 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
-| Chinese finance | AidData, Global Chinese Development Finance Dataset 3.0 + Geospatial GCDF 3.0 | 2,345 projects | what Chinese official lenders committed to infrastructure 2000–2021, where, on what terms, what got built |
+| Chinese finance | AidData, China's Global Loans and Grants Dataset 1.0, located with GCDF 3.0 + Geospatial GCDF 3.0 | 2,487 projects | what Chinese official lenders committed to infrastructure 2000–2023, where, on what terms, what got built |
 | EU finance | European Commission (DG INTPA, DG NEAR), IATI 2.03 activity files (61 African country and regional files) + European Investment Bank, IATI 2.02 global activity file | 2,008 records | what the EU's own institutions have contracted and signed for infrastructure, through whom, and how much is paid out |
 | Piano Mattei | Italian Government (Presidency of the Council of Ministers), Piano Mattei per l'Africa project portal, 76 project pages in Italian and English | 76 projects | what Italy counts under its Mattei Plan, where, at what stage, through whom, and for how much as the Government states it |
 
@@ -192,32 +192,43 @@ states the inference. TeleGeography puts its map under CC BY-SA 4.0 but keeps th
 data behind it for subscribers, so the cable layer is drawn but not published as
 a download (`NOT_REDISTRIBUTED` in `build_map.py`).
 
-**The Chinese finance layer** is AidData's GCDF 3.0 workbook (26 MB Excel,
-ODC-By) joined with the per-project footprints of its Geospatial companion
-(GeoGCDF v3.0.1 on GitHub, one GeoJSON per project, ODbL because the geometry
-is OpenStreetMap's). Kept: every non-umbrella commitment to an African recipient
+**The Chinese finance layer** is AidData's China's Global Loans and Grants
+Dataset 1.0 (CLG-Global 1.0, November 2025: 41 MB Excel, ODC-By; commitments
+2000–2023, implementation followed to 2025, constant 2023 USD). CLG 1.0 ships no
+location fields and has no geospatial companion yet, but keeps the record IDs of
+its predecessor, the Global Chinese Development Finance Dataset 3.0 (GCDF 3.0,
+2000–2021), so the fetch still reads GCDF 3.0 for locations only: a record
+carried over takes that release's precision, its ADM1/ADM2 centroid and the
+footprint from its Geospatial companion (GeoGCDF v3.0.1 on GitHub, one GeoJSON
+per project, ODbL because the geometry is OpenStreetMap's). The records new in
+CLG 1.0 (157 in Africa, mostly 2022–2023 commitments) sit at their country's
+centre, flagged. The join was checked on 14 Oct 2026: of 2,332 carried-over IDs,
+2,329 keep their country (three Sudan records recoded as South Sudan, same
+projects) and titles differ only where AidData described the same project more
+precisely. Kept: every non-umbrella commitment to an African recipient
 that AidData flags as `Infrastructure` (building, extending or maintaining a
 physical structure: power plants and highways, but also hospitals, stadiums and
-ministry buildings). Left out: 835 umbrella agreements (their money reappears in
-the projects under them), 489 pledges (MoUs and letters of intent, which AidData
+ministry buildings). Left out: 872 umbrella agreements (their money reappears in
+the projects under them), 510 pledges (MoUs and letters of intent, which AidData
 excludes from its own aggregates and never geocodes, so the layer has no
-*announced* records), 5,674 records that are not physical infrastructure
+*announced* records), 6,738 records that are not physical infrastructure
 (cash, equipment and vehicle donations, scholarships, medical teams, most
 oil-backed credit lines to state companies) and the loans that buy a stake
-(AidData's M&A flag). Infrastructure loans secured on oil or mineral exports are
-kept and counted in `meta.json`. AidData has since published a successor, China's
-Global Loans and Grants Dataset 1.0 (November 2025, to 2023, constant 2023 USD),
-not yet used here; china.aiddata.org now shows its records. Status: *Pipeline: Commitment* is **approved**,
+(AidData's `M_A` flag). Infrastructure loans AidData marks `Commodity_backed` are
+kept and counted in `meta.json`. Status: *Pipeline: Commitment* is **approved**,
 *Implementation* **under construction**, *Completion* **operating**,
-*Suspended*/*Cancelled* **stalled**. Amounts are AidData's constant 2021 USD and
+*Suspended*/*Cancelled* **stalled**, and a stalled record's money is not counted,
+which is exactly what AidData's `Recommended_for_Aggregates` does to the kept
+set. Amounts are AidData's constant 2023 USD (`CHINA_BASE_YEAR`; `meta.china.base_year`
+carries it to every page) and
 are never added to the IATI figures; the map's lender filter offers "Chinese
 official lenders" beside AfDB and the World Bank. Location comes in four tiers,
-stated on every card: precise (on the OSM feature; 892 of these carry a footprint
+stated on every card: precise (on the OSM feature; 886 of these carry a footprint
 that both pages outline), within 5 km, administrative area (the centre of the
 district or province AidData names), and country only (the country's interior
-point, computed from the 1:110m basemap). It is a **2000–2021 baseline**, which
-is why it was first evaluated and left out; the pages say so wherever the layer
-is described. The layer's GeoJSON carries the simplified footprints as
+point, computed from the 1:110m basemap), where the records new in CLG 1.0 sit
+too. It is a **2000–2023 baseline**; the pages say so wherever the layer is
+described, reading the years from `meta.json`. The layer's GeoJSON carries the simplified footprints as
 `MultiLineString` rings (a buffered road is a 2 m sliver, so rings are stroked,
 never filled) and every other record as a `Point`.
 
@@ -485,8 +496,10 @@ mirrors refuse: it walks latitude bands and sleeps between them
 to stay inside Overpass's slot budget. The cables pass reads one small JSON per
 cable system in the world (~700, about a quarter of an hour); the pipelines pass downloads two
 GeoJSON files of ~70 MB each from GEM's bucket. The china pass downloads
-AidData's 28 MB zip, reads the Excel workbook with the standard library (zip +
-XML, about three seconds), then fetches ~1,900 per-project GeoJSONs from GitHub
+AidData's CLG 1.0 zip (44 MB) and its GCDF 3.0 zip (28 MB, for locations), once
+each into `data/.aiddata_cache/` (delete a file to fetch it again), reads the
+Excel workbooks with the standard library (zip + XML, about a minute for CLG's
+41 MB), then fetches ~1,900 per-project GeoJSONs from GitHub
 eight at a time (two minutes; cached under `data/.aiddata_cache/` by GeoGCDF
 version, so a rerun is seconds). Each run records the fetch date, release and record
 count in `data/meta.json`; the pages read their "data as of" dates from there.

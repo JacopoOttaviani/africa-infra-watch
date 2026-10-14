@@ -663,18 +663,18 @@ def build_china(pack):
         if r["grace"]:
             terms.append(f"{r['grace']:g} grace")
         rows.append([td(r["year"] or "–", "num"), td(esc(r["recipient"]), "name"),
-                     td(f"{(r['usd_2021'] or 0) / 1e6:,.0f}" + (' <span class="dim" title="amount estimated by AidData">~</span>' if r["estimated"] else ""), "num"),
+                     td(f"{(r['usd_const'] or 0) / 1e6:,.0f}" + (' <span class="dim" title="amount estimated by AidData">~</span>' if r["estimated"] else ""), "num"),
                      td(esc(r["name"]) + (f'<br><span class="dim">{esc(r["funders"] or "")}{(" · " + esc(r["implementers"])) if r["implementers"] else ""}</span>')),
                      td(f'{esc(r["flow"] or "")}<br><span class="dim">{esc("; ".join(terms))}</span>'), td(st(r["status"])),
                      td(f'<a href="{esc(r["url"])}" target="_blank" rel="noopener noreferrer">AidData</a>')])
-    t_large = table(f"Largest Chinese official commitments to African infrastructure, {aid['from']}–{aid['to']}, in constant 2021 USD million "
+    t_large = table(f"Largest Chinese official commitments to African infrastructure, {aid['from']}–{aid['to']}, in constant {aid['base_year']} USD million "
                     f"(~ estimated by AidData). One row is one commitment; a railway financed in three tranches is three rows.",
-                    ["#Year", "Recipient", "#USD m (2021)", "Project · funder · implementer", "Flow · terms", "Status", "Link"], rows)
+                    ["#Year", "Recipient", f"#USD m ({aid['base_year']})", "Project · funder · implementer", "Flow · terms", "Status", "Link"], rows)
 
     rows = [[td(esc(f["funder"]), "name"), td(esc(f["type"] or "")), td(f"{f['n']:,}", "num"), td(f"{f['usd']:,.0f}", "num")]
             for f in aid["funders"]]
     t_fund = table("Chinese official lenders and agencies behind the commitments; a co-financed commitment is split evenly between its funders.",
-                   ["Funder", "Type", "#Commitments", "#USD m (2021)"], rows)
+                   ["Funder", "Type", "#Commitments", f"#USD m ({aid['base_year']})"], rows)
 
     rows = []
     for c in sorted(cs, key=lambda c: (-c["latest_stock"], c["name"])):
@@ -698,6 +698,7 @@ def build_china(pack):
     lo = aid["left_out"]
     tokens = {
         "__AID_N__": f"{aid['n']:,}", "__AID_USD_BN__": f"{aid['usd'] / 1000:,.1f}", "__AID_FROM__": str(aid["from"]), "__AID_TO__": str(aid["to"]),
+        "__AID_BASE__": str(aid["base_year"]), "__AID_NEW__": f"{aid.get('new_records') or 0:,}",
         "__AID_LOANS_N__": f"{aid['loans_n']:,}", "__AID_LOANS_BN__": f"{aid['loans_usd'] / 1000:,.1f}",
         "__AID_GRANTS_N__": f"{aid['grants_n']:,}", "__AID_GRANTS_BN__": f"{aid['grants_usd'] / 1000:,.1f}",
         "__AID_COUNTRIES__": str(len(aid["countries"])), "__AID_FUNDERS__": str(len(aid["funders"])),
@@ -738,19 +739,19 @@ def build_china(pack):
         bubbles.append({"x": x, "y": y, "r": round(4 + 18 * (v["usd"] / top_usd) ** 0.5, 1),
                         "label": _name(iso) if v["usd"] >= top_usd / 15 else None,
                         "tip": f"<b>{esc(_name(iso))}</b>{v['n']:,} Chinese official commitments {aid['from']}–{aid['to']}"
-                               f"<br>USD {v['usd'] / 1000:,.1f} bn (2021 USD), of which loans USD {v['loans'] / 1000:,.1f} bn<br>Drawn at the country's interior point"})
-    biggest = sorted(aid["largest"], key=lambda r: -(r["usd_2021"] or 0))
+                               f"<br>USD {v['usd'] / 1000:,.1f} bn ({aid['base_year']} USD), of which loans USD {v['loans'] / 1000:,.1f} bn<br>Drawn at the country's interior point"})
+    biggest = sorted(aid["largest"], key=lambda r: -(r["usd_const"] or 0))
     projects = [{**_pt(r), "cls": r["status"],
-                 "tip": f"<b>{esc(r['name'][:140])}</b>{esc(r['recipient'])} · {r['year']} · USD {(r['usd_2021'] or 0) / 1e6:,.0f} m (2021)"
+                 "tip": f"<b>{esc(r['name'][:140])}</b>{esc(r['recipient'])} · {r['year']} · USD {(r['usd_const'] or 0) / 1e6:,.0f} m ({aid['base_year']})"
                         f"<br>{esc(STATUS.get(r['status'], r['status']))} · {esc(r['funders'] or '')}<br>AidData; {esc(r['precision'])} location"}
-                for r in sorted(pack["aid"]["largest"], key=lambda r: -(r["usd_2021"] or 0))]
+                for r in sorted(pack["aid"]["largest"], key=lambda r: -(r["usd_const"] or 0))]
     # the 150 largest records beyond the table's 20, read back from the layer
     import json as _json
     allrecs = _json.loads((DATA / "aiddata_china_finance.geojson").read_text())["features"]
-    big = sorted(allrecs, key=lambda f: -(f["properties"]["amount_usd_2021"] or 0))[:150]
+    big = sorted(allrecs, key=lambda f: -(f["properties"]["amount_usd_const"] or 0))[:150]
     projects = [{**_pt({"lon": f["properties"]["lon"], "lat": f["properties"]["lat"]}), "cls": f["properties"]["dash_status"],
                  "tip": f"<b>{esc(f['properties']['name'][:140])}</b>{esc(f['properties']['recipient'])} · {f['properties']['commitment_year']} · "
-                        f"USD {(f['properties']['amount_usd_2021'] or 0) / 1e6:,.0f} m (2021)<br>{esc(STATUS.get(f['properties']['dash_status'], ''))} · "
+                        f"USD {(f['properties']['amount_usd_const'] or 0) / 1e6:,.0f} m ({aid['base_year']})<br>{esc(STATUS.get(f['properties']['dash_status'], ''))} · "
                         f"{esc(f['properties']['funders'] or '')}<br>AidData; {esc(f['properties']['geo_precision'])} location"}
                 for f in big if f["properties"]["lon"] is not None]
     charts = {

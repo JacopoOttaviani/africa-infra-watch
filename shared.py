@@ -112,7 +112,7 @@ SOURCE_INFO = {
     # the project records are AidData's (ODC-By); the footprints are traced in
     # OpenStreetMap and stay under OSM's ODbL
     "china": {"name": "AidData", "lic": "ODC-By 1.0 (footprints ODbL)",
-              "url": "https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0"},
+              "url": "https://www.aiddata.org/data/chinas-global-loans-and-grants-dataset-1-0"},
     # the Commission's IATI files fall under the EU's open-data decision
     # (CC BY 4.0); the EIB's are under the Bank's own terms, attribution required
     "eu": {"name": "European Union", "lic": "CC BY 4.0 (Commission), attribution (EIB)",
@@ -161,7 +161,7 @@ DONORS = [
     {"slug": "china", "name": "China", "badge": "CN",
      "title": "China in Africa's infrastructure",
      "description": "What the open data holds on Chinese money in African infrastructure: AidData's "
-                    "project-level record of Chinese official commitments 2000–2021 country by country, "
+                    "project-level record of Chinese official commitments since 2000 country by country, "
                     "lender by lender and sector by sector, what each African government owes Chinese "
                     "creditors (World Bank International Debt Statistics), and the power plants, pipelines "
                     "and submarine cables with a Chinese owner in the map's own layers."},
@@ -372,6 +372,14 @@ def fmt_date(iso):
     return f"{d.day} {d.strftime('%b %Y')}"
 
 
+def china_span(meta=None):
+    """AidData's commitment years and constant-dollar base year, from meta.json:
+    (2000, 2023, 2023) for CLG 1.0. Every page that states them reads them here."""
+    ch = ((load_meta() if meta is None else meta).get("china") or {})
+    y0, y1 = (ch.get("years") or [2000, 2023])[:2]
+    return y0, y1, ch.get("base_year") or 2023
+
+
 def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
     p, c, w = meta.get("pipelines", {}), meta.get("cables", {}), meta.get("finance_wb", {})
@@ -397,8 +405,9 @@ def sources(meta, keys=MAP_LAYERS):
          "detail": "Submarine Cable Map, cables with an African landing point",
          "fresh": c.get("fresh") or fmt_date(c.get("fetched"))},
         {"k": "china", **SOURCE_INFO["china"],
-         "detail": f"{ch.get('release') or 'Global Chinese Development Finance Dataset 3.0'}, "
-                   "official commitments to infrastructure 2000–2021, footprints from OpenStreetMap",
+         "detail": f"{ch.get('release') or 'China’s Global Loans and Grants Dataset 1.0'}, "
+                   f"official commitments to infrastructure {china_span(meta)[0]}–{china_span(meta)[1]}, "
+                   "footprints from OpenStreetMap",
          "fresh": ch.get("fresh") or fmt_date(ch.get("fetched"))},
         {"k": "eu", **SOURCE_INFO["eu"],
          "detail": f"IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, "
@@ -422,7 +431,10 @@ def payload_meta(meta, keys=MAP_LAYERS):
             # what the AidData fetch left out, so the Methodology can say so
             "china_left_out": {k: (meta.get("china") or {}).get(k)
                                for k in ("umbrella", "pledges", "not_infrastructure", "unlocated",
-                                         "acquisitions", "commodity_collateral", "commodity_collateral_usd")},
+                                         "acquisitions", "commodity_backed", "commodity_backed_usd")},
+            # the AidData release's span and constant-dollar base year, and the
+            # records new in it, which have no published location yet
+            "china_meta": {k: (meta.get("china") or {}).get(k) for k in ("years", "base_year", "new_records")},
             # how the EU fetch assembled its records, so the Methodology can say so
             "eu_meta": {k: (meta.get("eu") or {}).get(k)
                         for k in ("contracts", "decisions", "decisions_folded", "eib",
@@ -597,7 +609,7 @@ def facts_sentence(facts):
         s += f" and {facts['cables']:,} submarine cables landing in Africa from TeleGeography"
     if facts.get("china"):
         s += (f", plus {facts['china']:,} infrastructure projects financed by Chinese official "
-              f"lenders and agencies between 2000 and 2021, from AidData")
+              f"lenders and agencies between {china_span(facts['meta'])[0]} and {china_span(facts['meta'])[1]}, from AidData")
     if facts.get("eu"):
         s += (f", and {facts['eu']:,} infrastructure projects financed by the European Union's "
               f"institutions, the European Commission and the European Investment Bank, via IATI")
@@ -621,7 +633,8 @@ def facts_totals(facts):
             parts.append(f"USD {facts['usd_bn']:,.1f} billion of AfDB commitments, converted at {SDR_NOTE}")
     if facts.get("china_usd_bn"):
         parts.append(f"USD {facts['china_usd_bn']:,.1f} billion of Chinese official commitments to "
-                     f"infrastructure over 2000–2021, in constant 2021 dollars as AidData publishes them")
+                     f"infrastructure over {china_span(facts['meta'])[0]}–{china_span(facts['meta'])[1]}, "
+                     f"in constant {china_span(facts['meta'])[2]} dollars as AidData publishes them")
     if facts.get("eu_usd_bn"):
         parts.append(f"USD {facts['eu_usd_bn']:,.1f} billion of European Union commitments, Commission "
                      f"contracts and EIB loans, converted at {EUR_NOTE}")
@@ -671,12 +684,14 @@ def structured_data(facts, *, path, title, description, kind):
                           "suppliers, ready-for-service year, length and African landing points, "
                           "from TeleGeography's Submarine Cable Map.",
                 "china": "Infrastructure projects in Africa supported by official financial "
-                         "commitments from China between 2000 and 2021 (loans and grants from "
+                         f"commitments from China between {china_span(facts['meta'])[0]} and "
+                         f"{china_span(facts['meta'])[1]} (loans and grants from "
                          "China Eximbank, China Development Bank, the Ministry of Commerce and "
                          "other official lenders), with status, sector, funder, implementer, "
-                         "commitment in constant 2021 USD, loan terms where known, and the "
+                         f"commitment in constant {china_span(facts['meta'])[2]} USD, loan terms where known, and the "
                          "project's footprint traced in OpenStreetMap where AidData geocoded it, "
-                         "from AidData's Global Chinese Development Finance Dataset 3.0 and its "
+                         "from AidData's China's Global Loans and Grants Dataset 1.0, located with "
+                         "its Global Chinese Development Finance Dataset 3.0 and that release's "
                          "Geospatial companion.",
                 "eu": "Infrastructure projects in Africa financed by the European Union's "
                       "institutions: the European Commission's contracts and financing decisions "
@@ -775,7 +790,7 @@ under construction, operating and stalled.</p>
 institutions (the Commission's contracts and the EIB's loans, as each publishes them to IATI),
 Chinese official finance as AidData reconstructs it from public sources, and the amounts Italy's
 Piano Mattei portal states for its projects, which may be a whole project's value rather than
-Italy's share; the Chinese layer ends with commitments made in 2021, so totals are each lender's
+Italy's share; the Chinese layer ends with commitments made in {china_span(facts['meta'])[1]}, so totals are each lender's
 exposure, kept on lines of their own, and not investment in Africa; about {e(_pct(facts.get('afdb_approx_pct')))}
 of AfDB locations are approximate, a named town or a country or region centroid, the World Bank marks every location approximate, the EIB and the
 Piano Mattei portal publish no locations at all, so their records sit on a place the record names
@@ -980,7 +995,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   and the money of cancelled or suspended records, which stay on the map. Cards show the
   lender's own figure beside the counted one. AfDB publishes in SDR, converted at a
   fixed, stated rate: {SDR_NOTE}. The World Bank publishes in USD, taken as is. AidData's
-  Chinese commitments are in constant 2021 US dollars, as published, and are never added to
+  Chinese commitments are in constant {china_span(facts['meta'])[2]} US dollars, as published, and are never added to
   the IATI figures. The EU institutions publish in euros, converted at a fixed, stated rate:
   {EUR_NOTE}; a Commission contract carries the contracted amount, a financing decision with
   no contract yet its whole envelope, once however many country copies repeat it, an EIB
@@ -1014,10 +1029,10 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   a named place or the country's default point; the EIB publishes no locations, so its
   records sit at the country's point; Africa-wide programmes sit at the Commission's
   regional point, in Chad.
-- The Chinese layer is a historical baseline: AidData's 3.0 release covers commitments
-  made 2000-2021 and their implementation to 2023; AidData has since published a successor,
-  China's Global Loans and Grants Dataset 1.0 (November 2025, to 2023), which this site does
-  not yet use, so a project page linked from a card may now show a revised record. It says
+- The Chinese layer is AidData's China's Global Loans and Grants Dataset 1.0 (November 2025):
+  commitments made {china_span(facts['meta'])[0]}-{china_span(facts['meta'])[1]} and their implementation to 2025. CLG 1.0 publishes no
+  locations; records it carries over from AidData's GCDF 3.0 keep that release's location and
+  footprint, and the {(facts['meta'].get('china') or {}).get('new_records') or 0:,} records new in CLG 1.0 sit at their country's centre. It says
   where Chinese money went, not what China is financing now. Only projects AidData flags as
   physical infrastructure are kept, which includes infrastructure loans secured on oil or
   mineral exports; about {_pct(facts.get('china_country_pct'))} have no published location and sit at their country's centre.

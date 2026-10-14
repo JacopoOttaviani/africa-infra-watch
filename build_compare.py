@@ -177,7 +177,7 @@ def aid_block(packs):
         elif p.get("aid"):
             a = p["aid"]
             out[slug] = {"src": "AidData commitments, infrastructure projects only", "from": a["from"], "to": a["to"],
-                         "n": a["n"], "usd": m2(a["usd"]), "unit": "constant 2021 USD",
+                         "n": a["n"], "usd": m2(a["usd"]), "unit": f"constant {a['base_year']} USD",
                          "countries": {iso: {"n": v["n"], "usd": m2(v["usd"]), "loans": m2(v.get("loans", 0))}
                                        for iso, v in a["countries"].items()},
                          "regional": {"n": 0, "usd": 0}}
@@ -436,6 +436,8 @@ def tokens(pl, f):
         "__FOCUS_MAX_TOP__": esc(NAME[f[foc_max]["aid_top"]]),
         "__FOCUS_MIN__": esc(f[foc_min]["name"]), "__FOCUS_MIN_PCT__": f"{f[foc_min]['aid_top3_pct']:.0f}",
         "__CHINA_AID_BN__": bn(ch["aid"], 0), "__CHINA_FROM__": str(ch["aid_from"]), "__CHINA_TO__": str(ch["aid_to"]),
+        # the base year of AidData's constant dollars, from the unit the aid block states
+        "__CHINA_BASE__": re.search(r"\d{4}", pl["aid"]["china"]["unit"]).group(0),
         "__CHINA_LOAN_PCT__": f"{ch['loan_pct']:.0f}", "__CHINA_AID_N__": str(ch["aid_n"]),
         "__CHINA_DEBT_BN__": bn(f["china"]["debt"]), "__CHINA_TOP_SECTOR__": esc(ch.get("top_sector", "–")),
         "__COVER_NOTE__": cover_note,

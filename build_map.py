@@ -39,7 +39,7 @@ from build_dashboard import (  # noqa: E402
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
-    DOCS, SITE_NAME, brand_assets, inline_vendor, load_meta, payload_meta, site_facts, wrap_document,
+    DOCS, SITE_NAME, brand_assets, china_span, inline_vendor, load_meta, payload_meta, site_facts, wrap_document,
     write_site_index,
 )
 
@@ -265,7 +265,7 @@ def main():
     cusd = sum(x[cc.index("usd_m")] or 0 for x in china["rows"]) / 1000
     cfp = sum(1 for x in china["rows"] if x[cc.index("g")])
     cprec = {k: sum(1 for x in china["rows"] if x[cc.index("prec")] == k) for k in range(4)}
-    print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn (2021 USD); "
+    print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn ({china_span()[2]} USD); "
           f"{cfp:,} footprints; precise {cprec[0]:,}, ~5 km {cprec[1]:,}, admin {cprec[2]:,}, country {cprec[3]:,}")
 
     print("eu      …")
@@ -353,7 +353,7 @@ async function loadPayload(){{
         pages, title=SITE_NAME, path="", kind="map", facts=facts,
         description="Interactive open-data map of infrastructure across Africa: power plants and "
                     "oil and gas pipelines (Global Energy Monitor), African Development Bank "
-                    "and World Bank projects, Chinese-financed infrastructure 2000–2021 (AidData), "
+                    f"and World Bank projects, Chinese-financed infrastructure {china_span()[0]}–{china_span()[1]} (AidData), "
                     "European Union finance (European Commission and EIB), Italy's Piano Mattei projects, "
                     "construction works traced in OpenStreetMap and submarine cables "
                     "(TeleGeography). Filter by country, status and sector."))

@@ -102,8 +102,10 @@ for money" states them):
 
 **Left as is**:
 
-- **AidData's successor dataset** is not migrated. The site says it exists and
-  that a card's link may show a revised record.
+- ~~**AidData's successor dataset** is not migrated.~~ Migrated later the same
+  day: the layer now reads China's Global Loans and Grants Dataset 1.0
+  (2000–2023, constant 2023 USD). Locations still come from GCDF 3.0 by record
+  ID, and the 157 records new in CLG 1.0 sit at their country's centre.
 - **Upstream data errors**, which are GEM's or AidData's own:
   - ACWA's 10 GW "under construction" in Egypt.
   - Medusa "in service".

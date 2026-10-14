@@ -641,8 +641,8 @@
               (OpenStreetMap construction tags), <strong>where oil and gas move</strong> (Global
               Energy Monitor's pipeline trackers), <strong>where the continent's bandwidth comes
               ashore</strong> (TeleGeography's Submarine Cable Map), <strong>where two decades of
-              Chinese official finance went</strong> (AidData's Global Chinese Development Finance
-              Dataset, commitments 2000–2021, with the works' footprints traced in OpenStreetMap)
+              Chinese official finance went</strong> (AidData's China's Global Loans and Grants
+              Dataset, commitments <span class="cn-span">2000–2023</span>, with the works' footprints traced in OpenStreetMap)
               <strong>where the European Union's own money goes</strong> (the European
               Commission's contracts and the European Investment Bank's operations, from their
               IATI activity files) and <strong>what Italy's Piano Mattei has put on the map</strong>
@@ -680,7 +680,7 @@
                 transaction records (IATI type 2), converted from SDR at a fixed published rate; the World
                 Bank's are in US dollars as published; the European Commission's and the EIB's are in euros,
                 converted at a fixed published rate; Chinese commitments are AidData's reconstruction from
-                public sources, in constant 2021 dollars. Each is counted as the lender's own infrastructure
+                public sources, in constant <span class="cn-base">2023</span> dollars. Each is counted as the lender's own infrastructure
                 share, budget support, a borrower's counterpart funds and cancelled projects left out, and
                 each is shown on its own line, never added to another. Private,
                 domestic-budget, EU member states' and other-lender finance is <strong>not</strong> here.
@@ -695,13 +695,15 @@
                 for a programme across several countries, at one Africa-wide point. The selection panel says which.
               </li>
               <li class="caveat">
-                <strong>Chinese finance is a 2000–2021 baseline.</strong> AidData's 3.0 release ends with
-                commitments made in 2021, so the layer says where Chinese money went, not what China is
-                financing now; AidData's successor dataset, published in November 2025, reaches 2023 and is
-                not used here yet. Only projects AidData flags as physical infrastructure are kept, including
-                loans secured on oil or mineral exports; pledges, umbrella agreements and loans that buy a stake
-                are left out; about <span id="cnctry">a fifth</span> of the records have no published location and
-                sit at their country's centre, which the selection panel says.
+                <strong>Chinese finance is a <span class="cn-span">2000–2023</span> baseline.</strong> AidData's
+                China's Global Loans and Grants Dataset 1.0 ends with commitments made in <span class="cn-to">2023</span>,
+                so the layer says where Chinese money went, not what China is financing now. Only projects
+                AidData flags as physical infrastructure are kept, including loans it marks commodity-backed;
+                pledges, umbrella agreements and loans that buy a stake are left out. The release publishes no
+                locations: a record carried over from AidData's previous release (GCDF 3.0) keeps the location
+                and footprint published for it there, and about <span id="cnctry">a fifth</span> of the records,
+                <span id="cnnew">the ones</span> new in this release among them, sit at their country's centre,
+                which the selection panel says.
               </li>
               <li class="caveat">
                 <strong>EU finance is two institutions' own share.</strong> One record is a Commission
@@ -796,6 +798,11 @@
 <script>/*__VENDOR__*/</script>
 <script>
 const DATA = /*__PAYLOAD__*/;
+/* AidData's commitment years and constant-dollar base year, and the records new in its
+   release (no location yet), from meta.json: every mention of them reads these */
+const CN_META = (DATA.meta && DATA.meta.china_meta) || {};
+const CN_Y = CN_META.years || [2000, 2023], CN_BASE = CN_META.base_year || 2023, CN_NEW = CN_META.new_records || 0;
+const CN_SPAN = `${CN_Y[0]}–${CN_Y[1]}`;
 
 /* ---------------- vocabulary ---------------- */
 const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
@@ -803,7 +810,7 @@ const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_constructi
 const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables","china","eu","mattei"];
 const HOME_HOST    = "__HOME_URL__".replace(/^https?:\/\//,"").replace(/\/$/,"");
 const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",finance_wb:"World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · 2000–2021",eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",finance_wb:"World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
 /* The rail lists the data in two groups. "Layers" is what is built: power
    units, works on the ground, pipelines, cables. "Lenders" is who is paying:
    the finance layer's two banks (squares and diamonds), the EU layer's two
@@ -814,7 +821,7 @@ const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank
 const RAIL_LAYERS  = ["assets","ground","pipelines","cables"];
 const LENDER_ORDER = ["AfDB","WB","EC","EIB","CN","IT"];
 const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
-const LENDER_SUB   = {AfDB:"IATI activity files", WB:"IATI activity files", EC:"DG INTPA · DG NEAR · IATI", EIB:"IATI activity file", CN:"AidData · 2000–2021", IT:"Government project portal"};
+const LENDER_SUB   = {AfDB:"IATI activity files", WB:"IATI activity files", EC:"DG INTPA · DG NEAR · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal"};
 const LENDER_LAYER = {AfDB:"finance", WB:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
 const LENDER_GLYPH = {AfDB:"finance", WB:"finance_wb", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
 const LENDER_FAMILY = [["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["Italy",["IT"]]];
@@ -1345,6 +1352,10 @@ function renderSources(){
   const fa = FINANCE.filter(f=>f.ln!=="WB"), pc = (a,b) => b ? Math.round(100*a/b) + "%" : "some";
   el("afapprox").textContent = pc(fa.filter(f=>f.prec>0).length, fa.length);
   el("cnctry").textContent = pc(CHINA.filter(c=>c.prec===3).length, CHINA.length);
+  el("cnnew").textContent = `the ${fmt(CN_NEW)}`;
+  document.querySelectorAll(".cn-span").forEach(e => e.textContent = CN_SPAN);
+  document.querySelectorAll(".cn-base").forEach(e => e.textContent = CN_BASE);
+  document.querySelectorAll(".cn-to").forEach(e => e.textContent = CN_Y[1]);
 }
 
 function renderLede(){
@@ -1355,7 +1366,7 @@ function renderLede(){
     `What is being built across Africa, and who is paying for it. Eight layers from ten public datasets
      laid over one map: power plants, planned, being built, running or shelved, African Development Bank and World
      Bank projects with money attached, road, rail and airport works traced on the ground, oil and gas
-     pipelines, submarine cables, Chinese-financed projects from 2000 to 2021, the European Union's
+     pipelines, submarine cables, Chinese-financed projects from ${CN_Y[0]} to ${CN_Y[1]}, the European Union's
      own contracts and loans and the projects of Italy's Piano Mattei. Charts and a table follow the
      map; every figure carries its source.`;
 }
@@ -1402,7 +1413,7 @@ function renderKpis(){
     ["Works on the ground", fmt(G.length), "road, rail, air · OpenStreetMap"],
     ["Pipeline segments", fmt(P.length), `${fmt(pkm)} km of oil and gas route · GEM`],
     ["Submarine cables", fmt(C.length), `${fmt(landings)} African landings · TeleGeography`],
-    ["Chinese finance", "$" + fmt1(cnUsd/1000) + "bn", `${fmt(N.length)} projects 2000–2021 · AidData, 2021 USD`],
+    ["Chinese finance", "$" + fmt1(cnUsd/1000) + "bn", `${fmt(N.length)} projects ${CN_SPAN} · AidData, ${CN_BASE} USD`],
     ["Commission / EIB", "€" + fmt1((euEur-euEurEib)/1000) + "bn<br>€" + fmt1(euEurEib/1000) + "bn", `${fmt(E.length)} EU-financed records · each institution counted apart`],
     ["Piano Mattei", "€" + fmt1(pmEur/1000) + "bn", `${fmt(M.length)} projects · ${fmt(pmOn)} ongoing · stated by Italy's portal`],
     ["Under construction", fmt(VIS.filter(r=>r.status==="under_construction").length), "records across active layers"],
@@ -1640,7 +1651,7 @@ function renderSel(){
   } else if(r.layer==="china"){
     rows.push(["AidData status", esc(f.raw || CHINA_RAW[r.status] || r.status)]);
     rows.push(["Sector", esc(r.kind) + (OECD_SECTOR[f.sc] ? ` <i>· OECD ${esc(OECD_SECTOR[f.sc])}</i>` : "")]);
-    rows.push(["Commitment", money(r.size, f.pub_m, f.cnote, "$", "constant 2021 USD" + (f.est ? ", estimated" : ""))]);
+    rows.push(["Commitment", money(r.size, f.pub_m, f.cnote, "$", `constant ${CN_BASE} USD` + (f.est ? ", estimated" : ""))]);
     if(f.flow) rows.push(["Flow", esc(f.flow) + (f.cls ? ` <i>· ${esc(f.cls)}</i>` : "")]);
     if(f.rate!=null || f.mat!=null) rows.push(["Loan terms", [f.rate!=null ? fmt1(f.rate)+"% interest" : null, f.mat!=null ? fmt1(f.mat)+"-year maturity" : null].filter(Boolean).join(" · ")]);
     if(f.funders) rows.push(["Funder", esc(f.funders)]);
@@ -1652,10 +1663,11 @@ function renderSel(){
     rows.push(["Geo precision", f.prec===0 ? "precise" + (f.g ? " <i>· footprint outlined on the map</i>" : "")
       : f.prec===1 ? "approximate <i>· within 5 km</i>"
       : f.prec===2 ? "administrative area" + (f.place ? ` <i>· centre of ${esc(f.place)}</i>` : "")
+      : f.new ? "country only <i>· new in AidData's latest release, which publishes no locations; placed at the country's centre</i>"
       : "country only <i>· placed at the country's centre</i>"]);
     links.push([`https://china.aiddata.org/projects/${encodeURIComponent(f.aid)}/`, "AidData project page"]);
     if(f.osm) links.push(["https://www.openstreetmap.org/" + f.osm, "OSM feature"]);
-    note = "As AidData reconstructs it from public sources, in constant 2021 US dollars. Commitments made 2000–2021: a historical baseline, not what China finances now. Never added to AfDB money. AidData has since published a successor dataset, so its project page may show a revised record.";
+    note = `As AidData reconstructs it from public sources, in constant ${CN_BASE} US dollars. Commitments made ${CN_SPAN}: a historical baseline, not what China finances now. Never added to AfDB money.${f.new ? " New in AidData's latest release, which publishes no locations: placed at the country's centre." : ""}`;
   } else if(r.layer==="eu"){
     const eib = f.pub==="EIB";
     rows.push(["Lender", esc(EU_PUB[f.pub]||f.pub)]);

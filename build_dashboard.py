@@ -22,7 +22,7 @@ import sys
 from fetch_basemap import WIN, dp, ring_area, rnd, touches
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
     DASHBOARD_LAYERS, DOCS, EUR_USD, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
-    SITE_NAME, payload_meta, site_facts, wrap_document,
+    SITE_NAME, china_span, payload_meta, site_facts, wrap_document,
 )
 
 ROOT = pathlib.Path(__file__).parent
@@ -517,7 +517,7 @@ def _decimate(geoms, cap):
 def _china_title(t, n=130):
     """AidData's titles are sentences, sometimes suffixed "(Linked to Project
     ID#12345)"; drop the suffix and cut long ones at a word boundary."""
-    t = re.sub(r"\s*\(Linked to Project ID#?[^)]*\)", "", (t or "").strip())
+    t = re.sub(r"\s*\(Linked to (?:Project|Record) ID#?[^)]*\)", "", (t or "").strip())
     if len(t) <= n:
         return t or None
     cut = t[:n].rsplit(" ", 1)[0]
@@ -538,7 +538,7 @@ def build_china(idx, simp=simplify_line, rnd=r, cap=60, min_extent=0.02):
             geoms = _decimate(geoms, cap) if geoms else None
         lon, lat = p["lon"], p["lat"]
         iso = p.get("country") or locate(lon, lat, idx)[0]
-        amt, pub = p.get("amount_usd_2021"), p.get("amount_usd_2021_published")
+        amt, pub = p.get("amount_usd_const"), p.get("amount_usd_const_published")
         # the OSM link without its host and map fragment: "way/1164438280"
         osm = re.sub(r"^https?://www\.openstreetmap\.org/|#.*$", "", (p.get("osm_links") or [""])[0]) or None
         rows.append([
@@ -559,10 +559,12 @@ def build_china(idx, simp=simplify_line, rnd=r, cap=60, min_extent=0.02):
             p.get("raw_status") if p["dash_status"] == "stalled" else None,
             1 if p.get("amount_estimated") else 0, osm, geoms,
             round(pub / 1e6, 2) if pub else None, p.get("counted_note"),
+            # new in AidData's CLG 1.0: no location published yet, so at the country's centre
+            1 if p.get("new_in_clg") else 0,
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m", "prec", "place", "aid",
                      "sc", "flow", "cls", "funders", "impl", "cyr", "syr", "eyr", "rate", "mat",
-                     "distress", "cofin", "raw", "est", "osm", "g", "pub_m", "cnote"],
+                     "distress", "cofin", "raw", "est", "osm", "g", "pub_m", "cnote", "new"],
             "rows": rows}
 
 
@@ -706,7 +708,7 @@ def main():
     cc = china["cols"]
     cusd = sum(x[cc.index("usd_m")] or 0 for x in china["rows"]) / 1000
     cfp = sum(1 for x in china["rows"] if x[cc.index("g")])
-    print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn (2021 USD), {cfp:,} footprints kept")
+    print(f"   {len(china['rows']):,} Chinese-financed projects, ${cusd:,.1f}bn ({china_span()[2]} USD), {cfp:,} footprints kept")
 
     print("eu      …")
     eu = build_eu(idx)
@@ -787,7 +789,7 @@ def main():
         description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
                     "power plants and oil and gas pipelines (Global Energy Monitor), African "
                     "Development Bank and World Bank finance, Chinese-financed projects "
-                    "2000–2021 (AidData), European Union finance (European Commission and EIB), "
+                    f"{china_span()[0]}–{china_span()[1]} (AidData), European Union finance (European Commission and EIB), "
                     "Italy's Piano Mattei projects, "
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "
                     "with charts by country and sector and a sortable project table."))
