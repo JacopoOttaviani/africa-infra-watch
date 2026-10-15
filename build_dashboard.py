@@ -769,7 +769,7 @@ def main():
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
-    html = inline_vendor(brand_assets(TEMPLATE.read_text()))
+    html = inline_vendor(brand_assets(TEMPLATE.read_text(), here="dashboard"))
     if "/*__PAYLOAD__*/" not in html:
         sys.exit("template missing /*__PAYLOAD__*/ marker")
     page = html.replace("/*__PAYLOAD__*/", blob)

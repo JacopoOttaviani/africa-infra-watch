@@ -236,28 +236,97 @@ DEEP_THEMES = [
     ("corridors", "Africa's strategic corridors", "Railways, ports and pipelines: who pays and who builds", "corridors.json"),
 ]
 
+# The menu bar names a theme by one short word; its full title is the
+# tooltip, the dropdown's card and the footer's link. A theme missing here
+# shows its title in the bar.
+DEEP_SHORT = {"debt": "Debt", "compare": "Compare", "corridors": "Corridors"}
+
 DEEP_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/>'
              '<path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>')
+# a grid, not the three bars the map and the dashboard use for their filters drawer
+MENU_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/>'
+             '<rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/>'
+             '<rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>')
+BOOK_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/>'
+             '<path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>')
+CARET = '<svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'
+# the footer's two support buttons: the same steaming cup as every page's coffee button,
+# and LinkedIn's mark (a white tile with the blue "in")
+COFFEE_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g>'
+               '<g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/>'
+               '<path d="M4 22h14"/></g></svg>')
+LINKEDIN_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="4" fill="#fff"/>'
+                 '<path fill="#0A66C2" transform="translate(2.9 3.1) scale(.73)" d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 '
+                 '8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg>')
 
-# The menu's look, in one place: brand_assets() fills /*__LMENU_CSS__*/ in
-# every template's stylesheet with it. It reuses the .methodbtn look for the
-# button and the site's tokens for the panel, so it follows each theme.
+# The menu bar's and the footer's look, in one place: brand_assets() fills
+# /*__LMENU_CSS__*/ in every template's stylesheet with it. It uses the
+# site's tokens only, so it follows each theme.
 LMENU_CSS = """
-  /* the Deep dives menu (shared.donor_nav): one button in the top bar, the
-     reading pages in a panel under it */
-  .lmenu{position:relative}
-  .lmenu>summary{display:inline-flex;list-style:none;cursor:pointer}   /* .methodbtn is not a flex box on every page */
-  .lmenu>summary::-webkit-details-marker{display:none}
-  .lmenu>summary .lm-cur{font-weight:500;color:var(--ink-3)}
-  .lmenu>summary .lm-car{width:11px;height:11px;margin-left:1px;transition:transform .15s}
-  .lmenu[open]>summary{background:var(--surface-2)}
-  .lmenu[open]>summary .lm-car{transform:rotate(180deg)}
-  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:356px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
+  /* ---------- the menu bar (shared.site_nav) ----------
+     Map, Dashboard, the theme deep dives by name, the lender profiles in a
+     dropdown, Methodology, Contact me. It folds in three steps as the window narrows:
+     the "Deep dives" kicker goes, then the themes and the lenders fold into
+     one "Deep dives" dropdown, then everything but Methodology folds into
+     "Menu". The map and the dashboard (.snav.sn-app) fold sooner: the rail takes
+     356 px there, and their own controls share the top edge. */
+  .snav{display:flex;align-items:center;gap:1px;height:34px;padding:0 3px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);font-family:var(--display)}
+  .sn-a{display:inline-flex;align-items:center;gap:6px;height:26px;margin:0;padding:0 9px;border:0;border-radius:3px;background:none;color:var(--ink);font-family:var(--display);font-size:12px;font-weight:600;line-height:1;letter-spacing:.005em;white-space:nowrap;text-decoration:none;cursor:pointer;list-style:none;transition:background .15s,color .15s}
+  .sn-a::-webkit-details-marker{display:none}
+  .sn-a:hover{background:var(--surface-2)}
+  .sn-a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .sn-a svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sn-a[aria-current="page"],.sn-a[aria-pressed="true"],.sn-dd.cur>.sn-a,.sn-dd.cur[open]>.sn-a{background:var(--ink);color:var(--paper)}
+  .sn-sep{flex:none;width:1px;height:16px;margin:0 5px;background:var(--rule)}
+  .sn-k{padding:0 5px 0 3px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .sn-dd{position:relative}
+  .sn-dd[open]>.sn-a{background:var(--surface-2)}
+  .sn-dd .lm-car{width:11px;height:11px;margin:0 -3px 0 -3px;transition:transform .15s}
+  .sn-dd[open] .lm-car{transform:rotate(180deg)}
+  .sn-cur{font-weight:500;opacity:.72}
+  /* Contact me: the bar's one filled item, in LinkedIn's blue, with the footer button's
+     shine and logo flip (lishine, liflip) */
+  .sn-a.sn-contact{position:relative;margin-left:4px;overflow:hidden;isolation:isolate;background:#0A66C2;color:#fff}
+  .sn-a.sn-contact::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-130%)}
+  .sn-a.sn-contact svg{stroke:none;overflow:visible}
+  .sn-a.sn-contact:hover,.sn-a.sn-contact:focus-visible{background:#0B74DB;color:#fff}
+  .sn-a.sn-contact:hover::before,.sn-a.sn-contact:focus-visible::before{animation:lishine .75s ease-out forwards}
+  .sn-a.sn-contact:hover svg,.sn-a.sn-contact:focus-visible svg{animation:liflip .6s cubic-bezier(.34,1.56,.64,1)}
+  .sn-more,.sn-ico,.lm-site{display:none}
+  .sn-ms{display:none;align-items:center;gap:6px}
+  /* the reading pages: their header is capped at the column's 1140 px, too narrow for the
+     kicker beside the coffee button, so it never shows there; then themes and lenders fold */
+  .snav:not(.sn-app) .sn-k{display:none}
+  @media (max-width:1100px){.snav:not(.sn-app) .sn-t{display:none}.snav:not(.sn-app) .sn-more{display:block}}
+  @media (max-width:1000px){
+    .snav:not(.sn-app) .sn-x,.snav:not(.sn-app) .sn-ml,.snav:not(.sn-app) .sn-meth .sn-l,.snav:not(.sn-app) .sn-contact .sn-l{display:none}
+    .snav:not(.sn-app) .sn-ms{display:inline-flex}
+    .snav:not(.sn-app) .sn-meth .sn-ico{display:block}
+    .snav:not(.sn-app) .lm-site{display:grid}
+    .snav:not(.sn-app) .sn-meth,.snav:not(.sn-app) .sn-contact{padding:0 7px}
+    .snav:not(.sn-app) .sn-more.cur>.sn-a{background:none;color:var(--ink)}
+    .snav:not(.sn-app) .sn-more.cur[open]>.sn-a{background:var(--surface-2)}
+  }
+  /* the map and the dashboard */
+  @media (max-width:1480px){.snav.sn-app .sn-k{display:none}}
+  @media (max-width:1400px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
+  @media (max-width:1180px){
+    .snav.sn-app .sn-x,.snav.sn-app .sn-ml,.snav.sn-app .sn-meth .sn-l,.snav.sn-app .sn-contact .sn-l{display:none}
+    .snav.sn-app .sn-ms{display:inline-flex}
+    .snav.sn-app .sn-meth .sn-ico{display:block}
+    .snav.sn-app .lm-site{display:grid}
+    .snav.sn-app .sn-meth,.snav.sn-app .sn-contact{padding:0 7px}
+  }
+
+  /* the dropdown panels */
+  .lm-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:20;width:356px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left;font-family:var(--display)}
   .lm-h{margin:0 2px 4px;font-size:12px;line-height:1.45;color:var(--ink-3);max-width:none}
   .lm-h b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
   .lm-tab{display:flex;align-items:center;gap:6px;margin:6px 2px 2px;font-size:11.5px;font-weight:600;color:var(--accent-ink)}
   .lm-tab svg{width:12px;height:12px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .lm-gl{display:block;margin:12px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-site{grid-template-columns:1fr 1fr;gap:4px;margin:0 0 10px;padding-bottom:10px;border-bottom:1px solid var(--rule-soft)}
+  .lm-site .lm-item{justify-content:center;padding:7px 8px;border-color:var(--rule-soft);background:var(--surface-3)}
   .lm-themes{display:grid;gap:4px}
   .lm-theme{display:block;padding:7px 9px;border-radius:3px;border:1px solid var(--rule-soft);background:var(--surface-3);color:var(--ink);text-decoration:none;font-family:var(--display);line-height:1.3}
   .lm-theme b{display:block;font-size:12.5px;font-weight:700}
@@ -268,76 +337,245 @@ LMENU_CSS = """
   .lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
   .lm-item{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px 6px 6px;border-radius:3px;border:1px solid transparent;color:var(--ink);text-decoration:none;font-family:var(--display);font-size:12.5px;font-weight:600;line-height:1.2}
   .lm-item:hover{background:var(--surface-2)}
-  .lm-item[aria-current="page"]{background:var(--ink);color:var(--paper)}
+  .lm-item[aria-current="page"],.lm-site .lm-item[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
   .lm-item[aria-current="page"] .lm-badge{background:transparent;border-color:color-mix(in srgb,var(--paper) 40%,transparent);color:var(--paper)}
   .lm-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 4px;border:1px solid var(--rule);border-radius:2px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2);flex:none}
   .lm-item>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   @media (max-width:600px){
-    .lmenu>summary .lm-cur{display:none}
     .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
   }
+  @media (prefers-reduced-motion:reduce){.sn-a,.sn-dd .lm-car{transition:none}.sn-a.sn-contact::before,.sn-a.sn-contact svg{animation:none!important}}
+
+  /* ---------- the footer (shared.site_footer) ----------
+     every page in four columns: the site, Explore, the theme deep dives, the
+     lender profiles. It reflows on its own width, so the same footer sits
+     under a reading page and at the foot of the map's rail. */
+  .sf{container-type:inline-size}
+  .sf-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,1.15fr) minmax(0,1.25fr);gap:26px 40px;font-family:var(--display);font-size:12.5px;line-height:1.45;color:var(--ink-2);text-align:left}
+  .sf-home{display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none}
+  .sf-home .mark{flex:none;display:block;font-size:30px;color:var(--accent)}
+  .sf-home .kicker{display:block;font-size:9.5px}
+  .sf-home b{display:block;margin-top:2px;font-size:14px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+  .sf-home:hover b{color:var(--accent)}
+  .sf-about{margin:12px 0 0;max-width:40ch}
+  .sf-made{margin:10px 0 0;font-size:12px;color:var(--ink-3)}
+  .sf-made .heart{color:var(--accent)}
+  .sf-h{margin:3px 0 10px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .sf-h2{margin:14px 0 8px;font-size:11px;font-weight:600;color:var(--ink-3)}
+  .sf-list{display:grid;gap:7px;margin:0;padding:0;list-style:none}
+  .sf-list.two{grid-template-columns:1fr 1fr;column-gap:14px}
+  .sf-list small{display:block;margin-top:1px;font-size:11.5px;font-weight:400;color:var(--ink-3)}
+  .sf-grid a:not(.sf-b){color:var(--ink);font-weight:600;text-decoration:none;border:0}
+  .sf-grid a:not(.sf-b):hover{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .sf-grid a[aria-current="page"]{color:var(--accent)}
+  .sf-grid a[aria-current="page"]::after{content:" ·  you are here";font-weight:400;font-size:11px;color:var(--ink-3)}
+  .sf-made a:not(.sf-b){color:var(--ink-2)}
+  /* the two support buttons under the credit: the site's coffee button (.coffee, drawn
+     and animated by each template's own stylesheet) and a LinkedIn twin that tilts the
+     other way and flips its logo */
+  .sf-cta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .sf-cta .coffee,.sf-cta .sf-li{height:36px;padding:0 14px 0 11px;gap:8px;font-size:12px}
+  .sf-cta .coffee span{display:inline}
+  .sf-cta svg{width:17px;height:17px}
+  .sf-li{position:relative;display:inline-flex;align-items:center;border-radius:3px;background:#0A66C2;color:#fff;border:1px solid #0858A8;font-family:var(--display);font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
+  .sf-li::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-130%)}
+  .sf-li svg{flex:none;overflow:visible}
+  .sf-li:hover,.sf-li:focus-visible{background:#0B74DB;color:#fff;transform:translateY(-2px) rotate(2deg) scale(1.05);box-shadow:0 8px 22px -8px rgba(10,102,194,.85),0 2px 4px rgba(22,33,28,.12)}
+  .sf-li:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .sf-li:hover::before,.sf-li:focus-visible::before{animation:lishine .75s ease-out forwards}
+  .sf-li:hover svg,.sf-li:focus-visible svg{animation:liflip .6s cubic-bezier(.34,1.56,.64,1)}
+  .sf-li:active{transform:translateY(0) scale(.98)}
+  @keyframes lishine{to{transform:translateX(130%)}}
+  @keyframes liflip{from{transform:perspective(80px) rotateY(0)}to{transform:perspective(80px) rotateY(360deg)}}
+  @media (prefers-reduced-motion:reduce){.sf-li,.sf-li::before,.sf-li svg{animation:none!important;transition:none!important}.sf-li:hover{transform:none}}
+  @container (max-width:860px){.sf-grid{grid-template-columns:1fr 1fr}.sf-brand{grid-column:1/-1}}
+  @container (max-width:460px){.sf-grid{grid-template-columns:1fr;gap:22px}}
 """
 
 
-def donor_nav(current=None):
-    """The Deep dives menu, the first button of the top bar on every page: a
-    <details> whose panel lists the reading pages beyond the map, the themes
-    (debt, the comparison) first, then the lender profiles, single countries
-    apart from groups of countries. It opens without scripts; the small
-    script only closes it on an outside click or Escape.
+def _deep_pages():
+    """The published deep dives: the themes whose data is built, then the
+    lender profiles, single countries apart from groups of countries. The
+    menu bar and the footer both read this, so they always list the same
+    pages; pages that are built but unlisted (Lobito, LAPSSET, minerals)
+    stay out of both until they are added to DEEP_THEMES."""
+    themes = [(slug, t, sub) for slug, t, sub, need in DEEP_THEMES if (DATA / need).exists()]
+    single = sorted((d for d in DONORS if d["slug"] not in DONOR_BLOCS), key=lambda d: d["name"])
+    blocs = sorted((d for d in DONORS if d["slug"] in DONOR_BLOCS), key=lambda d: d["name"])
+    return themes, single, blocs
 
-    `current` is the page being built: None on the map and the dashboard,
-    where every entry opens in a new tab (so the reader's filters and view
-    stay where they were, and the panel says so), or the slug of a deep dive
-    ("debt", "compare", a lender), whose entry is marked aria-current and
-    named on the button, and where entries open in the same tab. Links are
+
+def _is_app(current):
+    """True on the map and the dashboard, where a deep dive opens in a new
+    tab so the reader's filters and view stay where they were."""
+    return current in (None, "map", "dashboard")
+
+
+NAV_SCRIPT = (
+    # one dropdown open at a time; an outside click or Escape closes it; on a
+    # phone the panel is pinned under the bar. A [data-method] link opens the
+    # map's Methodology tab in place when the page has one (the map's rail).
+    '<script>(()=>{const dd=[...document.querySelectorAll(".sn-dd")];'
+    'const place=d=>{const p=d.querySelector(".lm-panel");if(!p)return;p.style.top=p.style.maxHeight="";'
+    'if(innerWidth<=600){const t=Math.round(d.closest(".snav").getBoundingClientRect().bottom+8);'
+    'p.style.top=t+"px";p.style.maxHeight=(innerHeight-t-12)+"px";}};'
+    'dd.forEach(d=>d.addEventListener("toggle",()=>{if(d.open){dd.forEach(o=>{if(o!==d)o.open=false;});place(d);}}));'
+    'document.addEventListener("click",e=>{dd.forEach(d=>{if(d.open&&!d.contains(e.target))d.open=false;});'
+    'const m=e.target.closest&&e.target.closest("[data-method]"),b=document.getElementById("methodtop");'
+    'if(m&&b&&b.tagName==="BUTTON"){e.preventDefault();if(document.body.dataset.tab!=="method")b.click();}});'
+    'document.addEventListener("keydown",e=>{const d=dd.find(d=>d.open);'
+    'if(e.key==="Escape"&&d){d.open=false;d.querySelector("summary").focus();}});'
+    '})();</script>')
+
+
+def site_nav(current=None):
+    """The menu bar on every page: Map, Dashboard, then the deep dives (the
+    themes by name, the lender profiles in a dropdown), then Methodology and
+    Contact me (the author's LinkedIn). As the window narrows the themes and
+    lenders fold into one "Deep dives" dropdown, then everything but
+    Methodology and Contact me into "Menu" (LMENU_CSS). The
+    dropdowns are <details>, so they open without scripts; NAV_SCRIPT only
+    keeps one open at a time and closes them on an outside click or Escape.
+
+    `current` is the page being built: "map" or "dashboard" (the map's own
+    Map and Methodology entries are buttons its script drives: #navmap and
+    #methodtop), or the slug of a deep dive, which is marked aria-current
+    and named on its dropdown. On the map and the dashboard every deep dive
+    opens in a new tab, so the reader's filters stay where they were, and
+    the panels say so; elsewhere links open in the same tab. Links are
     absolute, so they also work from an artifact; wrap_document makes them
     relative for the Pages build."""
-    if not DONORS:
-        return ""
     esc = lambda x: html.escape(x, quote=True)
-    new_tab = current is None
-    tab = ' target="_blank" rel="noopener"' if new_tab else ""
-    tip = " (opens in a new tab)" if new_tab else ""
+    app = _is_app(current)
+    themes, single, blocs = _deep_pages()
+    tab = ' target="_blank" rel="noopener"' if app else ""
+    tip = " (opens in a new tab)" if app else ""
 
-    def link_attrs(slug, title):
+    def deep(slug, title):
         cur = ' aria-current="page"' if slug == current else ""
         return f'href="{site_url(slug + "/")}"{tab}{cur} title="{esc(title + tip)}"'
 
     def item(d):
-        return (f'<a class="lm-item" {link_attrs(d["slug"], d["title"])}>'
+        return (f'<a class="lm-item" {deep(d["slug"], d["title"])}>'
                 f'<span class="lm-badge">{esc(d["badge"])}</span><span>{esc(d["name"])}</span></a>')
-    themes = [(slug, t, sub) for slug, t, sub, need in DEEP_THEMES if (DATA / need).exists()]
-    single = sorted((d for d in DONORS if d["slug"] not in DONOR_BLOCS), key=lambda d: d["name"])
-    blocs = sorted((d for d in DONORS if d["slug"] in DONOR_BLOCS), key=lambda d: d["name"])
-    here = next((d["name"] for d in DONORS if d["slug"] == current), None) or \
-        next((t for slug, t, _, _ in DEEP_THEMES if slug == current), "")
-    short = {"debt": "Debt", "compare": "Compare", "corridors": "Corridors"}.get(current, here)
-    body = ""
-    if themes:
-        body += ('<span class="lm-gl">Themes</span><div class="lm-themes">' + "".join(
-            f'<a class="lm-theme" {link_attrs(slug, t)}><b>{esc(t)}</b><span>{esc(sub)}</span></a>'
-            for slug, t, sub in themes) + "</div>")
-    body += f'<span class="lm-gl">Lenders, one by one</span><div class="lm-grid">{"".join(map(item, single))}</div>'
+
+    def here(key):
+        return ' aria-current="page"' if key == current else ""
+
+    lenders = f'<span class="lm-gl">Lenders, one by one</span><div class="lm-grid">{"".join(map(item, single))}</div>'
     if blocs:
-        body += f'<span class="lm-gl">Groups of lending countries</span><div class="lm-grid">{"".join(map(item, blocs))}</div>'
-    note = (f'<p class="lm-tab">{DEEP_ICON}Each one opens in a new tab; the map keeps your filters.</p>'
-            if new_tab else "")
-    cur_html = f' <span class="lm-cur">· {esc(short)}</span>' if short else ""
-    return (
-        '<details class="lmenu" id="lmenu">'
-        '<summary class="methodbtn" aria-label="Deep dives" title="Deep dives: reading pages on one theme or one lender, '
-        'beyond the map">'
-        f'{DEEP_ICON}<span>Deep dives{cur_html}</span>'
-        '<svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>'
-        '<nav class="lm-panel" aria-label="Deep dives">'
+        lenders += f'<span class="lm-gl">Groups of lending countries</span><div class="lm-grid">{"".join(map(item, blocs))}</div>'
+    note = f'<p class="lm-tab">{DEEP_ICON}Each one opens in a new tab; the map keeps your filters.</p>' if app else ""
+    cards = ('<span class="lm-gl">Themes</span><div class="lm-themes">' + "".join(
+        f'<a class="lm-theme" {deep(slug, t)}><b>{esc(t)}</b><span>{esc(sub)}</span></a>'
+        for slug, t, sub in themes) + "</div>") if themes else ""
+    lender_here = next((d["name"] for d in DONORS if d["slug"] == current), "")
+    theme_here = next((DEEP_SHORT.get(slug, t) for slug, t, _ in themes if slug == current), "")
+    named = lambda s: f' <span class="sn-cur">· {esc(s)}</span>' if s else ""
+    cur_cls = lambda on: " cur" if on else ""
+
+    map_title = "The map: every record, filtered and zoomable"
+    dash_title = "The dashboard: the same records as charts and a table"
+    if current == "map":
+        map_link = f'<button class="sn-a sn-x" id="navmap" type="button" aria-current="page" title="{map_title}">Map</button>'
+    else:
+        map_link = f'<a class="sn-a sn-x" href="{SITE_URL}" title="{map_title}">Map</a>'
+    dash_link = f'<a class="sn-a sn-x" href="{site_url("dashboard.html")}"{here("dashboard")} title="{dash_title}">Dashboard</a>'
+    meth_title = "Methodology: where the data comes from and how it is aligned"
+    if current == "map":
+        meth = (f'<button class="sn-a sn-meth" id="methodtop" type="button" aria-pressed="false" title="{meth_title}" '
+                f'aria-label="Methodology"><span class="sn-ico">{BOOK_ICON}</span><span class="sn-l">Methodology</span></button>')
+    else:
+        meth = (f'<a class="sn-a sn-meth" href="{site_url("#t=m")}" title="{meth_title}" aria-label="Methodology">'
+                f'<span class="sn-ico">{BOOK_ICON}</span><span class="sn-l">Methodology</span></a>')
+    site_row = (f'<div class="lm-site"><a class="lm-item" href="{SITE_URL}"{here("map")}>Map</a>'
+                f'<a class="lm-item" href="{site_url("dashboard.html")}"{here("dashboard")}>Dashboard</a></div>')
+
+    bar = [map_link, dash_link]
+    if themes or single:
+        bar.append('<span class="sn-sep sn-x" aria-hidden="true"></span>')
+        bar.append('<span class="sn-k sn-x sn-t" aria-hidden="true">Deep dives</span>')
+        bar += [f'<a class="sn-a sn-x sn-t" {deep(slug, t)}>{esc(DEEP_SHORT.get(slug, t))}</a>' for slug, t, _ in themes]
+        if single:
+            bar.append(
+                f'<details class="sn-dd sn-x sn-t{cur_cls(lender_here)}" name="snav">'
+                f'<summary class="sn-a" title="Lender profiles: one page per lending country or group">'
+                f'Lender profiles{CARET}</summary>'
+                '<nav class="lm-panel" aria-label="Lender profiles"><p class="lm-h"><b>Lender profiles</b>One page per '
+                'lending country or group: what Africa owes it, what it lends and gives, and what it builds.</p>'
+                f'{note}{lenders}</nav></details>')
+    bar.append(
+        f'<details class="sn-dd sn-more{cur_cls(lender_here or theme_here)}" name="snav">'
+        f'<summary class="sn-a" title="Deep dives: reading pages on one theme or one lender, beyond the map">'
+        f'<span class="sn-ms">{MENU_ICON}Menu</span><span class="sn-ml">Deep dives{named(lender_here or theme_here)}</span>'
+        f'{CARET}</summary>'
+        f'<nav class="lm-panel" aria-label="Site and deep dives">{site_row}'
         '<p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, '
-        f'beyond what the map\'s filters show.</p>{note}{body}'
-        '</nav></details>'
-        '<script>(()=>{const d=document.getElementById("lmenu");if(!d)return;'
-        'document.addEventListener("click",e=>{if(d.open&&!d.contains(e.target))d.open=false;});'
-        'document.addEventListener("keydown",e=>{if(e.key==="Escape"&&d.open){d.open=false;d.querySelector("summary").focus();}});'
-        '})();</script>')
+        f'beyond what the map\'s filters show.</p>{note}{cards}{lenders if single else ""}</nav></details>')
+    bar.append('<span class="sn-sep sn-x" aria-hidden="true"></span>')
+    bar.append(meth)
+    bar.append(f'<a class="sn-a sn-contact" href="{AUTHOR_URL}" target="_blank" rel="noopener noreferrer" '
+               f'title="Contact {esc(AUTHOR_NAME)} on LinkedIn (opens in a new tab)" '
+               f'aria-label="Contact me on LinkedIn (opens in a new tab)">{LINKEDIN_ICON}<span class="sn-l">Contact me</span></a>')
+    return (f'<nav class="snav{" sn-app" if app else ""}" aria-label="Site">' + "".join(bar) + "</nav>" + NAV_SCRIPT)
+
+
+def site_footer(current=None):
+    """The footer on every page, four columns that reflow on their own width
+    (a container query), so the same markup sits under a reading page, under
+    the dashboard and at the foot of the map's rail: the site and its
+    author, Explore (map, dashboard, methodology), the theme deep dives and
+    the lender profiles, each with a line on what it holds. It lists exactly
+    the pages the menu bar lists (_deep_pages) and opens them the same way:
+    in a new tab from the map and the dashboard, in place elsewhere.
+    Templates own the <footer> element and anything page-specific (the
+    page's data file, the build date) under this. The coffee button reuses
+    the .coffee look every template already defines; the LinkedIn one is
+    styled here (.sf-li)."""
+    esc = lambda x: html.escape(x, quote=True)
+    app = _is_app(current)
+    themes, single, blocs = _deep_pages()
+    tab = ' target="_blank" rel="noopener"' if app else ""
+    ext = ' target="_blank" rel="noopener noreferrer"'
+
+    def here(key):
+        return ' aria-current="page"' if key == current else ""
+
+    def li(href, label, sub="", key=None, attrs=""):
+        small = f"<small>{esc(sub)}</small>" if sub else ""
+        return f'<li><a href="{href}"{attrs}{here(key)}>{esc(label)}</a>{small}</li>'
+
+    meth = ' data-method' if current == "map" else ""
+    explore = (li(SITE_URL, "Map", "Every record, filtered and zoomable", "map")
+               + li(site_url("dashboard.html"), "Dashboard", "The same records as charts and a table", "dashboard")
+               + li(site_url("#t=m"), "Methodology", "Where the data comes from, and its limits", attrs=meth))
+    cols = [
+        '<div class="sf-brand">'
+        f'<a class="sf-home" href="{SITE_URL}">{LOGO_MARK}<span><span class="kicker">Geopolitics of Africa</span>'
+        f'<b>{esc(SITE_NAME)}</b></span></a>'
+        '<p class="sf-about">What is being built across Africa, and who is paying for it: power plants, '
+        "lenders' projects, works on the ground, pipelines and cables from public data, with deep dives "
+        'by theme and by lender.</p>'
+        f'<p class="sf-made">Made with <span class="heart" aria-hidden="true">♥</span> by '
+        f'<a href="{WEB_URL}"{ext}>{esc(AUTHOR_NAME)}</a>.</p>'
+        f'<div class="sf-cta"><a class="coffee sf-b" href="{COFFEE_URL}"{ext} '
+        'aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">'
+        f'{COFFEE_ICON}<span>Buy me a coffee</span></a>'
+        f'<a class="sf-li sf-b" href="{AUTHOR_URL}"{ext} aria-label="{esc(AUTHOR_NAME)} on LinkedIn (opens in a new tab)" '
+        f'title="Connect on LinkedIn">{LINKEDIN_ICON}<span>LinkedIn</span></a></div></div>',
+        f'<nav class="sf-col" aria-label="Explore"><p class="sf-h">Explore</p><ul class="sf-list">{explore}</ul></nav>',
+    ]
+    if themes:
+        cols.append('<nav class="sf-col" aria-label="Deep dives by theme"><p class="sf-h">Deep dives</p><ul class="sf-list">'
+                    + "".join(li(site_url(slug + "/"), t, sub, slug, tab) for slug, t, sub in themes) + "</ul></nav>")
+    if single:
+        lend = ('<nav class="sf-col" aria-label="Lender profiles"><p class="sf-h">Lender profiles</p><ul class="sf-list two">'
+                + "".join(li(site_url(d["slug"] + "/"), d["name"], key=d["slug"], attrs=tab) for d in single) + "</ul>")
+        if blocs:
+            lend += ('<p class="sf-h2">Groups of countries</p><ul class="sf-list two">'
+                     + "".join(li(site_url(d["slug"] + "/"), d["name"], key=d["slug"], attrs=tab) for d in blocs) + "</ul>")
+        cols.append(lend + "</nav>")
+    return '<div class="sf"><div class="sf-grid">' + "".join(cols) + "</div></div>"
 
 
 # ------------------------------------------------------------------ meta.json
@@ -471,20 +709,23 @@ LOGO_MARK = re.sub(r"<svg ", '<svg class="mark" aria-hidden="true" focusable="fa
 SOURCE_LOGOS = {p.stem: p.read_text().strip() for p in sorted((BRAND / "sources").glob("*.svg"))}
 
 
-def brand_assets(page, donor=None):
+def brand_assets(page, donor=None, here=None):
     """Fill the brand markers a template carries: the inline favicon link in
     its head, the header mark next to each <h1>, the mark's home link, the
-    row of lender-profile buttons and, where the template asks for them, the
-    data-source logos.
+    menu bar (<!--__NAV__-->), the footer (<!--__FOOTER__-->) and, where the
+    template asks for them, the data-source logos.
     The home link is the absolute site URL so it also works from an artifact;
     wrap_document makes it relative for the Pages build. `donor` is the slug
-    of the profile being built, so its own button reads as the current page."""
-    for marker in ("<!--__FAVICON__-->", "<!--__LOGO__-->", "__HOME_URL__"):
+    of the deep dive being built and `here` is "map" or "dashboard", so the
+    menu bar and the footer mark the current page."""
+    for marker in ("<!--__FAVICON__-->", "<!--__LOGO__-->", "__HOME_URL__", "<!--__NAV__-->", "<!--__FOOTER__-->"):
         if marker not in page:
             raise SystemExit(f"template missing the {marker} marker")
+    current = donor or here
     return (page.replace("<!--__FAVICON__-->", f'<link rel="icon" href="{FAVICON}">')
                 .replace("<!--__LOGO__-->", LOGO_MARK)
-                .replace("<!--__DONORS__-->", donor_nav(donor))
+                .replace("<!--__NAV__-->", site_nav(current))
+                .replace("<!--__FOOTER__-->", site_footer(current))
                 .replace("/*__LMENU_CSS__*/", LMENU_CSS)
                 .replace("/*__SOURCE_LOGOS__*/{}", json.dumps(SOURCE_LOGOS, ensure_ascii=False))
                 .replace("__HOME_URL__", SITE_URL)

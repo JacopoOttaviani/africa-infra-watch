@@ -203,18 +203,17 @@
   .notes .foot{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
 
   /* ---------- support button (always visible) ---------- */
-  /* one row, right-aligned: the Deep dives menu and Methodology; support sits at the map's bottom right */
+  /* the site's menu bar (shared.site_nav) sits at the top right; support sits at the map's bottom right */
   .topright{position:fixed;right:12px;top:12px;z-index:8;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .topright .actions{display:flex;gap:6px;align-items:center}
   /*__LMENU_CSS__*/
-  /* below 1000 px the bar shrinks to its icons, so it clears the map's own controls; each button's
-     title and aria-label still name it */
-  @media (max-width:1000px){.topright .methodbtn{padding:0 7px;gap:0}.topright .methodbtn>span{display:none}.topright .lmenu>summary{gap:3px}}
-  .methodbtn{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;box-shadow:var(--shadow);cursor:pointer;transition:background .15s,color .15s}
-  .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .methodbtn:hover{background:var(--surface-2)}
-  .methodbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-  .methodbtn:focus-visible,.coffee:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* the room the menu bar takes on the top edge, which the map's own controls and the
+     methodology's top bar leave free; it steps with the bar's folds (1480/1400/1180 px) */
+  :root{--navw:750px}
+  @media (max-width:1480px){:root{--navw:670px}}
+  @media (max-width:1400px){:root{--navw:455px}}
+  @media (max-width:1180px){:root{--navw:165px}}
+  .coffee:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .coffee{position:relative;z-index:8;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
   .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
@@ -228,7 +227,7 @@
   @keyframes cshine{to{transform:translateX(130%)}}
   @keyframes cwiggle{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}65%{transform:rotate(9deg)}}
   @keyframes csteam{0%{transform:translateY(1px);opacity:0}35%{opacity:1}100%{transform:translateY(-3px);opacity:0}}
-  @media (max-width:600px){.coffee,.methodbtn{padding:0 7px;gap:0}.coffee span,.methodbtn span{display:none}}
+  @media (max-width:600px){.coffee{padding:0 7px;gap:0}.coffee span{display:none}}
   @media (prefers-reduced-motion:reduce){.coffee,.coffee::before,.coffee .cup,.coffee .steam{animation:none!important;transition:none!important}.coffee:hover{transform:none}}
   .byline{font-size:11.5px;color:var(--ink-3);line-height:1.5}
   .byline a{display:inline-flex;align-items:center;gap:4px;color:var(--ink-2);font-weight:600;text-decoration:none;border-bottom:1px solid var(--rule)}
@@ -238,7 +237,7 @@
   /* ---------- HUD ---------- */
   .hud{position:absolute;z-index:3;display:flex;gap:6px;align-items:flex-start;pointer-events:none}
   .hud > *{pointer-events:auto}
-  .hud-tl{left:12px;top:12px;flex-wrap:wrap;max-width:calc(100% - 290px)}
+  .hud-tl{left:12px;top:12px;flex-wrap:wrap;max-width:calc(100% - var(--navw) - 36px)}
   .hud-tr{right:12px;top:52px;flex-direction:column}
   .pill{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:5px 9px;font-size:11.5px;font-weight:600;box-shadow:var(--shadow);display:flex;gap:7px;align-items:center;white-space:nowrap}
   .pill .m{font-size:11.5px;color:var(--ink)}
@@ -360,9 +359,8 @@
     .legend .col.sizes{display:none}
     .detail{right:12px;left:12px;width:auto;bottom:12px;max-height:60%}
     .credit{max-width:230px;text-align:right}
-    .hud-tl{max-width:calc(100% - 290px)}
+    body.rail-open .topright{display:none}   /* the drawer's close button sits under the menu bar otherwise */
   }
-  @media (max-width:600px){.hud-tl{max-width:calc(100% - 100px)}.mtop{padding-right:96px}}
   /* ---------- site-only chrome (GitHub Pages build) ---------- */
   .pages-only{display:none}
   html[data-host="pages"] .pages-only{display:inline-flex}
@@ -390,6 +388,11 @@
   body[data-tab="method"] .stage > :not(#method):not(.scrim){display:none}
 
   .readmore{display:flex;flex-direction:column;gap:6px;padding:14px 20px 22px;margin-top:auto;border-top:1px solid var(--rule-soft);font-size:12px;color:var(--ink-3);line-height:1.5}
+  /* the site's footer (shared.site_footer) at the foot of the rail, in one column; the
+     rail's head already carries the name and the credit, so only the support buttons stay */
+  .railfoot{padding:18px 20px 26px;border-top:1px solid var(--rule)}
+  .railfoot .sf-home,.railfoot .sf-about,.railfoot .sf-made{display:none}
+  .railfoot .sf-cta{margin-top:0}
   .readmore button{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink)}
   .readmore button:hover{background:var(--surface-3)}
 
@@ -405,7 +408,7 @@
   #method{position:absolute;inset:0;overflow-y:auto;background:var(--paper);display:none;scroll-behavior:smooth;scrollbar-width:thin}
   body[data-tab="method"] #method{display:block}
   @media (prefers-reduced-motion:reduce){#method{scroll-behavior:auto}}
-  .mtop{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 290px 10px 24px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule-soft)}
+  .mtop{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px calc(var(--navw) + 24px) 10px 24px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule-soft)}
   .mtop .back{display:inline-flex;gap:6px;align-items:center;white-space:nowrap;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink);box-shadow:var(--shadow)}
   .mtop .back svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
   .mtop .where{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -579,6 +582,8 @@
       <h3>Contents</h3>
       <nav class="toc" id="toc" aria-label="Methodology sections"></nav>
     </div>
+
+    <footer class="railfoot"><!--__FOOTER__--></footer>
   </aside>
 
   <main class="stage" id="stage">
@@ -645,11 +650,7 @@
   </main>
 <div class="topright">
 <div class="actions">
-<!--__DONORS__-->
-<button class="methodbtn" id="methodtop" aria-pressed="false" title="Where the data comes from and how it is aligned" aria-label="Methodology">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
-  <span>Methodology</span>
-</button>
+<!--__NAV__-->
 </div>
 </div>
 </div>
@@ -1449,12 +1450,9 @@ function renderLede(){
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   el("lede").innerHTML =
-    `What is being built across Africa, and who is paying for it. Eight layers from ten public datasets
-     laid over one map: power plants, planned, being built, running or shelved, African Development Bank and World
-     Bank projects with money attached, road, rail and airport works traced on the ground, oil and gas
-     pipelines, submarine cables, Chinese-financed projects from ${CN_Y[0]} to ${CN_Y[1]}, the European Union's
-     own contracts and loans and the projects of Italy's Piano Mattei. Zoom in and click a marker for
-     its record; every figure carries its source.`;
+    `What is being built across Africa, and who is paying for it. Ten public datasets on one map: power
+     plants, pipelines, cables and road, rail and airport works, plus the projects of the AfDB, the World
+     Bank, China, the EU and Italy's Piano Mattei. Click a marker for its record and source.`;
 }
 
 /* Each panel counts what it would show with its own filter open: the same
@@ -2198,7 +2196,7 @@ el("share").onclick = async () => {
 };
 
 /* rail on small screens */
-function railToggle(open){ el("rail").classList.toggle("open", open); el("scrim").classList.toggle("show", open); }
+function railToggle(open){ el("rail").classList.toggle("open", open); el("scrim").classList.toggle("show", open); document.body.classList.toggle("rail-open", open); }
 el("railopen").onclick = () => railToggle(true);
 el("railclose").onclick = () => railToggle(false);
 el("scrim").onclick = () => railToggle(false);
@@ -2442,6 +2440,7 @@ function setTab(t, write=true){
   document.body.dataset.tab = t;
   document.querySelectorAll(".tab[data-t]").forEach(b => b.setAttribute("aria-current", String(b.dataset.t===t)));
   el("methodtop").setAttribute("aria-pressed", String(t==="method"));
+  el("navmap").setAttribute("aria-current", t==="method" ? "false" : "page");
   if(t==="method"){ renderMethod(); }
   else { fit(); draw(); }
   railToggle(false);
@@ -2450,6 +2449,7 @@ function setTab(t, write=true){
 document.querySelectorAll(".tab[data-t]").forEach(b => b.onclick = () => setTab(b.dataset.t));
 el("tomethod").onclick = () => setTab("method");
 el("methodtop").onclick = () => setTab(document.body.dataset.tab==="method" ? "map" : "method");
+el("navmap").onclick = () => setTab("map");
 el("mback").onclick = () => setTab("map");
 el("mtoc").onclick = () => railToggle(true);
 

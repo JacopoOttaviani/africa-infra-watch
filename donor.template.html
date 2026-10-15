@@ -69,7 +69,7 @@
 
   /* ---------- top bar: brand on the left, the same buttons as the map on the right ---------- */
   .top{position:sticky;top:0;z-index:8;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
-  .bar{max-width:1140px;margin:0 auto;padding:10px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .bar{max-width:1140px;margin:0 auto;padding:9px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px}
   .home{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;border-radius:4px;padding:2px 0}
   .home .mark{flex:none;font-size:34px;color:var(--accent);display:block}
   .home:hover .mark{opacity:.75}
@@ -79,9 +79,6 @@
   .topright{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .actions{display:flex;gap:6px;align-items:center}
   /*__LMENU_CSS__*/
-  .methodbtn{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);transition:background .15s,color .15s}
-  .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .methodbtn:hover{background:var(--surface-2)}
   .coffee{position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
   .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
@@ -235,10 +232,11 @@
   ul.tight li{margin:5px 0}
   ul.tight li b{color:var(--ink);font-weight:600}
   .note{font-size:12px;color:var(--ink-3);margin-top:8px;max-width:76ch}
-  .foot{margin:60px auto 44px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.8}
-  .foot a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .foot a:hover{color:var(--accent);border-color:var(--accent)}
-  .foot .heart{color:var(--accent)}
+  /* the footer: the site's (shared.site_footer), then this page's data file */
+  .foot{margin:64px auto 40px;padding-top:28px;border-top:1px solid var(--rule)}
+  .foot .sf-meta{max-width:none;margin:28px 0 0;padding-top:12px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:10.5px;line-height:1.8;color:var(--ink-3)}
+  .foot .sf-meta a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .foot .sf-meta a:hover{color:var(--accent);border-color:var(--accent)}
   @media (max-width:880px){
     .kpis{grid-template-columns:repeat(2,1fr)}
     .charts{grid-template-columns:1fr}
@@ -249,8 +247,8 @@
   @media (max-width:600px){
     .bar{flex-direction:column;align-items:flex-start;gap:8px}
     .topright{align-items:flex-start}
-    .coffee span,.methodbtn span{display:none}
-    .coffee,.methodbtn{padding:0 7px;gap:0}
+    .coffee span{display:none}
+    .coffee{padding:0 7px;gap:0}
     .kpis{grid-template-columns:1fr}
     .head{padding-top:26px}
   }
@@ -262,11 +260,7 @@
     <a class="home" href="__HOME_URL__" title="Back to the map"><!--__LOGO__--><span class="hb"><span class="kicker">Geopolitics of Africa</span><b>__SITE_NAME__</b></span></a>
     <div class="topright">
       <div class="actions">
-        <!--__DONORS__-->
-        <a class="methodbtn" href="__HOME_URL__#t=m" title="Where the map's data comes from and how it is aligned" aria-label="Methodology">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
-          <span>Methodology</span>
-        </a>
+        <!--__NAV__-->
         <a class="coffee" href="__COFFEE_URL__" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
           <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
           <span>Buy me a coffee</span>
@@ -284,9 +278,8 @@
 </main>
 
 <footer class="wrap foot">
-  __SITE_NAME__ · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="__WEB_URL__" target="_blank" rel="noopener noreferrer">Web</a>)
-  · <a href="__HOME_URL__">Map</a> · <a href="__HOME_URL__dashboard.html">Dashboard</a> · <a href="__HOME_URL__#t=m">Methodology</a>
-  · this page's data: <a href="__DATA_URL__">__DATA_FILE__</a> · built __BUILT__
+<!--__FOOTER__-->
+<p class="sf-meta">This page's data: <a href="__DATA_URL__">__DATA_FILE__</a> · built __BUILT__</p>
 </footer>
 
 <script>

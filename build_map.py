@@ -303,7 +303,7 @@ def main():
         "mattei": mattei,
     }
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
-    html = inline_vendor(brand_assets(TEMPLATE.read_text()))
+    html = inline_vendor(brand_assets(TEMPLATE.read_text(), here="map"))
     marker = "<script>\nconst DATA = /*__PAYLOAD__*/;"
     if marker not in html:
         sys.exit("template missing the payload marker")

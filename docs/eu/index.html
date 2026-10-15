@@ -100,7 +100,7 @@
 
   /* ---------- top bar: brand on the left, the same buttons as the map on the right ---------- */
   .top{position:sticky;top:0;z-index:8;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
-  .bar{max-width:1140px;margin:0 auto;padding:10px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .bar{max-width:1140px;margin:0 auto;padding:9px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px}
   .home{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;border-radius:4px;padding:2px 0}
   .home .mark{flex:none;font-size:34px;color:var(--accent);display:block}
   .home:hover .mark{opacity:.75}
@@ -110,21 +110,70 @@
   .topright{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .actions{display:flex;gap:6px;align-items:center}
   
-  /* the Deep dives menu (shared.donor_nav): one button in the top bar, the
-     reading pages in a panel under it */
-  .lmenu{position:relative}
-  .lmenu>summary{display:inline-flex;list-style:none;cursor:pointer}   /* .methodbtn is not a flex box on every page */
-  .lmenu>summary::-webkit-details-marker{display:none}
-  .lmenu>summary .lm-cur{font-weight:500;color:var(--ink-3)}
-  .lmenu>summary .lm-car{width:11px;height:11px;margin-left:1px;transition:transform .15s}
-  .lmenu[open]>summary{background:var(--surface-2)}
-  .lmenu[open]>summary .lm-car{transform:rotate(180deg)}
-  .lm-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:356px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left}
+  /* ---------- the menu bar (shared.site_nav) ----------
+     Map, Dashboard, the theme deep dives by name, the lender profiles in a
+     dropdown, Methodology, Contact me. It folds in three steps as the window narrows:
+     the "Deep dives" kicker goes, then the themes and the lenders fold into
+     one "Deep dives" dropdown, then everything but Methodology folds into
+     "Menu". The map and the dashboard (.snav.sn-app) fold sooner: the rail takes
+     356 px there, and their own controls share the top edge. */
+  .snav{display:flex;align-items:center;gap:1px;height:34px;padding:0 3px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);font-family:var(--display)}
+  .sn-a{display:inline-flex;align-items:center;gap:6px;height:26px;margin:0;padding:0 9px;border:0;border-radius:3px;background:none;color:var(--ink);font-family:var(--display);font-size:12px;font-weight:600;line-height:1;letter-spacing:.005em;white-space:nowrap;text-decoration:none;cursor:pointer;list-style:none;transition:background .15s,color .15s}
+  .sn-a::-webkit-details-marker{display:none}
+  .sn-a:hover{background:var(--surface-2)}
+  .sn-a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .sn-a svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sn-a[aria-current="page"],.sn-a[aria-pressed="true"],.sn-dd.cur>.sn-a,.sn-dd.cur[open]>.sn-a{background:var(--ink);color:var(--paper)}
+  .sn-sep{flex:none;width:1px;height:16px;margin:0 5px;background:var(--rule)}
+  .sn-k{padding:0 5px 0 3px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .sn-dd{position:relative}
+  .sn-dd[open]>.sn-a{background:var(--surface-2)}
+  .sn-dd .lm-car{width:11px;height:11px;margin:0 -3px 0 -3px;transition:transform .15s}
+  .sn-dd[open] .lm-car{transform:rotate(180deg)}
+  .sn-cur{font-weight:500;opacity:.72}
+  /* Contact me: the bar's one filled item, in LinkedIn's blue, with the footer button's
+     shine and logo flip (lishine, liflip) */
+  .sn-a.sn-contact{position:relative;margin-left:4px;overflow:hidden;isolation:isolate;background:#0A66C2;color:#fff}
+  .sn-a.sn-contact::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-130%)}
+  .sn-a.sn-contact svg{stroke:none;overflow:visible}
+  .sn-a.sn-contact:hover,.sn-a.sn-contact:focus-visible{background:#0B74DB;color:#fff}
+  .sn-a.sn-contact:hover::before,.sn-a.sn-contact:focus-visible::before{animation:lishine .75s ease-out forwards}
+  .sn-a.sn-contact:hover svg,.sn-a.sn-contact:focus-visible svg{animation:liflip .6s cubic-bezier(.34,1.56,.64,1)}
+  .sn-more,.sn-ico,.lm-site{display:none}
+  .sn-ms{display:none;align-items:center;gap:6px}
+  /* the reading pages: their header is capped at the column's 1140 px, too narrow for the
+     kicker beside the coffee button, so it never shows there; then themes and lenders fold */
+  .snav:not(.sn-app) .sn-k{display:none}
+  @media (max-width:1100px){.snav:not(.sn-app) .sn-t{display:none}.snav:not(.sn-app) .sn-more{display:block}}
+  @media (max-width:1000px){
+    .snav:not(.sn-app) .sn-x,.snav:not(.sn-app) .sn-ml,.snav:not(.sn-app) .sn-meth .sn-l,.snav:not(.sn-app) .sn-contact .sn-l{display:none}
+    .snav:not(.sn-app) .sn-ms{display:inline-flex}
+    .snav:not(.sn-app) .sn-meth .sn-ico{display:block}
+    .snav:not(.sn-app) .lm-site{display:grid}
+    .snav:not(.sn-app) .sn-meth,.snav:not(.sn-app) .sn-contact{padding:0 7px}
+    .snav:not(.sn-app) .sn-more.cur>.sn-a{background:none;color:var(--ink)}
+    .snav:not(.sn-app) .sn-more.cur[open]>.sn-a{background:var(--surface-2)}
+  }
+  /* the map and the dashboard */
+  @media (max-width:1480px){.snav.sn-app .sn-k{display:none}}
+  @media (max-width:1400px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
+  @media (max-width:1180px){
+    .snav.sn-app .sn-x,.snav.sn-app .sn-ml,.snav.sn-app .sn-meth .sn-l,.snav.sn-app .sn-contact .sn-l{display:none}
+    .snav.sn-app .sn-ms{display:inline-flex}
+    .snav.sn-app .sn-meth .sn-ico{display:block}
+    .snav.sn-app .lm-site{display:grid}
+    .snav.sn-app .sn-meth,.snav.sn-app .sn-contact{padding:0 7px}
+  }
+
+  /* the dropdown panels */
+  .lm-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:20;width:356px;max-height:calc(100vh - 80px);overflow:auto;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow-lg);padding:12px 12px 10px;text-align:left;font-family:var(--display)}
   .lm-h{margin:0 2px 4px;font-size:12px;line-height:1.45;color:var(--ink-3);max-width:none}
   .lm-h b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
   .lm-tab{display:flex;align-items:center;gap:6px;margin:6px 2px 2px;font-size:11.5px;font-weight:600;color:var(--accent-ink)}
   .lm-tab svg{width:12px;height:12px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .lm-gl{display:block;margin:12px 2px 5px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .lm-site{grid-template-columns:1fr 1fr;gap:4px;margin:0 0 10px;padding-bottom:10px;border-bottom:1px solid var(--rule-soft)}
+  .lm-site .lm-item{justify-content:center;padding:7px 8px;border-color:var(--rule-soft);background:var(--surface-3)}
   .lm-themes{display:grid;gap:4px}
   .lm-theme{display:block;padding:7px 9px;border-radius:3px;border:1px solid var(--rule-soft);background:var(--surface-3);color:var(--ink);text-decoration:none;font-family:var(--display);line-height:1.3}
   .lm-theme b{display:block;font-size:12.5px;font-weight:700}
@@ -135,18 +184,60 @@
   .lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
   .lm-item{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px 6px 6px;border-radius:3px;border:1px solid transparent;color:var(--ink);text-decoration:none;font-family:var(--display);font-size:12.5px;font-weight:600;line-height:1.2}
   .lm-item:hover{background:var(--surface-2)}
-  .lm-item[aria-current="page"]{background:var(--ink);color:var(--paper)}
+  .lm-item[aria-current="page"],.lm-site .lm-item[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
   .lm-item[aria-current="page"] .lm-badge{background:transparent;border-color:color-mix(in srgb,var(--paper) 40%,transparent);color:var(--paper)}
   .lm-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 4px;border:1px solid var(--rule);border-radius:2px;background:var(--surface-2);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2);flex:none}
   .lm-item>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   @media (max-width:600px){
-    .lmenu>summary .lm-cur{display:none}
     .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
   }
+  @media (prefers-reduced-motion:reduce){.sn-a,.sn-dd .lm-car{transition:none}.sn-a.sn-contact::before,.sn-a.sn-contact svg{animation:none!important}}
 
-  .methodbtn{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);transition:background .15s,color .15s}
-  .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .methodbtn:hover{background:var(--surface-2)}
+  /* ---------- the footer (shared.site_footer) ----------
+     every page in four columns: the site, Explore, the theme deep dives, the
+     lender profiles. It reflows on its own width, so the same footer sits
+     under a reading page and at the foot of the map's rail. */
+  .sf{container-type:inline-size}
+  .sf-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,1.15fr) minmax(0,1.25fr);gap:26px 40px;font-family:var(--display);font-size:12.5px;line-height:1.45;color:var(--ink-2);text-align:left}
+  .sf-home{display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none}
+  .sf-home .mark{flex:none;display:block;font-size:30px;color:var(--accent)}
+  .sf-home .kicker{display:block;font-size:9.5px}
+  .sf-home b{display:block;margin-top:2px;font-size:14px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+  .sf-home:hover b{color:var(--accent)}
+  .sf-about{margin:12px 0 0;max-width:40ch}
+  .sf-made{margin:10px 0 0;font-size:12px;color:var(--ink-3)}
+  .sf-made .heart{color:var(--accent)}
+  .sf-h{margin:3px 0 10px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .sf-h2{margin:14px 0 8px;font-size:11px;font-weight:600;color:var(--ink-3)}
+  .sf-list{display:grid;gap:7px;margin:0;padding:0;list-style:none}
+  .sf-list.two{grid-template-columns:1fr 1fr;column-gap:14px}
+  .sf-list small{display:block;margin-top:1px;font-size:11.5px;font-weight:400;color:var(--ink-3)}
+  .sf-grid a:not(.sf-b){color:var(--ink);font-weight:600;text-decoration:none;border:0}
+  .sf-grid a:not(.sf-b):hover{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .sf-grid a[aria-current="page"]{color:var(--accent)}
+  .sf-grid a[aria-current="page"]::after{content:" ·  you are here";font-weight:400;font-size:11px;color:var(--ink-3)}
+  .sf-made a:not(.sf-b){color:var(--ink-2)}
+  /* the two support buttons under the credit: the site's coffee button (.coffee, drawn
+     and animated by each template's own stylesheet) and a LinkedIn twin that tilts the
+     other way and flips its logo */
+  .sf-cta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .sf-cta .coffee,.sf-cta .sf-li{height:36px;padding:0 14px 0 11px;gap:8px;font-size:12px}
+  .sf-cta .coffee span{display:inline}
+  .sf-cta svg{width:17px;height:17px}
+  .sf-li{position:relative;display:inline-flex;align-items:center;border-radius:3px;background:#0A66C2;color:#fff;border:1px solid #0858A8;font-family:var(--display);font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
+  .sf-li::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-130%)}
+  .sf-li svg{flex:none;overflow:visible}
+  .sf-li:hover,.sf-li:focus-visible{background:#0B74DB;color:#fff;transform:translateY(-2px) rotate(2deg) scale(1.05);box-shadow:0 8px 22px -8px rgba(10,102,194,.85),0 2px 4px rgba(22,33,28,.12)}
+  .sf-li:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .sf-li:hover::before,.sf-li:focus-visible::before{animation:lishine .75s ease-out forwards}
+  .sf-li:hover svg,.sf-li:focus-visible svg{animation:liflip .6s cubic-bezier(.34,1.56,.64,1)}
+  .sf-li:active{transform:translateY(0) scale(.98)}
+  @keyframes lishine{to{transform:translateX(130%)}}
+  @keyframes liflip{from{transform:perspective(80px) rotateY(0)}to{transform:perspective(80px) rotateY(360deg)}}
+  @media (prefers-reduced-motion:reduce){.sf-li,.sf-li::before,.sf-li svg{animation:none!important;transition:none!important}.sf-li:hover{transform:none}}
+  @container (max-width:860px){.sf-grid{grid-template-columns:1fr 1fr}.sf-brand{grid-column:1/-1}}
+  @container (max-width:460px){.sf-grid{grid-template-columns:1fr;gap:22px}}
+
   .coffee{position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
   .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
@@ -300,10 +391,11 @@
   ul.tight li{margin:5px 0}
   ul.tight li b{color:var(--ink);font-weight:600}
   .note{font-size:12px;color:var(--ink-3);margin-top:8px;max-width:76ch}
-  .foot{margin:60px auto 44px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.8}
-  .foot a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .foot a:hover{color:var(--accent);border-color:var(--accent)}
-  .foot .heart{color:var(--accent)}
+  /* the footer: the site's (shared.site_footer), then this page's data file */
+  .foot{margin:64px auto 40px;padding-top:28px;border-top:1px solid var(--rule)}
+  .foot .sf-meta{max-width:none;margin:28px 0 0;padding-top:12px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:10.5px;line-height:1.8;color:var(--ink-3)}
+  .foot .sf-meta a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .foot .sf-meta a:hover{color:var(--accent);border-color:var(--accent)}
   @media (max-width:880px){
     .kpis{grid-template-columns:repeat(2,1fr)}
     .charts{grid-template-columns:1fr}
@@ -314,8 +406,8 @@
   @media (max-width:600px){
     .bar{flex-direction:column;align-items:flex-start;gap:8px}
     .topright{align-items:flex-start}
-    .coffee span,.methodbtn span{display:none}
-    .coffee,.methodbtn{padding:0 7px;gap:0}
+    .coffee span{display:none}
+    .coffee{padding:0 7px;gap:0}
     .kpis{grid-template-columns:1fr}
     .head{padding-top:26px}
   }
@@ -343,11 +435,7 @@
 </svg><span class="hb"><span class="kicker">Geopolitics of Africa</span><b>Africa Project Atlas</b></span></a>
     <div class="topright">
       <div class="actions">
-        <details class="lmenu" id="lmenu"><summary class="methodbtn" aria-label="Deep dives" title="Deep dives: reading pages on one theme or one lender, beyond the map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span>Deep dives <span class="lm-cur">· European Union</span></span><svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav class="lm-panel" aria-label="Deep dives"><p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, beyond what the map's filters show.</p><span class="lm-gl">Themes</span><div class="lm-themes"><a class="lm-theme" href="../debt/" title="Who Africa owes"><b>Who Africa owes</b><span>Debt by creditor, 2000–2024, from the World Bank</span></a><a class="lm-theme" href="../compare/" title="Seven lenders side by side"><b>Seven lenders side by side</b><span>Debt, aid and what each one builds, compared</span></a><a class="lm-theme" href="../corridors/" title="Africa&#x27;s strategic corridors"><b>Africa&#x27;s strategic corridors</b><span>Railways, ports and pipelines: who pays and who builds</span></a></div><span class="lm-gl">Lenders, one by one</span><div class="lm-grid"><a class="lm-item" href="../china/" title="China in Africa&#x27;s infrastructure"><span class="lm-badge">CN</span><span>China</span></a><a class="lm-item" href="../france/" title="France in Africa&#x27;s infrastructure"><span class="lm-badge">FR</span><span>France</span></a><a class="lm-item" href="../germany/" title="Germany in Africa&#x27;s infrastructure"><span class="lm-badge">DE</span><span>Germany</span></a><a class="lm-item" href="../italy/" title="Italy in Africa&#x27;s infrastructure"><span class="lm-badge">IT</span><span>Italy</span></a><a class="lm-item" href="../japan/" title="Japan in Africa&#x27;s infrastructure"><span class="lm-badge">JP</span><span>Japan</span></a><a class="lm-item" href="../russia/" title="Russia in Africa&#x27;s infrastructure"><span class="lm-badge">RU</span><span>Russia</span></a><a class="lm-item" href="../spain/" title="Spain in Africa&#x27;s infrastructure"><span class="lm-badge">ES</span><span>Spain</span></a><a class="lm-item" href="../turkey/" title="Turkey in Africa&#x27;s infrastructure"><span class="lm-badge">TR</span><span>Turkey</span></a><a class="lm-item" href="../usa/" title="The United States in Africa&#x27;s infrastructure"><span class="lm-badge">US</span><span>United States</span></a></div><span class="lm-gl">Groups of lending countries</span><div class="lm-grid"><a class="lm-item" href="../eu/" aria-current="page" title="The European Union in Africa&#x27;s infrastructure"><span class="lm-badge">EU</span><span>European Union</span></a><a class="lm-item" href="../gulf/" title="The Gulf states in Africa&#x27;s infrastructure"><span class="lm-badge">GCC</span><span>Gulf states</span></a><a class="lm-item" href="../nordics/" title="The Nordic countries in Africa&#x27;s infrastructure"><span class="lm-badge">NORD</span><span>Nordic countries</span></a></div></nav></details><script>(()=>{const d=document.getElementById("lmenu");if(!d)return;document.addEventListener("click",e=>{if(d.open&&!d.contains(e.target))d.open=false;});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&d.open){d.open=false;d.querySelector("summary").focus();}});})();</script>
-        <a class="methodbtn" href="../index.html#t=m" title="Where the map's data comes from and how it is aligned" aria-label="Methodology">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
-          <span>Methodology</span>
-        </a>
+        <nav class="snav" aria-label="Site"><a class="sn-a sn-x" href="../index.html" title="The map: every record, filtered and zoomable">Map</a><a class="sn-a sn-x" href="../dashboard.html" title="The dashboard: the same records as charts and a table">Dashboard</a><span class="sn-sep sn-x" aria-hidden="true"></span><span class="sn-k sn-x sn-t" aria-hidden="true">Deep dives</span><a class="sn-a sn-x sn-t" href="../debt/" title="Who Africa owes">Debt</a><a class="sn-a sn-x sn-t" href="../compare/" title="Seven lenders side by side">Compare</a><a class="sn-a sn-x sn-t" href="../corridors/" title="Africa&#x27;s strategic corridors">Corridors</a><details class="sn-dd sn-x sn-t cur" name="snav"><summary class="sn-a" title="Lender profiles: one page per lending country or group">Lender profiles<svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav class="lm-panel" aria-label="Lender profiles"><p class="lm-h"><b>Lender profiles</b>One page per lending country or group: what Africa owes it, what it lends and gives, and what it builds.</p><span class="lm-gl">Lenders, one by one</span><div class="lm-grid"><a class="lm-item" href="../china/" title="China in Africa&#x27;s infrastructure"><span class="lm-badge">CN</span><span>China</span></a><a class="lm-item" href="../france/" title="France in Africa&#x27;s infrastructure"><span class="lm-badge">FR</span><span>France</span></a><a class="lm-item" href="../germany/" title="Germany in Africa&#x27;s infrastructure"><span class="lm-badge">DE</span><span>Germany</span></a><a class="lm-item" href="../italy/" title="Italy in Africa&#x27;s infrastructure"><span class="lm-badge">IT</span><span>Italy</span></a><a class="lm-item" href="../japan/" title="Japan in Africa&#x27;s infrastructure"><span class="lm-badge">JP</span><span>Japan</span></a><a class="lm-item" href="../russia/" title="Russia in Africa&#x27;s infrastructure"><span class="lm-badge">RU</span><span>Russia</span></a><a class="lm-item" href="../spain/" title="Spain in Africa&#x27;s infrastructure"><span class="lm-badge">ES</span><span>Spain</span></a><a class="lm-item" href="../turkey/" title="Turkey in Africa&#x27;s infrastructure"><span class="lm-badge">TR</span><span>Turkey</span></a><a class="lm-item" href="../usa/" title="The United States in Africa&#x27;s infrastructure"><span class="lm-badge">US</span><span>United States</span></a></div><span class="lm-gl">Groups of lending countries</span><div class="lm-grid"><a class="lm-item" href="../eu/" aria-current="page" title="The European Union in Africa&#x27;s infrastructure"><span class="lm-badge">EU</span><span>European Union</span></a><a class="lm-item" href="../gulf/" title="The Gulf states in Africa&#x27;s infrastructure"><span class="lm-badge">GCC</span><span>Gulf states</span></a><a class="lm-item" href="../nordics/" title="The Nordic countries in Africa&#x27;s infrastructure"><span class="lm-badge">NORD</span><span>Nordic countries</span></a></div></nav></details><details class="sn-dd sn-more cur" name="snav"><summary class="sn-a" title="Deep dives: reading pages on one theme or one lender, beyond the map"><span class="sn-ms"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>Menu</span><span class="sn-ml">Deep dives <span class="sn-cur">· European Union</span></span><svg class="lm-car" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav class="lm-panel" aria-label="Site and deep dives"><div class="lm-site"><a class="lm-item" href="../index.html">Map</a><a class="lm-item" href="../dashboard.html">Dashboard</a></div><p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, beyond what the map's filters show.</p><span class="lm-gl">Themes</span><div class="lm-themes"><a class="lm-theme" href="../debt/" title="Who Africa owes"><b>Who Africa owes</b><span>Debt by creditor, 2000–2024, from the World Bank</span></a><a class="lm-theme" href="../compare/" title="Seven lenders side by side"><b>Seven lenders side by side</b><span>Debt, aid and what each one builds, compared</span></a><a class="lm-theme" href="../corridors/" title="Africa&#x27;s strategic corridors"><b>Africa&#x27;s strategic corridors</b><span>Railways, ports and pipelines: who pays and who builds</span></a></div><span class="lm-gl">Lenders, one by one</span><div class="lm-grid"><a class="lm-item" href="../china/" title="China in Africa&#x27;s infrastructure"><span class="lm-badge">CN</span><span>China</span></a><a class="lm-item" href="../france/" title="France in Africa&#x27;s infrastructure"><span class="lm-badge">FR</span><span>France</span></a><a class="lm-item" href="../germany/" title="Germany in Africa&#x27;s infrastructure"><span class="lm-badge">DE</span><span>Germany</span></a><a class="lm-item" href="../italy/" title="Italy in Africa&#x27;s infrastructure"><span class="lm-badge">IT</span><span>Italy</span></a><a class="lm-item" href="../japan/" title="Japan in Africa&#x27;s infrastructure"><span class="lm-badge">JP</span><span>Japan</span></a><a class="lm-item" href="../russia/" title="Russia in Africa&#x27;s infrastructure"><span class="lm-badge">RU</span><span>Russia</span></a><a class="lm-item" href="../spain/" title="Spain in Africa&#x27;s infrastructure"><span class="lm-badge">ES</span><span>Spain</span></a><a class="lm-item" href="../turkey/" title="Turkey in Africa&#x27;s infrastructure"><span class="lm-badge">TR</span><span>Turkey</span></a><a class="lm-item" href="../usa/" title="The United States in Africa&#x27;s infrastructure"><span class="lm-badge">US</span><span>United States</span></a></div><span class="lm-gl">Groups of lending countries</span><div class="lm-grid"><a class="lm-item" href="../eu/" aria-current="page" title="The European Union in Africa&#x27;s infrastructure"><span class="lm-badge">EU</span><span>European Union</span></a><a class="lm-item" href="../gulf/" title="The Gulf states in Africa&#x27;s infrastructure"><span class="lm-badge">GCC</span><span>Gulf states</span></a><a class="lm-item" href="../nordics/" title="The Nordic countries in Africa&#x27;s infrastructure"><span class="lm-badge">NORD</span><span>Nordic countries</span></a></div></nav></details><span class="sn-sep sn-x" aria-hidden="true"></span><a class="sn-a sn-meth" href="../index.html#t=m" title="Methodology: where the data comes from and how it is aligned" aria-label="Methodology"><span class="sn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg></span><span class="sn-l">Methodology</span></a><a class="sn-a sn-contact" href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer" title="Contact Jacopo Ottaviani on LinkedIn (opens in a new tab)" aria-label="Contact me on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="4" fill="#fff"/><path fill="#0A66C2" transform="translate(2.9 3.1) scale(.73)" d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg><span class="sn-l">Contact me</span></a></nav><script>(()=>{const dd=[...document.querySelectorAll(".sn-dd")];const place=d=>{const p=d.querySelector(".lm-panel");if(!p)return;p.style.top=p.style.maxHeight="";if(innerWidth<=600){const t=Math.round(d.closest(".snav").getBoundingClientRect().bottom+8);p.style.top=t+"px";p.style.maxHeight=(innerHeight-t-12)+"px";}};dd.forEach(d=>d.addEventListener("toggle",()=>{if(d.open){dd.forEach(o=>{if(o!==d)o.open=false;});place(d);}}));document.addEventListener("click",e=>{dd.forEach(d=>{if(d.open&&!d.contains(e.target))d.open=false;});const m=e.target.closest&&e.target.closest("[data-method]"),b=document.getElementById("methodtop");if(m&&b&&b.tagName==="BUTTON"){e.preventDefault();if(document.body.dataset.tab!=="method")b.click();}});document.addEventListener("keydown",e=>{const d=dd.find(d=>d.open);if(e.key==="Escape"&&d){d.open=false;d.querySelector("summary").focus();}});})();</script>
         <a class="coffee" href="https://ko-fi.com/jacopoottaviani" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project">
           <svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg>
           <span>Buy me a coffee</span>
@@ -518,9 +606,21 @@
 </main>
 
 <footer class="wrap foot">
-  Africa Project Atlas · made with <span class="heart" aria-hidden="true">♥</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Web</a>)
-  · <a href="../index.html">Map</a> · <a href="../dashboard.html">Dashboard</a> · <a href="../index.html#t=m">Methodology</a>
-  · this page's data: <a href="../data/donors/eu.json">eu.json</a> · built 14 Oct 2026
+<div class="sf"><div class="sf-grid"><div class="sf-brand"><a class="sf-home" href="../index.html"><svg class="mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1em" height="1em">
+
+<defs>
+  <mask id="aiw-cut">
+    <rect width="1000" height="1000" fill="white"/>
+    <circle cx="599" cy="388" r="172" fill="black"/>
+    <circle cx="599" cy="388" r="151" fill="white"/>
+    <path d="M599 251 L626 360 L736 388 L626 415 L599 525 L571 415 L461 388 L571 360Z" fill="black"/>
+    <path d="M656 331 L623 388 L656 445 L599 412 L541 445 L574 388 L541 331 L599 363Z" fill="black"/>
+    <circle cx="599" cy="388" r="12" fill="white"/>
+  </mask>
+</defs>
+<path d="M411 1 L416 3 L420 6 L421 13 L421 21 L418 32 L424 44 L438 55 L459 67 L489 79 L512 87 L528 92 L539 94 L542 92 L545 89 L548 85 L549 81 L550 77 L552 73 L554 69 L558 67 L563 65 L572 65 L587 67 L607 72 L633 79 L653 83 L670 86 L682 86 L689 83 L698 82 L707 81 L718 81 L729 82 L738 85 L745 88 L750 93 L752 99 L753 105 L752 111 L751 117 L749 122 L746 126 L743 130 L740 131 L737 132 L737 136 L740 142 L745 153 L753 166 L759 176 L763 184 L765 190 L764 193 L765 196 L767 199 L771 203 L776 207 L780 213 L783 221 L786 231 L788 242 L791 253 L795 263 L800 273 L806 283 L814 292 L824 303 L836 314 L849 326 L859 335 L865 343 L868 348 L867 352 L868 355 L871 359 L875 363 L881 367 L892 369 L906 368 L924 366 L947 361 L961 363 L968 372 L967 387 L958 410 L944 434 L925 459 L901 485 L872 513 L850 535 L833 553 L823 566 L819 574 L816 583 L814 593 L813 604 L814 617 L815 628 L818 638 L821 647 L825 655 L829 665 L831 677 L832 692 L831 709 L826 725 L816 741 L802 756 L782 771 L769 785 L760 799 L758 813 L761 827 L760 839 L756 849 L749 858 L739 865 L730 872 L725 881 L721 890 L720 901 L716 912 L709 924 L699 936 L685 950 L673 961 L662 970 L651 977 L642 982 L632 985 L622 987 L611 988 L600 988 L589 989 L578 990 L568 993 L558 996 L550 999 L544 1000 L539 999 L536 998 L534 995 L531 992 L528 987 L524 981 L522 975 L521 970 L521 966 L522 962 L520 956 L515 946 L507 933 L497 918 L489 902 L482 885 L477 868 L473 851 L469 834 L463 819 L456 804 L447 790 L441 776 L437 763 L436 750 L437 737 L440 724 L443 712 L448 700 L453 688 L456 674 L455 658 L452 640 L446 620 L438 601 L430 584 L420 568 L409 554 L402 540 L397 524 L396 508 L399 492 L399 478 L399 468 L397 462 L393 458 L388 456 L382 455 L375 455 L366 456 L358 455 L351 453 L344 448 L339 441 L332 436 L324 433 L314 432 L303 433 L292 435 L281 438 L270 441 L259 446 L249 449 L238 450 L227 450 L217 449 L206 448 L196 449 L186 450 L175 453 L164 452 L150 447 L134 439 L117 427 L102 416 L90 405 L81 394 L75 383 L69 374 L62 367 L56 360 L50 356 L44 350 L39 343 L35 335 L31 326 L30 317 L31 308 L34 299 L38 290 L41 279 L42 267 L41 254 L39 240 L37 227 L38 216 L40 207 L43 199 L48 191 L55 180 L64 168 L74 154 L85 142 L96 131 L107 122 L119 114 L129 106 L135 98 L139 89 L140 79 L143 71 L147 64 L154 58 L162 52 L169 47 L174 42 L179 36 L183 30 L189 26 L197 24 L208 24 L221 26 L234 27 L247 25 L260 22 L272 17 L289 13 L309 9 L333 6 L361 3 L382 1 L396 0 L403 0 L403 0 L404 0 L407 0Z M960 703 L964 716 L967 725 L969 732 L969 736 L968 737 L967 738 L966 738 L964 738 L963 737 L962 737 L961 738 L961 741 L961 744 L959 754 L955 770 L948 791 L939 819 L931 841 L923 857 L916 866 L910 869 L904 871 L899 871 L894 870 L889 868 L885 864 L881 859 L878 852 L875 844 L874 835 L875 825 L877 816 L881 805 L884 796 L885 787 L885 778 L883 771 L882 764 L882 758 L883 753 L885 749 L888 746 L892 743 L897 741 L903 739 L909 737 L915 734 L921 730 L926 726 L931 721 L936 714 L941 707 L946 698 L949 692 L952 687 L953 685 L953 685 L954 688 L956 694Z" fill="currentColor" mask="url(#aiw-cut)" fill-rule="evenodd"/>
+</svg><span><span class="kicker">Geopolitics of Africa</span><b>Africa Project Atlas</b></span></a><p class="sf-about">What is being built across Africa, and who is paying for it: power plants, lenders' projects, works on the ground, pipelines and cables from public data, with deep dives by theme and by lender.</p><p class="sf-made">Made with <span class="heart" aria-hidden="true">♥</span> by <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer">Jacopo Ottaviani</a>.</p><div class="sf-cta"><a class="coffee sf-b" href="https://ko-fi.com/jacopoottaviani" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)" title="Support this project"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="steam"><path d="M8 3v2.5M11.5 2v3.5M15 3v2.5"/></g><g class="cup"><path d="M5 9h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M4 22h14"/></g></svg><span>Buy me a coffee</span></a><a class="sf-li sf-b" href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer" aria-label="Jacopo Ottaviani on LinkedIn (opens in a new tab)" title="Connect on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="4" fill="#fff"/><path fill="#0A66C2" transform="translate(2.9 3.1) scale(.73)" d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg><span>LinkedIn</span></a></div></div><nav class="sf-col" aria-label="Explore"><p class="sf-h">Explore</p><ul class="sf-list"><li><a href="../index.html">Map</a><small>Every record, filtered and zoomable</small></li><li><a href="../dashboard.html">Dashboard</a><small>The same records as charts and a table</small></li><li><a href="../index.html#t=m">Methodology</a><small>Where the data comes from, and its limits</small></li></ul></nav><nav class="sf-col" aria-label="Deep dives by theme"><p class="sf-h">Deep dives</p><ul class="sf-list"><li><a href="../debt/">Who Africa owes</a><small>Debt by creditor, 2000–2024, from the World Bank</small></li><li><a href="../compare/">Seven lenders side by side</a><small>Debt, aid and what each one builds, compared</small></li><li><a href="../corridors/">Africa&#x27;s strategic corridors</a><small>Railways, ports and pipelines: who pays and who builds</small></li></ul></nav><nav class="sf-col" aria-label="Lender profiles"><p class="sf-h">Lender profiles</p><ul class="sf-list two"><li><a href="../china/">China</a></li><li><a href="../france/">France</a></li><li><a href="../germany/">Germany</a></li><li><a href="../italy/">Italy</a></li><li><a href="../japan/">Japan</a></li><li><a href="../russia/">Russia</a></li><li><a href="../spain/">Spain</a></li><li><a href="../turkey/">Turkey</a></li><li><a href="../usa/">United States</a></li></ul><p class="sf-h2">Groups of countries</p><ul class="sf-list two"><li><a href="../eu/" aria-current="page">European Union</a></li><li><a href="../gulf/">Gulf states</a></li><li><a href="../nordics/">Nordic countries</a></li></ul></nav></div></div>
+<p class="sf-meta">This page's data: <a href="../data/donors/eu.json">eu.json</a> · built 15 Oct 2026</p>
 </footer>
 
 <script>

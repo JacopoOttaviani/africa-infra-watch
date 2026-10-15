@@ -182,13 +182,9 @@
   .readmore{display:flex;flex-direction:column;gap:6px;padding:14px 20px 22px;margin-top:auto;border-top:1px solid var(--rule-soft);font-size:12px;color:var(--ink-3);line-height:1.5}
   .readmore a.pages-only{align-self:flex-start;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none}
   .readmore a.pages-only:hover{text-decoration:underline}
-  .byline{font-size:11.5px;color:var(--ink-3);line-height:1.5}
-  .byline a{display:inline-flex;align-items:center;gap:4px;color:var(--ink-2);font-weight:600;text-decoration:none;border-bottom:1px solid var(--rule)}
-  .byline a:hover{color:var(--accent);border-color:var(--accent)}
-  .byline a svg{width:12px;height:12px;fill:currentColor}
 
   /* ---------- stage: top bar ---------- */
-  .topbar{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 -22px;padding:12px 340px 10px 22px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .topbar{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 -22px;padding:12px calc(var(--navw) + 12px) 10px 22px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   .pill{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:5px 9px;font-size:11.5px;font-weight:600;box-shadow:var(--shadow);display:flex;gap:7px;align-items:center;white-space:nowrap;height:32px}
   .pill .m{font-size:11.5px;color:var(--ink)}
   .ib{width:32px;height:32px;background:var(--surface);border:1px solid var(--rule);border-radius:3px;font-size:16px;font-weight:600;line-height:1;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
@@ -421,8 +417,9 @@
   .src .sn{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:-.008em}
   .src .sf{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
   .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.finance_wb,.sk.cables,.sk.eu{color:var(--st-approved)} .sk.ground,.sk.mattei{color:var(--st-construction)}
-  footer.foot{margin-top:16px;padding-top:16px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
-  footer.foot .byline{font-family:var(--mono);font-size:11px}
+  /* the site's footer (shared.site_footer), then when the page was built */
+  footer.foot{margin-top:28px;padding-top:26px;border-top:1px solid var(--rule)}
+  footer.foot .sf-meta{margin:26px 0 0;padding-top:12px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
 
   /* ---------- drawer on small screens, as on the map ---------- */
   .scrim{display:none}
@@ -435,12 +432,12 @@
     .scrim{display:block;position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
     .scrim.show{opacity:1;pointer-events:auto}
     .shell{padding:0 16px 60px}
-    .topbar{margin:0 -16px;padding:12px 16px 10px}
+    .topbar{margin:0 -16px;padding:12px calc(var(--navw) + 12px) 10px 16px}
     .brow{grid-template-columns:84px 1fr 48px}
     .axis{padding-left:94px}
     body.rail-open .topright{display:none}   /* the drawer's close button sits under them otherwise */
   }
-  @media (max-width:600px){.topbar{padding-right:150px}.proj-note{display:none}}
+  @media (max-width:600px){.proj-note{display:none}}
 
   /* ---------- site-only chrome (GitHub Pages build) ---------- */
   .pages-only{display:none}
@@ -448,17 +445,17 @@
   a.tab.pages-only{display:none}
   html[data-host="pages"] a.tab.pages-only{display:flex}
 
-  /* ---------- support and method buttons (always visible) ---------- */
-  /* one row, right-aligned: the Deep dives menu and Methodology; support sits at the map's bottom right */
+  /* ---------- the theme switch and the site's menu bar (always visible) ---------- */
+  /* one row, right-aligned: the theme switch and the menu bar (shared.site_nav); support sits at the map's bottom right */
   .topright{position:fixed;right:12px;top:12px;z-index:8;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .topright .actions{display:flex;gap:6px;align-items:center}
   /*__LMENU_CSS__*/
-  /* below 1000 px the bar shrinks to its icons, so it clears the map's own controls; each button's
-     title and aria-label still name it */
-  @media (max-width:1000px){.topright .methodbtn{padding:0 7px;gap:0}.topright .methodbtn>span{display:none}.topright .lmenu>summary{gap:3px}}
-  .methodbtn{align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);transition:background .15s}
-  .methodbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .methodbtn:hover{background:var(--surface-2)}
+  /* the room the theme switch and the menu bar take on the top edge, which the top bar's
+     pills leave free; it steps with the bar's folds (1480/1400/1180 px) */
+  :root{--navw:790px}
+  @media (max-width:1480px){:root{--navw:710px}}
+  @media (max-width:1400px){:root{--navw:495px}}
+  @media (max-width:1180px){:root{--navw:205px}}
   .coffee{position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
   .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
@@ -472,7 +469,7 @@
   @keyframes cshine{to{transform:translateX(130%)}}
   @keyframes cwiggle{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}65%{transform:rotate(9deg)}}
   @keyframes csteam{0%{transform:translateY(1px);opacity:0}35%{opacity:1}100%{transform:translateY(-3px);opacity:0}}
-  @media (max-width:600px){.coffee,.methodbtn{padding:0 7px;gap:0}.coffee span,.methodbtn span{display:none}}
+  @media (max-width:600px){.coffee{padding:0 7px;gap:0}.coffee span{display:none}}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.coffee:hover{transform:none}}
 </style>
 
@@ -790,8 +787,8 @@
       <div class="srcs" id="srcs"></div>
 
       <footer class="foot">
-        <span id="builtnote"></span>
-        <span class="byline">__SITE_NAME__ · a project by <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">Jacopo Ottaviani<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg></a></span>
+        <!--__FOOTER__-->
+        <p class="sf-meta" id="builtnote"></p>
       </footer>
     </div>
     <div class="scrim" id="scrim"></div>
@@ -802,11 +799,7 @@
 <button class="ib pages-only" id="theme" title="Switch light / dark" aria-label="Switch between light and dark theme">
   <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg>
 </button>
-<!--__DONORS__-->
-<a class="methodbtn pages-only" href="index.html#t=m" title="Where the data comes from and how it is aligned" aria-label="Methodology">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M20 18v3H6.5"/><path d="M9 8h7M9 11.5h7"/></svg>
-  <span>Methodology</span>
-</a>
+<!--__NAV__-->
 </div>
 </div>
 
@@ -1379,12 +1372,10 @@ function renderLede(){
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]||s.k}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   el("lede").innerHTML =
-    `What is being built across Africa, and who is paying for it. Eight layers from ten public datasets
-     laid over one map: power plants, planned, being built, running or shelved, African Development Bank and World
-     Bank projects with money attached, road, rail and airport works traced on the ground, oil and gas
-     pipelines, submarine cables, Chinese-financed projects from ${CN_Y[0]} to ${CN_Y[1]}, the European Union's
-     own contracts and loans and the projects of Italy's Piano Mattei. Charts and a table follow the
-     map; every figure carries its source.`;
+    `What is being built across Africa, and who is paying for it. Ten public datasets on one map: power
+     plants, pipelines, cables and road, rail and airport works, plus the projects of the AfDB, the World
+     Bank, China, the EU and Italy's Piano Mattei. Charts and a table follow; every figure
+     carries its source.`;
 }
 
 /* Deliberately per-layer. The sources share no project identifier, so a

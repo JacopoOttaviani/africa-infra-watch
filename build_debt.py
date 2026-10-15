@@ -362,8 +362,8 @@ def jsonld(path):
             + json.dumps(page, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>\n")
 
 
-# The debt section is a theme of the top bar's Deep dives menu
-# (shared.donor_nav); brand_assets(page, donor="debt") marks it current.
+# The debt section is a theme of the menu bar and the footer
+# (shared.site_nav, site_footer); brand_assets(page, donor="debt") marks it current.
 
 
 def build():

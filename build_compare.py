@@ -498,8 +498,8 @@ def jsonld(path):
             + json.dumps(page, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>\n")
 
 
-# The comparison is the last entry of the top bar's Lenders menu
-# (shared.donor_nav); brand_assets(page, donor="compare") marks it current.
+# The comparison is a theme of the menu bar and the footer
+# (shared.site_nav, site_footer); brand_assets(page, donor="compare") marks it current.
 
 
 def build():
