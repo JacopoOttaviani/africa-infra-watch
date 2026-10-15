@@ -547,10 +547,11 @@
   body[data-tab="method"] .stage > :not(#method):not(.scrim){display:none}
 
   .readmore{display:flex;flex-direction:column;gap:6px;padding:14px 20px 22px;margin-top:auto;border-top:1px solid var(--rule-soft);font-size:12px;color:var(--ink-3);line-height:1.5}
-  /* the site's footer (shared.site_footer) at the foot of the rail, in one column; the
-     rail's head already carries the name and the credit, so only the support buttons stay */
+  /* the site's footer (shared.site_footer) at the foot of the rail: the rail's head already
+     carries the name and the credit, and the menu bar the page lists, so only the support
+     buttons stay */
   .railfoot{padding:18px 20px 26px;border-top:1px solid var(--rule)}
-  .railfoot .sf-home,.railfoot .sf-about,.railfoot .sf-made{display:none}
+  .railfoot .sf-home,.railfoot .sf-about,.railfoot .sf-made,.railfoot .sf-col{display:none}
   .railfoot .sf-cta{margin-top:0}
   .readmore button{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:12px;font-weight:600;color:var(--ink)}
   .readmore button:hover{background:var(--surface-3)}
