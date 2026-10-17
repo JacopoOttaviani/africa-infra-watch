@@ -95,11 +95,11 @@ def an(word):
     """"an African", "a Southeast Asian", "an AfDB-financed": the article a word takes."""
     return ("an " if word[:1].lower() in "aeiou" else "a ") + word
 # The name beside the logo, as a two-colour wordmark, for the headers, the
-# footer and the loading box: "AfricaInfra" keeps the surrounding ink, "Radar"
-# takes the accent (the mark's colour; .wm-r lives in LMENU_CSS). The Africa
-# edition writes the region in front, in one word; other editions print
-# "InfraRadar". Templates print it through __SITE_WORDMARK__.
-SITE_WORDMARK = ("Africa" if REGION.key == "africa" else "") + 'Infra<span class="wm-r">Radar</span>'
+# footer and the loading box: "Africa" and "Radar" take the accent (the mark's
+# colour; .wm-r lives in LMENU_CSS), "Infra" between them keeps the surrounding
+# ink. The Africa edition writes the region in front, in one word; other
+# editions print "InfraRadar". Templates print it through __SITE_WORDMARK__.
+SITE_WORDMARK = ('<span class="wm-r">Africa</span>' if REGION.key == "africa" else "") + 'Infra<span class="wm-r">Radar</span>'
 AUTHOR_NAME = "Jacopo Ottaviani"
 # The link-preview image, docs/social.png, drawn by build_social.py.
 SOCIAL_IMAGE = "social.png"
@@ -299,7 +299,7 @@ LINKEDIN_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" 
 # /*__LMENU_CSS__*/ in every template's stylesheet with it. It uses the
 # site's tokens only, so it follows each theme.
 LMENU_CSS = """
-  .wm-r{color:var(--accent)}   /* the "Radar" half of the wordmark (SITE_WORDMARK) */
+  .wm-r{color:var(--accent)}   /* "Africa" and "Radar" in the wordmark (SITE_WORDMARK) */
   /* ---------- the menu bar (shared.site_nav) ----------
      Map, Dashboard, the theme deep dives by name, the lender profiles in a
      dropdown, Methodology, Contact me. It folds in three steps as the window narrows:
