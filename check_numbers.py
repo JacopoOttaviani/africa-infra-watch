@@ -36,6 +36,7 @@ ROOT = pathlib.Path(_dirs[0]).resolve() if _dirs else pathlib.Path(__file__).res
 sys.path.insert(0, str(ROOT))
 import shared  # noqa: E402
 from fetch_donors import AFRICA  # noqa: E402
+from region import REGIONS  # noqa: E402
 
 DATA, DOCS = ROOT / "data", ROOT / "docs"
 OKS, FAILS = [], []
@@ -355,8 +356,11 @@ def main():
     if (ROOT / "map.html").exists() and (ROOT / "dashboard.html").exists():
         claim("artifact sizes, MB (map, dashboard)", r"inside the page \((\d+\.\d) MB and\s+(\d+\.\d) MB",
               [mb(ROOT / "map.html"), mb(ROOT / "dashboard.html")], rel=0.15)
+    # the other editions' folders (docs/se-asia/) are snapshots of their own
+    editions = {DOCS / r.slug for r in REGIONS.values() if r.slug}
     claim("docs/ size per snapshot, MB", r"About (\d+) MB per\s+snapshot",
-          round(sum(f.stat().st_size for f in DOCS.rglob("*") if f.is_file()) / 1e6), rel=0.15)
+          round(sum(f.stat().st_size for f in DOCS.rglob("*")
+                    if f.is_file() and not any(e in f.parents for e in editions)) / 1e6), rel=0.15)
 
     # ------------------------------------------------------------------
     section("8. hand-written proportions in the prose")
@@ -372,7 +376,9 @@ def main():
     noscript = (DOCS / "index.html").read_text(encoding="utf-8")
     llms = (DOCS / "llms.txt").read_text(encoding="utf-8")
     dtpl = (ROOT / "dashboard.template.html").read_text(encoding="utf-8")
-    mtpl = (ROOT / "map.template.html").read_text(encoding="utf-8")
+    # the region markers (<!--__IF:africa__-->…<!--__ENDIF__-->) carry other
+    # editions' wording; resolve them for Africa, as the build does
+    mtpl = shared.regionalize((ROOT / "map.template.html").read_text(encoding="utf-8"))
     china_cty = ch["country_level"] / ch["records"]
     unrouted = meta["pipelines"]["unrouted"] / (meta["pipelines"]["records"] + meta["pipelines"]["unrouted"])
     # the crawler text states these two as computed percentages, of markers

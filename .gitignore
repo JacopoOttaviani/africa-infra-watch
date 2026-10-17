@@ -15,6 +15,8 @@ data/.aiddata_cache/
 # Pages serves it straight from main.
 /map.html
 /dashboard.html
+/map.*.html
+/dashboard.*.html
 # USGS MCS PDF and other downloads for the minerals page (fetch_minerals.py refills it)
 data/.minerals_cache/
 # USGS Africa mineral industries GIS (2021), downloaded by hand from ScienceBase (~630 MB; fetch_minerals.py facilities reads it)

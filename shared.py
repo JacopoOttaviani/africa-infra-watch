@@ -94,10 +94,12 @@ ROBOTS = "noindex,nofollow" if REGION.noindex else "index,follow,max-image-previ
 def an(word):
     """"an African", "a Southeast Asian", "an AfDB-financed": the article a word takes."""
     return ("an " if word[:1].lower() in "aeiou" else "a ") + word
-# The same name as a two-colour wordmark, for the headers, the footer and the
-# loading box: "Infra" keeps the surrounding ink, "Radar" takes the accent (the
-# mark's colour; .wm-r lives in LMENU_CSS). Templates print it through __SITE_WORDMARK__.
-SITE_WORDMARK = 'Infra<span class="wm-r">Radar</span>'
+# The name beside the logo, as a two-colour wordmark, for the headers, the
+# footer and the loading box: "AfricaInfra" keeps the surrounding ink, "Radar"
+# takes the accent (the mark's colour; .wm-r lives in LMENU_CSS). The Africa
+# edition writes the region in front, in one word; other editions print
+# "InfraRadar". Templates print it through __SITE_WORDMARK__.
+SITE_WORDMARK = ("Africa" if REGION.key == "africa" else "") + 'Infra<span class="wm-r">Radar</span>'
 AUTHOR_NAME = "Jacopo Ottaviani"
 # The link-preview image, docs/social.png, drawn by build_social.py.
 SOCIAL_IMAGE = "social.png"
@@ -539,14 +541,22 @@ def site_nav(current=None):
                 '<nav class="lm-panel" aria-label="Lender profiles"><p class="lm-h"><b>Lender profiles</b>One page per '
                 f'lending country or group: what {REGION.name} owes it, what it lends and gives, and what it builds.</p>'
                 f'{note}{lenders}</nav></details>')
-    bar.append(
-        f'<details class="sn-dd sn-more{cur_cls(lender_here or theme_here)}" name="snav">'
-        f'<summary class="sn-a" title="Deep dives: reading pages on one theme or one lender, beyond the map">'
-        f'<span class="sn-ms">{MENU_ICON}Menu</span><span class="sn-ml">Deep dives{named(lender_here or theme_here)}</span>'
-        f'{CARET}</summary>'
-        f'<nav class="lm-panel" aria-label="Site and deep dives">{site_row}'
-        '<p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, '
-        f'beyond what the map\'s filters show.</p>{note}{cards}{lenders if single else ""}</nav></details>')
+    if themes or single:
+        bar.append(
+            f'<details class="sn-dd sn-more{cur_cls(lender_here or theme_here)}" name="snav">'
+            f'<summary class="sn-a" title="Deep dives: reading pages on one theme or one lender, beyond the map">'
+            f'<span class="sn-ms">{MENU_ICON}Menu</span><span class="sn-ml">Deep dives{named(lender_here or theme_here)}</span>'
+            f'{CARET}</summary>'
+            f'<nav class="lm-panel" aria-label="Site and deep dives">{site_row}'
+            '<p class="lm-h"><b>Deep dives</b>Reading pages on one theme or one lender, each with its own data, '
+            f'beyond what the map\'s filters show.</p>{note}{cards}{lenders if single else ""}</nav></details>')
+    else:
+        # an edition with no deep dives yet: the folded menu holds the site's two pages, and says so
+        bar.append(
+            '<details class="sn-dd sn-more" name="snav">'
+            '<summary class="sn-a" title="Menu: the map and the dashboard">'
+            f'<span class="sn-ms">{MENU_ICON}Menu</span><span class="sn-ml">Menu</span>{CARET}</summary>'
+            f'<nav class="lm-panel" aria-label="Site">{site_row}</nav></details>')
     bar.append('<span class="sn-sep sn-x" aria-hidden="true"></span>')
     bar.append(meth)
     bar.append(f'<a class="sn-a sn-contact" href="{AUTHOR_URL}" target="_blank" rel="noopener noreferrer" '
@@ -956,16 +966,18 @@ def facts_sentence(facts):
 
 def facts_totals(facts):
     parts = []
+    # the regional bank's currency: the AfDB publishes in SDR, the ADB in dollars
+    bank_rate = f"converted at {SDR_NOTE}" if REGION.bank["currency"] == "XDR" else "in US dollars as published"
     if facts["gw"]:
         parts.append(f"about {facts['gw']:,.0f} GW of generating capacity across all statuses")
     if facts["usd_bn"]:
         if facts.get("usd_bn_wb"):
             parts.append(f"USD {facts['usd_bn'] - facts['usd_bn_wb']:,.1f} billion of {BANK} commitments, "
-                         f"converted at {SDR_NOTE}, and USD {facts['usd_bn_wb']:,.1f} billion of World Bank "
+                         f"{bank_rate}, and USD {facts['usd_bn_wb']:,.1f} billion of World Bank "
                          f"commitments, each the infrastructure share of the lender's own commitment, "
                          f"budget support and cancelled projects left out")
         else:
-            parts.append(f"USD {facts['usd_bn']:,.1f} billion of {BANK} commitments, converted at {SDR_NOTE}")
+            parts.append(f"USD {facts['usd_bn']:,.1f} billion of {BANK} commitments, {bank_rate}")
     if facts.get("china_usd_bn"):
         parts.append(f"USD {facts['china_usd_bn']:,.1f} billion of Chinese official commitments to "
                      f"infrastructure over {china_span(facts['meta'])[0]}–{china_span(facts['meta'])[1]}, "

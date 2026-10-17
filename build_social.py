@@ -38,7 +38,11 @@ sys.path.insert(0, str(ROOT))
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
 from build_dashboard import build_china, build_eu, build_lookup, build_mattei  # noqa: E402
 from region import REGION  # noqa: E402
-from shared import BANK, BRAND, DATA, DOCS, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W, china_span  # noqa: E402
+from shared import (BANK, BRAND, DATA, DOCS, MAP_LAYERS, NUM_WORD, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE,  # noqa: E402
+                    SOCIAL_W, china_span)
+
+# one public dataset per source card, and the EU card is two (Commission and EIB)
+N_DATASETS = NUM_WORD.get(len(MAP_LAYERS) + 1, str(len(MAP_LAYERS) + 1))
 
 W, H = SOCIAL_W, SOCIAL_H
 OUT = DOCS / SOCIAL_IMAGE
@@ -232,7 +236,7 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     # the two-colour wordmark (SITE_WORDMARK in shared.py): "Infra" in the ink, "Radar" in the accent
     out.append(f'<text x="62" y="262" class="title">Infra<tspan fill="{C["accent"]}">Radar</tspan></text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
-    out.append('<text x="64" y="430" class="sub">the continent, from ten public datasets.</text>')
+    out.append(f'<text x="64" y="430" class="sub">{esc(REGION.land)}, from {N_DATASETS} public datasets.</text>')
 
     n_a, n_f, n_g, n_c, n_e = (len(assets["rows"]), len(finance["rows"]), len(ground["rows"]),
                                len(china["rows"]), len(eu["rows"]))

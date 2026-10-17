@@ -33,7 +33,8 @@ ROOT = pathlib.Path(__file__).parent
 
 from build_debt import dashboard_payload as debt_payload  # noqa: E402
 TEMPLATE = ROOT / "dashboard.template.html"
-OUT = ROOT / "dashboard.html"
+# the artifact build (payload inlined); another edition's carries its key: dashboard.sea.html
+OUT = ROOT / ("dashboard.html" if REGION.key == "africa" else f"dashboard.{REGION.key}.html")
 
 # GEM uses country names; IATI uses ISO-3166-1 alpha-2. Bridge them (the
 # region's table, region.py; first name wins for ISO -> name).

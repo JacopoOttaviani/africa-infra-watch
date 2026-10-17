@@ -32,7 +32,8 @@ from region import REGION  # noqa: E402
 ROOT = pathlib.Path(__file__).parent
 DATA = REGION.data_dir
 TEMPLATE = ROOT / "map.template.html"
-OUT = ROOT / "map.html"
+# the artifact build (payload inlined); another edition's carries its key: map.sea.html
+OUT = ROOT / ("map.html" if REGION.key == "africa" else f"map.{REGION.key}.html")
 
 # Shared with build_dashboard.py so the two pages quote the same figure.
 from build_dashboard import (  # noqa: E402
