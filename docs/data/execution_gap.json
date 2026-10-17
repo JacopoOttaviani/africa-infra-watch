@@ -1,0 +1,3419 @@
+{
+ "built": "2026-10-17",
+ "page": "https://jacopoottaviani.com/africa-infra-watch/execution-gap/",
+ "sources": {
+  "gem": {
+   "fetched": "2026-10-14",
+   "fresh": "24 Sep 2026",
+   "release": "2026-09",
+   "records": 4295
+  },
+  "aiddata": {
+   "fetched": "2026-10-14",
+   "fresh": "Nov 2025 · to 2023",
+   "release": "CLG-Global 1.0 · locations from GCDF 3.0 and GeoGCDF v3.0.1",
+   "records": 2487,
+   "footprints": 886,
+   "precise": 1157,
+   "approximate": 721,
+   "country_level": 609,
+   "unlocated": 2,
+   "umbrella": 872,
+   "pledges": 510,
+   "mislinked": 1,
+   "not_infrastructure": 6738,
+   "acquisitions": 0,
+   "base_year": 2023,
+   "years": [
+    2000,
+    2023
+   ],
+   "new_records": 157,
+   "commodity_backed": 288,
+   "commodity_backed_usd": 51425987792
+  }
+ },
+ "rules": {
+  "status_fold": [
+   [
+    "announced",
+    "announced"
+   ],
+   [
+    "pre-construction, permitted",
+    "approved"
+   ],
+   [
+    "construction",
+    "under_construction"
+   ],
+   [
+    "operating, retired",
+    "operating"
+   ],
+   [
+    "cancelled, shelved, mothballed",
+    "stalled"
+   ]
+  ],
+  "tech_groups": {
+   "PV": "solar",
+   "Assumed PV": "solar",
+   "Solar Thermal": "csp",
+   "Onshore": "wind",
+   "Offshore mount unknown": "wind",
+   "Offshore floating": "wind",
+   "Unknown": "wind",
+   "gas turbine": "gasoil",
+   "combined cycle": "gasoil",
+   "steam turbine": "gasoil",
+   "internal combustion": "gasoil",
+   "ICCC": "gasoil",
+   "ISCC": "gasoil",
+   "subcritical": "coal",
+   "supercritical": "coal",
+   "ultra-supercritical": "coal",
+   "run-of-river": "hydro",
+   "conventional storage": "hydro",
+   "pumped storage": "hydro",
+   "conventional and run-of-river": "hydro",
+   "pressurized water reactor": "nuclear",
+   "flash steam - single": "geo",
+   "flash steam - unknown": "geo",
+   "binary cycle": "geo",
+   "unknown type": "geo"
+  },
+  "tech_name_rule": [
+   [
+    "nuclear",
+    "nuclear"
+   ],
+   [
+    "hydro",
+    "hydro"
+   ],
+   [
+    "coal",
+    "coal"
+   ],
+   [
+    "wind",
+    "\\bwind"
+   ],
+   [
+    "solar",
+    "solar|photovolta"
+   ],
+   [
+    "geo",
+    "geotherm"
+   ],
+   [
+    "gasoil",
+    "\\bgas\\b|\\bLNG\\b|diesel|\\bHFO\\b|\\boil\\b"
+   ]
+  ],
+  "owner_lists": [
+   "China",
+   "Gulf states",
+   "France",
+   "Nordic countries",
+   "Italy",
+   "Germany",
+   "Spain",
+   "Türkiye",
+   "United States",
+   "Japan"
+  ],
+  "hydrogen_regex": "hydrogen|hydrog[eè]ne|\\bH2\\b|Megaton Moon|\\bAMAN\\b|Conjuncta|Project Nour|Hyphen|Zhero|NAYRAH|White Dunes|Tsau",
+  "quartiles": "statistics.quantiles(method='inclusive')"
+ },
+ "status_totals_gw": {
+  "announced": 250.16,
+  "approved": 268.39,
+  "under_construction": 75.41,
+  "operating": 271.3,
+  "stalled": 228.71
+ },
+ "status_units": {
+  "announced": 603,
+  "approved": 599,
+  "under_construction": 263,
+  "operating": 2064,
+  "stalled": 766
+ },
+ "by_technology": [
+  {
+   "group": "solar",
+   "name": "Solar PV",
+   "gw": {
+    "announced": 137.02,
+    "approved": 97.8,
+    "under_construction": 20.9,
+    "operating": 14.88,
+    "stalled": 60.94
+   },
+   "units": {
+    "announced": 314,
+    "approved": 287,
+    "under_construction": 125,
+    "operating": 782,
+    "stalled": 266
+   },
+   "sorted_by_name": 0
+  },
+  {
+   "group": "gasoil",
+   "name": "Gas and oil",
+   "gw": {
+    "announced": 23.11,
+    "approved": 19.42,
+    "under_construction": 14.94,
+    "operating": 135.55,
+    "stalled": 36.3
+   },
+   "units": {
+    "announced": 92,
+    "approved": 35,
+    "under_construction": 49,
+    "operating": 693,
+    "stalled": 113
+   },
+   "sorted_by_name": 9
+  },
+  {
+   "group": "wind",
+   "name": "Wind",
+   "gw": {
+    "announced": 50.69,
+    "approved": 95.64,
+    "under_construction": 19.99,
+    "operating": 12.02,
+    "stalled": 22.05
+   },
+   "units": {
+    "announced": 84,
+    "approved": 99,
+    "under_construction": 32,
+    "operating": 126,
+    "stalled": 75
+   },
+   "sorted_by_name": 0
+  },
+  {
+   "group": "hydro",
+   "name": "Hydro",
+   "gw": {
+    "announced": 4.74,
+    "approved": 38.21,
+    "under_construction": 8.2,
+    "operating": 47.25,
+    "stalled": 11.3
+   },
+   "units": {
+    "announced": 24,
+    "approved": 83,
+    "under_construction": 14,
+    "operating": 145,
+    "stalled": 33
+   },
+   "sorted_by_name": 62
+  },
+  {
+   "group": "coal",
+   "name": "Coal",
+   "gw": {
+    "announced": 0.0,
+    "approved": 1.24,
+    "under_construction": 0.65,
+    "operating": 53.7,
+    "stalled": 45.62
+   },
+   "units": {
+    "announced": 0,
+    "approved": 20,
+    "under_construction": 4,
+    "operating": 153,
+    "stalled": 134
+   },
+   "sorted_by_name": 9
+  },
+  {
+   "group": "nuclear",
+   "name": "Nuclear",
+   "gw": {
+    "announced": 21.4,
+    "approved": 6.12,
+    "under_construction": 4.8,
+    "operating": 1.94,
+    "stalled": 5.7
+   },
+   "units": {
+    "announced": 19,
+    "approved": 17,
+    "under_construction": 4,
+    "operating": 2,
+    "stalled": 4
+   },
+   "sorted_by_name": 38
+  },
+  {
+   "group": "csp",
+   "name": "Solar thermal",
+   "gw": {
+    "announced": 0.39,
+    "approved": 3.3,
+    "under_construction": 2.35,
+    "operating": 1.17,
+    "stalled": 1.06
+   },
+   "units": {
+    "announced": 6,
+    "approved": 7,
+    "under_construction": 3,
+    "operating": 13,
+    "stalled": 7
+   },
+   "sorted_by_name": 0
+  },
+  {
+   "group": "geo",
+   "name": "Geothermal",
+   "gw": {
+    "announced": 0.7,
+    "approved": 1.77,
+    "under_construction": 0.36,
+    "operating": 0.9,
+    "stalled": 0.88
+   },
+   "units": {
+    "announced": 15,
+    "approved": 22,
+    "under_construction": 8,
+    "operating": 20,
+    "stalled": 6
+   },
+   "sorted_by_name": 0
+  },
+  {
+   "group": "bio",
+   "name": "Bioenergy",
+   "gw": {
+    "announced": 0.3,
+    "approved": 0.56,
+    "under_construction": 0.26,
+    "operating": 1.6,
+    "stalled": 1.53
+   },
+   "units": {
+    "announced": 11,
+    "approved": 15,
+    "under_construction": 6,
+    "operating": 84,
+    "stalled": 23
+   },
+   "sorted_by_name": 0
+  },
+  {
+   "group": "unknown",
+   "name": "Not stated",
+   "gw": {
+    "announced": 11.8,
+    "approved": 4.33,
+    "under_construction": 2.96,
+    "operating": 2.29,
+    "stalled": 43.33
+   },
+   "units": {
+    "announced": 38,
+    "approved": 14,
+    "under_construction": 18,
+    "operating": 46,
+    "stalled": 105
+   },
+   "sorted_by_name": 221
+  }
+ ],
+ "paper_over_operating": [
+  "Benin",
+  "Botswana",
+  "Burkina Faso",
+  "Cameroon",
+  "Central African Republic",
+  "Chad",
+  "DR Congo",
+  "Djibouti",
+  "Egypt",
+  "Eswatini",
+  "Gabon",
+  "Ghana",
+  "Guinea",
+  "Guinea-Bissau",
+  "Kenya",
+  "Lesotho",
+  "Liberia",
+  "Madagascar",
+  "Malawi",
+  "Mauritania",
+  "Morocco",
+  "Mozambique",
+  "Namibia",
+  "Niger",
+  "Nigeria",
+  "Republic of the Congo",
+  "Rwanda",
+  "Sierra Leone",
+  "Somalia",
+  "South Sudan",
+  "Tanzania",
+  "The Gambia",
+  "Togo",
+  "Uganda",
+  "Western Sahara",
+  "Zambia",
+  "Zimbabwe"
+ ],
+ "solar_pv_on_paper": {
+  "total_gw": 234.82,
+  "units": 601,
+  "by_country": [
+   {
+    "country": "Mauritania",
+    "gw": 53.13,
+    "owners": [
+     {
+      "owner": "GreenGo Energy Group",
+      "gw": 30.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 2
+     },
+     {
+      "owner": "CWP Global",
+      "gw": 12.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "Conjuncta; Infinity Power AS",
+      "gw": 5.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 2
+     },
+     {
+      "owner": "Chariot Ltd [100%]",
+      "gw": 5.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 2
+     },
+     {
+      "owner": "Möhring Energie",
+      "gw": 0.5,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 2
+     },
+     {
+      "owner": "Ministry of Petroleum, Energy, and Mines",
+      "gw": 0.276,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Iwa Green Energy",
+      "gw": 0.199,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "",
+      "gw": 0.16,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Egypt",
+    "gw": 45.21,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 16.5,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 5
+     },
+     {
+      "owner": "New and Renewable Energy Authority [100%]",
+      "gw": 15.024,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 10
+     },
+     {
+      "owner": "China Electric Power Equipment and Technology Co Ltd",
+      "gw": 10.0,
+      "home": "china",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Ministry of Electricity and Renewable Energy (Egypt)",
+      "gw": 1.6,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "Scatec ASA [100%]",
+      "gw": 1.564,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "SolarizEgypt | Amarenco & Co [100%]",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Scatec ASA",
+      "gw": 0.14,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Alexandria National Refining and Petrochemical Company (ANRPC); Scatec ASA",
+      "gw": 0.04,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "New and Renewable Energy Authority",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Heidelberg Materials AG [100%]",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "South Africa",
+    "gw": 31.71,
+    "owners": [
+     {
+      "owner": "Jearrard Energy Resources (JER)",
+      "gw": 12.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "Blue Crane Environmental",
+      "gw": 7.28,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 30
+     },
+     {
+      "owner": "",
+      "gw": 4.428,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 25
+     },
+     {
+      "owner": "African Oxygen PTY LTD (Afrox); Hive Energy; BuiltAfrica Group",
+      "gw": 1.35,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Biopower SA; Powgex-HYFI",
+      "gw": 1.0,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Scatec ASA [50%]; other [2%]; Greenstreet and Redstreet [46%]",
+      "gw": 0.74,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "Pele SPV 32 [49%]; Infinity Power AS [51%]",
+      "gw": 0.41,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Soventix South Africa Pty Ltd [100%]",
+      "gw": 0.4,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Jade-Sky Energy; MBY Energy; Red Rocket South Africa Pty Ltd",
+      "gw": 0.38,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Norsk Renewables",
+      "gw": 0.315,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "NOA Group",
+      "gw": 0.295,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "Magnora ASA [100%]",
+      "gw": 0.26,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Envusa Energy",
+      "gw": 0.238,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Yellow Door",
+      "gw": 0.216,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Red Rocket South Africa Pty Ltd",
+      "gw": 0.21,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Antlia Energy",
+      "gw": 0.2,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Central Energy Corporation (CENEC)",
+      "gw": 0.18,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Globeleq Africa Investments Ltd",
+      "gw": 0.177,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Meadows Energy [22%]; Perpetua Investment Holdings [22%]; ENGIE SA [35%]; G7 Renewable Energies Pty Ltd [20%]",
+      "gw": 0.155,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "ACWA Power Co [100%]",
+      "gw": 0.15,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Earth and Wire; 24Solutions; Enertrag Ltd",
+      "gw": 0.15,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "ib vogt gmbH",
+      "gw": 0.14,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "EDF Renewables [100%]",
+      "gw": 0.138,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "OptiPower; Coxabengoa",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "unknown [90%]; EDF Renewables; Pele Energy Group; Community Owned - Anglo American Platinum Community Trust [10%]",
+      "gw": 0.1,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Royal Bafokeng Platinum (RBPlat) [100%]",
+      "gw": 0.098,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Sturdee Energy Southern Africa Pty Ltd",
+      "gw": 0.091,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Sturdee Energy Southern Africa Pty Ltd [100%]",
+      "gw": 0.09,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "AMEA Power",
+      "gw": 0.085,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "BTE Renewables",
+      "gw": 0.075,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Mulilo Energy Holdings Pty Ltd",
+      "gw": 0.075,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "City of Cape Town [100%]",
+      "gw": 0.06,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Harmony Gold Mining Co Ltd [100%]",
+      "gw": 0.056,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Mainstream Renewable Power [70%]; Investec [30%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Northam Platinum Holdings Ltd [100%]",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Morocco",
+    "gw": 24.01,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 17.858,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 7
+     },
+     {
+      "owner": "Total Eren SA [100%]",
+      "gw": 5.0,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Total Eren SA",
+      "gw": 0.5,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "EDF Renewables; Green of Africa; MASEN; Masdar Clean Energy",
+      "gw": 0.4,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Moroccan Agency for Sustainable Energy (MASEN) [100%]",
+      "gw": 0.151,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 4
+     },
+     {
+      "owner": "MASEN; Kreditanstalt für Wiederaufbau",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Mozambique",
+    "gw": 13.63,
+    "owners": [
+     {
+      "owner": "Jearrard Energy Resources (JER)",
+      "gw": 12.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.52,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 5
+     },
+     {
+      "owner": "Solgenics Ltd [100%]",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Africa50 SA; Electricidade de Moçambique EP",
+      "gw": 0.16,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "National Investment Bank (BNI); AMEA Power",
+      "gw": 0.125,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "WHN Solar [100%]",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Sal Energia; Electricidade de Moçambique EP",
+      "gw": 0.095,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Renco Tek [100%]",
+      "gw": 0.09,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Electricidade de Moçambique EP",
+      "gw": 0.06,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Anglican Church of Niassa; Electricidade de Moçambique EP; Gigawatt Global",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Electricidade de Moçambique EP [100%]",
+      "gw": 0.044,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Total Eren SA [100%]",
+      "gw": 0.04,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Solarcentury [100%]",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "EleQtra Ltd",
+      "gw": 0.014,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Djibouti",
+    "gw": 10.05,
+    "owners": [
+     {
+      "owner": "CWP Global [73%]; Copenhagen Infrastructure Partners P/S [26%]",
+      "gw": 10.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "AMEA Power [100%]",
+      "gw": 0.03,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.025,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Namibia",
+    "gw": 9.18,
+    "owners": [
+     {
+      "owner": "Hyphen Hydrogen Energy Pty Ltd [100%]",
+      "gw": 3.5,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "Zhero Molecules Walvis Bay",
+      "gw": 3.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "International Finance Corp; Power Africa; International Bank for Reconstruction and Development; Government of Botswana; African Union Development Agency (AUDA-NEPAD); Government of Namibia; African Development Bank",
+      "gw": 1.125,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.386,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 18
+     },
+     {
+      "owner": "Namibia Power Corp Ltd",
+      "gw": 0.37,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "International Finance Corp; Power Africa; International Bank for Reconstruction and Development; African Development Bank; African Union Development Agency (AUDA-NEPAD); Government of Namibia; Government of Botswana",
+      "gw": 0.25,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Emerging Markets Energy Services Company (EMESCO) [100%]",
+      "gw": 0.125,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Namibia Power Corp Ltd [100%]",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "ANIREP; Cerim Luderitz Energy (CERIM)",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Hydrogène de France (HDF Energy) [100%]",
+      "gw": 0.085,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "Natura Energy; Globeleq Africa Investments Ltd",
+      "gw": 0.081,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "SolNam Energy; Solarcentury Africa (SOCA)",
+      "gw": 0.06,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Western Sahara",
+    "gw": 7.35,
+    "owners": [
+     {
+      "owner": "Hydrogène de France (HDF Energy)",
+      "gw": 7.0,
+      "home": "unresolved",
+      "hydrogen": true,
+      "units": 1
+     },
+     {
+      "owner": "Moroccan Agency for Sustainable Energy (MASEN) [100%]",
+      "gw": 0.35,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Zambia",
+    "gw": 5.81,
+    "owners": [
+     {
+      "owner": "ZESCO Limited; Abu Dhabi Future Energy Co",
+      "gw": 2.0,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "SkyPower Global",
+      "gw": 1.0,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Allpro Green Energy",
+      "gw": 1.0,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "",
+      "gw": 0.43,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 4
+     },
+     {
+      "owner": "AMDG Energy",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "ZESCO Ltd",
+      "gw": 0.275,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "REV-UP Solar Ventures",
+      "gw": 0.2,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "ZAHU Energy Solutions Limited (ZESL)",
+      "gw": 0.2,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "CGM Powergroup",
+      "gw": 0.15,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Hive Energy",
+      "gw": 0.12,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Copperbelt Energy Corporation (CEC); InnoVent Group",
+      "gw": 0.04,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Aurora Power Solutions; Globeleq Africa Investments Ltd",
+      "gw": 0.04,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Solarcentury Africa (SOCA)",
+      "gw": 0.033,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Africa Greenco Group; Serengeti Energy; Western Solar Power",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Ghana",
+    "gw": 3.48,
+    "owners": [
+     {
+      "owner": "Solar for Industries (SFI)",
+      "gw": 1.0,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Volta Solar Park Limited",
+      "gw": 0.9,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Meinergy Ghana [100%]",
+      "gw": 0.8,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 10
+     },
+     {
+      "owner": "Bui Power Authority (BPA) [100%]",
+      "gw": 0.27,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 8
+     },
+     {
+      "owner": "",
+      "gw": 0.25,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Renergy Solar",
+      "gw": 0.13,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "China Energy Construction Group Tianjin Power Construction Co Ltd",
+      "gw": 0.13,
+      "home": "china",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Zimbabwe",
+    "gw": 3.25,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 1.449,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 28
+     },
+     {
+      "owner": "Tatanga Energy [100%]",
+      "gw": 0.35,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 7
+     },
+     {
+      "owner": "Skypower",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "JINAN Group",
+      "gw": 0.15,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "RioZim Ltd [100%]",
+      "gw": 0.108,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Zimplats [100%]",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Green Rhino Energy [100%]",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Energywise",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Power Ventures [100%]",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Lunigar Solar [100%]",
+      "gw": 0.065,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Gombe Power [100%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Tatanga Energy; Masawara Group Holding",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Af Power Pte [100%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Ravensus Pvt Ltd [100%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "De Opper Trading; Green Rhino Energy",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Mimosa Mining Co [100%]",
+      "gw": 0.038,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "New Sahara Ventures",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Td Energy [100%]",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Xago Africa [100%]",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Pito Investments [100%]",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Sunny Yi Feng Tiles (Zimbabwe) Pvt Ltd",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Riverside Power Station (Private) Limited",
+      "gw": 0.007,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Botswana",
+    "gw": 2.5,
+    "owners": [
+     {
+      "owner": "International Finance Corp; Power Africa; African Development Bank; International Bank for Reconstruction and Development; African Union Development Agency (AUDA-NEPAD); Government of Namibia; Government of Botswana",
+      "gw": 1.125,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Botala Energy Ltd.",
+      "gw": 0.5,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "International Finance Corp; Power Africa; International Bank for Reconstruction and Development; African Union Development Agency (AUDA-NEPAD); African Development Bank; Government of Namibia; Government of Botswana",
+      "gw": 0.25,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.2,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Scatec ASA [100%]",
+      "gw": 0.1,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Solarcentury Africa (SOCA)",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Energy & Natural Resource Corp; Solarcentury Africa (SOCA)",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Solarcentury; Shumba Energy Ltd",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Tlou Energy [100%]",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Libya",
+    "gw": 2.49,
+    "owners": [
+     {
+      "owner": "Alpha Dhabi Holding; Libyan General Electric C",
+      "gw": 1.5,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Alpha Dhabi Holding; General Electricity Company of Libya",
+      "gw": 0.5,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "AG Energy",
+      "gw": 0.2,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Renewable Energy Authority of Libya [100%]",
+      "gw": 0.14,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "General Authority for Electricity and Renewable Energy (GAERE) [100%]",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Ministry of Electricity and Renewable Energy (Libya)",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Ethiopia",
+    "gw": 2.38,
+    "owners": [
+     {
+      "owner": "Abu Dhabi Future Energy Co",
+      "gw": 2.0,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "",
+      "gw": 0.275,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Orchid Business Group [20%]; Enel Green Power SpA [80%]",
+      "gw": 0.1,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Nigeria",
+    "gw": 2.29,
+    "owners": [
+     {
+      "owner": "Niger Delta Power Holding Co [100%]",
+      "gw": 0.96,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 5
+     },
+     {
+      "owner": "China Gezhouba Group Co Ltd; FalCore Power & Energy",
+      "gw": 0.36,
+      "home": "china",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Nigeria Sovereign Fund",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Sunnyfred Global; B&S Power Holding Pte",
+      "gw": 0.2,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Evtec Energy [100%]",
+      "gw": 0.11,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Granville Energy; Mainstream Energy Solutions Ltd",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Kaduna Electric",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 4
+     },
+     {
+      "owner": "Phanes FZ LLC [20%]; unknown; Africa Finance Corp [80%]",
+      "gw": 0.055,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Access Quaint Solar Nigeria Ltd; InfraCo Africa",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "PRIME Teknologies",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.025,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     }
+    ]
+   },
+   {
+    "country": "Tanzania",
+    "gw": 2.06,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 1.151,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 9
+     },
+     {
+      "owner": "Tanzania Electric Supply Company Ltd; Abu Dhabi Future Energy Co",
+      "gw": 0.6,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Upepo Energy",
+      "gw": 0.234,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 4
+     },
+     {
+      "owner": "Astra Energy Inc",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "AG Energies",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "DR Congo",
+    "gw": 1.98,
+    "owners": [
+     {
+      "owner": "African Finance Corporation (AFC); Skypower",
+      "gw": 1.0,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Melci Holdings; Soleos Energy",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "East African Power (EAP) [85%]",
+      "gw": 0.266,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "CrossBoundary Energy (CBE)",
+      "gw": 0.233,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "AMEA Power [100%]",
+      "gw": 0.1,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Abosskal Oferka; Tinda Energy",
+      "gw": 0.065,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.015,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 3
+     }
+    ]
+   },
+   {
+    "country": "Algeria",
+    "gw": 1.93,
+    "owners": [
+     {
+      "owner": "Sonelgaz SpA",
+      "gw": 1.052,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 8
+     },
+     {
+      "owner": "Sonelgaz SpA [100%]",
+      "gw": 0.73,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 6
+     },
+     {
+      "owner": "",
+      "gw": 0.1,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "VNG AG; Sonatrach SpA",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Tunisia",
+    "gw": 1.9,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 1.222,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 8
+     },
+     {
+      "owner": "Tunisian Ministry of Industry, Energy and Mines",
+      "gw": 0.339,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "AMEA Power [100%]",
+      "gw": 0.2,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Votalia [100%]",
+      "gw": 0.13,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "TuNur Ltd [100%]",
+      "gw": 0.01,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Cameroon",
+    "gw": 1.02,
+    "owners": [
+     {
+      "owner": "Abu Dhabi Future Energy Co; Infinity",
+      "gw": 1.0,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "GDS Orion Solar [100%]",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Togo",
+    "gw": 0.96,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.48,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "ARISE IIP [100%]",
+      "gw": 0.39,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Meridiam SAS",
+      "gw": 0.064,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "RESPITE [100%]",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Angola",
+    "gw": 0.79,
+    "owners": [
+     {
+      "owner": "AfricaGlobal Schaffer; Sun Africa LLC",
+      "gw": 0.5,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Abu Dhabi Future Energy Co",
+      "gw": 0.15,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Greentech Corp [19%]; Sonangol EP [30%]; TotalEnergies SE [51%]",
+      "gw": 0.08,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Etablissements Maurel & Prom SA [19%]; Sonangol EP [30%]; TotalEnergies SE [51%]",
+      "gw": 0.045,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.01,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Côte d'Ivoire",
+    "gw": 0.78,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.668,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 12
+     },
+     {
+      "owner": "Abu Dhabi Future Energy Co [100%]",
+      "gw": 0.07,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Avaada Energy [100%]",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "CI-Energies [100%]",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Guinea",
+    "gw": 0.67,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.55,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 8
+     },
+     {
+      "owner": "CleanPower Generation; Frontier Investment Management ApS",
+      "gw": 0.082,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Solvéo Energie; InfraCo Africa",
+      "gw": 0.04,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Kenya",
+    "gw": 0.67,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.256,
+      "home": "blank",
+      "hydrogen": true,
+      "units": 3
+     },
+     {
+      "owner": "Tarita Green Energy Ltd",
+      "gw": 0.195,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Alten Energías Renovables [100%]",
+      "gw": 0.055,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Kenya Electricity Generating Company PLC [100%]",
+      "gw": 0.043,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Kenya Electricity Generating Company PLC",
+      "gw": 0.04,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Kenergy Renewable [100%]",
+      "gw": 0.04,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Shandong Dahai Group",
+      "gw": 0.04,
+      "home": "china",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Uganda",
+    "gw": 0.61,
+    "owners": [
+     {
+      "owner": "Abu Dhabi Future Energy Co",
+      "gw": 0.3,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "TotalEnergies EP Uganda [100%]",
+      "gw": 0.12,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 6
+     },
+     {
+      "owner": "Energy America",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Xsabo Group [100%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "AMEA Power",
+      "gw": 0.025,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "TotalEnergies SE",
+      "gw": 0.015,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Mali",
+    "gw": 0.61,
+    "owners": [
+     {
+      "owner": "NovaWind",
+      "gw": 0.24,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Phanes Energy Mali-SA [100%]",
+      "gw": 0.093,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.083,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Allied Gold Corporation",
+      "gw": 0.06,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "AMEA Power [100%]",
+      "gw": 0.05,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Legendre Energie [100%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Africa Power; IFC InfraVentures; Scatec ASA",
+      "gw": 0.033,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Madagascar",
+    "gw": 0.58,
+    "owners": [
+     {
+      "owner": "Global South Utilites (GSU)",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "",
+      "gw": 0.21,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "REPP",
+      "gw": 0.042,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 3
+     },
+     {
+      "owner": "Afripower",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Rio Tinto PLC",
+      "gw": 0.006,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Senegal",
+    "gw": 0.51,
+    "owners": [
+     {
+      "owner": "PowerChina International",
+      "gw": 0.3,
+      "home": "china",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "CNTIC",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Climate Fund Managers (CFM); Energy Resources Senegal (ERS)",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Energy Resources Senegal (ERS)",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Juwi Inc",
+      "gw": 0.02,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "TotalEnergies SE; Sen'Eau",
+      "gw": 0.02,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "",
+      "gw": 0.01,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Niger",
+    "gw": 0.48,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.28,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 5
+     },
+     {
+      "owner": "Savannah Energy PLC [100%]",
+      "gw": 0.2,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     }
+    ]
+   },
+   {
+    "country": "Burkina Faso",
+    "gw": 0.43,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.175,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Gutami Holding",
+      "gw": 0.15,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Ministry of Energy (Burkina Faso) [100%]",
+      "gw": 0.062,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Société Nationale d'électricité du Burkina",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Qair Energy",
+      "gw": 0.018,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Chad",
+    "gw": 0.43,
+    "owners": [
+     {
+      "owner": "Savannah Energy PLC [100%]",
+      "gw": 0.3,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Axian Group",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.03,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Sierra Leone",
+    "gw": 0.25,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.181,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 5
+     },
+     {
+      "owner": "Scatec ASA",
+      "gw": 0.04,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "CrossBoundary",
+      "gw": 0.024,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Frontier Energy II",
+      "gw": 0.004,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Mauritius",
+    "gw": 0.24,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.17,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 7
+     },
+     {
+      "owner": "Qair SAS",
+      "gw": 0.06,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 4
+     },
+     {
+      "owner": "Central Energy Board (CEB); Green Rock Ltd",
+      "gw": 0.01,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Rwanda",
+    "gw": 0.23,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.23,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     }
+    ]
+   },
+   {
+    "country": "Malawi",
+    "gw": 0.18,
+    "owners": [
+     {
+      "owner": "Voltalia SA [100%]",
+      "gw": 0.055,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Renewable Energy Services Africa (RESA); Solarcentury Africa (SOCA)",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.04,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 4
+     },
+     {
+      "owner": "Blantyre Water Board [100%]",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Electricity Generation Company (Malawi) Ltd",
+      "gw": 0.01,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "The Gambia",
+    "gw": 0.18,
+    "owners": [
+     {
+      "owner": "Economic Community of West African States (ECOWAS) [100%]",
+      "gw": 0.15,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Neo Themis SARL",
+      "gw": 0.025,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "AIC",
+      "gw": 0.005,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Lesotho",
+    "gw": 0.14,
+    "owners": [
+     {
+      "owner": "Astra Energy Inc",
+      "gw": 0.1,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.04,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Somalia",
+    "gw": 0.14,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.14,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 5
+     }
+    ]
+   },
+   {
+    "country": "Republic of the Congo",
+    "gw": 0.1,
+    "owners": [
+     {
+      "owner": "AMEA Power",
+      "gw": 0.1,
+      "home": "gulf",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Liberia",
+    "gw": 0.1,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.055,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "Scatec ASA",
+      "gw": 0.044,
+      "home": "europe",
+      "hydrogen": false,
+      "units": 2
+     }
+    ]
+   },
+   {
+    "country": "Eswatini",
+    "gw": 0.1,
+    "owners": [
+     {
+      "owner": "Globeleq Africa Investments Ltd",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 2
+     },
+     {
+      "owner": "",
+      "gw": 0.025,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Tsamela Solar Pty Ltd",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Africa Clean Energy Development",
+      "gw": 0.02,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Guinea-Bissau",
+    "gw": 0.08,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.069,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 7
+     },
+     {
+      "owner": "AIC-Green Energy",
+      "gw": 0.01,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Gabon",
+    "gw": 0.07,
+    "owners": [
+     {
+      "owner": "Total Eren SA [100%]",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Solen [100%]",
+      "gw": 0.019,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Benin",
+    "gw": 0.05,
+    "owners": [
+     {
+      "owner": "GreenYellow",
+      "gw": 0.05,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 4
+     }
+    ]
+   },
+   {
+    "country": "Eritrea",
+    "gw": 0.04,
+    "owners": [
+     {
+      "owner": "Government of the State of Eritrea (GOSE) [100%]",
+      "gw": 0.03,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "",
+      "gw": 0.012,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 3
+     }
+    ]
+   },
+   {
+    "country": "Cabo Verde",
+    "gw": 0.02,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.01,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     },
+     {
+      "owner": "Direcção Geral da Energia de Cabo Verde",
+      "gw": 0.006,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Central African Republic",
+    "gw": 0.01,
+    "owners": [
+     {
+      "owner": "Énergie Centrafricaine [100%]",
+      "gw": 0.015,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Burundi",
+    "gw": 0.01,
+    "owners": [
+     {
+      "owner": "",
+      "gw": 0.007,
+      "home": "blank",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "country": "Sao Tome and Principe",
+    "gw": 0.0,
+    "owners": [
+     {
+      "owner": "Cleanwatts",
+      "gw": 0.001,
+      "home": "unresolved",
+      "hydrogen": false,
+      "units": 1
+     }
+    ]
+   }
+  ]
+ },
+ "hydrogen_tagged": [
+  [
+   "AMAN Green Hydrogen solar farm",
+   "Mauritania"
+  ],
+  [
+   "AMAN Green Hydrogen wind farm",
+   "Mauritania"
+  ],
+  [
+   "AMUN wind farm",
+   "Morocco"
+  ],
+  [
+   "Chbika Green Hydrogen solar farm",
+   "Morocco"
+  ],
+  [
+   "Chbika Green Hydrogen wind farm",
+   "Morocco"
+  ],
+  [
+   "Conjuncta and Infinity hybrid solar farm",
+   "Mauritania"
+  ],
+  [
+   "Conjuncta and Infinity hybrid wind farm",
+   "Mauritania"
+  ],
+  [
+   "Daures Green Hydrogen Village solar farm",
+   "Namibia"
+  ],
+  [
+   "Daures Green Hydrogen Village wind farm",
+   "Namibia"
+  ],
+  [
+   "Djibouti Green Hydrogen hybrid solar farm",
+   "Djibouti"
+  ],
+  [
+   "Fortescue Green Hydrogen solar farm",
+   "Egypt"
+  ],
+  [
+   "Fortescue Green Hydrogen wind farm",
+   "Egypt"
+  ],
+  [
+   "Globeleq Green Hydrogen solar farm",
+   "Egypt"
+  ],
+  [
+   "Globeleq Green Hydrogen wind farm",
+   "Egypt"
+  ],
+  [
+   "Guelmim Green Hydrogen solar farm",
+   "Morocco"
+  ],
+  [
+   "Guelmim Green Hydrogen wind farm",
+   "Morocco"
+  ],
+  [
+   "HDF Green Hydrogen Solar PV Project",
+   "Kenya"
+  ],
+  [
+   "JER Green Hydrogen Solar PV Project  (Mozambique)",
+   "Mozambique"
+  ],
+  [
+   "JER Green Hydrogen Solar PV Project (South Africa)",
+   "South Africa"
+  ],
+  [
+   "Masdar Green Hydrogen solar farm",
+   "Egypt"
+  ],
+  [
+   "Megaton Moon Hybrid Solar project",
+   "Mauritania"
+  ],
+  [
+   "Megaton Moon Hybrid Wind project",
+   "Mauritania"
+  ],
+  [
+   "NAYRAH green hydrogen solar farm",
+   "Mauritania"
+  ],
+  [
+   "NAYRAH green hydrogen wind farm",
+   "Mauritania"
+  ],
+  [
+   "NAYRAH wind farm",
+   "Mauritania"
+  ],
+  [
+   "Project Nour hybrid solar farm",
+   "Mauritania"
+  ],
+  [
+   "Project Nour hybrid wind farm",
+   "Mauritania"
+  ],
+  [
+   "ReNew Green Hydrogen solar farm",
+   "Egypt"
+  ],
+  [
+   "ReNew Green Hydrogen wind farm",
+   "Egypt"
+  ],
+  [
+   "SCDI Green Hydrogen solar farm",
+   "Namibia"
+  ],
+  [
+   "SCDI Green Hydrogen wind farm",
+   "Namibia"
+  ],
+  [
+   "Swakopmund Green Hydrogen solar farm",
+   "Namibia"
+  ],
+  [
+   "Tsau Khaeb National Park (Innosun Energy Holding) wind farm",
+   "Namibia"
+  ],
+  [
+   "Tsau Khaeb National Park (Nampower) wind farm",
+   "Namibia"
+  ],
+  [
+   "Tsau Khaeb National Park (United Africa) wind farm",
+   "Namibia"
+  ],
+  [
+   "White Dunes solar farm",
+   "Western Sahara"
+  ],
+  [
+   "White Dunes wind farm",
+   "Western Sahara"
+  ],
+  [
+   "Zhero Molecules Walvis Bay green hydrogen solar farm",
+   "Namibia"
+  ]
+ ],
+ "owner_matrix": [
+  {
+   "group": "china",
+   "name": "China",
+   "gw": {
+    "announced": 10.37,
+    "approved": 3.28,
+    "under_construction": 4.96,
+    "operating": 1.39,
+    "stalled": 10.88
+   },
+   "units": {
+    "announced": 4,
+    "approved": 15,
+    "under_construction": 7,
+    "operating": 10,
+    "stalled": 26
+   }
+  },
+  {
+   "group": "gulf",
+   "name": "Gulf states",
+   "gw": {
+    "announced": 5.45,
+    "approved": 8.29,
+    "under_construction": 6.69,
+    "operating": 5.06,
+    "stalled": 4.88
+   },
+   "units": {
+    "announced": 15,
+    "approved": 19,
+    "under_construction": 11,
+    "operating": 35,
+    "stalled": 19
+   }
+  },
+  {
+   "group": "france",
+   "name": "France",
+   "gw": {
+    "announced": 0.34,
+    "approved": 5.88,
+    "under_construction": 3.7,
+    "operating": 3.09,
+    "stalled": 0.74
+   },
+   "units": {
+    "announced": 10,
+    "approved": 22,
+    "under_construction": 22,
+    "operating": 34,
+    "stalled": 8
+   }
+  },
+  {
+   "group": "nordics",
+   "name": "Nordic countries",
+   "gw": {
+    "announced": 1.42,
+    "approved": 7.23,
+    "under_construction": 1.16,
+    "operating": 2.12,
+    "stalled": 0.3
+   },
+   "units": {
+    "announced": 10,
+    "approved": 12,
+    "under_construction": 12,
+    "operating": 27,
+    "stalled": 4
+   }
+  },
+  {
+   "group": "turkey",
+   "name": "Türkiye",
+   "gw": {
+    "announced": 0.0,
+    "approved": 0.0,
+    "under_construction": 0.0,
+    "operating": 1.83,
+    "stalled": 2.77
+   },
+   "units": {
+    "announced": 0,
+    "approved": 0,
+    "under_construction": 0,
+    "operating": 9,
+    "stalled": 6
+   }
+  },
+  {
+   "group": "usa",
+   "name": "United States",
+   "gw": {
+    "announced": 0.14,
+    "approved": 1.85,
+    "under_construction": 0.9,
+    "operating": 0.19,
+    "stalled": 1.5
+   },
+   "units": {
+    "announced": 1,
+    "approved": 2,
+    "under_construction": 2,
+    "operating": 4,
+    "stalled": 1
+   }
+  },
+  {
+   "group": "japan",
+   "name": "Japan",
+   "gw": {
+    "announced": 0.0,
+    "approved": 1.8,
+    "under_construction": 0.03,
+    "operating": 0.91,
+    "stalled": 0.1
+   },
+   "units": {
+    "announced": 0,
+    "approved": 3,
+    "under_construction": 1,
+    "operating": 3,
+    "stalled": 2
+   }
+  },
+  {
+   "group": "italy",
+   "name": "Italy",
+   "gw": {
+    "announced": 0.07,
+    "approved": 0.27,
+    "under_construction": 0.34,
+    "operating": 1.03,
+    "stalled": 0.3
+   },
+   "units": {
+    "announced": 1,
+    "approved": 4,
+    "under_construction": 4,
+    "operating": 12,
+    "stalled": 8
+   }
+  },
+  {
+   "group": "spain",
+   "name": "Spain",
+   "gw": {
+    "announced": 0.0,
+    "approved": 0.0,
+    "under_construction": 0.19,
+    "operating": 0.91,
+    "stalled": 0.05
+   },
+   "units": {
+    "announced": 0,
+    "approved": 0,
+    "under_construction": 2,
+    "operating": 10,
+    "stalled": 1
+   }
+  },
+  {
+   "group": "germany",
+   "name": "Germany",
+   "gw": {
+    "announced": 0.02,
+    "approved": 0.14,
+    "under_construction": 0.34,
+    "operating": 0.36,
+    "stalled": 0.07
+   },
+   "units": {
+    "announced": 1,
+    "approved": 1,
+    "under_construction": 3,
+    "operating": 6,
+    "stalled": 1
+   }
+  },
+  {
+   "group": "unresolved",
+   "name": "named, unresolved",
+   "gw": {
+    "announced": 177.52,
+    "approved": 200.24,
+    "under_construction": 45.6,
+    "operating": 249.48,
+    "stalled": 182.74
+   },
+   "units": {
+    "announced": 367,
+    "approved": 384,
+    "under_construction": 173,
+    "operating": 1357,
+    "stalled": 584
+   }
+  },
+  {
+   "group": "blank",
+   "name": "no owner",
+   "gw": {
+    "announced": 54.82,
+    "approved": 45.01,
+    "under_construction": 14.5,
+    "operating": 6.47,
+    "stalled": 24.38
+   },
+   "units": {
+    "announced": 194,
+    "approved": 144,
+    "under_construction": 29,
+    "operating": 566,
+    "stalled": 106
+   }
+  }
+ ],
+ "multi_list_units": [
+  {
+   "name": "Voltalia-TAQA Project solar farm",
+   "unit": "1",
+   "owner": "Voltalia SA; Taqa Power",
+   "lists": [
+    "gulf",
+    "france"
+   ]
+  },
+  {
+   "name": "Mphanda Nkuwa hydroelectric plant",
+   "unit": "",
+   "owner": "Sumitomo Corp [30%]; TotalEnergies SE [30%]; EDF Renewables [40%]",
+   "lists": [
+    "france",
+    "japan"
+   ]
+  },
+  {
+   "name": "W Solar solar farm",
+   "unit": "future phases",
+   "owner": "Alpha Dhabi Holding; Libyan General Electric C",
+   "lists": [
+    "gulf",
+    "usa"
+   ]
+  },
+  {
+   "name": "Voltalia-TAQA Project wind farm",
+   "unit": "1",
+   "owner": "Voltalia SA; Taqa Power",
+   "lists": [
+    "gulf",
+    "france"
+   ]
+  },
+  {
+   "name": "Abuja power station",
+   "unit": "2",
+   "owner": "NNPC Ltd [33%]; General Electric Co [33%]; China Machinery Engineering Corp [33%]",
+   "lists": [
+    "china",
+    "usa"
+   ]
+  },
+  {
+   "name": "Abuja power station",
+   "unit": "3",
+   "owner": "NNPC Ltd [33%]; General Electric Co [33%]; China Machinery Engineering Corp [33%]",
+   "lists": [
+    "china",
+    "usa"
+   ]
+  },
+  {
+   "name": "Noor Midelt solar farm",
+   "unit": "1-PV",
+   "owner": "EDF Renewables; Green of Africa; MASEN; Masdar Clean Energy",
+   "lists": [
+    "gulf",
+    "france"
+   ]
+  },
+  {
+   "name": "Noor Midelt solar farm",
+   "unit": "1-Solar Thermal",
+   "owner": "EDF Renewables; Green of Africa; MASEN; Masdar Clean Energy",
+   "lists": [
+    "gulf",
+    "france"
+   ]
+  },
+  {
+   "name": "Mpatamanga Gorge hydroelectric plant",
+   "unit": "",
+   "owner": "EDF Energy Ltd [27%]; unknown [1%]; British International Investment PLC [13%]; Scatec ASA [14%]; Norwegian Norfund [13%]; Electricity Generation Co (Malawi) Ltd [30%]",
+   "lists": [
+    "france",
+    "nordics"
+   ]
+  },
+  {
+   "name": "Abuja power station",
+   "unit": "1",
+   "owner": "NNPC Ltd [33%]; General Electric Co [33%]; China Machinery Engineering Corp [33%]",
+   "lists": [
+    "china",
+    "usa"
+   ]
+  },
+  {
+   "name": "Ras Ghareb wind farm",
+   "unit": "3",
+   "owner": "Eurus Energy Holdings Corp [40%]; Orascom Construction PLC [25%]; ENGIE SA [35%]; Toyota Tsusho Corp",
+   "lists": [
+    "france",
+    "japan"
+   ]
+  },
+  {
+   "name": "Ras Ghareb wind farm",
+   "unit": "2",
+   "owner": "Eurus Energy Holdings Corp [40%]; Orascom Construction PLC [25%]; ENGIE SA [35%]; Toyota Tsusho Corp",
+   "lists": [
+    "france",
+    "japan"
+   ]
+  },
+  {
+   "name": "Ras Ghareb wind farm",
+   "unit": "1",
+   "owner": "ENGIE SA [40%]; Eurus Energy Holdings Corp [40%]; Orascom Construction PLC [20%]; Toyota Tsusho Corp",
+   "lists": [
+    "france",
+    "japan"
+   ]
+  },
+  {
+   "name": "Noor Ouarzazate solar farm",
+   "unit": "2",
+   "owner": "ACWA Power Co; SENER",
+   "lists": [
+    "gulf",
+    "spain"
+   ]
+  },
+  {
+   "name": "Noor Ouarzazate solar farm",
+   "unit": "3",
+   "owner": "ACWA Power Co; SENER",
+   "lists": [
+    "gulf",
+    "spain"
+   ]
+  },
+  {
+   "name": "Kairouan Solar Plant",
+   "unit": "",
+   "owner": "TBEA Xinjiang New Energy Co; AMEA Power",
+   "lists": [
+    "china",
+    "gulf"
+   ]
+  },
+  {
+   "name": "Benban ACWA solar farm",
+   "unit": "PV 2",
+   "owner": "ACWA Power Co; CHINT Group Corp; Tawakol Electric",
+   "lists": [
+    "china",
+    "gulf"
+   ]
+  },
+  {
+   "name": "Benban ACWA solar farm",
+   "unit": "PV 1",
+   "owner": "ACWA Power Co; CHINT Group Corp; Tawakol Electric",
+   "lists": [
+    "china",
+    "gulf"
+   ]
+  },
+  {
+   "name": "Benban ACWA solar farm",
+   "unit": "PV 3",
+   "owner": "ACWA Power Co; CHINT Group Corp; Tawakol Electric",
+   "lists": [
+    "china",
+    "gulf"
+   ]
+  }
+ ],
+ "owner_list_misses": {
+  "unresolved_examples": [
+   "Total Eren (6.3 GW on paper)",
+   "HDF Energy (17.1 GW on paper)",
+   "Copenhagen Infrastructure Partners (10.0 GW on paper)"
+  ],
+  "false_positive": "Libyan General Electric Company: 1.5 GW read as United States"
+ },
+ "aiddata_lag": {
+  "records": 2487,
+  "with_both_years": 1577,
+  "median": 3,
+  "q1": 1.0,
+  "q3": 4.0,
+  "mean": 2.91,
+  "negative": 8,
+  "histogram": {
+   "-6": 1,
+   "-1": 7,
+   "0": 258,
+   "1": 212,
+   "2": 287,
+   "3": 253,
+   "4": 201,
+   "5": 159,
+   "6": 78,
+   "7": 52,
+   "8": 25,
+   "9": 26,
+   "10": 9,
+   "11": 6,
+   "12": 2,
+   "13": 1
+  },
+  "without_completion_year": {
+   "announced": 0,
+   "approved": 194,
+   "under_construction": 484,
+   "operating": 184,
+   "stalled": 48
+  },
+  "by_sector": [
+   {
+    "label": "Transport",
+    "n": 264,
+    "q1": 2.0,
+    "median": 4.0,
+    "q3": 5.0,
+    "mean": 3.875
+   },
+   {
+    "label": "Energy",
+    "n": 182,
+    "q1": 2.0,
+    "median": 3.0,
+    "q3": 5.0,
+    "mean": 3.456043956043956
+   },
+   {
+    "label": "Government buildings",
+    "n": 137,
+    "q1": 2.0,
+    "median": 3,
+    "q3": 5.0,
+    "mean": 3.291970802919708
+   },
+   {
+    "label": "Agriculture",
+    "n": 54,
+    "q1": 2.0,
+    "median": 3.0,
+    "q3": 5.0,
+    "mean": 3.314814814814815
+   },
+   {
+    "label": "Health",
+    "n": 153,
+    "q1": 1.0,
+    "median": 3,
+    "q3": 4.0,
+    "mean": 2.915032679738562
+   },
+   {
+    "label": "Communications",
+    "n": 113,
+    "q1": 2.0,
+    "median": 3,
+    "q3": 4.0,
+    "mean": 3.0265486725663715
+   },
+   {
+    "label": "Water",
+    "n": 86,
+    "q1": 1.0,
+    "median": 3.0,
+    "q3": 4.0,
+    "mean": 2.7790697674418605
+   },
+   {
+    "label": "Social",
+    "n": 178,
+    "q1": 1.0,
+    "median": 2.0,
+    "q3": 4.0,
+    "mean": 2.707865168539326
+   },
+   {
+    "label": "Industry",
+    "n": 96,
+    "q1": 1.0,
+    "median": 2.0,
+    "q3": 3.0,
+    "mean": 2.34375
+   },
+   {
+    "label": "Other",
+    "n": 28,
+    "q1": 0.0,
+    "median": 1.0,
+    "q3": 4.0,
+    "mean": 2.107142857142857
+   },
+   {
+    "label": "Education",
+    "n": 275,
+    "q1": 0.0,
+    "median": 1,
+    "q3": 3.0,
+    "mean": 1.7636363636363637
+   }
+  ],
+  "by_funder_flow": [
+   {
+    "funder": "China Eximbank",
+    "flow": "Loan",
+    "n": 472,
+    "q1": 2.0,
+    "median": 4.0,
+    "q3": 5.0,
+    "mean": 3.9216101694915255
+   },
+   {
+    "funder": "Ministry of Commerce",
+    "flow": "Loan",
+    "n": 90,
+    "q1": 2.0,
+    "median": 4.0,
+    "q3": 5.0,
+    "mean": 4.2
+   },
+   {
+    "funder": "Ministry of Commerce",
+    "flow": "Grant",
+    "n": 351,
+    "q1": 2.0,
+    "median": 3,
+    "q3": 5.0,
+    "mean": 3.3846153846153846
+   },
+   {
+    "funder": "State commercial banks",
+    "flow": "Loan",
+    "n": 79,
+    "q1": 2.0,
+    "median": 3,
+    "q3": 4.0,
+    "mean": 3.3037974683544302
+   },
+   {
+    "funder": "China Development Bank",
+    "flow": "Loan",
+    "n": 55,
+    "q1": 2.0,
+    "median": 3,
+    "q3": 4.0,
+    "mean": 3
+   },
+   {
+    "funder": "Other funders",
+    "flow": "Loan",
+    "n": 37,
+    "q1": 1.0,
+    "median": 2,
+    "q3": 4.0,
+    "mean": 2.3513513513513513
+   },
+   {
+    "funder": "Unspecified government body",
+    "flow": "Grant",
+    "n": 286,
+    "q1": 0.0,
+    "median": 1.0,
+    "q3": 2.0,
+    "mean": 1.4090909090909092
+   },
+   {
+    "funder": "Other funders",
+    "flow": "Grant",
+    "n": 98,
+    "q1": 0.0,
+    "median": 1.0,
+    "q3": 2.0,
+    "mean": 1.336734693877551
+   },
+   {
+    "funder": "Chinese embassy",
+    "flow": "Grant",
+    "n": 68,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 1.0,
+    "mean": 0.38235294117647056
+   }
+  ],
+  "dropped_sectors": [
+   [
+    "Environment",
+    2
+   ],
+   [
+    "Trade",
+    9
+   ]
+  ]
+ }
+}

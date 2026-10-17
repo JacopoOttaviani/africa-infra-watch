@@ -16,12 +16,17 @@ import pathlib
 import subprocess
 import sys
 
-DATA = pathlib.Path(__file__).parent / "data"
+from region import REGION
 
-# file stem -> (meta key, minimum plausible feature count)
+ROOT = pathlib.Path(__file__).parent
+DATA = REGION.data_dir
+
+# file stem -> (meta key, minimum plausible feature count), for Africa; a
+# smaller region's floors are scaled down (Southeast Asia has eleven
+# countries to Africa's 54)
 LAYERS = {
     "gem_power_assets": ("assets", 1000),
-    "iati_afdb_finance": ("finance", 300),
+    f"iati_{REGION.bank['publisher']}_finance": ("finance", 300),
     "iati_worldbank_finance": ("finance_wb", 500),
     "osm_construction": ("ground", 500),
     "gem_oil_gas_pipelines": ("pipelines", 150),
@@ -30,14 +35,16 @@ LAYERS = {
     "iati_eu_finance": ("eu", 800),
     "piano_mattei": ("mattei", 50),
 }
+LAYERS = {k: v for k, v in LAYERS.items() if v[0] in REGION.layers or v[0] == "finance_wb"}
+FLOOR_SCALE = 1.0 if REGION.key == "africa" else 0.25
 MAX_DROP = 0.20          # refuse if a layer lost more than a fifth of its records
-WINDOW = (-30, -45, 70, 45)   # lon0, lat0, lon1, lat1
+WINDOW = REGION.data_window   # lon0, lat0, lon1, lat1
 
 
 def committed_meta():
     try:
-        out = subprocess.run(["git", "show", "HEAD:data/meta.json"],
-                             capture_output=True, text=True, check=True, cwd=DATA.parent)
+        out = subprocess.run(["git", "show", f"HEAD:{DATA.relative_to(ROOT)}/meta.json"],
+                             capture_output=True, text=True, check=True, cwd=ROOT)
         return json.loads(out.stdout)
     except Exception:  # noqa: BLE001 — no git, no commit yet: compare to nothing
         return {}
@@ -62,7 +69,7 @@ def in_window(p):
 
 
 def inside(geom):
-    """A point must sit in the Africa window. A line must touch it: a cable
+    """A point must sit in the region's window. A line must touch it: a cable
     that lands in Mombasa and Mumbai, or a pipeline into Spain, is African
     without every vertex being so."""
     geom = geom or {}
@@ -76,6 +83,7 @@ def main():
     prev = committed_meta()
     problems = []
     for stem, (key, floor) in LAYERS.items():
+        floor = int(floor * FLOOR_SCALE)
         path = DATA / f"{stem}.geojson"
         if not path.exists():
             problems.append(f"{stem}: file missing")
@@ -94,7 +102,7 @@ def main():
             problems.append(f"{stem}: {n:,} features, down from {before:,} — more than "
                             f"{int(MAX_DROP * 100)}% lost; a source or mirror probably failed")
         if n and outside > 0.01 * n:
-            problems.append(f"{stem}: {outside:,} features outside the Africa window")
+            problems.append(f"{stem}: {outside:,} features outside the {REGION.name} window")
         null_island = sum(1 for f in feats if (f.get("geometry") or {}).get("type") == "Point"
                           and (f["geometry"].get("coordinates") or [None])[:2] == [0.0, 0.0])
         if null_island:      # inside the window, but a publisher's "no location" placeholder

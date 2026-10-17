@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate Africa Project Atlas from the ten verified sources.
+Populate InfraRadar from the ten verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
 `dash_status` vocabulary so a single filter works across every layer.
@@ -38,32 +38,18 @@ import zipfile
 from fetch_basemap import dp
 from shared import EUR_USD, fmt_date, today, update_meta
 
-DATA = pathlib.Path(__file__).parent / "data"
+from region import AFRICA_ISO, AFRICA_NAMES, REGION, ROOT_DATA  # noqa: E402,F401  (AFRICA_* re-exported for fetch_minerals)
+
+# this edition's data directory (data/, or data/sea/ for Southeast Asia)
+DATA = REGION.data_dir
 UA = {"User-Agent": "africa-project-atlas/0.1 (dataset evaluation)"}
 
-# The 54 ISO-3166-1 alpha-2 codes. Used to clip OSM (a bounding box pulls in
-# Turkey and Spain) and to filter World Bank results (region names are unstable).
-AFRICA_ISO = [
-    "DZ", "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CG",
-    "CD", "DJ", "EG", "GQ", "ER", "SZ", "ET", "GA", "GM", "GH", "GN", "GW",
-    "CI", "KE", "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA", "MZ",
-    "NA", "NE", "NG", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD",
-    "TZ", "TG", "TN", "UG", "ZM", "ZW",
-]
-
-AFRICA_NAMES = {
-    "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi",
-    "Cameroon", "Cape Verde", "Cabo Verde", "Central African Republic", "Chad",
-    "Comoros", "Congo", "Democratic Republic of Congo", "DR Congo", "Djibouti",
-    "Egypt", "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia", "Gabon",
-    "Gambia", "The Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Ivory Coast", "Cote d'Ivoire",
-    "Côte d'Ivoire", "Kenya", "Lesotho", "Liberia", "Libya", "Madagascar",
-    "Malawi", "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique",
-    "Namibia", "Niger", "Nigeria", "Rwanda", "Sao Tome and Principe", "Senegal",
-    "Seychelles", "Sierra Leone", "Somalia", "South Africa", "South Sudan",
-    "Sudan", "Tanzania", "Togo", "Tunisia", "Uganda", "Zambia", "Zimbabwe",
-    "Western Sahara", "Republic of the Congo",
-}
+# The region's ISO-3166-1 alpha-2 codes (Africa's 54, Southeast Asia's 11) and
+# the publishers' spellings of its countries' names (region.py). Used to clip
+# OSM (a bounding box pulls in Turkey and Spain, or southern China) and to
+# filter the global files (GEM, the pipeline trackers, AidData).
+REGION_ISO = REGION.iso
+REGION_NAMES = REGION.fetch_names
 
 # Shared vocabulary. Keep these five values stable — the dashboard filters on them.
 ANNOUNCED, APPROVED, BUILDING, OPERATING, STALLED = (
@@ -176,7 +162,7 @@ def fetch_gem():
 
     feats = []
     for row in csv.DictReader(io.StringIO(raw)):
-        if (row.get("country-area1") or "").strip() not in AFRICA_NAMES:
+        if (row.get("country-area1") or "").strip() not in REGION_NAMES:
             continue
         try:
             lon, lat = float(row["Longitude"]), float(row["Latitude"])
@@ -220,10 +206,28 @@ REGISTRY = "https://iatiregistry.org/api/3/action/package_search"
 # which is how the World Bank's energy portfolio first went missing.
 IATI_INFRA_DAC = ("210", "23", "140", "321", "322", "323", "331", "410", "220")
 
+# Commitments a publisher's file states wrongly, by activity id: the figure
+# the bank's own project page gives, and why. Checked by hand on the date in
+# the note; the card shows the file's figure beside the counted one, like any
+# other counting correction.
+IATI_AMOUNT_FIX = {
+    # ADB's Indonesia file carries 44,229,000,000 for Loan 4708-INO, a figure
+    # larger than the Bank lends in a year; its Project Data Sheet says US$ 300 million
+    "XM-DAC-46004-56017-001-LN4708": (300_000_000.0, "ADB's file states USD 44,229 million for this loan; "
+                                      "the Bank's Project Data Sheet puts it at USD 300 million (checked 17 Oct 2026), "
+                                      "which is counted"),
+}
 
-# The two lenders in the finance layer. Both publish IATI 2.03 per-country
-# files through the registry; the fetcher is the same, the conventions differ:
+
+# The two lenders in the finance layer: the region's development bank (the
+# AfDB in Africa, the ADB in Southeast Asia; region.py) and the World Bank.
+# All publish IATI 2.03 per-country files through the registry; the fetcher is
+# the same, the conventions differ:
 #   AfDB       57 files, XDR (IMF SDR) amounts, exactness 1 on real sites
+#   ADB        one file per borrowing country plus a regional one, USD amounts,
+#              every location exactness 2 and named: a province, a town, or the
+#              country itself (GeoNames ids, no location-class); a named one is
+#              flagged location_named so the builders draw it as a named place
 #   World Bank 148 files worldwide (50 African countries plus two regional
 #              files, 289 South of Sahara and 298 Africa regional), USD
 #              amounts, every location marked exactness 2 (approximate) with
@@ -234,9 +238,8 @@ IATI_INFRA_DAC = ("210", "23", "140", "321", "322", "323", "331", "410", "220")
 #              few dozen are geocoded to the wrong continent; place_iati()
 #              below deals with both.
 IATI_PUBLISHERS = {
-    "afdb": {"lender": "AfDB", "meta": "finance", "files": None},
-    "worldbank": {"lender": "World Bank", "meta": "finance_wb",
-                  "files": [c.lower() for c in AFRICA_ISO] + ["289", "298"]},
+    REGION.bank["publisher"]: {"lender": REGION.bank["code"], "meta": "finance", "files": REGION.bank["files"]},
+    "worldbank": {"lender": "World Bank", "meta": "finance_wb", "files": REGION.wb_files},
 }
 
 
@@ -244,7 +247,7 @@ IATI_PUBLISHERS = {
 # site on an island is kept, narrower than check_data's window so that the
 # Gulf of Guinea's Null Island, Kosovo (a Guinea project) and Nepal (three
 # Mozambican districts) are not.
-IATI_WINDOW = (-30.0, -40.0, 65.0, 40.0)   # lon0, lat0, lon1, lat1
+IATI_WINDOW = REGION.iati_window   # lon0, lat0, lon1, lat1
 
 
 def place_iati(feats):
@@ -290,13 +293,19 @@ def place_iati(feats):
     return kept
 
 
-def fetch_iati(publisher="afdb", infra_only=True):
+def fetch_iati(publisher=None, infra_only=True):
     """One GeoJSON point per <location> with a <point>, per activity.
 
     The IATI Datastore API (api.iatistandard.org) needs a subscription key and
     returns 401 without one, so go via the registry to the publisher's XML.
     """
+    publisher = publisher or REGION.bank["publisher"]
     conf = IATI_PUBLISHERS[publisher]
+    # the names a country's own location carries, so a location named after
+    # the country is told apart from a named province or town (ADB)
+    own_names = {}
+    for n, i in REGION.names.items():
+        own_names.setdefault(i, set()).add(n.lower())
     meta = json.loads(get(
         f"{REGISTRY}?q=organization:{publisher}&rows=300", timeout=90))
     pkgs = meta["result"]["results"]
@@ -305,7 +314,7 @@ def fetch_iati(publisher="afdb", infra_only=True):
     urls = [r["url"] for pk in pkgs for r in pk["resources"]]
     print(f"IATI {publisher}: {len(urls)} datasets")
 
-    feats, n_budget, n_counterpart = [], 0, 0
+    feats, n_budget, n_counterpart, n_fixed = [], 0, 0, 0
     for i, u in enumerate(urls, 1):
         try:
             xml = get(u, timeout=300)
@@ -418,10 +427,21 @@ def fetch_iati(publisher="afdb", infra_only=True):
             n_counterpart += bool(counterpart)
 
             iid = ident.text.strip() if ident is not None and ident.text else None
+            if iid in IATI_AMOUNT_FIX and not stalled:
+                fixed, why = IATI_AMOUNT_FIX[iid]
+                counted = fixed * share
+                notes.append(why)
+                n_fixed += 1
             project_url = None
             if publisher == "worldbank" and iid and "-P" in iid:
                 project_url = ("https://projects.worldbank.org/en/projects-operations/"
                                f"project-detail/{iid.rsplit('-', 1)[-1]}")
+            elif publisher == "asdb" and iid:
+                # XM-DAC-46004-39603-012-GRNT0034: the project number is 39603-012
+                m = re.match(r"XM-DAC-46004-(\d{5}-\d{3})", iid)
+                if m:
+                    project_url = f"https://www.adb.org/projects/{m.group(1)}/main"
+            iso_here = country.get("code") if country is not None else None
 
             for loc in act.iter("location"):
                 pos = loc.find("point/pos")
@@ -434,6 +454,11 @@ def fetch_iati(publisher="afdb", infra_only=True):
                 ex = loc.find("exactness")
                 lc = loc.find("location-class")
                 nm = loc.find("name/narrative")
+                # ADB names every location and marks all of them exactness 2:
+                # one named after the country is the country's point, any
+                # other a province or a town
+                named = (publisher == "asdb" and nm is not None and bool((nm.text or "").strip())
+                         and (nm.text or "").strip().lower() not in own_names.get(iso_here, set()))
                 feats.append({
                     "type": "Feature",
                     "geometry": {"type": "Point", "coordinates": [lon, lat]},
@@ -455,6 +480,7 @@ def fetch_iati(publisher="afdb", infra_only=True):
                         # everything 2 and says how close in location-class.
                         "geo_precision": ex.get("code") if ex is not None else None,
                         "location_class": lc.get("code") if lc is not None else None,
+                        "location_named": True if named else None,
                         # counted (what totals add up) and, where it differs,
                         # the lender's own figure as published
                         "commitment": round(counted, 2) if counted else None,
@@ -475,11 +501,13 @@ def fetch_iati(publisher="afdb", infra_only=True):
             print(f"  … {i}/{len(urls)} files, {len(feats):,} located so far")
 
     print(f"  left out {n_budget:,} budget-support activities (aid-type A01/A02); "
-          f"{n_counterpart:,} carry a government counterpart commitment, not counted")
+          f"{n_counterpart:,} carry a government counterpart commitment, not counted"
+          + (f"; {n_fixed} amount(s) corrected from IATI_AMOUNT_FIX" if n_fixed else ""))
     feats = place_iati(feats)
     out = write_layer(f"iati_{publisher}_finance", feats)
     update_meta(conf["meta"], fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
-                activities=len({f["properties"]["iati_id"] for f in feats}), budget_support=n_budget)
+                activities=len({f["properties"]["iati_id"] for f in feats}), budget_support=n_budget,
+                amount_fixes=n_fixed)
     return out
 
 
@@ -516,8 +544,9 @@ def fetch_osm(retries=5):
     """
     # Every query covers a latitude band of the continent's box, so one the
     # mirrors keep timing out on can be split and asked again.
-    def band(kind, lo, hi):
-        box = f"({lo},-18,{hi},52)"
+    osm = REGION.osm
+    def band(kind, lo, hi, x0=osm["lon0"], x1=osm["lon1"]):
+        box = f"({lo},{x0},{hi},{x1})"
         body = {
             "rail": f'way["railway"~"^(construction|proposed)$"]{box};',
             # a runway or terminal outline under works is aeroway=construction;
@@ -530,20 +559,23 @@ def fetch_osm(retries=5):
             "road": (f'way["highway"="construction"]["construction"~"^({SIGNIFICANT})$"]{box};'
                      f'way["highway"="proposed"]["proposed"~"^({SIGNIFICANT})$"]{box};'),
         }[kind]
-        return (f"{kind} {lo:g}..{hi:g}", body, (kind, lo, hi))
+        label = f"{kind} {lo:g}..{hi:g}" + (f" × {x0:g}..{x1:g}" if (x0, x1) != (osm["lon0"], osm["lon1"]) else "")
+        return (label, body, (kind, lo, hi, x0, x1))
 
     # rail and aeroway are cheap enough for one continental band; the road
     # regex over the whole continent times out (504), so roads start in bands
-    queries = [band("rail", -36.0, 39.0), band("air", -36.0, 39.0)]
-    lat = -36.0
-    while lat < 39.0:
-        hi = min(lat + 7.5, 39.0)
+    queries = [band("rail", osm["lat0"], osm["lat1"]), band("air", osm["lat0"], osm["lat1"])]
+    lat = osm["lat0"]
+    while lat < osm["lat1"]:
+        hi = min(lat + osm["band"], osm["lat1"])
         queries.append(band("road", lat, hi))
         lat = hi
 
     # A band the mirrors keep timing out on is split in two and queued again,
-    # down to bands of under two degrees; past that the fetch stops without
-    # writing, so a gap never replaces a complete layer.
+    # by latitude down to bands of under two degrees, then by longitude down to
+    # boxes under six degrees wide (a dense band such as Bangkok to Manila);
+    # past that the fetch stops without writing, so a gap never replaces a
+    # complete layer.
     raw, seen = [], set()
     while queries:
         label, body, where = queries.pop(0)
@@ -551,7 +583,7 @@ def fetch_osm(retries=5):
         print(f"OSM  {label}")
         res = None
         # a wide band gets three tries before it is split; the narrowest, all of them
-        tries = retries + 1 if where[2] - where[1] <= 2 else 3
+        tries = retries + 1 if where[2] - where[1] <= 2 and where[4] - where[3] <= 6 else 3
         for attempt in range(tries):
             ep = OVERPASS_ENDPOINTS[attempt % len(OVERPASS_ENDPOINTS)]
             try:
@@ -564,11 +596,16 @@ def fetch_osm(retries=5):
                     print(f"    backing off {wait}s, rotating mirror")
                     time.sleep(wait)
         if res is None:
-            kind, lo, hi = where
+            kind, lo, hi, x0, x1 = where
             if hi - lo > 2:
                 mid = round((lo + hi) / 2, 2)
                 print(f"  !! {label} failed; splitting it into {lo:g}..{mid:g} and {mid:g}..{hi:g}")
-                queries[:0] = [band(kind, lo, mid), band(kind, mid, hi)]
+                queries[:0] = [band(kind, lo, mid, x0, x1), band(kind, mid, hi, x0, x1)]
+                continue
+            if x1 - x0 > 6:
+                xm = round((x0 + x1) / 2, 2)
+                print(f"  !! {label} failed; splitting it by longitude into {x0:g}..{xm:g} and {xm:g}..{x1:g}")
+                queries[:0] = [band(kind, lo, hi, x0, xm), band(kind, lo, hi, xm, x1)]
                 continue
             raise SystemExit(f"OSM: {label} failed on every mirror; nothing written, the previous layer stays")
         # a way that crosses a band's edge comes back from both bands
@@ -585,7 +622,7 @@ def fetch_osm(retries=5):
         if len(geom) < 2:
             continue
         mid = geom[len(geom) // 2]
-        if not _in_africa(mid["lon"], mid["lat"]):
+        if not _in_region(mid["lon"], mid["lat"]):
             dropped += 1
             continue
         t = el.get("tags", {})
@@ -627,8 +664,8 @@ def fetch_osm(retries=5):
                 "osm_id": f"way/{el.get('id')}",
             },
         })
-    print(f"\n  clipped out {dropped:,} ways outside Africa "
-          f"(Turkey, Spain, Arabian peninsula)")
+    print(f"\n  clipped out {dropped:,} ways outside {REGION.name} "
+          f"(the bounding box's overspill into the neighbours)")
     out = write_layer("osm_construction", feats)
     update_meta("ground", fetched=today(), fresh=None, records=len(feats))
     return out
@@ -637,13 +674,13 @@ def fetch_osm(retries=5):
 _AFRICA_POLYS = None
 
 
-def _in_africa(lon, lat):
+def _in_region(lon, lat):
     """Point-in-polygon against the same outlines the dashboard renders."""
     global _AFRICA_POLYS
     if _AFRICA_POLYS is None:
-        bm = DATA / "africa_basemap.json"
+        bm = DATA / REGION.basemap_110
         if not bm.exists():
-            raise SystemExit("data/africa_basemap.json needed to clip OSM")
+            raise SystemExit(f"{bm.relative_to(ROOT_DATA.parent)} needed to clip OSM; run fetch_basemap.py first")
         cs = json.loads(bm.read_text())["countries"]
         _AFRICA_POLYS = []
         for c in cs:
@@ -744,7 +781,7 @@ def _num(s):
 
 
 def fetch_pipelines():
-    feats, unrouted, releases, updated, fixed = [], 0, [], [], 0
+    feats, unrouted, releases, updated, fixed, dropped_by_hand = [], 0, [], [], 0, 0
     for tracker, fuel_group in PIPE_TRACKERS.items():
         url, release = gem_latest_pipeline_geojson(tracker)
         releases.append(f"{tracker.upper()} {release}")
@@ -756,12 +793,13 @@ def fetch_pipelines():
             p = f.get("properties") or {}
             countries = [c.strip() for c in (p.get("CountriesOrAreas") or "").split(",")
                          if c.strip()]
-            # a pipeline counts if ANY country on its route is African, so
-            # Medgaz (Algeria–Spain) and Transmed (Tunisia–Italy) stay in
-            if not any(c in AFRICA_NAMES or c == "The Gambia" for c in countries):
+            # a pipeline counts if ANY country on its route is in the region,
+            # so Medgaz (Algeria–Spain) and Transmed (Tunisia–Italy) stay in
+            if not any(c in REGION_NAMES for c in countries):
                 continue
             n_af += 1
             pid = (p.get("ProjectID") or "").strip()
+            dropped_by_hand += pid in PIPE_ROUTE_DROP
             parts = [] if pid in PIPE_ROUTE_DROP else _line_parts(f.get("geometry"))
             if not parts:
                 unrouted += 1
@@ -815,9 +853,9 @@ def fetch_pipelines():
                     "release": release,
                 },
             })
-        print(f"     {n_af:,} African segments in {tracker.upper()}")
-    print(f"  {unrouted:,} African segments have no usable route and are not drawn "
-          f"({len(PIPE_ROUTE_DROP)} of them by hand: a published route that is not the pipeline); "
+        print(f"     {n_af:,} {REGION.adj} segments in {tracker.upper()}")
+    print(f"  {unrouted:,} {REGION.adj} segments have no usable route and are not drawn "
+          f"({dropped_by_hand} of them by hand: a published route that is not the pipeline); "
           f"{fixed} length(s) corrected from PIPE_LENGTH_FIX")
     out = write_layer("gem_oil_gas_pipelines", feats)
     # "data as of" is the newest record update in the two files, not the
@@ -825,7 +863,7 @@ def fetch_pipelines():
     newest = max((d for d in updated if re.match(r"\d{4}-\d\d-\d\d$", d)), default=None)
     update_meta("pipelines", fetched=today(), fresh=fmt_date(newest) if newest else None,
                 release=" · ".join(releases), records=len(feats), unrouted=unrouted,
-                length_fixes=fixed, route_drops=len(PIPE_ROUTE_DROP))
+                length_fixes=fixed, route_drops=dropped_by_hand)
     return out
 
 
@@ -843,22 +881,11 @@ def fetch_pipelines():
 # therefore draws the routes and cards from this feed and does not publish
 # the layer as a download.
 TG_API = "https://www.submarinecablemap.com/api/v3"
-# TeleGeography's own spellings for Africa and its islands -> ISO 3166-1. The
-# cable detail carries a country per landing point; landing-point names read
-# "City, Country" with commas inside some countries ("Congo, Dem. Rep."), so
-# the fallback matches by suffix.
-TG_ISO = {
-    "Algeria": "DZ", "Angola": "AO", "Benin": "BJ", "Cameroon": "CM", "Cape Verde": "CV",
-    "Comoros": "KM", "Congo, Dem. Rep.": "CD", "Congo, Rep.": "CG", "Côte d'Ivoire": "CI",
-    "Djibouti": "DJ", "Egypt": "EG", "Equatorial Guinea": "GQ", "Eritrea": "ER", "Gabon": "GA",
-    "Gambia": "GM", "Ghana": "GH", "Guinea": "GN", "Guinea-Bissau": "GW", "Kenya": "KE",
-    "Liberia": "LR", "Libya": "LY", "Madagascar": "MG", "Mauritania": "MR", "Mauritius": "MU",
-    "Mayotte": "YT", "Morocco": "MA", "Mozambique": "MZ", "Namibia": "NA", "Nigeria": "NG",
-    "Réunion": "RE", "Saint Helena, Ascension and Tristan da Cunha": "SH",
-    "Sao Tome and Principe": "ST", "Senegal": "SN", "Seychelles": "SC", "Sierra Leone": "SL",
-    "Somalia": "SO", "South Africa": "ZA", "Sudan": "SD", "Tanzania": "TZ", "Togo": "TG",
-    "Tunisia": "TN", "Uganda": "UG", "Western Sahara": "EH",
-}
+# TeleGeography's own spellings for the region's countries and islands -> ISO
+# 3166-1 (region.py). The cable detail carries a country per landing point;
+# landing-point names read "City, Country" with commas inside some countries
+# ("Congo, Dem. Rep."), so the fallback matches by suffix.
+TG_ISO = REGION.tg_iso
 
 
 def _route_km(parts):
@@ -881,7 +908,7 @@ def _tg_country(name):
 
 
 def fetch_cables(pause=0.1):
-    """Every cable with at least one African landing point.
+    """Every cable with at least one landing point in the region.
 
     Walks every cable's detail record (about 700 small requests, a few
     minutes) rather than going through landing points: a landing point that
@@ -919,7 +946,7 @@ def fetch_cables(pause=0.1):
                 else:
                     time.sleep(2 + 3 * attempt)
         if i % 100 == 0:
-            print(f"  … {i}/{len(ids)} cables, {len(feats)} African so far")
+            print(f"  … {i}/{len(ids)} cables, {len(feats)} {REGION.adj} so far")
         time.sleep(pause)
         if not d:
             continue
@@ -937,7 +964,7 @@ def fetch_cables(pause=0.1):
         parts = routes.get(cid) or []
         if not parts:
             missing += 1
-            print(f"  ! {cid}: African landing but no route geometry; skipped")
+            print(f"  ! {cid}: {REGION.adj} landing but no route geometry; skipped")
             continue
         planned = bool(d.get("is_planned"))
         rfs = d.get("rfs_year")
@@ -1019,18 +1046,10 @@ AIDDATA_ZIP = ("https://docs.aiddata.org/ad4/datasets/"
 AIDDATA_SHEET = "GCDF_3.0"
 GEOGCDF_RAW = "https://raw.githubusercontent.com/aiddata/gcdf-geospatial-data/main/latest"
 GEOGCDF_API = "https://api.github.com/repos/aiddata/gcdf-geospatial-data/releases/latest"
-AIDDATA_CACHE = DATA / ".aiddata_cache"
+# the workbooks and footprints are shared by every edition
+AIDDATA_CACHE = ROOT_DATA / ".aiddata_cache"
 # AidData records the recipient as an ISO-3 code; the rest of the site speaks ISO-2.
-ISO3_TO_ISO2 = {
-    "DZA": "DZ", "AGO": "AO", "BEN": "BJ", "BWA": "BW", "BFA": "BF", "BDI": "BI", "CMR": "CM",
-    "CPV": "CV", "CAF": "CF", "TCD": "TD", "COM": "KM", "COG": "CG", "COD": "CD", "DJI": "DJ",
-    "EGY": "EG", "GNQ": "GQ", "ERI": "ER", "SWZ": "SZ", "ETH": "ET", "GAB": "GA", "GMB": "GM",
-    "GHA": "GH", "GIN": "GN", "GNB": "GW", "CIV": "CI", "KEN": "KE", "LSO": "LS", "LBR": "LR",
-    "LBY": "LY", "MDG": "MG", "MWI": "MW", "MLI": "ML", "MRT": "MR", "MUS": "MU", "MAR": "MA",
-    "MOZ": "MZ", "NAM": "NA", "NER": "NE", "NGA": "NG", "RWA": "RW", "STP": "ST", "SEN": "SN",
-    "SYC": "SC", "SLE": "SL", "SOM": "SO", "ZAF": "ZA", "SSD": "SS", "SDN": "SD", "TZA": "TZ",
-    "TGO": "TG", "TUN": "TN", "UGA": "UG", "ZMB": "ZM", "ZWE": "ZW", "ESH": "EH",
-}
+ISO3_TO_ISO2 = REGION.iso3
 # AidData's six statuses onto the shared five. A pledge (letter of intent,
 # MoU, announcement) is a record of intent, like GEM "announced"; a commitment
 # is a signed, binding agreement not yet in implementation, like AfDB's
@@ -1059,7 +1078,7 @@ FOOTPRINT_MAX_VERTICES = 2000
 # a footprint whose interior point falls outside this window is a mislinked
 # OSM feature (one buyer's credit sits in Colombia); the record falls back to
 # its country's centre
-AFRICA_WINDOW = (-30.0, -45.0, 70.0, 45.0)
+AFRICA_WINDOW = REGION.aiddata_window
 
 
 def read_xlsx_sheet(path, sheet):
@@ -1128,12 +1147,12 @@ _COUNTRY_POLYS = None
 
 
 def _country_polys():
-    """(iso, bbox, polygon) for every African country in the dashboard basemap."""
+    """(iso, bbox, polygon) for every country of the region in the dashboard basemap."""
     global _COUNTRY_POLYS
     if _COUNTRY_POLYS is None:
-        bm = DATA / "africa_basemap.json"
+        bm = DATA / REGION.basemap_110
         if not bm.exists():
-            raise SystemExit("data/africa_basemap.json needed to place AidData records")
+            raise SystemExit(f"{bm.relative_to(ROOT_DATA.parent)} needed to place records; run fetch_basemap.py first")
         _COUNTRY_POLYS = []
         for c in json.loads(bm.read_text())["countries"]:
             for poly in c["p"]:
@@ -1284,7 +1303,7 @@ def _xlsx_from(z, name):
 
 
 def fetch_aiddata(workers=8):
-    """One record per Chinese official commitment to an African country in an
+    """One record per Chinese official commitment to a country of the region in an
     infrastructure sector, from AidData's China's Global Loans and Grants
     Dataset 1.0 (commitments 2000-2023), placed as precisely as AidData can.
 
@@ -1343,7 +1362,12 @@ def fetch_aiddata(workers=8):
     col = lambda r, name: r[ix[name]] if ix[name] < len(r) else None  # noqa: E731
     keep, skipped = [], {"pledge": 0, "umbrella": 0, "not_infra": 0, "acquisition": 0}
     for r in rows:
-        if not r or r[0] is None or col(r, "Region_of_Activity") != "Africa":
+        if not r or r[0] is None or col(r, "Region_of_Activity") not in REGION.aiddata_regions:
+            continue
+        # a region that is part of AidData's (Southeast Asia within "Asia"):
+        # the recipient must be one of its countries, or the region itself
+        if REGION.aiddata_by_iso3 and (col(r, "Country_of_Activity_ISO3") or "") not in ISO3_TO_ISO2 \
+                and str(col(r, "Country_of_Activity") or "") not in ("Asia, regional",):
             continue
         if col(r, "Umbrella") == "Yes":
             skipped["umbrella"] += 1
@@ -1361,7 +1385,7 @@ def fetch_aiddata(workers=8):
             skipped["acquisition"] += 1
             continue
         keep.append(r)
-    print(f"  {len(keep):,} African infrastructure commitments "
+    print(f"  {len(keep):,} {REGION.adj} infrastructure commitments "
           f"(left out: {skipped['umbrella']:,} umbrella agreements, {skipped['pledge']:,} pledges, "
           f"{skipped['not_infra']:,} not physical infrastructure, {skipped['acquisition']:,} acquisitions)")
     # the kept set's stalled records are exactly the ones AidData's own
@@ -1400,7 +1424,7 @@ def fetch_aiddata(workers=8):
         new = pid not in old
         level = None if new else old[pid][1]
         geom, lon, lat, place, osm_links, n_feat = None, None, None, None, None, None
-        bad_geo = False                  # a footprint outside Africa: its ADM rows are as wrong
+        bad_geo = False                  # a footprint outside the region: its ADM rows are as wrong
         fc = feats_geo.get(pid)
         if fc and fc.get("features"):
             f0 = fc["features"][0]
@@ -1413,7 +1437,7 @@ def fetch_aiddata(workers=8):
                 lon, lat = _interior_point([tuple(q[:2]) for q in largest[0]])
                 x0, y0, x1, y1 = AFRICA_WINDOW
                 if not (x0 <= lon <= x1 and y0 <= lat <= y1):
-                    print(f"  ! {pid}: footprint at {lon:.2f}, {lat:.2f} is not in Africa; "
+                    print(f"  ! {pid}: footprint at {lon:.2f}, {lat:.2f} is not in {REGION.name}; "
                           f"placed at the country's centre instead")
                     lon = lat = None
                     bad_geo = True
@@ -1459,6 +1483,9 @@ def fetch_aiddata(workers=8):
             precision, n_approx = "admin", n_approx + 1
         if not iso:
             iso = _country_at(lon, lat)      # "Africa, regional" projects with a footprint
+            if not iso:                      # a regional project located outside the region
+                unlocated += 1
+                continue
         amount = col(r, "Adjusted_Amount_Constant_USD_2023")
         if amount is None:
             amount = col(r, "Amount_Constant_USD_2023")
@@ -1534,7 +1561,7 @@ def fetch_aiddata(workers=8):
     years = [f["properties"]["commitment_year"] for f in feats if f["properties"]["commitment_year"]]
     print(f"  {n_fp:,} footprints drawn · {n_prec:,} precise, {n_approx:,} approximate (5 km or "
           f"administrative), {n_country:,} at the country's centre ({n_new:,} of them new in CLG 1.0) · "
-          f"{unlocated:,} regional records without a location dropped · {mislinked} footprint(s) outside Africa ignored")
+          f"{unlocated:,} regional records without a location dropped · {mislinked} footprint(s) outside {REGION.name} ignored")
     out = write_layer("aiddata_china_finance", feats)
     update_meta("china", fetched=today(), fresh="Nov 2025 · to 2023",
                 release=f"CLG-Global 1.0 · locations from GCDF 3.0 and GeoGCDF {geo_release or geo_version}",
@@ -1583,19 +1610,17 @@ def ring_area_deg(ring):
 # of the distinct ones, which matches the Bank's project pages. Sectors are
 # the Bank's own NACE-like codes (vocabulary 99), mapped below to the same
 # buckets the DAC filter yields for the other lenders.
-EU_PUBLISHERS = {
-    "ec-intpa": {"pub": "INTPA", "lender": "European Commission",
-                 "files": [c.lower() for c in AFRICA_ISO] + ["289", "298", "1027", "1028", "1029", "1030"]},
-    "ec-near": {"pub": "NEAR", "lender": "European Commission",
-                "files": ["dz", "eg", "ly", "ma", "tn", "189"]},
-    "eib": {"pub": "EIB", "lender": "European Investment Bank", "files": ["act"]},
-}
-# North of Sahara, South of Sahara, Africa regional, and the DAC's Eastern,
-# Middle, Southern and Western Africa, which INTPA publishes as files of their own
-EU_REGIONS = {"189", "289", "298", "1027", "1028", "1029", "1030"}
-EU_AFRICA_POINT = (17.7578122, 11.5024338)   # lon, lat: the Commission's point for Africa-wide activities
-# island states the 1:110m basemap has no polygon for: a point on the main island
-ISLAND_POINT = {"CV": (-23.6, 15.1), "ST": (6.6, 0.3), "SC": (55.45, -4.65), "MU": (57.55, -20.3), "KM": (43.35, -11.7)}
+# the publishers and files for the region (region.py): for Africa INTPA's
+# country files and its 289, 298 and 1027–1030 regional files, NEAR's five
+# North African neighbours and 189, and the EIB's global file; for Southeast
+# Asia INTPA's country files and its 789 and 798 regional files, and the EIB
+EU_PUBLISHERS = REGION.eu_publishers
+# the DAC regional codes INTPA publishes as files of their own: for Africa
+# North of Sahara, South of Sahara, Africa regional and the four sub-regions
+EU_REGIONS = REGION.eu_regions
+EU_AFRICA_POINT = REGION.eu_region_point   # lon, lat: the Commission's point for region-wide activities
+# island states the coarse basemap has no polygon for: a point on the main island
+ISLAND_POINT = REGION.island_point
 # EIB sector codes: the two leading digits decide. Everything else (global
 # loans and SME credit lines, funds, health, education, agriculture, finance)
 # is left out, as the DAC filter leaves it out for the other lenders.
@@ -1688,11 +1713,11 @@ def _clean_place(name, iso):
     number ("KE - 419705-4"), a bare country or "AFRICA" -> None."""
     s = re.sub(r"^[A-Z0-9]{2,3}\s*-\s*", "", (name or "").strip())
     s = re.sub(r"^[A-Z]{1,4}_", "", s)                           # "AA_Ethiopia"
-    if not s or s.upper() in ("AFRICA", "ACTION LOCATION", "N/A") or s.upper() == (iso or "").upper():
+    if not s or s.upper() in ("AFRICA", REGION.name.upper(), "ACTION LOCATION", "N/A") or s.upper() == (iso or "").upper():
         return None
     if re.fullmatch(r"[\dA-Z_\-\. ]*\d[\dA-Z_\-\. ]*", s):      # a code, not a place
         return None
-    if s.title() in AFRICA_NAMES or len(s) > 40:                 # the country itself, or a title
+    if s.title() in REGION_NAMES or len(s) > 40:                 # the country itself, or a title
         return None
     if s.isupper() and len(s) > 3:
         s = s.title()
@@ -1700,7 +1725,7 @@ def _clean_place(name, iso):
 
 
 def _eu_activity(act, conf):
-    """One parsed activity, or None when it is not infrastructure in Africa."""
+    """One parsed activity, or None when it is not infrastructure in the region."""
     pub = conf["pub"]
     share = 1.0              # the infrastructure share, by the publisher's sector percentages
     iid0 = _narr(act, "iati-identifier") or ""
@@ -1748,19 +1773,19 @@ def _eu_activity(act, conf):
             pct = 100.0
         countries.append((rc.get("code"), pct))
     regions = [(rr.get("code"), _num(rr.get("percentage"))) for rr in act.iter("recipient-region")]
-    african = [c for c in countries if c[0] in AFRICA_ISO]
+    african = [c for c in countries if c[0] in REGION_ISO]
     if not african and not ({r for r, _ in regions} & EU_REGIONS):
         return None
-    if excluded:              # counted only once it is known to be African infrastructure
+    if excluded:              # counted only once it is known to be the region's infrastructure
         return excluded
     iso = max(african, key=lambda c: c[1])[0] if african else None
-    # the African share, by the publisher's recipient percentages: an EIB
+    # the region's share, by the publisher's recipient percentages: an EIB
     # loan to IFAD is 50% Africa, 12% America and 38% Asia
     rec = [(c, p) for c, p in countries] + [(r, p if p is not None else 100.0) for r, p in regions]
     rec_total = sum(p for _, p in rec)
     africa_share = 1.0
     if rec_total and len(rec) > 1:
-        africa_share = min(1.0, sum(p for c, p in rec if c in AFRICA_ISO or c in EU_REGIONS) / rec_total)
+        africa_share = min(1.0, sum(p for c, p in rec if c in REGION_ISO or c in EU_REGIONS) / rec_total)
     regions = [r for r, _ in regions]
 
     st = act.find("activity-status")
@@ -1846,7 +1871,7 @@ def _eu_activity(act, conf):
 
 
 def fetch_eu():
-    """European Commission (INTPA, NEAR) and EIB activities in Africa, one
+    """European Commission (INTPA, and NEAR in Africa) and EIB activities in the region, one
     GeoJSON point per record, from the publishers' IATI files via the registry."""
     acts, n_files, dropped, generated = [], 0, {"left_out": 0, "other_funder": 0}, {}
     for publisher, conf in EU_PUBLISHERS.items():
@@ -1877,7 +1902,7 @@ def fetch_eu():
                 elif a:
                     acts.append(a)
             if i % 15 == 0 or i == len(urls):
-                print(f"  … {i}/{len(urls)} files, {len(acts):,} infrastructure activities in Africa so far")
+                print(f"  … {i}/{len(urls)} files, {len(acts):,} infrastructure activities in {REGION.name} so far")
 
     # one record per contract; a decision only when none of its contracts is here
     ec = [a for a in acts if a["pub"] != "EIB"]
@@ -1920,7 +1945,7 @@ def fetch_eu():
             cts = [c for a in mem for c in (a["countries"] or [])]
             keep1["countries"] = list(dict.fromkeys(cts)) or None
             if keep1["countries"] and len(keep1["countries"]) > 1:
-                keep1["country"] = None          # drawn at the Commission's Africa-wide point
+                keep1["country"] = None          # drawn at the Commission's region-wide point
             drop |= {a["id"] for a in live if a is not keep1}
         n_env += 1
     kept = [a for a in kept if a["id"] not in drop]
@@ -1976,7 +2001,7 @@ def fetch_eu():
             prec = 3
         prec_n[prec] += 1
         parent = next((by_id[p] for p in a["parents"] if p in by_id), None)
-        # What the totals add up: the infrastructure share of the African
+        # What the totals add up: the infrastructure share of the region's
         # share of the commitment; nothing for a cancelled or suspended record
         stalled = a["dash_status"] == STALLED
         factor = a["share"] * a["africa_share"]
@@ -1990,7 +2015,7 @@ def fetch_eu():
             if a["share"] < 0.995:
                 notes.append(f"{a['share']:.0%} of its sectors are infrastructure")
             if a["africa_share"] < 0.995:
-                notes.append(f"{a['africa_share']:.0%} of it goes to Africa")
+                notes.append(f"{a['africa_share']:.0%} of it goes to {REGION.name}")
             if notes:
                 notes = ["; ".join(notes) + "; that share is counted"]
         feats.append({
@@ -2019,7 +2044,7 @@ def fetch_eu():
             },
         })
     print(f"  placed: {prec_n[1]:,} on a named place, {prec_n[2]:,} at the country's point, "
-          f"{prec_n[3]:,} Africa-wide at the Commission's regional point; {unplaced} could not be placed")
+          f"{prec_n[3]:,} {REGION.wide} at the Commission's regional point; {unplaced} could not be placed")
     out = write_layer("iati_eu_finance", feats)
     # "data as of": the oldest file's own generation date, since the EIB's
     # and DG NEAR's files can be more than a year older than the download
@@ -2344,7 +2369,7 @@ def fetch_mattei(workers=4):
 
 LAYERS = {
     "gem": fetch_gem,
-    "iati": fetch_iati,
+    "iati": fetch_iati,                 # the region's development bank: AfDB, or ADB
     "wb": lambda: fetch_iati("worldbank"),
     "osm": fetch_osm,
     "pipes": fetch_pipelines,
@@ -2353,6 +2378,8 @@ LAYERS = {
     "eu": fetch_eu,
     "mattei": fetch_mattei,
 }
+# the layers this edition has (no Piano Mattei outside Africa)
+LAYERS = {k: f for k, f in LAYERS.items() if k != "mattei" or "mattei" in REGION.layers}
 
 if __name__ == "__main__":
     want = [a.lower() for a in sys.argv[1:]] or list(LAYERS)

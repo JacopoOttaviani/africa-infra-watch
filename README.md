@@ -1,11 +1,14 @@
-# Africa Project Atlas
+# InfraRadar
 
 An interactive map and dashboard of announced, approved and ongoing infrastructure
 in Africa, for investors, researchers and journalists.
 
-The project was first called Africa Infra Watch. The repository and the live
-site's address still use that slug, `africa-infra-watch`, so existing links keep
-working; the name shown on every page comes from `SITE_NAME` in `shared.py`.
+The project was first called Africa Infra Watch, then Africa Project Atlas. The
+repository and the live site's address still use the first slug,
+`africa-infra-watch`, so existing links keep working. The name shown on every
+page comes from `SITE_NAME` in `shared.py`; the headers, the footer and the map's
+loading box print it as a two-colour wordmark, `SITE_WORDMARK` ("Infra" in the
+ink, "Radar" in the accent), through the `__SITE_WORDMARK__` marker.
 
 **Interactive map:** https://claude.ai/code/artifact/ba74ed91-3123-4fe5-9f01-43708f368104
 **Dashboard:** https://claude.ai/code/artifact/e4229926-b67c-4c7b-ac4a-5b21b03b83fa
@@ -486,6 +489,84 @@ follows the dashboard's country filter, and only that: it is country-year
 debt, not records, so it is never summed with the layers' money. The
 dashboard now reads and writes `#c=<ISO2>`, which is how the debt page's
 country table links into it.
+
+## Editions: Southeast Asia
+
+One codebase, several editions. `region.py` holds everything that depends on
+the part of the world being mapped, and the `AIW_REGION` environment variable
+picks it: `africa` (the default, the site as it always was) or `sea`, the
+Southeast Asia edition added on 17 October 2026. A plain `python3 build_map.py`
+is the Africa build, byte for byte; with `AIW_REGION=sea` the same scripts read
+`data/sea/` and write `docs/se-asia/`, so the edition is served at
+[…/se-asia/](https://jacopoottaviani.com/africa-infra-watch/se-asia/) (map) and
+[…/se-asia/dashboard.html](https://jacopoottaviani.com/africa-infra-watch/se-asia/dashboard.html).
+It is **not linked from the Africa pages**, not in their sitemap or `llms.txt`,
+and its pages carry `noindex` (`noindex=True` in `region.py`) until it is
+published; it has no deep dives, no lender profiles and no debt box.
+
+**What a region holds** (`region.py`): the countries (ISO codes, the
+publishers' spellings of their names, display names, islands the coarse
+basemap lacks); the windows (the basemap's detail window, the OpenStreetMap
+bands, the IATI and AidData placement windows, the dashboard frame, the map's
+home view and zoom window, the social card's window); the lenders (the
+regional development bank with its IATI publisher, files and conventions, the
+World Bank's country files, the Commission's country and regional files and
+its point for region-wide programmes); the layers the edition has; and the
+words the pages print (name, adjective, kicker). The templates read the same
+block as `DATA.meta.region`, with Africa's values as their defaults, and
+`shared.regionalize()` strips `<!--__IF:cond__-->…<!--__ENDIF__-->` blocks and
+fills `__REGION__`-style markers at build time, so one template serves every
+edition and the Africa output is unchanged (checked: the rendered text of both
+Africa pages hashes identically before and after).
+
+**Southeast Asia** is the ten ASEAN members and Timor-Leste. Seven layers:
+
+| Layer | Source | First snapshot (17 Oct 2026) |
+|---|---|---|
+| Assets | GEM, Global Integrated Power Tracker | 6,958 units |
+| Finance | **Asian Development Bank**, IATI 2.03 files (`asdb-id`, `-kh`, `-la`, `-mm`, `-ph`, `-th`, `-tl`, `-vn`, `-reg`) | 390 activities, $35.0bn counted |
+| Finance | World Bank, IATI files of the eight borrowers | 165 activities, $15.5bn |
+| Ground truth | OpenStreetMap via Overpass, lat −11 to 29, lon 92 to 142 | 4,686 works |
+| Pipelines | GEM gas and oil trackers | 134 routed segments |
+| Cables | TeleGeography | 124 cables, 534 landings |
+| Chinese finance | AidData CLG 1.0, recipients in the eleven countries or "Asia, regional" | 970 projects, $148bn |
+| EU finance | DG INTPA country files + `789` (Far East Asia) and `798` (Asia regional), EIB global file | 207 records |
+
+The ADB's conventions differ from the AfDB's and the code states them: every
+location is exactness 2 and named, a province, a town or the country itself
+(GeoNames ids, no location class), so a location named after anything but the
+country is flagged `location_named` by the fetcher and drawn as a named place;
+amounts are USD, except a few non-sovereign loans in baht and pesos, converted
+at one stated rate per currency (`LOCAL_USD` in `shared.py`, ECB reference
+rates of 16 Oct 2026) with the conversion on the card; `IATI_AMOUNT_FIX` in
+`fetch_sources.py` corrects, by activity id and with the reason on the card,
+a commitment the publisher's file states wrongly (ADB's Indonesia file gives
+Loan 4708-INO as USD 44,229 million; the Bank's Project Data Sheet says USD
+300 million). Project pages are `adb.org/projects/<number>/main`. Neither bank
+publishes a file for Brunei, Malaysia or Singapore. The Commission's regional
+files place their "ASEAN region" activities on its point for Cambodia, which
+is the edition's region-wide point. The coarse basemap the dashboard draws and
+the fetchers clip with (`data/sea/sea_basemap.json`) is cut from Natural Earth
+1:10m by `fetch_basemap.py`, so that Singapore, absent at 1:110m, keeps a
+polygon; the hand-kept Africa lists (`PIPE_LENGTH_FIX`, `PIPE_ROUTE_DROP`,
+`EIB_NOT_INFRA`) apply only where their ids occur.
+
+```bash
+AIW_REGION=sea python3 fetch_basemap.py      # once: data/sea/sea_basemap_10m.json and sea_basemap.json
+AIW_REGION=sea python3 fetch_sources.py      # the seven layers (OSM is the slow one)
+AIW_REGION=sea python3 check_data.py
+AIW_REGION=sea python3 build_dashboard.py && AIW_REGION=sea python3 build_map.py
+AIW_REGION=sea python3 build_social.py       # docs/se-asia/social.png and icons
+AIW_REGION=sea python3 refresh.py            # all of the above; the Africa-only steps are skipped
+```
+
+To publish the edition: set `noindex=False` in `region.py`, rebuild, and add
+the two pages wherever the Africa site should point to them (the menu bar and
+footer in `shared.site_nav`/`site_footer`, the root sitemap in
+`write_site_index`), none of which mentions it today. The Methodology prose
+has been adapted layer by layer but not yet fact-checked the way the Africa
+pages were (`factcheck/`); the mark in the header is still the Africa-shaped
+compass rose; and `check_numbers.py` knows nothing about the edition.
 
 ## Rebuild
 

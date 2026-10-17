@@ -1,0 +1,1422 @@
+{
+ "compiled": "2026-10-13",
+ "about": "Africa's rare-earth projects at feasibility stage or beyond, with owners, stage, resource, buyers and lenders, each fact with the address it was read from. Compiled for the InfraRadar minerals page (draft). Coordinates: the project's own report where published, otherwise the USGS deposit point of the same name (loc_precision 'usgs'), otherwise none. Mineral-sands mines that hold monazite count only where the operator reports recovering or selling it: QMM in Madagascar does; Kenmare's Moma, Richards Bay Minerals and Namakwa Sands disclose no rare-earth tonnage and are under left_out.",
+ "stages": {
+  "producing": "Producing, or commissioning with first product",
+  "construction": "Being built",
+  "feasibility": "Feasibility study done or under way, permits sought",
+  "exploration": "Resource defined or being defined, scoping study at most",
+  "stalled": "Suspended, licence revoked or in dispute"
+ },
+ "projects": [
+  {
+   "id": "phalaborwa-rainbow",
+   "name": "Phalaborwa Rare Earths Project",
+   "country": "ZA",
+   "lat": -23.983,
+   "lon": 31.093,
+   "loc_precision": "approx",
+   "loc_source": "Centre of the resource block-model extents (UTM WGS84 zone 36S, E 305,150-306,850, N 7,345,500-7,347,300; Table 9.1 of the Dec 2025 MRE report), converted to lat/lon; same report puts the stacks 6.5 km from Phalaborwa town. https://www.rainbowrareearths.com/wp-content/uploads/2025/12/Phalaborwa-MRE-December-2025-FINAL.pdf",
+   "deposit_type": "phosphogypsum stacks (secondary, from carbonatite-hosted phosphate mining)",
+   "owners": [
+    {
+     "name": "Rainbow Rare Earths Ltd (LSE: RBW)",
+     "stake": "85%",
+     "home": "GG",
+     "source": "https://www.rainbowrareearths.com/wp-content/uploads/2025/12/Phalaborwa-MRE-December-2025-FINAL.pdf"
+    },
+    {
+     "name": "Bosveld Phosphates (Pty) Ltd",
+     "stake": "15%",
+     "home": "ZA",
+     "source": "https://www.rainbowrareearths.com/wp-content/uploads/2025/12/Phalaborwa-MRE-December-2025-FINAL.pdf"
+    }
+   ],
+   "state_partner": null,
+   "stage": "feasibility",
+   "stage_date": "2026-10",
+   "stage_source": "https://miningmx.com/2026-10-05-rainbow-targets-us-listing-as-sa-project-shifts-to-2029/",
+   "licence": {
+    "status": "No mining right needed: legal opinion in MRE report says the stacks are movable property outside mining legislation. They sit on Bosveld surface rights dating from the Mining Rights Act 1967. Bosveld must grant a notarial lease and transfer the stacks to an SPV (long-stop date 31 Dec 2025). Water, waste and air licences still to be obtained.",
+    "date": "2025-12",
+    "source": "https://www.rainbowrareearths.com/wp-content/uploads/2025/12/Phalaborwa-MRE-December-2025-FINAL.pdf"
+   },
+   "resource": {
+    "text": "35.0 Mt @ 0.44% TREO (JORC 2012; 46% Measured, 43% Indicated, 11% Inferred; effective 5 Jul 2024, report dated 12 Dec 2025)",
+    "source": "https://www.rainbowrareearths.com/wp-content/uploads/2025/12/Phalaborwa-MRE-December-2025-FINAL.pdf"
+   },
+   "output": {
+    "text": "Planned: 2.2 Mtpa phosphogypsum processed to c. 10,000 tpa mixed rare earth precipitate, refined to c. 1,800 tpa separated NdPr oxide, plus an SEG+ product with c. 60 tpa Dy, c. 20 tpa Tb and c. 140 tpa Y. Not yet producing.",
+    "source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/interim-results-for-six-months-to-31-december-2025/9500041"
+   },
+   "offtake": [
+    {
+     "buyer": "Neo Performance Materials",
+     "home": "CA",
+     "text": "Non-binding MoU of 24 Sep 2026: 40% of annual separated NdPr oxide and 65% of annual mixed SEG+ heavy rare earth carbonate. Neo also supplies solvent extraction technology. Binding agreements still to be negotiated.",
+     "source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/mou-with-neo-performance-materials/9787959"
+    }
+   ],
+   "finance": [
+    {
+     "lender": "U.S. International Development Finance Corporation (via TechMet Ltd, IE)",
+     "home": "US",
+     "amount_usd": 50000000,
+     "instrument": "Equity option, not exercised. DFC is sole funder of TechMet's proposed US$50m for a 15-33% project stake, exercisable for 3 months after a credit-approved debt term sheet.",
+     "date": "2023-12",
+     "source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/dfc-to-fund-proposed-50m-techmet-investment/7921407"
+    },
+    {
+     "lender": "Ecora Resources PLC",
+     "home": "GB",
+     "amount_usd": 8500000,
+     "instrument": "Gross revenue royalty, 0.85% on Phalaborwa production (rate rises if production is delayed). Ecora also subscribed US$1.5m for Rainbow shares.",
+     "date": "2024-07",
+     "source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/royalty-agreement-with-ecora-us-10m-raise/8286120"
+    }
+   ],
+   "note": "On 5 Oct 2026 Rainbow pushed first production to early 2029. A PFS is due in Q4 2026, the DFS in H1 2027 and early construction in Q4 2027. It is also weighing a US listing in 2027.",
+   "note_source": "https://miningmx.com/2026-10-05-rainbow-targets-us-listing-as-sa-project-shifts-to-2029/"
+  },
+  {
+   "id": "steenkampskraal",
+   "name": "Steenkampskraal Monazite Mine",
+   "country": "ZA",
+   "lat": -30.9667,
+   "lon": 18.6167,
+   "loc_precision": "usgs",
+   "loc_source": "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=2906",
+   "deposit_type": "monazite vein (high-grade hard-rock, with thorium)",
+   "owners": [
+    {
+     "name": "Steenkampskraal Holdings Ltd (SHL), parent of Steenkampskraal Monazite Mine (Pty) Ltd",
+     "stake": null,
+     "home": null,
+     "source": "https://www.steenkampskraal.com/the-mine-overview/"
+    },
+    {
+     "name": "Bora Mining Investments / Bora Mining Services (Enock Mathebula)",
+     "stake": null,
+     "home": "ZA",
+     "source": "https://crown.co.za/africa-updates/27503-bora-mining-acquires-share-in-steenkampskraal-monazite-mine"
+    }
+   ],
+   "state_partner": null,
+   "stage": "producing",
+   "stage_date": "2026-10",
+   "stage_source": "https://www.steenkampskraal.com/steenkampskraal-mine-opens-phase-1-monazite-concentrate-plant-as-ministers-tour-worlds-highest-grade-rare-earth-resource/",
+   "licence": {
+    "status": "Mining right WC30/5/1/2/2/353MR held by SMM; company says it was issued 2 Jun 2010 for 20 years to 1 Jun 2030, renewable (page wording is ambiguous on which licence this date belongs to). NNR certificate COR-23 held, dates not confirmed. Water use licence 06/E33D/GJA/5694 issued 13 Jun 2019 for 10 years. EMPr approved 2010.",
+    "date": "2010-06",
+    "source": "https://www.steenkampskraal.com/licensed-to-operate/"
+   },
+   "resource": {
+    "text": "605,000 t @ 14.4% TREO+Y2O3, including 46,000 t of historic tailings (Measured+Indicated+Inferred). Reserve 799,700 t @ 8.68% TREO+Y2O3, excluding a pending Section 102 mining-right extension. NI 43-101; report date not stated.",
+    "source": "https://www.steenkampskraal.com/the-mine-overview/"
+   },
+   "output": {
+    "text": "Phase 1 plant: c. 6,600 tpa monazite concentrate (>50% TREO) at start, rising to c. 13,400 tpa at steady state. Figures are tonnes of concentrate, not REO.",
+    "source": "https://www.steenkampskraal.com/steenkampskraal-monazite-mine-turns-soil-on-new-processing-plant/"
+   },
+   "offtake": [
+    {
+     "buyer": "undisclosed",
+     "home": null,
+     "text": "Company says it has secured a number of offtake agreements for its concentrate. Buyers are not named. First shipments are planned before end-2026.",
+     "source": "https://www.steenkampskraal.com/steenkampskraal-mine-opens-phase-1-monazite-concentrate-plant-as-ministers-tour-worlds-highest-grade-rare-earth-resource/"
+    }
+   ],
+   "finance": [
+    {
+     "lender": "Industrial Development Corporation (IDC)",
+     "home": "ZA",
+     "amount_usd": null,
+     "instrument": "Funding for the Phase 1 metallurgical plant; first tranche received Oct 2025. Amount and instrument not disclosed.",
+     "date": "2025-10",
+     "source": "https://www.crown.co.za/latest-news/modern-mining-latest-news/34555-steenkampskraal-sets-out-rare-earths-six-phase-production-plan"
+    }
+   ],
+   "note": "Minister Gwede Mantashe opened the Phase 1 concentrate plant on 6 Oct 2026. The company says production is under way, with first export shipments planned before end-2026. Phase 2 (cracking, with thorium recovery) and Phase 3 (separation) are not yet built. India is named as a possible thorium market; no Chinese, US, EU or Gulf involvement was found.",
+   "note_source": "https://www.steenkampskraal.com/steenkampskraal-mine-opens-phase-1-monazite-concentrate-plant-as-ministers-tour-worlds-highest-grade-rare-earth-resource/",
+   "loc_note": "USGS deposit point \"Steenkampskraal\""
+  },
+  {
+   "id": "zandkopsdrift",
+   "name": "Zandkopsdrift Rare Earths and Manganese Project",
+   "country": "ZA",
+   "lat": -30.883,
+   "lon": 17.95,
+   "loc_precision": "usgs",
+   "loc_source": "https://doi.org/10.5066/F7GH9GQR",
+   "deposit_type": "carbonatite (rare earths with manganese)",
+   "owners": [
+    {
+     "name": "Frontier Rare Earths Ltd (private, Luxembourg-based)",
+     "stake": null,
+     "home": "LU",
+     "source": "https://en.paperjam.lu/article/luxembourg-based-frontier-signs-7-year-rare-earths-processing-deal"
+    },
+    {
+     "name": "Industrial Development Corporation of South Africa (IDC)",
+     "stake": null,
+     "home": "ZA",
+     "source": "https://en.paperjam.lu/article/luxembourg-based-frontier-signs-7-year-rare-earths-processing-deal"
+    },
+    {
+     "name": "Korea Mine Rehabilitation and Mineral Resources Corporation (KOMIR, formerly KORES)",
+     "stake": null,
+     "home": "KR",
+     "source": "https://en.paperjam.lu/article/luxembourg-based-frontier-signs-7-year-rare-earths-processing-deal"
+    },
+    {
+     "name": "South African BEE shareholders (unnamed)",
+     "stake": null,
+     "home": "ZA",
+     "source": "https://en.paperjam.lu/article/luxembourg-based-frontier-signs-7-year-rare-earths-processing-deal"
+    }
+   ],
+   "state_partner": "IDC (South African state DFI) holds strategic equity, stake undisclosed; unnamed SA BEE shareholders; Korean state agency KOMIR also a shareholder",
+   "stage": "feasibility",
+   "stage_date": "2026-06",
+   "stage_source": "https://www.engineeringnews.co.za/article/south-africas-zandkopsdrift-rare-earths-project-highlighted-at-junior-indaba-2026-06-26",
+   "licence": {
+    "status": "Mining right and environmental authorisation in place, per the Feb 2026 company release. Grant dates not given.",
+    "date": "2026-02",
+    "source": "https://kyodonewsprwire.jp/index.php/release/202602053677"
+   },
+   "resource": {
+    "text": "Proven and Probable Reserves said to support a mine life of more than 45 years (updated PFS, 2025). Tonnage and grade not disclosed in the release.",
+    "source": "https://kyodonewsprwire.jp/index.php/release/202602053677"
+   },
+   "output": {
+    "text": "Planned: 3,038 t/y NdPr oxide, 114 t/y Dy oxide and 25 t/y Tb oxide (separated oxides), plus battery-grade manganese sulphate. First production envisaged from 2030.",
+    "source": "https://www.engineeringnews.co.za/article/south-africas-zandkopsdrift-rare-earths-project-highlighted-at-junior-indaba-2026-06-26"
+   },
+   "offtake": [
+    {
+     "buyer": "Carester",
+     "home": "FR",
+     "text": "7-year offtake, renewable for 3 years, for mixed heavy rare earth carbonate, to be separated at Carester's Lacq plant in France. Carester also supplies solvent extraction technology for the mine site.",
+     "source": "https://en.paperjam.lu/article/luxembourg-based-frontier-signs-7-year-rare-earths-processing-deal"
+    },
+    {
+     "buyer": "Industrial Development Corporation (IDC)",
+     "home": "ZA",
+     "text": "Option to take up to 10% of production at prevailing market prices.",
+     "source": "https://kyodonewsprwire.jp/index.php/release/202602053677"
+    }
+   ],
+   "finance": [
+    {
+     "lender": "Industrial Development Corporation (IDC)",
+     "home": "ZA",
+     "amount_usd": 20000000,
+     "instrument": "Strategic equity investment (about ZAR 325m per News24); stake not disclosed",
+     "date": "2026-02",
+     "source": "https://kyodonewsprwire.jp/index.php/release/202602053677"
+    }
+   ],
+   "note": "Conditions precedent were met in Sep 2025; the DFS is under way and due in H1 2027, with first production targeted for 2030. The EU named the project a Critical Raw Materials Act Strategic Project in June 2025.",
+   "note_source": "https://kyodonewsprwire.jp/index.php/release/202602053677",
+   "loc_note": "USGS deposit point \"Zandkopsdrift\""
+  },
+  {
+   "id": "ngualla",
+   "name": "Ngualla",
+   "country": "TZ",
+   "lat": -7.7,
+   "lon": 32.833,
+   "loc_precision": "usgs",
+   "loc_source": "https://doi.org/10.5066/F7GH9GQR",
+   "deposit_type": "carbonatite (bastnaesite ore)",
+   "owners": [
+    {
+     "name": "Shenghe Resources (Singapore) Pte Ltd, subsidiary of Shenghe Resources Holding Co (SSE:600392); owns 100% of Peak Rare Earths, which holds 84% of licence holder Mamba Minerals via Ngualla Group UK",
+     "stake": "84%",
+     "home": "CN",
+     "source": "https://announcements.asx.com.au/asxpdf/20250930/pdf/06pw9y37glkhgh.pdf"
+    },
+    {
+     "name": "Government of Tanzania (via Treasury Registrar)",
+     "stake": "16%",
+     "home": "TZ",
+     "source": "https://announcements.asx.com.au/asxpdf/20250515/pdf/06jrrv7bzv8wkn.pdf"
+    }
+   ],
+   "state_partner": "Government of Tanzania 16% non-dilutable free-carried (Framework Agreement 17 Apr 2023)",
+   "stage": "feasibility",
+   "stage_date": "2026-08",
+   "stage_source": "https://pdf.dfcfw.com/pdf/H22_AN202608101827809988_1.pdf",
+   "licence": {
+    "status": "Special Mining Licence granted to Mamba Minerals (84% Peak, 16% Government of Tanzania)",
+    "date": "2023-04-25",
+    "source": "https://wcsecure.weblink.com.au/pdf/PEK/02691663.pdf"
+   },
+   "resource": {
+    "text": "214.4 Mt @ 2.15% REO for 4.63 Mt REO (JORC, >=1% TREO cut-off); Ore Reserve 18.5 Mt @ 4.80% TREO for 887 kt",
+    "source": "https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf"
+   },
+   "output": {
+    "text": "Planned average 16.2 kt/y of high-grade rare earth concentrate containing 3.6 kt/y NdPr oxide, 24+ year mine life (not producing)",
+    "source": "https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf"
+   },
+   "offtake": [
+    {
+     "buyer": "Shenghe Resources",
+     "home": "CN",
+     "text": "Binding 7-year offtake for 100% of rare earth concentrate and at least 50% of any intermediate or separated oxides (signed Aug 2023, conditions satisfied Jun 2024)",
+     "source": "https://announcements.asx.com.au/asxpdf/20250515/pdf/06jrrv7bzv8wkn.pdf"
+    }
+   ],
+   "finance": [],
+   "note": "In Aug 2026 Shenghe said Ngualla is still going through Chinese technology-export approval procedures and gave no construction start date.",
+   "note_source": "https://pdf.dfcfw.com/pdf/H22_AN202608101827809988_1.pdf",
+   "loc_note": "USGS deposit point \"Ngualla\""
+  },
+  {
+   "id": "wigu-hill",
+   "name": "Wigu Hill",
+   "country": "TZ",
+   "lat": -7.433,
+   "lon": 37.567,
+   "loc_precision": "usgs",
+   "loc_source": "https://doi.org/10.5066/F7GH9GQR",
+   "deposit_type": "carbonatite",
+   "owners": [
+    {
+     "name": "Vital Metals Ltd (via Cheetah Resources, which owns 90% of licence applicant Kisaki Mining Ltd)",
+     "stake": "90%",
+     "home": "AU",
+     "source": "https://wcsecure.weblink.com.au/pdf/VML/02731324.pdf"
+    },
+    {
+     "name": "Shenghe Resources (Singapore) Pte Ltd (option to buy 50% of Kisaki once a licence is granted, earn-in to 75% by funding PFS and DFS)",
+     "stake": null,
+     "home": "CN",
+     "source": "https://wcsecure.weblink.com.au/pdf/VML/02731324.pdf"
+    }
+   ],
+   "state_partner": "Government of Tanzania entitled to 16% free-carried on grant of a Special Mining Licence (not yet granted)",
+   "stage": "exploration",
+   "stage_date": "2023-10",
+   "stage_source": "https://wcsecure.weblink.com.au/pdf/VML/02731324.pdf",
+   "licence": {
+    "status": "Mining Licence / Special Mining Licence applied for by Kisaki Mining Ltd, not granted as of Oct 2023; framework agreement with government needed first",
+    "date": null,
+    "source": "https://wcsecure.weblink.com.au/pdf/VML/02731324.pdf"
+   },
+   "resource": {
+    "text": null,
+    "source": null
+   },
+   "output": {
+    "text": null,
+    "source": null
+   },
+   "offtake": [],
+   "finance": [],
+   "note": "In Oct 2023 Shenghe agreed to take an initial 50% of Wigu Hill once a mining licence is granted (deadline 19 Nov 2027); no resource estimate or later licence disclosure was found.",
+   "note_source": "https://wcsecure.weblink.com.au/pdf/VML/02731324.pdf",
+   "loc_note": "USGS deposit point \"Wigu Hill\""
+  },
+  {
+   "id": "songwe-hill",
+   "name": "Songwe Hill",
+   "country": "MW",
+   "lat": -15.7019,
+   "lon": 35.836,
+   "loc_precision": "usgs",
+   "loc_source": "https://doi.org/10.5066/F7GH9GQR",
+   "deposit_type": "carbonatite",
+   "owners": [
+    {
+     "name": "Mkango Magnetic Materials Ltd (renamed from Mkango Resources, Sep 2026; TSX-V/AIM: MKA), via Mkango Rare Earths Ltd and Lancaster Exploration Ltd",
+     "stake": "100%",
+     "home": "CA",
+     "source": "https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/mkango-resources-ltd-announces-name-change/9780830"
+    }
+   ],
+   "state_partner": "Government of Malawi may elect a free 10% interest on grant of the large-scale mining licence (MDA: 10% non-diluting equity interest)",
+   "stage": "feasibility",
+   "stage_date": "2026-09",
+   "stage_source": "https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/mka-half-year-2026-results/9747174",
+   "licence": {
+    "status": "Large-scale mining licence not yet granted (Sep 2026)",
+    "date": null,
+    "source": "https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/mkango-resources-ltd-announces-name-change/9780830"
+   },
+   "resource": {
+    "text": "M&I 38.1 Mt @ 1.15% TREO plus Inferred 55.9 Mt @ 1.05% TREO (NI 43-101, effective 30 Jun 2025); reserve 18.147 Mt @ 1.16% TREO",
+    "source": "https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/feasibility-study-songwe-pfs-results-pu-awy/9481471"
+   },
+   "output": {
+    "text": "Planned 5,954 t/y TREO contained in mixed rare earth carbonate (MREC) in years 1-5, then 4,081 t/y; 18-year mine life; capex US$325.5m (updated DFS, Mar 2026)",
+    "source": "https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/feasibility-study-songwe-pfs-results-pu-awy/9481471"
+   },
+   "offtake": [],
+   "finance": [
+    {
+     "lender": "US International Development Finance Corporation (DFC)",
+     "home": "US",
+     "amount_usd": 4600000,
+     "instrument": "Pre-investment project development financing to complete the FEED study, preparing the project for potential DFC debt financing (all-source total US$11m)",
+     "date": "2025-09",
+     "source": "https://www.dfc.gov/sites/default/files/media/documents/9100000133.pdf"
+    }
+   ],
+   "note": "Mkango plans to list Songwe and its Pulawy (Poland) separation plant on Nasdaq through a SPAC merger with Crown PropTech Acquisitions as Mkango Rare Earths Ltd (agreement signed 2 Jul 2025, amended Feb and May 2026); both projects are EU Critical Raw Materials Act Strategic Projects.",
+   "note_source": "https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/mka-half-year-2026-results/9747174",
+   "loc_note": "USGS deposit point \"Songwe Hill\""
+  },
+  {
+   "id": "kangankunde",
+   "name": "Kangankunde",
+   "country": "MW",
+   "lat": -15.125,
+   "lon": 34.9083,
+   "loc_precision": "usgs",
+   "loc_source": "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=2490",
+   "deposit_type": "carbonatite (monazite)",
+   "owners": [
+    {
+     "name": "Lindian Resources Ltd (ASX: LIN), via Rift Valley Resource Developments Ltd (100% since Dec 2025)",
+     "stake": "100%",
+     "home": "AU",
+     "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643"
+    }
+   ],
+   "state_partner": null,
+   "stage": "construction",
+   "stage_date": "2026-10",
+   "stage_source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61347110",
+   "licence": {
+    "status": "Medium-scale mining licence, issued April 2022; parliament says the operation is large-scale",
+    "date": "2022-04",
+    "source": "https://allafrica.com/stories/202608040027.html"
+   },
+   "resource": {
+    "text": "261 Mt @ 2.14% TREO (Indicated 61 Mt @ 2.43%, Inferred 200 Mt @ 2.05%; JORC, May 2024); Probable Ore Reserve 23.7 Mt @ 2.9% TREO (Jul 2024)",
+    "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643"
+   },
+   "output": {
+    "text": "Stage 1 planned about 20,000 t/y of monazite concentrate at about 55% TREO; staged commissioning late Nov 2026, commercial production targeted Dec 2026; Stage 2 study targets about 120,000 t/y concentrate",
+    "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643"
+   },
+   "offtake": [
+    {
+     "buyer": "Iluka Resources",
+     "home": "AU",
+     "text": "Binding 15-year offtake for 6,000 t/y of Stage 1 monazite concentrate (announced 6 Aug 2025)",
+     "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643"
+    }
+   ],
+   "finance": [
+    {
+     "lender": "Iluka Resources",
+     "home": "AU",
+     "amount_usd": 20000000,
+     "instrument": "Five-year loan facility to support construction",
+     "date": "2025-08",
+     "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643"
+    },
+    {
+     "lender": "NBS Bank Plc (NICO Group)",
+     "home": "MW",
+     "amount_usd": 11600000,
+     "instrument": "Composite facility: US$4.6m equipment finance (5-year) plus US$7.0m working capital (3-year)",
+     "date": "2026-04",
+     "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61321377"
+    },
+    {
+     "lender": "Institutional investors (equity placement)",
+     "home": null,
+     "amount_usd": null,
+     "instrument": "A$91.5m institutional share placement, after which Stage 1 FID was approved",
+     "date": "2025-08",
+     "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643"
+    },
+    {
+     "lender": "Institutional investors (equity placement)",
+     "home": null,
+     "amount_usd": null,
+     "instrument": "A$100m institutional share placement",
+     "date": "2026-04",
+     "source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61318974"
+    }
+   ],
+   "note": "The 27 km dedicated grid power line was energised on 1 Oct 2026, with staged plant commissioning set for late November and commercial production targeted for December 2026.",
+   "note_source": "https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61347110",
+   "loc_note": "USGS deposit point \"Kangankunde\""
+  },
+  {
+   "id": "makuutu",
+   "name": "Makuutu Heavy Rare Earths Project",
+   "country": "UG",
+   "lat": null,
+   "lon": null,
+   "loc_precision": null,
+   "loc_source": null,
+   "deposit_type": "ionic adsorption clay (heavy-REE rich)",
+   "owners": [
+    {
+     "name": "Ionic Rare Earths Ltd (via Rwenzori Rare Metals Ltd, which owns 100% of the project)",
+     "stake": "60%",
+     "home": "AU",
+     "source": "https://ionicre.com/our-assets/makuutu/"
+    },
+    {
+     "name": "Rare Earth Elements Africa (agreed in Dec 2023 a conditional sale of 34% of Rwenzori to Ionic; not shown as completed)",
+     "stake": null,
+     "home": null,
+     "source": "https://skillings.net/ionicre-increases-ownership-of-makuutu-project-to-94/"
+    }
+   ],
+   "state_partner": null,
+   "stage": "feasibility",
+   "stage_date": "2026-07",
+   "stage_source": "https://pro.edgex.exchange/en-US/news/article/ionic-rare-earths-makuutu-strategic-review",
+   "licence": {
+    "status": "Large-scale mining licence LML00334 over the central tenement granted, expires 2044-12-27; second mining licence application TN/LML/04741 in process",
+    "date": "2023-12-28",
+    "source": "https://ionicre.com/makuutu/"
+   },
+   "resource": {
+    "text": "617 Mt @ 630 ppm TREO (incl. 517 Mt Indicated @ 650 ppm), 200 ppm cut-off, MRE of May 2024",
+    "source": "https://ionicre.com/makuutu/"
+   },
+   "output": {
+    "text": "Stage 1 DFS (Mar 2023): plant starting at 5 Mtpa ore, producing mixed rare earth carbonate (MREC); annual REO tonnage not verified",
+    "source": "https://ionicre.com/makuutu/"
+   },
+   "offtake": [],
+   "finance": [],
+   "note": "On 31 Jul 2026 Ionic launched a strategic review of Makuutu (government-backed partners, new structures, listings elsewhere) after engagement with US and other Western-aligned interests, saying the product is not committed to China; no FID yet.",
+   "note_source": "https://pro.edgex.exchange/en-US/news/article/ionic-rare-earths-makuutu-strategic-review"
+  },
+  {
+   "id": "longonjo",
+   "name": "Longonjo Rare Earth Mine",
+   "country": "AO",
+   "lat": -12.90667,
+   "lon": 15.18639,
+   "loc_precision": "approx",
+   "loc_source": "Longonjo town coordinates (Wikipedia, https://en.wikipedia.org/wiki/Longonjo); the deposit (Longonjo carbonatite / Mount Chibilundo) lies in Longonjo municipality near the town, about 60 km west of Huambo per Pensana",
+   "deposit_type": "carbonatite (weathered near-surface, free-dig ore)",
+   "owners": [
+    {
+     "name": "Pensana plc (via Sable Min Unipessoal Lda and Ozango Minerais SA, which owns 100% of the project)",
+     "stake": "68.4%",
+     "home": "GB",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/02/Update-on-Longonjo-US25-million-mine-finance.pdf"
+    },
+    {
+     "name": "FSDEA, Angolan Sovereign Wealth Fund (US$25m equity subscription in Ozango; stake not disclosed)",
+     "stake": null,
+     "home": "AO",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/02/Update-on-Longonjo-US25-million-mine-finance.pdf"
+    },
+    {
+     "name": "Angolan state (free-carried interest in the mine)",
+     "stake": "10%",
+     "home": "AO",
+     "source": "https://www.ecofinagency.com/news-industry/0203-53359-pensana-advances-angola-s-first-rare-earths-mine-with-100-million-raise"
+    },
+    {
+     "name": "Other Angolan partners",
+     "stake": "6%",
+     "home": "AO",
+     "source": "https://www.ecofinagency.com/news-industry/0203-53359-pensana-advances-angola-s-first-rare-earths-mine-with-100-million-raise"
+    }
+   ],
+   "state_partner": "Angolan state ~10% free carry (Ecofin); sovereign wealth fund FSDEA holds equity in Ozango (US$25m, 2026-02) and ~29.2% of Pensana plc (Dec 2025)",
+   "stage": "construction",
+   "stage_date": "2026-09",
+   "stage_source": "https://pensana.co.uk/wp-content/uploads/2026/09/Update-on-Longonjo-Financing-25th-September-2026.pdf",
+   "licence": {
+    "status": "Mining title No 298/05/01/T.E/ANG-MIREMPET/2020 held by Ozango Minerais SA, renewable up to 35 years, with Mining Investment Contract (2% revenue royalty)",
+    "date": "2020-04",
+    "source": "https://www.investegate.co.uk/announcement/rns/pensana--pre/quarterly-activities-and-cashflow-report/6122839"
+   },
+   "resource": {
+    "text": "Stage 1 Ore Reserve 22 Mt @ 3.04% TREO (JORC), containing 139,457 t NdPr oxide and 3,689 t Dy+Tb oxide",
+    "source": "https://pensana.co.uk/wp-content/uploads/2026/06/Operational-Update-8th-June-2026.pdf"
+   },
+   "output": {
+    "text": "Phase 1: 20,000 tpa mixed rare earth carbonate (MREC), about 2,400 t NdPr and 73 t DyTb a year; Phase 2: 40,000 tpa MREC (4,200 t NdPr, 122 t DyTb) after 2030; railed 273 km to Lobito",
+    "source": "https://pensana.co.uk/wp-content/uploads/2026/03/Construction-on-track-for-2027-first-production.pdf"
+   },
+   "offtake": [
+    {
+     "buyer": "Toyota Tsusho Corporation",
+     "home": "JP",
+     "text": "Non-binding MoU (Jun 2025) for up to 20,000 tpa MREC over 5 years, separation via Toyotsu Rare Earths India",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/06/Operational-Update-8th-June-2026.pdf"
+    },
+    {
+     "buyer": "ReElement Technologies (American Resources Corp)",
+     "home": "US",
+     "text": "Non-binding MoU (Jun 2025) for MREC over 5 years, volume to be confirmed",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/06/Operational-Update-8th-June-2026.pdf"
+    },
+    {
+     "buyer": "Vacuumschmelze (VAC) / eVAC Magnetics",
+     "home": "DE",
+     "text": "MoU (Oct 2025) for MREC to feed eVAC's NdFeB magnet plant in Sumter, South Carolina, US",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/06/Operational-Update-8th-June-2026.pdf"
+    },
+    {
+     "buyer": "Hanwa Co.",
+     "home": "JP",
+     "text": "MoU on offtake and cooperation (2024)",
+     "source": "https://pensana.co.uk/wp-content/uploads/2025/10/Pensana-integrated-annual-report-2025.pdf"
+    }
+   ],
+   "finance": [
+    {
+     "lender": "Absa Bank Ltd",
+     "home": "ZA",
+     "amount_usd": 160000000,
+     "instrument": "Proposed ~US$160m senior syndicated debt facility arranged by Absa; approved Mar 2025, still being finalised Sep 2026",
+     "date": "2025-03",
+     "source": "https://pensana.co.uk/wp-content/uploads/2025/03/Update-on-Longonjo-Finance-18-March-2025.pdf"
+    },
+    {
+     "lender": "Africa Finance Corporation (AFC)",
+     "home": null,
+     "amount_usd": 81200000,
+     "instrument": "Board-approved participation in the ~US$160m syndicated loan, subject to documentation",
+     "date": "2025-03",
+     "source": "https://pensana.co.uk/wp-content/uploads/2025/03/Update-on-Longonjo-Finance-18-March-2025.pdf"
+    },
+    {
+     "lender": "Africa Finance Corporation (AFC)",
+     "home": null,
+     "amount_usd": 54900000,
+     "instrument": "Board-approved convertible loan at subsidiary level, subject to documentation",
+     "date": "2025-03",
+     "source": "https://pensana.co.uk/wp-content/uploads/2025/03/Update-on-Longonjo-Finance-18-March-2025.pdf"
+    },
+    {
+     "lender": "Export-Import Bank of the United States (US EXIM)",
+     "home": "US",
+     "amount_usd": null,
+     "instrument": "Letter of interest to participate up to 100% of the US$160m debt under EXIM's Supply Chain Resiliency Initiative; later described as guarantee / political and commercial risk insurance on the Absa debt",
+     "date": "2025-10",
+     "source": "https://pensana.co.uk/wp-content/uploads/2025/10/U.S.-EXIM-debt-funding-to-accelerate-U.S.-mine-to-magnet-supply-chain-.pdf"
+    },
+    {
+     "lender": "FSDEA, Angolan Sovereign Wealth Fund (via ASF Yova Mining Holding)",
+     "home": "AO",
+     "amount_usd": 15000000,
+     "instrument": "Bridging loan of 7 Aug 2023; 50% converted to Pensana shares in Dec 2025",
+     "date": "2023-08",
+     "source": "https://pensana.co.uk/wp-content/uploads/2025/12/Major-shareholder-support-for-US-strategy.pdf"
+    },
+    {
+     "lender": "FSDEA, Angolan Sovereign Wealth Fund",
+     "home": "AO",
+     "amount_usd": 25000000,
+     "instrument": "Equity into Ozango Minerais SA; final tranche received Feb 2026",
+     "date": "2026-02",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/02/Update-on-Longonjo-US25-million-mine-finance.pdf"
+    },
+    {
+     "lender": "Cascade Natural Resources Ltd (Guernsey fund backed by the State of Qatar)",
+     "home": "GG",
+     "amount_usd": 165000000,
+     "instrument": "Strategic investment: US$15m for 3.8% of Pensana plc (received Apr 2026) plus US$150m for 38.2% of Sable Min (outstanding at Sep 2026)",
+     "date": "2026-04",
+     "source": "https://pensana.co.uk/wp-content/uploads/2026/04/US165-million-Strategic-Investment-to-support-U.S-Mine-to-Magnet-strategy.pdf"
+    },
+    {
+     "lender": "US International Development Finance Corporation (DFC)",
+     "home": "US",
+     "amount_usd": 3400000,
+     "instrument": "Technical assistance grant for expansion, in-country separation and Coola studies, matched by Pensana",
+     "date": "2024-09",
+     "source": "https://pensana.co.uk/wp-content/uploads/2024/09/Technical-Assistance-Grant-from-the-US-International-Development-Finance-Corporation-1.pdf"
+    }
+   ],
+   "note": "On 25 Sep 2026 Pensana said construction was over 30% complete but high-cost site work and long-lead procurement were ramped down until financing is finalised, pushing the schedule to late 2028; only US$15m of the Qatar-backed Cascade US$165m has arrived.",
+   "note_source": "https://pensana.co.uk/wp-content/uploads/2026/09/Update-on-Longonjo-Financing-25th-September-2026.pdf"
+  },
+  {
+   "id": "lofdal",
+   "name": "Lofdal Heavy Rare Earth Project (Lofdal 2B-4)",
+   "country": "NA",
+   "lat": -20.3062,
+   "lon": 14.7057,
+   "loc_precision": "usgs",
+   "loc_source": "https://doi.org/10.5066/F7GH9GQR",
+   "deposit_type": "carbonatite dykes (xenotime-hosted heavy REE: Dy, Tb, Y)",
+   "owners": [
+    {
+     "name": "Namibia Critical Metals Inc. (via Namibia Rare Earths (Pty) Ltd)",
+     "stake": "45%",
+     "home": "CA",
+     "source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf"
+    },
+    {
+     "name": "TJ Namibia Rare Earths Corp. (JOGMEC and Toyota Tsusho; internal split undisclosed)",
+     "stake": "50%",
+     "home": "JP",
+     "source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf"
+    },
+    {
+     "name": "Historically Disadvantaged Namibians entity (free-carried)",
+     "stake": "5%",
+     "home": "NA",
+     "source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf"
+    }
+   ],
+   "state_partner": null,
+   "stage": "feasibility",
+   "stage_date": "2026-07",
+   "stage_source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf",
+   "licence": {
+    "status": "Mining Licence ML 200 issued by the Ministry of Mines and Energy to Namibia Rare Earths (Pty) Ltd, 25 years, valid to 2046-05-10",
+    "date": "2021-07-22 (announced)",
+    "source": "https://investor.wedbush.com/wedbush/article/accesswire-2021-7-22-namibia-critical-metals-announces-25-year-mining-licence-issued-for-lofdal-heavy-rare-earth-dysprosium-terbium-project-in-namibia"
+   },
+   "resource": {
+    "text": "Measured+Indicated 58.5 Mt @ 0.16% TREO plus Inferred 14.9 Mt @ 0.14% TREO (NI 43-101 / CIM, 2024)",
+    "source": "https://www.namibiacriticalmetals.com/projects/lofdal-heavy-rare-earths-project"
+   },
+   "output": {
+    "text": "PFS (Dec 2025): average 1,478 t/yr TREO (oxide) excluding La and Ce, incl. 119 t Dy2O3, 17.8 t Tb2O3, 841 t Y2O3",
+    "source": "https://www.namibiacriticalmetals.com/projects/lofdal-heavy-rare-earths-project"
+   },
+   "offtake": [
+    {
+     "buyer": "JOGMEC",
+     "home": "JP",
+     "text": "JV terms give JOGMEC the right to purchase all production at market prices; no binding offtake contract",
+     "source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf"
+    }
+   ],
+   "finance": [
+    {
+     "lender": "JOGMEC with Toyota Tsusho (via TJNREC)",
+     "home": "JP",
+     "amount_usd": null,
+     "instrument": "Earn-in expenditure of C$23m for a 50% participating interest, completed Jul 2026",
+     "date": "2026-07",
+     "source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf"
+    },
+    {
+     "lender": "JOGMEC",
+     "home": "JP",
+     "amount_usd": null,
+     "instrument": "Commitment of up to C$47.668m (~JPY 5.5bn) into TJNREC; non-dilutive, interest-free pre-FID funding; first tranche 23 Jul 2026",
+     "date": "2026-07",
+     "source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf"
+    }
+   ],
+   "note": "On 30 Jul 2026 Japan's JOGMEC and Toyota Tsusho completed the C$23m earn-in for 50% of Lofdal through TJ Namibia Rare Earths Corp. and JOGMEC committed up to C$47.668m to fund the DFS toward FID, subject to TSX-V and shareholder approval.",
+   "note_source": "https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260730-TJNRE-Earn-In-Completion-SEDAR.pdf",
+   "loc_note": "USGS deposit point \"Lofdal project\""
+  },
+  {
+   "id": "ampasindava",
+   "name": "Ampasindava Ionic Clay Rare Earth Project",
+   "country": "MG",
+   "lat": -13.85,
+   "lon": 48.182,
+   "loc_precision": "usgs",
+   "loc_source": "https://doi.org/10.5066/F7GH9GQR",
+   "deposit_type": "ionic adsorption clay",
+   "owners": [
+    {
+     "name": "Harena Rare Earths plc (LSE: HREE; held via Harena Resources Pty Ltd, Australia)",
+     "stake": "100%",
+     "home": "GB",
+     "source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/ampasindava-exploitation-permit-formalised/9816841"
+    }
+   ],
+   "state_partner": null,
+   "stage": "feasibility",
+   "stage_date": "2026-10",
+   "stage_source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/ampasindava-exploitation-permit-formalised/9816841",
+   "licence": {
+    "status": "Exploitation Permit formalised with Ministry of Mines (permit number and terms not disclosed); environmental permit still needed",
+    "date": "2026-10",
+    "source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/ampasindava-exploitation-permit-formalised/9816841"
+   },
+   "resource": {
+    "text": "698.5 Mt @ 868 ppm TREO = 606,000 t TREO, 500 ppm cut-off (JORC 2012, SGS, effective Nov 2023); no reserve",
+    "source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/completion-of-pre-feasibility-study/9385655"
+   },
+   "output": {
+    "text": "Planned (PFS, Jan 2026): ~4,000 t/yr TREO shipped as ~6,700 t/yr mixed rare earth carbonate (60%); ~1,700 t/yr NdPr+DyTb oxide; 20-year life; capex US$142m",
+    "source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/completion-of-pre-feasibility-study/9385655"
+   },
+   "offtake": [],
+   "finance": [
+    {
+     "lender": "US International Development Finance Corporation (DFC)",
+     "home": "US",
+     "amount_usd": 4840000,
+     "instrument": "Project Development Funding Agreement (permitting, E&S studies, proof-of-concept pilot plant); DFC has right to be considered for future debt/equity",
+     "date": "2026-07",
+     "source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/us-government-funding/9680685"
+    }
+   ],
+   "note": "On 12 Oct 2026 Harena said the exploitation permit was formalised; next come an environmental permit, a DFC-funded pilot plant, a DFS, and production targeted for 2028.",
+   "note_source": "https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/ampasindava-exploitation-permit-formalised/9816841",
+   "loc_note": "USGS deposit point \"TRE project\""
+  },
+  {
+   "id": "vara-mada",
+   "name": "Vara Mada (formerly Toliara / Base Toliara), Ranobe mineral sands",
+   "country": "MG",
+   "lat": null,
+   "lon": null,
+   "loc_precision": null,
+   "loc_source": null,
+   "deposit_type": "heavy mineral sands; monazite co-product with ilmenite, zircon, rutile",
+   "owners": [
+    {
+     "name": "Energy Fuels Inc. (NYSE American: UUUU; via Base Toliara SARL)",
+     "stake": "100%",
+     "home": "US",
+     "source": "https://finviz.com/news/270343/energy-fuels-announces-updated-feasibility-study-for-toliara-rare-earth-and-hms-project-in-madagascar-confirming-world-class-scale-and-economics-including-18-billion-npv-and-ramping-up-to-over-500-million-of-expected-annual-ebitda"
+    }
+   ],
+   "state_partner": null,
+   "stage": "feasibility",
+   "stage_date": "2026-08",
+   "stage_source": "https://finviz.com/news/377973/energy-fuels-announces-q2-2026-results",
+   "licence": {
+    "status": "Mining permit (ilmenite, rutile, zircon); govt suspension of Nov 2019 lifted by Council of Ministers 28 Nov 2024; monazite still to be added to permit",
+    "date": "2024-11",
+    "source": "https://www.stockwatch.com/News/Item/Z-C!EFR-3630607/C/EFR?&fmt=orig"
+   },
+   "resource": {
+    "text": "Reserve 904 Mt @ 6.1% HM, monazite 1.9% of HM; plus M&I 485 Mt and Inferred 1.2 bn t @ 3.3% HM, monazite 2.0% of HM (S-K 1300 / NI 43-101 FS, Jan 2026)",
+    "source": "https://finviz.com/news/270343/energy-fuels-announces-updated-feasibility-study-for-toliara-rare-earth-and-hms-project-in-madagascar-confirming-world-class-scale-and-economics-including-18-billion-npv-and-ramping-up-to-over-500-million-of-expected-annual-ebitda"
+   },
+   "output": {
+    "text": "Planned (FS, Jan 2026): ~24,000 t/yr monazite concentrate (gross tonnes, not REO), annual average excluding partial years",
+    "source": "https://finviz.com/news/270343/energy-fuels-announces-updated-feasibility-study-for-toliara-rare-earth-and-hms-project-in-madagascar-confirming-world-class-scale-and-economics-including-18-billion-npv-and-ramping-up-to-over-500-million-of-expected-annual-ebitda"
+   },
+   "offtake": [
+    {
+     "buyer": "Energy Fuels White Mesa Mill, Utah (internal)",
+     "home": "US",
+     "text": "Monazite concentrate to be shipped to White Mesa Mill for REE separation; ~27% of expected project revenue",
+     "source": "https://finviz.com/news/270343/energy-fuels-announces-updated-feasibility-study-for-toliara-rare-earth-and-hms-project-in-madagascar-confirming-world-class-scale-and-economics-including-18-billion-npv-and-ramping-up-to-over-500-million-of-expected-annual-ebitda"
+    }
+   ],
+   "finance": [],
+   "note": "Energy Fuels' Aug 2026 Q2 release still lists fiscal terms with the Madagascar government and permits for monazite recovery as unresolved, so no FID yet.",
+   "note_source": "https://finviz.com/news/377973/energy-fuels-announces-q2-2026-results"
+  },
+  {
+   "id": "qmm-mandena",
+   "name": "QMM Mandena mineral sands (monazite by-product)",
+   "country": "MG",
+   "lat": -25.0,
+   "lon": 47.0,
+   "loc_precision": "usgs",
+   "loc_source": "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=2482",
+   "deposit_type": "heavy mineral sands; monazite recovered from ilmenite tailings",
+   "owners": [
+    {
+     "name": "Rio Tinto (via QIT Fer et Titane, Canada)",
+     "stake": "85% economic, 80% voting",
+     "home": "GB",
+     "source": "https://minedocs.com/24/Rio_Tinto_and_Government_of_Madagascar_reach_agreement-PR-08232023.pdf"
+    }
+   ],
+   "state_partner": "Government of Madagascar: 15% free-carry stake, 20% voting rights (Aug 2023 agreement)",
+   "stage": "producing",
+   "stage_date": "2026-09",
+   "stage_source": "https://www.lexpress.mg/2026/09/activites-minieres-qmm-reprend-ses.html",
+   "licence": {
+    "status": "Operating under 1998 Framework Agreement; fiscal terms renegotiated (royalty 2% to 2.5%), confirmed by High Constitutional Court 8 Aug 2023",
+    "date": "2023-08",
+    "source": "https://minedocs.com/24/Rio_Tinto_and_Government_of_Madagascar_reach_agreement-PR-08232023.pdf"
+   },
+   "resource": {
+    "text": null,
+    "source": null
+   },
+   "output": {
+    "text": "USGS: monazite recovery from tailings began 2018; 2019 est. 21,000 t monazite concentrate = ~4,000 t REO; est. capacity 22,000 t monazite / 4,400 t REO. No recent volumes disclosed",
+    "source": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-madagascar.pdf"
+   },
+   "offtake": [
+    {
+     "buyer": "Unnamed buyers in China",
+     "home": "CN",
+     "text": "The Ecologist (Feb 2026) reports QMM ships its monazite by-product to China; buyer not named",
+     "source": "https://theecologist.org/2026/feb/02/will-rio-tinto-leave-madagascar-toxic-legacy"
+    }
+   ],
+   "finance": [],
+   "note": "QMM halted Mandena operations in late Aug 2026 after road blockades tied to a farmers' compensation ruling, and resumed them on 7 Sep 2026.",
+   "note_source": "https://www.lexpress.mg/2026/09/activites-minieres-qmm-reprend-ses.html",
+   "loc_note": "USGS deposit point \"Fort Dauphin\""
+  },
+  {
+   "id": "gakara",
+   "name": "Gakara",
+   "country": "BI",
+   "lat": -3.4167,
+   "lon": 29.4167,
+   "loc_precision": "usgs",
+   "loc_source": "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=2202",
+   "deposit_type": "vein- and breccia-hosted bastnaesite and monazite",
+   "owners": [
+    {
+     "name": "Rainbow Rare Earths Ltd (LSE: RBW)",
+     "stake": "90%",
+     "home": "GG",
+     "source": "https://www.rainbowrareearths.com/project/gakara/"
+    }
+   ],
+   "state_partner": "Burundi State, non-dilutable 10%",
+   "stage": "stalled",
+   "stage_date": "2026-03",
+   "stage_source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/interim-results-for-six-months-to-31-december-2025/9500041",
+   "licence": {
+    "status": "Trial mining and processing suspended by notice of Burundi's Ministry of Hydraulics, Energy and Mines, 29 Jun 2021; on care and maintenance since",
+    "date": "2021-06",
+    "source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/market-update/6470017"
+   },
+   "resource": {
+    "text": "No resource; exploration target only: 262,000-375,000 t @ 7-12% TREO (veins) and 252,000-342,000 t @ 1.0-1.5% TREO (breccia)",
+    "source": "https://www.rainbowrareearths.com/project/gakara/"
+   },
+   "output": {
+    "text": "Trial operations (to 2021) produced mixed REE concentrate of 52-56% TREO; volumes not stated. Mining licence granted Mar 2015 for 25 years",
+    "source": "https://www.rainbowrareearths.com/project/gakara/"
+   },
+   "offtake": [],
+   "finance": [],
+   "note": "Rainbow's Mar 2026 interim results say Gakara remains on care and maintenance, impaired to nil, and a near-term restart cannot be assumed; it dates the government's concentrate export halt to 12 Apr 2021.",
+   "note_source": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/interim-results-for-six-months-to-31-december-2025/9500041",
+   "loc_note": "USGS deposit point \"Karonge Gakara\""
+  },
+  {
+   "id": "mrima-hill",
+   "name": "Mrima Hill",
+   "country": "KE",
+   "lat": -4.5,
+   "lon": 39.2667,
+   "loc_precision": "usgs",
+   "loc_source": "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=2423",
+   "deposit_type": "niobium and rare earth deposit (carbonatite)",
+   "owners": [],
+   "state_partner": "No licence holder; Ministry of Mining and Blue Economy tendering niobium/REE rights (gazetted 27 Mar 2026); bids filed with National Mining Corporation (NAMICO)",
+   "stage": "stalled",
+   "stage_date": "2026-07",
+   "stage_source": "https://capitalfm.africa/lobby-seeks-to-halt-sh9-7tn-us-backed-mrima-hill-mining-deal-over-secrecy-claims/",
+   "licence": {
+    "status": "Cortec Mining Kenya (Pacific Wildcat, CA) licence revoked by government in 2013; ICSID claim dismissed (award 22 Oct 2018), annulment rejected; rights now under public tender",
+    "date": "2013",
+    "source": "https://afaa.ngo/page-18372"
+   },
+   "resource": {
+    "text": null,
+    "source": null
+   },
+   "output": {
+    "text": null,
+    "source": null
+   },
+   "offtake": [],
+   "finance": [],
+   "note": "A High Court petition seeks to halt a preliminary Kenya-US agreement to develop the site; a ruling on the government's jurisdiction objection was set for 9 Oct 2026, outcome not found.",
+   "note_source": "https://capitalfm.africa/lobby-seeks-to-halt-sh9-7tn-us-backed-mrima-hill-mining-deal-over-secrecy-claims/",
+   "loc_note": "USGS deposit point \"Mrima Hill\""
+  },
+  {
+   "id": "mabounie",
+   "name": "Mabounié (Maboumine)",
+   "country": "GA",
+   "lat": -0.85,
+   "lon": 10.6667,
+   "loc_precision": "usgs",
+   "loc_source": "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=2350",
+   "deposit_type": "polymetallic carbonatite-laterite: niobium, REE, tantalum, phosphate, uranium",
+   "owners": [
+    {
+     "name": "Dusk Gabon S.A. (subsidiary of New Energy Metals Holdings Ltd, incorporated in ADGM, Abu Dhabi)",
+     "stake": null,
+     "home": "AE",
+     "source": "https://www.danantaraindonesia.co.id/media-center/press-releases/perminas-new-energy-metals-and-danantara-support-integrated-rare-earth-cooperation-linking-gabons-upstream-with-indonesias-downstream"
+    }
+   ],
+   "state_partner": "Gabonese state took the deposit back from Eramet/Comilog in Nov 2022; current state share not disclosed",
+   "stage": "exploration",
+   "stage_date": "2026-05",
+   "stage_source": "https://ecomatin.net/or-terres-rares-le-gabon-durcit-les-regles-autour-du-projet-minier-maboumine",
+   "licence": {
+    "status": "Exploration permit issued to Dusk Gabon 28 Apr 2025; revised by Mines Minister order of 24 Mar (2026) adding gold and a 10% penalty on unspent FCFA 35.02bn investment programme",
+    "date": "2025-04",
+    "source": "https://ecomatin.net/or-terres-rares-le-gabon-durcit-les-regles-autour-du-projet-minier-maboumine"
+   },
+   "resource": {
+    "text": "Eramet-era: indicated 2.3 Mt Nb2O5 @ 1.2%; 2 Mt REO @ 1% (reporting code not stated, 2022)",
+    "source": "https://www.kitco.com/news/article/2022-11-25/french-mining-firm-eramet-transfers-mabounie-niobium-deposit-back-gabon"
+   },
+   "output": {
+    "text": "Potential 14,500 t/yr niobium and 18,000 t/yr rare earths per 'official 2023 data' (basis, e.g. REO, not stated)",
+    "source": "https://www.ecofinagency.com/news-digital/1802-53015-gabon-revives-maboumine-draws-indonesian-interest-in-rare-earths-push"
+   },
+   "offtake": [],
+   "finance": [],
+   "note": "On 16 Feb 2026 NEM signed a non-binding MoU with Indonesian state miner PT Perminas, backed by sovereign fund Danantara, on possible equity/debt in Maboumine and downstream processing in Indonesia.",
+   "note_source": "https://www.danantaraindonesia.co.id/media-center/press-releases/perminas-new-energy-metals-and-danantara-support-integrated-rare-earth-cooperation-linking-gabons-upstream-with-indonesias-downstream",
+   "loc_note": "USGS deposit point \"Mabounie\""
+  }
+ ],
+ "facts": [
+  {
+   "text": "Madagascar's USGS figure does not come from mine reports. It is \"estimated based on reported import data for China\".",
+   "source": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf"
+  },
+  {
+   "text": "USGS cut its estimate of Nigeria's 2024 output from 13,000 t REO (January 2025 edition, estimated from Chinese import data) to 1,500 t (February 2026 edition). Madagascar's 2024 figure fell from 2,000 t to 1,400 t.",
+   "source": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf",
+   "source_2": "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf"
+  },
+  {
+   "text": "Tanzania (890,000 t REO) and South Africa (860,000 t) are the only African countries with quantified rare-earth reserves in the USGS table. World reserves exceed 75 million t, and USGS records no mine output from either country in 2024 or 2025.",
+   "source": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf"
+  },
+  {
+   "text": "In June 2025 the EU named 13 'Strategic Projects' outside the bloc under its Critical Raw Materials Act. The only two rare-earth projects among them are African: Mkango's Songwe Hill in Malawi and Frontier Rare Earths' Zandkopsdrift in South Africa.",
+   "source": "https://single-market-economy.ec.europa.eu/document/download/60c576a5-435e-43e6-83de-c81f3652259b_en?filename=C_2025_3491_1_EN_annexe_acte_autonome_part1_v3.pdf"
+  },
+  {
+   "text": "The US International Development Finance Corporation (DFC) said in August 2026 that it had committed $62.8 million to rare-earth projects in Malawi, Angola, Madagascar and South Africa, none yet in production. Most of it is the $50 million it would put into TechMet's option on a stake in Phalaborwa, which Rainbow Rare Earths' own filings describe as not yet exercised.",
+   "source": "https://www.kitco.com/news/off-the-wire/2026-08-19/us-steps-fund-african-rare-earths-shunned-private-money-sources-say",
+   "source_2": "https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/dfc-to-fund-proposed-50m-techmet-investment/7921407"
+  },
+  {
+   "text": "Malawi banned exports of raw, unprocessed minerals from 21 October 2025 by presidential executive order. Rare earth elements are named in the order's list, but minerals processed in Malawi are exempt.",
+   "source": "https://www.alcircle.com/news/the-malawi-government-restricts-raw-minerals-exports-to-focus-on-local-processing-115994"
+  },
+  {
+   "text": "In June 2023 Namibia's Cabinet banned exports of unprocessed critical minerals, and rare-earth minerals are named in the ban. Small quantities can still be exported at the mines minister's discretion, with Cabinet endorsement.",
+   "source": "https://namibian.com.na/namibia-bans-export-of-unprocessed-lithium/"
+  },
+  {
+   "text": "The African Union's Green Minerals Strategy, adopted by the AU Executive Council in February 2025, says rare earths are mined in Angola, Burundi, Madagascar and South Africa. It lists projects in development in Malawi, South Africa, Tanzania, Madagascar, Morocco and Mozambique.",
+   "source": "https://au.int/sites/default/files/documents/44539-doc-AGMS_Final_doc.pdf"
+  },
+  {
+   "text": "In April 2025 China tightened export controls on several rare earths, including terbium and dysprosium, and kept those controls after suspending a wider October 2025 extension.",
+   "source": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths-heavy.pdf"
+  }
+ ],
+ "export_rules": [
+  {
+   "country": "NA",
+   "text": "Cabinet banned exports of unprocessed critical minerals: crushed lithium ore, cobalt, manganese, graphite and rare-earth minerals. Smaller quantities may be exported at the mines minister's discretion, subject to Cabinet endorsement. The decision was announced by Deputy ICT Minister Emma Theofelus at a Cabinet briefing. No gazette notice was found.",
+   "ree_named": true,
+   "date": "2023-06",
+   "source": "https://namibian.com.na/namibia-bans-export-of-unprocessed-lithium/"
+  },
+  {
+   "country": "MW",
+   "text": "A presidential executive order banned exports of raw, unprocessed minerals from 21 October 2025. It names uranium, rare earth elements, niobium, graphite, tantalum and others, and exempts minerals processed, refined or value-added in Malawi. Lindian Resources says Kangankunde is unaffected because it will export a concentrate.",
+   "ree_named": true,
+   "date": "2025-10",
+   "source": "https://www.alcircle.com/news/the-malawi-government-restricts-raw-minerals-exports-to-focus-on-local-processing-115994",
+   "source_2": "https://www.ecofinagency.com/news/2810-49885-malawi-bans-unprocessed-mineral-exports-to-force-local-value-addition"
+  },
+  {
+   "country": "MW",
+   "text": "In his February 2026 State of the Nation address, President Mutharika suspended all new mining licences and ordered an audit of existing permits. The October 2025 raw-export ban stays in place.",
+   "ree_named": true,
+   "date": "2026-02",
+   "source": "https://africasustainabilitymatters.com/malawi-suspends-mining-licences-bans-raw-mineral-exports-in-major-sector-reform/"
+  },
+  {
+   "country": "TZ",
+   "text": "The 2017 overhaul of the Mining Act gives the government a non-dilutable free-carried interest of at least 16% and restricts exports of raw resources for beneficiation abroad. This applies to all minerals. At Ngualla, Tanzania holds a 16% free-carried interest in Mamba Minerals, the licence holder.",
+   "ree_named": false,
+   "date": "2017",
+   "source": "https://www.dlapiperafrica.com/en/africa-wide/insights/africa-connected/issue-04/mining-in-tanzania-effects-of-the-mining-legal-framework-overhaul.html",
+   "source_2": "https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf"
+  },
+  {
+   "country": "UG",
+   "text": "A ban on exporting unprocessed minerals, imposed by President Museveni in February 2015, 'still stands', Energy Minister Ruth Nankabirwa said in October 2022. Rare earths are not named.",
+   "ree_named": false,
+   "date": "2015-02",
+   "source": "https://www.monitor.co.ug/uganda/news/national/ban-on-raw-minerals-export-to-stay-govt-3982402"
+  },
+  {
+   "country": "NG",
+   "text": "No gazetted ban was found. Nigeria makes local processing a condition of new licences, and Solid Minerals Minister Dele Alake said in May 2025 that 'The days of exporting raw minerals from pit to port are over.' Rare earths are not named.",
+   "ree_named": false,
+   "date": "2025-05",
+   "source": "https://statehouse.gov.ng/?p=54891"
+  }
+ ],
+ "deals": [
+  {
+   "text": "The DFC made a $50 million equity investment in TechMet to support the Phalaborwa Rare Earths project in South Africa, which will reprocess gypsum waste from legacy mining. The project needs about $317 million in total.",
+   "parties": "US DFC; TechMet; Rainbow Rare Earths",
+   "date": "2023-12",
+   "source": "https://www.dfc.gov/media/press-releases/dfc-approves-17-transactions-totaling-more-33-billion-q1-fy2024",
+   "source_2": "https://www.dfc.gov/sites/default/files/media/documents/9000116135.pdf"
+  },
+  {
+   "text": "The EU-Namibia memorandum of understanding on sustainable raw materials and renewable hydrogen, signed at Sharm El-Sheikh (COP27), is non-binding. It cites rare earth elements for permanent magnets as an example of the critical raw materials it covers.",
+   "parties": "European Commission; Republic of Namibia",
+   "date": "2022-11",
+   "source": "https://single-market-economy.ec.europa.eu/document/download/56b5fdff-bc0e-4b3a-8e0f-6b9fc907617b_en"
+  },
+  {
+   "text": "The EU named Songwe Hill (Malawi, Mkango Resources) and Zandkopsdrift (South Africa, Frontier Rare Earths) as Strategic Projects under its Critical Raw Materials Act. They are 2 of the 13 projects outside the EU, which need about EUR 5.5 billion in total capital.",
+   "parties": "European Commission; Mkango Resources; Frontier Rare Earths",
+   "date": "2025-06",
+   "source": "https://ec.europa.eu/commission/presscorner/detail/en/ip_25_1419",
+   "source_2": "https://single-market-economy.ec.europa.eu/document/download/60c576a5-435e-43e6-83de-c81f3652259b_en?filename=C_2025_3491_1_EN_annexe_acte_autonome_part1_v3.pdf"
+  },
+  {
+   "text": "Pensana announced approvals for about $268 million to build Longonjo in Angola. The package included $81.2 million from the Africa Finance Corporation in a roughly $160 million loan with Absa, a $54.9 million AFC convertible loan, and $38 million from Angola's sovereign wealth fund. All of it was subject to final documents.",
+   "parties": "Pensana; Africa Finance Corporation; Absa; FSDEA (Angola)",
+   "date": "2025-03",
+   "source": "https://www.globalminingreview.com/mining/21032025/pensana-secures-us268-million-for-rare-earth-project/"
+  },
+  {
+   "text": "Shenghe Resources (Singapore) completed its takeover of Peak Rare Earths, buying the shares it did not already hold for A$0.443 each in cash. Peak holds 84% of Ngualla in Tanzania, and Shenghe already had offtake rights to 100% of the project's output for its first seven years.",
+   "parties": "Shenghe Resources; Peak Rare Earths; Government of Tanzania (16%)",
+   "date": "2025-09",
+   "source": "https://announcements.asx.com.au/asxpdf/20250930/pdf/06pw9y37glkhgh.pdf",
+   "source_2": "https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf"
+  },
+  {
+   "text": "The US Trade and Development Agency gave a $1,875,000 grant for the metallurgy and process-engineering work of a prefeasibility study at Altona's Monte Muambe rare-earth project in Tete, Mozambique.",
+   "parties": "USTDA; Altona Rare Earths / Monte Muambe Mining",
+   "date": "2026-02",
+   "source": "https://ustda.gov/?p=31259",
+   "source_2": "https://www.ajbell.co.uk/news/articles/brief-altona-inks-19-million-grant-deal-us-government"
+  },
+  {
+   "text": "Japan's state agency JOGMEC raised its earn-in spending commitment on Namibia Critical Metals' Lofdal heavy-rare-earth project by C$3 million to fund a feasibility study, which is targeted for Q2 2027.",
+   "parties": "JOGMEC; Namibia Critical Metals",
+   "date": "2026-03",
+   "source": "https://finance.yahoo.com/sectors/energy/articles/namibia-critical-metals-amends-lofdal-130300836.html"
+  },
+  {
+   "text": "DFC gave project development funding to Pensana for testing at Longonjo and for developing refining facilities in Angola. No amount is published.",
+   "parties": "US DFC; Pensana",
+   "date": "2026",
+   "source": "https://www.dfc.gov/investment-story/supporting-development-rare-earth-processing-facility-angola"
+  },
+  {
+   "text": "The DFC said it had committed $62.8 million in total to rare-earth projects in Malawi, Angola, Madagascar and South Africa, about $50 million of it to Phalaborwa. Two DFC executives said private investors remain reluctant to fund the sector.",
+   "parties": "US DFC",
+   "date": "2026-08",
+   "source": "https://www.kitco.com/news/off-the-wire/2026-08-19/us-steps-fund-african-rare-earths-shunned-private-money-sources-say"
+  }
+ ],
+ "usgs_mcs2026": {
+  "production_2025": {
+   "MG": 2700,
+   "NG": 1500,
+   "ZA": 0,
+   "TZ": 0
+  },
+  "production_2024": {
+   "MG": 1400,
+   "NG": 1500,
+   "ZA": 0,
+   "TZ": 0
+  },
+  "production_2024_as_published_mcs2025": {
+   "MG": 2000,
+   "NG": 13000,
+   "ZA": 0,
+   "TZ": 0
+  },
+  "production_2023_as_published_mcs2025": {
+   "MG": 2100,
+   "NG": 7200,
+   "ZA": 0,
+   "TZ": 0
+  },
+  "reserves": {
+   "ZA": 860000,
+   "TZ": 890000,
+   "MG": null,
+   "NG": null
+  },
+  "reserves_note": "USGS lists Madagascar and Nigeria reserves as NA (not available). It shows South Africa and Tanzania production as a dash, meaning zero. Units are metric tons of REO equivalent. No other African country has its own row; any other African output is inside 'Other' (1,000 t in 2024, 550 t in 2025). Reserves for ZA and TZ are the same in the 2025 and 2026 editions.",
+  "world_production_2025": 390000,
+  "world_production_2024_revised": 380000,
+  "world_production_2024_as_published_mcs2025": 390000,
+  "world_reserves": ">75,000,000",
+  "world_reserves_as_published_mcs2025": ">90,000,000",
+  "footnotes": [
+   "[MCS 2026, header] Data in metric tons, rare-earth-oxide (REO) equivalent, unless otherwise specified",
+   "[MCS 2026, fn 1] Data include lanthanides and yttrium but exclude most scandium.",
+   "[MCS 2026, fn 12, attached to Madagascar 2024 and 2025 and to Burma, Malaysia, Thailand and Vietnam; NOT attached to Nigeria] Estimated based on reported import data for China. Source: Trade Data Monitor Inc.",
+   "[MCS 2026, World Mine Production and Reserves] Significant revisions were made to the 2024 production for Australia, Brazil, Burma, Madagascar, Nigeria, and Vietnam based on Government and industry reports.",
+   "[MCS 2025, fn 12, attached to Madagascar and Nigeria 2023 and 2024] Estimated based on reported import data for China. Source: Zen Innovations, Global Trade Tracker.",
+   "[MCS 2025, Events, Trends, and Issues] Global mine production was estimated to have increased to 390,000 tons of REO equivalent largely owing to increased mining and processing in China, Nigeria, and Thailand.",
+   "[MCS 2026, Yttrium chapter] Although mined rare earth production in Burma, India, Madagascar, Malaysia, Nigeria, and Thailand was significant, reliable information on yttrium reserves was not available."
+  ],
+  "source": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf",
+  "source_mcs2025": "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+  "source_yttrium": "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-yttrium.pdf",
+  "edition_date": "February 2026 (MCS 2026); January 2025 (MCS 2025)"
+ },
+ "notes": {
+  "madagascar_output": {
+   "text": "USGS MCS 2026 estimates Madagascar REE mine output at 2,700 t REO in 2025 (1,400 t in 2024). A footnote says both figures are estimated from reported Chinese import data (Trade Data Monitor), and no operation is named. USGS's 2019 Minerals Yearbook names QMM (Rio Tinto 80%/state 20% then, Mandena) as the country's REE producer, recovering monazite from tailings since 2018: about 4,000 t REO in 2019, with capacity around 4,400 t REO. Rio Tinto says QMM produces monazite, and The Ecologist (Feb 2026) reports QMM ships it to China. The 2025 figure is consistent with QMM monazite exports, but no fetched source attributes it explicitly. Vara Mada and Ampasindava are not producing.",
+   "sources": [
+    "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf",
+    "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-madagascar.pdf",
+    "https://www.riotinto.com/en/operations/madagascar",
+    "https://theecologist.org/2026/feb/02/will-rio-tinto-leave-madagascar-toxic-legacy"
+   ]
+  },
+  "nigeria_output": {
+   "text": "USGS MCS 2026 gives Nigeria 1,500 t REO mine production in both 2024 and 2025, reserves NA. That is a big cut from MCS 2025, which put Nigeria at 7,200 t (2023) and 13,000 t (2024), with a footnote saying the figures were estimated from Chinese import data. MCS 2026 says the 2024 Nigeria figure was significantly revised 'based on Government and industry reports'. The USGS 2024 Nigeria chapter (data to Mar 2026) tabulates monazite concentrate at 210 t (2020), 590 t (2021e), 2,535 t (2022), 2,620 t (2023) and 2,600 t (2024e). Its separate oxide-content row runs 110, 300, 1,300e, 1,400e and 1,400e t REO. Monazite concentrate is the only rare-earth mineral USGS tabulates for Nigeria. USGS says monazite mining restarted in 2017, and that critical minerals in Nigeria are produced by artisanal and small-scale miners as well as private companies. It names no monazite mine, area or buyer. It records tin ores and concentrates going to China. The federal research council RMRDC sampled monazite in Kano, Taraba, Plateau, Kaduna and Bauchi in 2025. A private Nigerian seller was offering 55-60% REO monazite concentrate in Aug 2026. No gazetted ban on raw-mineral exports found; the minister's Oct 2023 line that 'the era of exporting raw materials is over' is a policy statement. No Chinese-built REE plant found; the Chinese plant the USGS chapter names in Nasarawa processes lithium.",
+   "sources": [
+    "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf",
+    "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+    "https://www.usgs.gov/centers/national-minerals-information-center/nigeria",
+    "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-nigeria.pdf",
+    "https://rmrdc.gov.ng/project-details.php?id=80",
+    "https://miningfocusafrica.com/?p=13916",
+    "https://fmino.gov.ng/era-of-exporting-raw-materials-is-over-says-alake/"
+   ]
+  }
+ },
+ "left_out": [
+  {
+   "name": "Glenover (Limpopo)",
+   "why": "Owned by Afrimat (JSE) since 2021, not Fertoz. Only a techno-economic assessment / concept study has been done for rare earths (SAMREC 19.47 Mt @ 1.52% TREO+Y2O3; 647 ha mining right; phosphate stockpiles processed). Afrimat says it is still optimising the flowsheet. No PFS or DFS. Metallurgical test work was done in South Africa, China, Germany and the USA. Sources: https://www.afrimat.co.za/future-materials-metals/ and https://www.afrimat.co.za/press-releases/the-glenover-rare-earth-project/"
+  },
+  {
+   "name": "Mineral sands monazite (Richards Bay Minerals, Tronox Namakwa Sands, MRC Tormin)",
+   "why": "Heavy mineral sands operations, known monazite/thorium hosts. No rare earth project or study announced."
+  },
+  {
+   "name": "Tundulu / Nathace Hill (Malawi)",
+   "why": "Exploration only, no JORC resource; AuKing Mining agreed in Apr 2026 to buy 100% (DY6 Metals named as earlier holder in press). Not an Mkango asset."
+  },
+  {
+   "name": "Eturra (Malawi/Tanzania)",
+   "why": "No rare-earth project of this name found in any search."
+  },
+  {
+   "name": "Machinga (Malawi)",
+   "why": "Early exploration (prospecting licences, AuKing deal up to A$4m); seen in search snippets only, not fetched."
+  },
+  {
+   "name": "Salambidwe (Malawi)",
+   "why": "Undrilled exploration ground (AuKing via Green Exploration); search snippets only."
+  },
+  {
+   "name": "Chambe Basin, Mulanje (Malawi)",
+   "why": "Ionic-clay exploration; licence expired Feb 2020 and outcome of re-application unknown; search snippets only."
+  },
+  {
+   "name": "Other Tanzanian REE projects",
+   "why": "No other Tanzanian rare-earth project at feasibility stage or beyond found; a May 2026 overview says none beyond Ngualla."
+  },
+  {
+   "name": "Mauze (Malawi)",
+   "why": "No standalone project found; the 2022 Songwe NI 43-101 report only notes that Songwe Hill abuts Mauze Hill."
+  },
+  {
+   "name": "Chilwa-area mineral sands (Malawi)",
+   "why": "No rare-earth project at feasibility stage or beyond surfaced in searches."
+  },
+  {
+   "name": "Eureka (Namibia; ReeXploration Inc., formerly E-Tech Resources, TSX-V)",
+   "why": "Monazite discovery at trenching/exploration stage, no resource-based study found; 2026 work is a uranium drill programme"
+  },
+  {
+   "name": "Kameelburg (Namibia; Aldoro Resources, ASX:ARN, AU)",
+   "why": "Large carbonatite resource (about 520 Mt per Ecofin, May 2026) but no published scoping study or PFS found; Ecofin only mentions an ongoing feasibility assessment"
+  },
+  {
+   "name": "Eisenberg (Namibia; Broadmind Mining, Namibian private)",
+   "why": "Inferred resource only; no granted mining licence or feasibility study found (licence application within EPL 6688 reported); 2022 target of 2026 production not evidenced"
+  },
+  {
+   "name": "Ondoto (Namibia; Ondoto Rare Earth, private)",
+   "why": "Private bastnaesite project; no public feasibility study found"
+  },
+  {
+   "name": "Coola (Angola; Pensana)",
+   "why": "Exploration carbonatite 30 km from Longonjo; Sep 2026 farm-out to ASX-listed Tyranna Resources (US$2.6m over 3 years, Pensana diluting to 20%)"
+  },
+  {
+   "name": "Sukulu / Osukuru (Uganda; Guangzhou Dongsong Energy Group, CN)",
+   "why": "Phosphate fertiliser and steel complex; rare earths only a planned by-product, no REE study or production found"
+  },
+  {
+   "name": "Busumbu / other Tororo carbonatites (Uganda)",
+   "why": "No current REE project, study or licence found"
+  },
+  {
+   "name": "Second Ionic Rare Earths project in Africa",
+   "why": "None found; Ionic's other assets are outside Africa (Brazil, UK recycling)"
+  },
+  {
+   "name": "Bekisopa (Akora Resources, Madagascar)",
+   "why": "Iron ore project, not REE (per brief); not researched."
+  },
+  {
+   "name": "Kwale mineral sands (Base Titanium, Kenya)",
+   "why": "Titanium/zircon sands; no REE or monazite product found in this pass; not researched further."
+  },
+  {
+   "name": "Ruri Hills (Kenya)",
+   "why": "Carbonatite REE prospect at early exploration; no feasibility-stage work found; not researched."
+  },
+  {
+   "name": "Other Burundi or Gabon REE prospects",
+   "why": "None at feasibility stage or beyond found in this pass."
+  },
+  {
+   "name": "Nigeria monazite concentrate output (artisanal and small-scale)",
+   "why": "Real and counted by USGS (about 1,500 t REO a year), but no mine, operator or plant is named in any source. See nigeria_output."
+  },
+  {
+   "name": "Monte Muambe (NeoTerra Group, ex-Altona Rare Earths), Tete, Mozambique",
+   "why": "Pre-feasibility not done. Contractor for the USTDA-funded PFS was picked on 20 Aug 2026, with the study due to start in Sep 2026. Has a 25-year mining licence and a JORC resource of 13.6 Mt at 2.42% TREO."
+  },
+  {
+   "name": "Kenmare Moma mineral sands, Mozambique",
+   "why": "Monazite only as a minor part of the mixed ZrTi by-product concentrate (Q2 2026 report). No separate REE product and no REO tonnage disclosed."
+  },
+  {
+   "name": "Dingsheng Minerals, Chibuto, Mozambique",
+   "why": "Chinese heavy mineral sands (titanium) operation, reported stalled in 2026. No monazite or REE product found (search only)."
+  },
+  {
+   "name": "Egyptian Black Sand Co., Burullus plant, Egypt",
+   "why": "Sands plant inaugurated Oct 2022 (NMA holds 15%). Monazite was named as planned output, but no evidence it is separated or sold. The USGS 2024 Egypt chapter has no rare-earth row."
+  },
+  {
+   "name": "Eramet Grande Cote (GCO), Senegal",
+   "why": "Eramet markets only zircon and titanium products from GCO; no monazite or REE product. No REE row in the USGS 2024 Senegal chapter."
+  },
+  {
+   "name": "Sierra Rutile / Sembehun, Sierra Leone",
+   "why": "Rutile, ilmenite and zircon only; no monazite product found (search only). No REE row in the USGS 2024 Sierra Leone chapter."
+  },
+  {
+   "name": "Nkombwa Hill, Zambia",
+   "why": "Exploration only; old JORC resource and no study found. Marula Mining gave up its interest in Dec 2024 (search only)."
+  },
+  {
+   "name": "Bou Naga, Mauritania",
+   "why": "Mined for yttrium and thorium in 1967-68 only; no current project found (search only)."
+  },
+  {
+   "name": "Lamlaga and Twihinate prospects (ONHYM with Managem), Morocco",
+   "why": "Exploration prospects only (search only)."
+  },
+  {
+   "name": "Gcwihaba (Tsodilo Resources), Botswana",
+   "why": "Conceptual exploration target only, with drilling planned for 2026 (search only)."
+  },
+  {
+   "name": "Chishanya and Kapfrugwa, Zimbabwe",
+   "why": "Old exploration (Prospect Resources 2021, Rainbow 2019); no current project found (search only)."
+  },
+  {
+   "name": "Cameroon, DR Congo, Cote d'Ivoire, Ethiopia, Ghana, Guinea, Mali, Rwanda",
+   "why": "No REE project at feasibility or beyond found. The USGS 2024 country chapters for these, and for Egypt, Mauritania, Mozambique, Senegal, Sierra Leone and Zambia, contain no rare-earth production row."
+  },
+  {
+   "name": "Hasetins rare earth and critical metal processing plant (Nigeria)",
+   "why": "A processing plant under construction whose feedstock and products are not disclosed; the state governor named platinum, uranium and chromium. Not shown as a rare-earth project on the evidence found.",
+   "source": "https://nairametrics.com/2026/06/24/hasetins-is-building-nigerias-400m-rare-earth-plant-the-fg-has-one-key-demand/"
+  }
+ ],
+ "open_questions": [
+  "Phalaborwa DFC: Miningmx (5 Oct 2026) says DFC 'has already committed $50m towards construction funding'. Rainbow's Dec 2023 RNS and Mar 2026 interims call it a US$50m equity option via TechMet, not exercised. DFC's Apr 2024 public summary says DFC 'proposes to invest up to $50 million in equity' (https://www.dfc.gov/sites/default/files/media/documents/9000116135.pdf). Treat it as an option unless DFC or Rainbow confirm.",
+  "Phalaborwa: did Bosveld complete the notarial lease and the transfer of the stacks to an SPV (long-stop 31 Dec 2025)? Rainbow's option to buy Bosveld's 15% for 38.9m new shares runs to 30 Jun 2027.",
+  "Phalaborwa: Rainbow's website still says first production from 2028; Oct 2026 reporting says early 2029. The 1,800 tpa NdPr figure is from the Dec 2024 interim study and may change in the Q4 2026 PFS.",
+  "Phalaborwa foreign ties: TechMet (Irish-registered, DFC-backed) holds 10.7% of Rainbow (https://www.rainbowrareearths.com/investors/shareholder-information/major-shareholders/). Offtaker Neo (Toronto HQ) has plants in Canada, Estonia, China, Germany, Thailand and the UK. Traxys and two US family offices joined the Mar 2026 GBP 11.1m (c. US$14.6m) raise (https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/subscription-raises-11-1m-from-investors/9499206). Rainbow is registered in Guernsey (Mar 2026 interims: https://www.investegate.co.uk/announcement/rns/rainbow-rare-earths-limited-npv--rbw/interim-results-for-six-months-to-31-december-2025/9500041), hence home GG.",
+  "Steenkampskraal: the stake split between Steenkampskraal Holdings and Bora is undisclosed. SHL's country of incorporation was not found (no UK Companies House entry). Bora appears as both 'Bora Mining Services' (2024) and 'Bora Mining Investments' (company site). Bora's ZA home is taken from boramining.co.za (Midrand head office, '100% Black Owned').",
+  "Steenkampskraal: stage set to producing on the company's statement at the 6 Oct 2026 opening that 'Production is under way'. No shipment has been confirmed yet, so it could still be read as commissioning.",
+  "Steenkampskraal: the company overview says the mining right runs 20 years from 2 Jun 2010 (renewable), which matches the undated sentence on the licences page, so the 2030 expiry is probably the mining right's. COR-23 dates are unconfirmed. The reserve excludes a pending Section 102 extension. The NI 43-101 report date is not stated. The site's text says 665,000 t @ 14.5%, but its table gives 605,000 t @ 14.4%.",
+  "Steenkampskraal: the IDC funding amount and its terms (loan or equity) are undisclosed.",
+  "Zandkopsdrift: reserve tonnage and grade from the 2025 updated PFS were not found. Older figures such as 41.12 Mt @ 1.92% TREO (c. 2015) appeared only in search snippets and were not verified. Stakes of Frontier, IDC, KOMIR and the BEE holders are unknown. No coordinates were found in a fetched source.",
+  "Zandkopsdrift: Frontier says multiple EU funding pathways are being evaluated (News24, Feb 2026). Watch for EU, EIB or Carester-linked finance.",
+  "Malawi export rules: Presidential Executive Order No. 2 of 2025 bans raw-mineral exports; the MMRA letter of 28 Oct 2025 says Kangankunde is exempt because monazite is concentrated in Malawi before export. Draft Beneficiation and Value Addition Regulations and amendments to the Mines and Minerals Act 2023 were under consultation until 10 Oct 2026. https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61346521 ; Mining Minister quoted 24 Sep 2026 saying no company may export raw minerals: https://www.nyasatimes.com/lindian-resources-moves-to-upgrade-licence-as-malawi-tightens-mineral-export-rules/",
+  "Kangankunde licence class: the Malawi parliament (4 Aug 2026) said the operation is large-scale but runs on a medium-scale licence; the Attorney General (14 Aug 2026) said Rift Valley Resource Developments applied to upgrade and MMRA was to meet the company on 19 Aug 2026. Outcome not found. https://allafrica.com/stories/202608040027.html ; https://justice.gov.mw/node/566",
+  "Kangankunde state stake: no fetched source states a Government of Malawi equity interest or a Mining Development Agreement. Mkango's disclosures say the government may take a free 10% on grant of a large-scale licence, so an upgrade might bring one in (inference, unconfirmed).",
+  "Kangankunde US interest: US Deputy Assistant Secretary of State Nicholas Checker visited in Dec 2025 to discuss a possible partnership; no US funding announced. https://www.ecofinagency.com/news-industry/1812-51499-us-interest-in-malawi-rare-earths-extends-to-kangankunde-project",
+  "Kangankunde downstream: Lindian owns the SARECO MREC plant in Stepnogorsk, Kazakhstan (formerly Kazatomprom), meant to process Kangankunde concentrate; Carester (France) has a binding 10-year offtake for 70% of SARECO heavy rare earth product, and a Gerald Metals sale agreement was terminated in Jun 2026. https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643",
+  "Kangankunde licence date: April 2022 comes from a parliamentary report quoted by allAfrica; exact day not found.",
+  "Songwe tenure: the 2022 NI 43-101 report lists Retention Licence RTL 0001/21 granted 1 Jun 2021, valid to 1 Jun 2026 (non-extendable), and Mkango said in Sep 2026 that the large-scale mining licence is still not granted, so current tenure is unclear. https://minedocs.com/22/Songwe_Hill-TR-070121022.pdf",
+  "Songwe export: the Mar 2026 DFS lists Malawi government approval to sell the MREC as a risk; the MREC is to go to Mkango's planned Pulawy plant in Poland for separation. https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/feasibility-study-songwe-pfs-results-pu-awy/9481471",
+  "Ngualla China link: Shenghe (Aug 2026) says the project awaits Chinese technology-export approval. Reuters reported in Sep 2026 that state-owned China Rare Earth Group is in talks to buy control of Shenghe; Shenghe denied it, citing its controlling shareholder, the Institute of Multipurpose Utilisation of Mineral Resources. https://www.businessday.co.za/world/international-companies/2026-09-20-how-shenghe-deal-could-reshape-us-and-australias-rare-earth-stakes/",
+  "Tanzania rules: law gives the state not less than 16% non-dilutable free-carried shares in a mining company and a right to acquire up to 50%. Peak and the government also set up Mamba Refinery Corp (84/16) and studied a Tanzanian refinery, with a longer-term plan for a mixed carbonate plant in Tanzania. https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf",
+  "Teesside (UK): Peak secured a site for a rare earth refinery, then dropped it in favour of a standalone concentrate project and sold it on 9 Jul 2025 for GBP 3.5m. https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf",
+  "Ngualla takeover price: shareholders were paid A$0.443 per share on 30 Sep 2025, above the A$0.359 minimum in the May 2025 deal (total A$157.99m at signing). Press reports of an A$195m final value were not verified.",
+  "Ngualla output: older press cites 37,200 t/y concentrate; the Aug 2025 scheme booklet gives 16.2 kt/y. The booklet figure is used.",
+  "Ngualla coordinates are from Wikipedia (Mount Ngualla), not a technical report; treat as approximate.",
+  "Wigu Hill: former owner Montero Mining agreed to settle its dispute with Tanzania over the project for US$27m in three instalments (date not visible on page). https://www.northernminer.com/news/montero-mining-settles-with-tanzania-for-us27m/1003875175/ No Vital Metals update on the licence after 2023 was found.",
+  "Songwe MDA: Mining Development Agreement signed 26 Jul 2024 (announced 29 Jul 2024) with a 5% royalty on gross revenue and a 10% non-diluting equity interest for the Malawi Government. https://www.investegate.co.uk/announcement/rns/mkango-resources--mka/mkango-signs-mda-with-malawi-government-for-songwe/8334631",
+  "Ngualla licence changes: the SML area was expanded from 18 to 51 km2 and the initial term extended to 30 years (announced 26 Apr 2024). https://announcements.asx.com.au/asxpdf/20250811/pdf/06mrcb48sjb3qs.pdf",
+  "Kangankunde licence detail: Lindian names it Mining Licence MML0290/22 (medium-scale) and says approval was given during FY2026 to enlarge the area from about 900 to 2,500 ha. https://wcsecure.weblink.com.au/clients/lindianresources/headline.aspx?headlineid=61345643",
+  "Namibia: Cabinet in June 2023 banned export of unprocessed critical minerals 'such as' crushed lithium ore, cobalt, manganese, graphite and rare earth minerals, with ministerial exemptions for small volumes (https://www.mining-technology.com/news/namibia-ban-unprocessed-minerals-export). Lofdal's DFS now aims to make separate light and heavy rare earth carbonates in Namibia, aligned with domestic beneficiation goals (https://www.namibiacriticalmetals.com/wp-content/uploads/2026/07/260720-NMI-Press-Release-Budget-SGS-FINAL-.pdf). Current enforcement status of the ban not checked.",
+  "Uganda: ban on export of unprocessed minerals in place since Feb 2015, restated by the energy minister in Oct 2022 (https://www.monitor.co.ug/uganda/news/national/ban-on-raw-minerals-export-to-stay-govt-3982402). Unclear whether Makuutu's mixed rare earth carbonate counts as processed.",
+  "Makuutu ownership: Ionic still reports 60% of Rwenzori Rare Metals (June 2026 quarterly, https://investorpa.com/announcement/322913/); the Dec 2023 conditional purchase of a further 34% from Rare Earth Elements Africa (to 94%) has not been shown as completed. Holders of the remaining stake not verified.",
+  "Makuutu state participation: in Feb 2023 Ionic said a mineral development agreement under negotiation gives the Ugandan government an option for a free carry or an interest up to 15% (https://www.cruxinvestor.com/posts/ionic-rare-earths-ixr-us-funders-want-to-secure-heavy-rare-earths); no current confirmation found.",
+  "Makuutu China/US links: Apr 2021 non-binding MoU with Chinalco subsidiary China Rare Metals and Rare Earth (Jiangsu) covering potential offtake and funding (https://www.mining-technology.com/news/ionicre-mou-makuutu-rare-earths-project/); by Jul 2026 Ionic says output is not committed to China and cites US partner talks. Makuutu was also added to Minerals Security Partnership discussions per https://ionicre.com/makuutu/.",
+  "Makuutu DFS numbers (about 1,300 tpa REO first 10 years, 172.9 Mt reserve @ 848 ppm, capex US$120.8m) were seen only in search snippets; the Mar 2023 ASX PDF could not be read, so they are not in the record.",
+  "Makuutu licence date: company table says LML00334 granted 28 Dec 2023; it was signed by the energy minister in Kampala on 17 Jan 2024 and was the first large-scale licence under the Mining Act 2022 (https://www.globalminingreview.com/exploration-development/19012024/ionic-rare-earths-project-mining-licence-signed-by-ugandan-government/).",
+  "Longonjo ownership: Angolan state 10% and other Angolan partners 6% come only from Ecofin (Mar 2026); Pensana's filings say only that minority shareholders are free-carried (https://pensana.co.uk/wp-content/uploads/2025/10/Pensana-integrated-annual-report-2025.pdf). FSDEA's own stake in Ozango after its US$25m (which cut Pensana from 84% to 68.4%) is not disclosed; the 10%/6% may predate that dilution.",
+  "Longonjo debt: AFC approved US$81.2m of the ~US$160m loan plus a US$54.9m convertible in Mar 2025, but 2026 updates describe only Absa debt backed by US EXIM (https://pensana.co.uk/wp-content/uploads/2026/06/Operational-Update-8th-June-2026.pdf). Is AFC still in? The debt had not closed by 25 Sep 2026.",
+  "Longonjo Gulf money: Cascade Natural Resources terms shifted. Apr 2026 said 38.2% of Sable Min for US$150m; the June 2026 update says about 4% of Pensana and of Sable Min; Aug 2026 says State of Qatar backers widened scope to downstream and a NASDAQ listing, with US$150m still outstanding (https://pensana.co.uk/wp-content/uploads/2026/08/Update-on-Cascade-Financing-6-August-2026.pdf). Appointment of Sheikh Dr Badr bin Dalhim Al-Faheid Al-Hajri to Cascade's board was not yet effective on 17 Aug 2026 (https://pensana.co.uk/wp-content/uploads/2026/08/Update-on-Strategic-Investor-Board-Appointment.pdf).",
+  "Longonjo schedule slip: first production 2027 (Mar and Jun 2026), then 2028 at about 25% complete (https://pensana.co.uk/wp-content/uploads/2026/08/Trump-announces-US3-billion-support-for-U.S.-critical-minerals-supply-chains.pdf), then late 2028 (Sep 2026).",
+  "Pensana strategy: NASDAQ listing planned for mid-2026 (Dec 2025) not done by Sep 2026. Saltend (UK) separation design is being re-optimised for deployment in 'the most operationally and commercially advantageous location', alongside a US mine-to-magnet chain with eVAC in South Carolina and Japanese partners; Hanwa is sponsoring a separation study under Japan's METI Global South initiative (https://pensana.co.uk/wp-content/uploads/2026/06/Operational-Update-8th-June-2026.pdf).",
+  "Longonjo and the Lobito corridor: MREC to be railed 273 km to Lobito; Pensana cites the US DFC-backed US$553m rail concession financing and EU support (https://pensana.co.uk/wp-content/uploads/2026/03/Construction-on-track-for-2027-first-production.pdf).",
+  "Lofdal JOGMEC stake history (verified): 40% after Term 2 (C$10m) as of Jan 2026 (https://www.namibiacriticalmetals.com/wp-content/uploads/2026/01/130126-NMI-Press-Release-PFS-Filed-on-SEDAR-FINAL.pdf); Mar 2026 amendment raised Term 3 from C$10m to C$13m (total C$23m) (https://www.namibiacriticalmetals.com/wp-content/uploads/2026/03/260330-NMI-Press-Release-JV-Amendment-SEDAR.pdf); 50% earned Jul 2026 via TJNREC. NMI's 45% is implied by the release (NMI may participate up to 45%; HDN 5%); company boilerplate still prints NMI 95% / HDN 5% at subsidiary level.",
+  "Lofdal approvals: on 31 Aug 2026 NMI said shareholder consent, regulatory approvals and final TSX-V approval were still pending for the TJNREC transaction (https://www.webull.com/news/15499415444530176).",
+  "Lofdal DFS timing: company target Q2 2027 (Mar 2026 release) vs Q3 2027 in Crux Investor (Aug 2026, https://www.cruxinvestor.com/posts/namibia-critical-metals-secures-new-partner-and-funding-for-lofdal-heavy-rare-earth-project-towards-fid). PFS reserve 32 Mt @ 0.176% TREO, capex US$347.9m, after-tax NPV5 US$275.5m (https://www.cruxinvestor.com/posts/namibia-critical-metals-reports-positive-pre-feasibility-study-for-lofdal-heavy-rare-earths-project).",
+  "Lofdal ML 200 exact grant date: expiry 10 May 2046 implies grant around May 2021 (11 May 2021 per an unfetched 2024 technical-report snippet); announced 22 Jul 2021.",
+  "Coordinates: none found in a fetchable primary source for Makuutu or Lofdal (the Lofdal NI 43-101 PFS PDF is over 10 MB). Longonjo uses town coordinates as an approximation.",
+  "Madagascar 2025 output (USGS 2,700 t REO): no source names the operation. It is consistent with QMM monazite shipped to China, but this attribution is unconfirmed. See madagascar_output.",
+  "Ampasindava: no arbitration found. Fetched history shows a 2011-2023 national moratorium on new mining licences and ownership churn rather than arbitration: Tantalus/TRE AG bankrupt 2015, then REO Magnetic, ISR Capital/Reenova (SG), GRM (2021) and Harena (Wikipedia, https://en.wikipedia.org/wiki/Ampasindava_mine). Confirm with Madagascar's mining cadastre (BCMM).",
+  "Ampasindava Chinese link: Reenova Investment Holding (SG, 75% holder at the time) signed a non-binding MOU with China Nonferrous Metal Industry's Foreign Engineering and Construction Co. (NFC, Shenzhen-listed) on 24 Jun 2019 (SGX filing https://links.sgx.com/1.0.0/corporate-announcements/42Z73Y5GBREB57C4/574835_RIHL%20-%20Announcement%20-%20Quarterly%20Update%20Listing%20Rule%201313.2%20for%202Q2019%20-%2015%20Aug%202019.pdf). Not followed by any known deal.",
+  "Ampasindava: the exploitation permit number, grant date, term and area are not in the 12 Oct 2026 RNS. Licence PR6698 appears only in secondary coverage, which was not fetched. Some outlets give the DFC amount as $4.48m, but the RNS says $4.84m. Harena signed the Cahier des Charges Minières (CCM) on 11 Aug 2026 (RNS https://www.investegate.co.uk/announcement/rns/harena-resources-plc--hree/mining-terms-and-conditions-ccm-signed/9714357). Reuters via Engineering News (https://www.engineeringnews.co.za/article/us-backs-madagascar-rare-earths-project-in-push-to-loosen-chinas-supply-chain-grip-2026-07-28, Jul 2026) named MP Materials, USA Rare Earth and Solvay (EU) as potential refining partners; no offtake is signed.",
+  "Vara Mada: no news on the investment agreement after Aug 2026. AllAfrica (May 2026) says it must be approved by the High Constitutional Court and Parliament before work starts (https://allafrica.com/stories/202605040006.html). No Madagascar state equity is disclosed; the Dec 2024 MOU reportedly includes a 5% royalty, but this was not fetched. Coordinates were not found.",
+  "QMM: the monazite resource/reserve was not fetched (Rio Tinto 20-F too large). Monazite volumes since 2019 and buyer names are undisclosed. The Ecologist reports operations were suspended Nov 2025 to 6 Jan 2026, which may explain a lower 2025 figure. Rio Tinto has put its titanium business under strategic review.",
+  "Gakara: AFP reports a presidential order suspending foreign miners from 14 Jul 2021, which was not fetched. Rainbow still describes government actions as not in line with the mining convention, with no resolution as of Mar 2026. Historical offtake was not researched.",
+  "Mrima Hill: sources disagree on the Cortec licence date. afaa.ngo gives 2013; Citizen/bilaterals report a 10 Apr 2015 cancellation of 65 licences by CS Najib Balala. Resource figures in news (5.8 Mt Nb / 48.7 Mt REE, or 6.4/53.6 Mt) are unverified and not used. The tender winner and the outcome of the 9 Oct 2026 ruling are unknown.",
+  "Mrima Hill bidders: RareX and Iluka (AU) filed a joint application with NAMICO in Apr 2025. A US consortium, Mrima Earth Ltd, has also bid, and Chinese state companies reportedly signalled interest (https://miningmx.com/news/battery-minerals/2026-04-07-kenya-opens-bidding-for-prized-rare-earths-deposit). President Ruto said Kenya and the US finalised a preliminary agreement on the site (https://citizen.digital/article/petition-filed-to-stop-proposed-kenya-us-mrima-hill-mining-deal-n385178).",
+  "Mabounié: GabonReview (Feb 2026) says 'Eramet-Comilog en détient 76%', which contradicts Eramet's Nov 2022 sale of all assets to the state. Unresolved, not used. NEM/Dusk's stake, the state's share and the resource reporting code are unknown. Also involved: Indonesia (Perminas/Danantara) and Gulf (NEM, Abu Dhabi); Eramet (FR) exited in 2022.",
+  "No Japanese or Russian involvement was found in any of these projects.",
+  "Nigeria: none of the fetched sources say whether the monazite is a by-product of tin and columbite mining or tailings on the Jos Plateau, or which states produce it. USGS names no area or company. RMRDC sampled monazite in Kano, Taraba, Plateau, Kaduna and Bauchi in 2025.",
+  "Nigeria buyers: USGS MCS 2025 estimated Nigerian output from Chinese import data, which points to China as the buyer, but no fetched source gives monazite export tonnage by destination. The USGS 2024 chapter records tin, beryllium and tantalum going to China, but no destination for monazite.",
+  "Nigeria export ban: no gazetted ban on raw-mineral exports found. The Oct 2023 'era of exporting raw materials is over' line from the minister is a policy statement, and the USGS 2024 chapter mentions no restriction. Value addition seems to be enforced through licence conditions (search only).",
+  "Hasetins: is this an REE separation plant at all? Feedstock, flowsheet, products and the existing 6,000 t operation are all undisclosed. Rare Earth Exchanges (Dec 2025) says no Chinese ownership or partnership has been disclosed. Keep it, flag it, or drop it at merge.",
+  "Mineral sands rule: Kenmare sells monazite only inside a mixed concentrate (ZrTi). The same yes/no rule should apply across clusters, e.g. Madagascar or South African sands with incidental monazite.",
+  "Egypt Burullus: EBSC's head was quoted (Oct 2022) as expecting '145k tons of monazite' a year. That is implausible next to 298k t ilmenite and USGS world totals, and is probably a misquote. Treat it as unverified.",
+  "Kaduna polymetallic discovery with rare earths announced Jul 2026 at an Abuja summit (search snippet only; not fetched).",
+  "The USGS Tanzania reserve (890,000 t REO) almost matches Ngualla's JORC ore reserve of 887 kt REO in Peak's August 2025 scheme booklet. USGS likely took its figure from it, but USGS does not say so. Where USGS's South Africa figure (860,000 t) comes from is not stated.",
+  "In MCS 2026, Nigeria's 1,500 t no longer carries the 'estimated from Chinese import data' footnote. USGS says only that the revision is 'based on Government and industry reports'. Which reports, and why the figure dropped from 13,000 t to 1,500 t, is unexplained.",
+  "Burundi (Gakara), Angola and Malawi have no USGS rows. Any output is inside 'Other' (550 t in 2025), with no breakdown. The AU strategy says rare earths are 'mined' in Angola and South Africa, but USGS shows no output for either.",
+  "The AU strategy cites Madagascar at 960 t in 2023 (from USGS 2024). USGS 2025 gives 2,100 t for 2023. Madagascar's figures have moved a lot between editions.",
+  "Of the DFC's $62.8m, the $12.8m split among Malawi, Angola and Madagascar was not in the fetched Reuters text. Search snippets claiming $3.4m for Longonjo, a $4.6m grant for Songwe Hill and a potential EXIM loan of up to $160m for Pensana are unverified.",
+  "The AFC/Absa Longonjo loan was approved in March 2025, subject to conditions. No financial close was confirmed. A reported US$100m strategic investment in Pensana (December 2025) was not fetched.",
+  "Namibia: no gazette notice or legal instrument was found for the 2023 ban. It is not checked whether it was later amended, how it treats concentrates (such as Lofdal's), or whether it is enforced.",
+  "Malawi: the official text of the executive order was not found. Whether a mineral concentrate counts as 'processed' rests on Lindian's own statement; no government ruling was found.",
+  "Uganda: a January 2025 government post 'President Museveni Restates the Prohibition on The Export of Raw Minerals' (infrastructure.go.ug) returned 404. How the ban applies to Makuutu's mixed carbonate is unknown.",
+  "Zimbabwe: the December 2022 ban, a circular under the Base Minerals Export Control Act, covers lithium only (miningindex.co.zw). The 'SI 213/2022' designation appears only in search snippets. A reported later extension to all unrefined minerals (Mondaq) was not fetched. It is left out of export_rules because rare earths are not covered.",
+  "Ghana: the 2023 Green Minerals Policy and the December 2023 raw-lithium stance do not name rare earths in any source found. It is left out of export_rules.",
+  "EU: a second list of projects outside the EU has not been published. The 9 October 2026 list covered EU applications only, and the next call is due 'towards the end of 2026'.",
+  "JOGMEC/Lofdal: a Crux Investor report says JOGMEC and Toyota Tsusho completed their earn-in in July 2026. This is unverified; no company filing was fetched.",
+  "Not found: any US Minerals Security Partnership project list naming African rare-earth projects, any US-Malawi or US-Uganda critical-minerals MoU, or official confirmation of the February 2026 Rubio ministerial with African states."
+ ]
+}

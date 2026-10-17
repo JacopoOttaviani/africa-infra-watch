@@ -12,7 +12,7 @@ Writes  docs/social.png                1200 x 630, what Slack, WhatsApp, LinkedI
                                        favicon and home-screen icons
 
 The picture is the map itself: every power unit, AfDB and World Bank project,
-Chinese- and EU-financed project, Piano Mattei project and construction way over the continent, in the status
+Chinese- and EU-financed project, Piano Mattei project and construction way over the region, in the status
 palette, with the title on the left. It
 is drawn as SVG and rasterised by a headless Chrome, which every Mac with Chrome
 has and which renders the web fonts the pages use. Pass AIW_CHROME to point at
@@ -37,7 +37,8 @@ sys.path.insert(0, str(ROOT))
 
 from build_map import build_assets, build_finance, build_ground  # noqa: E402
 from build_dashboard import build_china, build_eu, build_lookup, build_mattei  # noqa: E402
-from shared import BRAND, DATA, DOCS, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W, china_span  # noqa: E402
+from region import REGION  # noqa: E402
+from shared import BANK, BRAND, DATA, DOCS, SITE_NAME, SITE_URL, SOCIAL_H, SOCIAL_IMAGE, SOCIAL_W, china_span  # noqa: E402
 
 W, H = SOCIAL_W, SOCIAL_H
 OUT = DOCS / SOCIAL_IMAGE
@@ -54,9 +55,10 @@ STATUS_LABEL = [("announced", "Announced"), ("approved", "Approved"),
                 ("under_construction", "Under construction"), ("operating", "Operating"),
                 ("stalled", "Stalled")]
 
-# Map window: the continent, Madagascar and the Gulf of Aden coast; the far
-# islands (Cabo Verde, Mauritius, Seychelles) fall outside, as on a postcard.
-LON0, LON1, LAT0, LAT1 = -18.5, 52.0, -35.5, 37.8
+# Map window (region.py): for Africa the continent, Madagascar and the Gulf of
+# Aden coast, the far islands (Cabo Verde, Mauritius, Seychelles) outside, as
+# on a postcard; for Southeast Asia the Andaman Sea to western New Guinea.
+LON0, LON1, LAT0, LAT1 = REGION.social_win
 MAP_X0, MAP_X1, MAP_Y0, MAP_Y1 = 590, 1185, 14, 616
 
 CHROME_CANDIDATES = [
@@ -81,11 +83,13 @@ def find_chrome():
 
 def make_proj():
     """Plain equirectangular, as the dashboard uses: one scale for both axes,
-    fitted to the window's height, the map centred horizontally."""
-    s = (MAP_Y1 - MAP_Y0) / (LAT1 - LAT0)
-    w = (LON1 - LON0) * s
+    fitted to the window (its height for a tall region, its width for a wide
+    one), the map centred in the other direction."""
+    s = min((MAP_Y1 - MAP_Y0) / (LAT1 - LAT0), (MAP_X1 - MAP_X0) / (LON1 - LON0))
+    w, h = (LON1 - LON0) * s, (LAT1 - LAT0) * s
     x0 = MAP_X0 + ((MAP_X1 - MAP_X0) - w) / 2
-    return lambda lon, lat: (x0 + (lon - LON0) * s, MAP_Y0 + (LAT1 - lat) * s), s
+    y0 = MAP_Y0 + ((MAP_Y1 - MAP_Y0) - h) / 2
+    return lambda lon, lat: (x0 + (lon - LON0) * s, y0 + (LAT1 - lat) * s), s
 
 
 def ring_path(ring, proj):
@@ -104,10 +108,10 @@ def poly_paths(p, proj):
 # ------------------------------------------------------------------ svg
 
 def load_basemap():
-    p10 = DATA / "africa_basemap_10m.json"
+    p10 = DATA / REGION.basemap_10m
     if p10.exists():
         return json.loads(p10.read_text())["countries"], True
-    return json.loads((DATA / "africa_basemap.json").read_text())["countries"], False
+    return json.loads((DATA / REGION.basemap_110).read_text())["countries"], False
 
 
 def esc(s):
@@ -223,10 +227,10 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     mark = mark.replace('width="1em" height="1em"', 'width="46" height="46" x="64" y="52"', 1)
     mark = mark.replace('id="aiw-cut"', 'id="soc-cut"').replace('url(#aiw-cut)', 'url(#soc-cut)')
     out.append(f'<g color="{C["accent"]}">{mark}</g>')
-    out.append(f'<text x="124" y="83" class="kicker">Geopolitics of Africa</text>')
+    out.append(f'<text x="124" y="83" class="kicker">{esc(REGION.kicker)}</text>')
 
-    for i, word in enumerate(SITE_NAME.split()):   # one word a line
-        out.append(f'<text x="62" y="{200 + 76 * i}" class="title">{word}</text>')
+    # the two-colour wordmark (SITE_WORDMARK in shared.py): "Infra" in the ink, "Radar" in the accent
+    out.append(f'<text x="62" y="262" class="title">Infra<tspan fill="{C["accent"]}">Radar</tspan></text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
     out.append('<text x="64" y="430" class="sub">the continent, from ten public datasets.</text>')
 
@@ -236,7 +240,7 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     for glyph, num, src in (
         ("circle", f"{n_a:,} power units", "Global Energy Monitor"),
         # two layers, two counts: the bank projects and the EU's own records are never added
-        ("rect", f"{n_f:,} AfDB and World Bank projects · {n_e:,} EU records", "via IATI"),
+        ("rect", f"{n_f:,} {BANK} and World Bank projects · {n_e:,} EU records", "via IATI"),
         ("tri", f"{n_c:,} Chinese-financed projects", f"AidData, {china_span()[0]}–{china_span()[1]}"),
         ("line", f"{n_g:,} construction works", "OpenStreetMap"),
     ):
@@ -343,12 +347,13 @@ def shrink(png, out):
 
 def main():
     print("layers  …")
-    base110 = json.loads((DATA / "africa_basemap.json").read_text())
+    base110 = json.loads((DATA / REGION.basemap_110).read_text())
     idx = build_lookup(base110["countries"])
     assets, finance, ground = build_assets(), build_finance(), build_ground(idx)
     china = build_china(idx, simp=lambda part: [])     # markers only, no footprints
     eu = build_eu(idx)
-    mattei = build_mattei(idx)
+    # the Piano Mattei layer is Africa's; an edition without it draws no hexagons
+    mattei = build_mattei(idx) if "mattei" in REGION.layers else {"cols": [], "rows": []}
     countries, is10m = load_basemap()
     print("drawing …")
     html = page(draw(assets, finance, ground, china, eu, mattei, countries, is10m))

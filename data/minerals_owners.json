@@ -1,0 +1,4592 @@
+[
+ {
+  "name": "Government",
+  "home": null,
+  "state": true,
+  "kind": "state",
+  "parent": "Host government (varies by mine)",
+  "note": "host-government holdings in 26 countries; resolve home per mine from the mine's country",
+  "source": null
+ },
+ {
+  "name": "Artisanal and small scale miners (ASM)",
+  "home": null,
+  "state": false,
+  "kind": "local",
+  "parent": "Artisanal and small-scale miners",
+  "note": "host-country artisanal miners in 16 countries; resolve per mine",
+  "source": null
+ },
+ {
+  "name": "Zambia Consolidated Copper Mines Investments Holdings Plc (ZCCM–IH)",
+  "home": "ZM",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Zambia (ZCCM-IH)",
+  "note": "ZCCM-IH ~78% owned by the Zambian state",
+  "source": null
+ },
+ {
+  "name": "Glencore Plc",
+  "home": "CH",
+  "state": false,
+  "kind": "company",
+  "parent": "Glencore plc",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "First Quantum Minerals Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "First Quantum Minerals",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "AngloGold Ashanti Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "AngloGold Ashanti",
+  "note": "Johannesburg head office in 2018 (redomiciled 2023)",
+  "source": null
+ },
+ {
+  "name": "Mopani Copper Mines Plc",
+  "home": "CH",
+  "state": false,
+  "kind": "company",
+  "parent": "Glencore plc",
+  "note": "Glencore 73.1%, First Quantum 16.9%, ZCCM-IH 10% in 2018",
+  "source": null
+ },
+ {
+  "name": "Anglo American Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "London-listed, London head office",
+  "source": null
+ },
+ {
+  "name": "La Générale des Carrières et des Mines SA (Gécamines)",
+  "home": "CD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of DR Congo (Gécamines)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Various companies and cooperatives",
+  "home": "RW",
+  "state": false,
+  "kind": "local",
+  "parent": "Rwandan companies and cooperatives",
+  "note": "generic local holder; Rwanda only",
+  "source": null
+ },
+ {
+  "name": "Harmony Gold Mining Co. Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Harmony Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Managem Group",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Al Mada (Moroccan royal holding)",
+  "note": "Casablanca-listed; controlled by Al Mada, the royal family's private holding (not state)",
+  "source": "https://ledesk.ma/2016/01/06/colere-contre-la-compagnie-royale-managem-au-gabon/"
+ },
+ {
+  "name": "De Beers Group",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "De Beers 85% Anglo American, 15% Government of Botswana",
+  "source": null
+ },
+ {
+  "name": "Anglo American Platinum Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "JSE-listed Anglo American Platinum, ~78% owned by Anglo American plc (GB); listed subsidiary takes parent's home",
+  "source": null
+ },
+ {
+  "name": "Empresa Nacional de Diamantes de Angola E.P. (ENDIAMA)",
+  "home": "AO",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Angola (ENDIAMA)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Office Chérifien des Phosphates (OCP)",
+  "home": "MA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Morocco (OCP)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Namdeb Diamond Corp. (Pty) Ltd. (Namdeb)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Namdeb Holdings",
+  "note": "50/50 De Beers (Anglo American, GB) and Government of Namibia",
+  "source": null
+ },
+ {
+  "name": "Sibanye-Stillwater Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Sibanye-Stillwater",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Compagnie des Phosphates de Gafsa (CPG)",
+  "home": "TN",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Tunisia (CPG)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Tantalum Mining Co. (TAMINCO)",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Burundi tin/tantalum operator; owners not found",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-burundi.pdf"
+ },
+ {
+  "name": "El Nasr Mining Co.",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt (Holding Co. for Metallurgical Industries)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Metallurgical Industries (HCMI)",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt",
+  "note": "Holding Company for Metallurgical Industries, state holding company",
+  "source": null
+ },
+ {
+  "name": "Merafe Resources Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Merafe Resources",
+  "note": "JSE-listed; Glencore holds ~29% (not majority); 20.5% partner in Glencore-Merafe Chrome Venture",
+  "source": "https://www.engineeringnews.co.za/article/merafe-shares-up-on-glencore-buying-bafokeng-stake-2015-04-29"
+ },
+ {
+  "name": "Konkola Copper Mines Plc (KCM)",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Vedanta Resources",
+  "note": "Vedanta 79.4%, ZCCM-IH 20.6%; Vedanta controlled by Indian Anil Agarwal; Indian parent Vedanta Ltd",
+  "source": null
+ },
+ {
+  "name": "Vedanta Resources Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Vedanta Resources",
+  "note": "controlled by Indian Anil Agarwal; Indian parent Vedanta Ltd",
+  "source": null
+ },
+ {
+  "name": "Endeavour Mining Corp.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Endeavour Mining",
+  "note": "Cayman-incorporated, TSX-listed in 2018 with corporate office in London (LSE listing 2021); CA if classed by listing",
+  "source": "https://www.globaldata.com/company-profile/endeavour-mining-corporation/locations/"
+ },
+ {
+  "name": "Ongopolo Mining Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Weatherly International plc",
+  "note": "renamed Weatherly Mining Namibia in 2007; London AIM company, mines on care and maintenance",
+  "source": "https://en.wikipedia.org/wiki/Weatherly_International"
+ },
+ {
+  "name": "Weatherly Mining Namibia Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Weatherly International plc",
+  "note": "London AIM company (shares suspended since 2015)",
+  "source": "https://en.wikipedia.org/wiki/Weatherly_International"
+ },
+ {
+  "name": "Labour Investment Holdings",
+  "home": "NA",
+  "state": false,
+  "kind": "company",
+  "parent": "National Union of Namibian Workers",
+  "note": "investment arm of Namibia's union federation (NUNW)",
+  "source": "https://www.namibian.com.na/lih-to-withdraw-from-mobipay/"
+ },
+ {
+  "name": "Anglo American Platinum Ltd. (Amplats)",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "Anglo American Platinum, ~78% owned by Anglo American plc (GB); listed subsidiary takes parent's home",
+  "source": null
+ },
+ {
+  "name": "NFC Africa Mining Plc",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Nonferrous Metal Mining (CNMC)",
+  "note": "CNMC 85%, ZCCM-IH 15%",
+  "source": null
+ },
+ {
+  "name": "Zimbabwe Mining and Smelting Co. (Private) Ltd. (Zimasco)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Sinosteel",
+  "note": "Zimasco Consolidated Enterprises bought by state-owned Sinosteel in 2007",
+  "source": "https://www.chinadaily.com.cn/china/2007-12/21/content_6338629.htm"
+ },
+ {
+  "name": "Zimasco Consolidated Enterprises Ltd. (ZCE)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Sinosteel",
+  "note": "Mauritius-registered parent of Zimasco, ~92% Sinosteel since 2007",
+  "source": "https://china.aiddata.org/projects/63266"
+ },
+ {
+  "name": "Metallon Gold Zimbabwe (Private) Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Metallon Corporation (Mzi Khumalo)",
+  "note": "London-registered private company chaired and controlled by South African Mzi Khumalo",
+  "source": "https://find-and-update.company-information.service.gov.uk/company/06223345"
+ },
+ {
+  "name": "Metallon Corp.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Metallon Corporation (Mzi Khumalo)",
+  "note": "London-registered private company chaired and controlled by South African Mzi Khumalo",
+  "source": "https://find-and-update.company-information.service.gov.uk/company/06223345"
+ },
+ {
+  "name": "Debswana Diamond Co. (Pty.) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Debswana",
+  "note": "50/50 De Beers (Anglo American, GB) and Government of Botswana",
+  "source": null
+ },
+ {
+  "name": "De Beers Centenary AG",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "Swiss-registered De Beers holding company; De Beers 85% Anglo American",
+  "source": null
+ },
+ {
+  "name": "Office National des Hydrocarbures et des Mines (ONHYM)",
+  "home": "MA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Morocco (ONHYM)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Pan African Resources Plc",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Pan African Resources",
+  "note": "UK-incorporated (London registered office), AIM/JSE-listed; corporate head office Rosebank, Johannesburg",
+  "source": "https://senspdf.jse.co.za/documents/SENS_20210920_S451485.pdf"
+ },
+ {
+  "name": "Assmang (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "jv",
+  "parent": "African Rainbow Minerals / Assore",
+  "note": "50/50 ARM and Assore, both South African",
+  "source": null
+ },
+ {
+  "name": "Petra Diamonds Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Petra Diamonds",
+  "note": "Bermuda-incorporated, LSE-listed, London corporate office",
+  "source": null
+ },
+ {
+  "name": "Lonmin Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Lonmin plc",
+  "note": "acquired by Sibanye-Stillwater (ZA) in June 2019",
+  "source": null
+ },
+ {
+  "name": "Zimbabwe Platinum Mines (Private) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Impala Platinum Holdings",
+  "note": "Zimplats ~87% owned by Implats",
+  "source": null
+ },
+ {
+  "name": "Zimplats Holdings Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Impala Platinum Holdings",
+  "note": "Guernsey-incorporated, ASX-listed; ~87% Implats",
+  "source": null
+ },
+ {
+  "name": "Duration Gold Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Clarity Capital (London)",
+  "note": "majority held by London-based Clarity Capital, minority Zimbabwean families",
+  "source": "https://www.heraldonline.co.zw/duration-gold-seeks-us10m/"
+ },
+ {
+  "name": "Clarity Enterprises Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Clarity Capital (London)",
+  "note": "USGS 100% owner of Duration Gold's mines; taken to be Clarity Capital's vehicle",
+  "source": "https://www.heraldonline.co.zw/duration-gold-seeks-us10m/"
+ },
+ {
+  "name": "Bilboes Holding (Private) Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Bilboes Gold Ltd (Victor Gapare)",
+  "note": "management buyout from Anglo American Zimbabwe 2003; controlled by Zimbabwean Victor Gapare via a Mauritius holding; sold to Caledonia 2023",
+  "source": "https://www.globalminingreview.com/mining/06012023/caledonia-mining-completes-acquisition-of-bilboes-gold-project/amp/"
+ },
+ {
+  "name": "Société des Mines de Fer d'Algérie S.p.A. (SOMIFER)",
+  "home": "DZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Algeria",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Bamangwato Concessions (BCL) Ltd.",
+  "home": "BW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Botswana",
+  "note": "BCL in provisional liquidation since Oct 2016",
+  "source": null
+ },
+ {
+  "name": "BCL Ltd.",
+  "home": "BW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Botswana",
+  "note": "BCL in provisional liquidation since Oct 2016",
+  "source": null
+ },
+ {
+  "name": "Nordgold N.V.",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Nord Gold (Alexey Mordashov)",
+  "note": "Netherlands-incorporated, Moscow head office; controlled by Russian Alexey Mordashov",
+  "source": "https://en.wikipedia.org/wiki/Nordgold"
+ },
+ {
+  "name": "IAMGOLD Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "IAMGOLD",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Cooperatives and artisanal and small scale miners (ASM)",
+  "home": "BI",
+  "state": false,
+  "kind": "local",
+  "parent": "Burundian cooperatives and artisanal miners",
+  "note": "generic local holder; Burundi only",
+  "source": null
+ },
+ {
+  "name": "Katanga Mining Ltd.",
+  "home": "CH",
+  "state": false,
+  "kind": "company",
+  "parent": "Glencore plc",
+  "note": "TSX-listed Katanga Mining ~86% Glencore",
+  "source": null
+ },
+ {
+  "name": "Glencore International AG",
+  "home": "CH",
+  "state": false,
+  "kind": "company",
+  "parent": "Glencore plc",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Egyptian Company for Mineral Resources (ECMR)",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt (ECMR)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Gold Fields Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Gold Fields",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Société Nationale Industrielle et Minière (SNIM)",
+  "home": "MR",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Mauritania (SNIM)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Industrial Bank of Kuwait K.S.C",
+  "home": "KW",
+  "state": true,
+  "kind": "dfi",
+  "parent": "Industrial Bank of Kuwait",
+  "note": "majority owned by Kuwaiti public authorities (Ministry of Finance, Central Bank, social security)",
+  "source": "https://en.wikipedia.org/wiki/Industrial_Bank_of_Kuwait"
+ },
+ {
+  "name": "Arab Mining Co.",
+  "home": null,
+  "state": true,
+  "kind": "dfi",
+  "parent": "Arab Mining Company (ARMICO)",
+  "note": "pan-Arab intergovernmental company, Amman HQ; owned by Arab governments (UAE, Saudi, Iraq, Kuwait ~20% each)",
+  "source": "https://www.sec.gov/Archives/edgar/data/7039/000000703911000025/exh991.htm"
+ },
+ {
+  "name": "Iraq Foreign Development Fund",
+  "home": "IQ",
+  "state": true,
+  "kind": "dfi",
+  "parent": "Government of Iraq",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Société de Patrimoine des Mines du Niger S.A. (SOPAMIN)",
+  "home": "NE",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Niger (SOPAMIN)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Kumba Iron Ore Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "JSE-listed Kumba Iron Ore, ~70% Anglo American (GB); listed subsidiary takes parent's home",
+  "source": null
+ },
+ {
+  "name": "Afarak Group Oyj",
+  "home": "FI",
+  "state": false,
+  "kind": "company",
+  "parent": "Afarak Group",
+  "note": "Helsinki/London-listed",
+  "source": null
+ },
+ {
+  "name": "African Rainbow Minerals Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "African Rainbow Minerals",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Acacia Mining Plc",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Barrick Gold",
+  "note": "London-listed Acacia, Barrick 63.9% (fully acquired 2019)",
+  "source": null
+ },
+ {
+  "name": "Barrick Gold Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Barrick Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Société de Djebel Djerissa",
+  "home": "TN",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Tunisia",
+  "note": "public enterprise; CEO appointed by the Ministry of Industry, Mines and Energy",
+  "source": "https://managers.tn/2025/04/15/khaled-othman-nomme-pdg-de-la-societe-djebel-djerissa/"
+ },
+ {
+  "name": "CNMC Luanshya Copper Mines Plc",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Nonferrous Metal Mining (CNMC)",
+  "note": "CNMC 80%, ZCCM-IH 20%",
+  "source": null
+ },
+ {
+  "name": "Zimbabwe Mining Development Corp. (ZMDC)",
+  "home": "ZW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Zimbabwe (ZMDC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Entreprise d'Exploitation des Mines d'Or S.p.A. (ENOR)",
+  "home": "DZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Algeria",
+  "note": "state-owned via Sonatrach/Manadjim group",
+  "source": null
+ },
+ {
+  "name": "Sonatrach S.p.A.",
+  "home": "DZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Algeria (Sonatrach)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Ferphos S.p.A.",
+  "home": "DZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Algeria",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "ITM Mining Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "partner of ENDIAMA and LUMANHE in the Cuango and Chitotolo diamond JVs; ownership and domicile not found",
+  "source": "https://business-humanrights.org/en/sociedade-mineira-do-cuango-joint-venture-itm-mining-endiama-lumanhe"
+ },
+ {
+  "name": "Lucapa Diamond Co. Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Lucapa Diamond Co.",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Gem Diamonds Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Gem Diamonds",
+  "note": "BVI-incorporated, LSE-listed, London head office",
+  "source": null
+ },
+ {
+  "name": "Tati Nickel Mining Co. (Pty.) Ltd.",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Norilsk Nickel",
+  "note": "Norilsk held 85% (Botswana state 15%); 2014 sale to state-owned BCL never closed (terminated Feb 2019); Tati in provisional liquidation since 2016; USGS lists BCL",
+  "source": "https://www.businesslive.co.za/bd/companies/mining/2019-02-05-norilsk-nickel-ends-agreements-with-botswanas-bcl/"
+ },
+ {
+  "name": "Burkina Mining Company S.A.",
+  "home": "TR",
+  "state": false,
+  "kind": "company",
+  "parent": "MNG Group (via Avesoro Resources)",
+  "note": "Avesoro 90%; Avesoro ~73% held by Avesoro Jersey, part of Turkey's MNG Group (Günal family)",
+  "source": "https://www.mining.com/controlling-shareholder-grabs-avesoro-resources/"
+ },
+ {
+  "name": "Avesoro resources Inc.",
+  "home": "TR",
+  "state": false,
+  "kind": "company",
+  "parent": "MNG Group (Avesoro Jersey)",
+  "note": "TSX/AIM-listed; ~73% held by Avesoro Jersey Ltd, part of Turkey's MNG Group (Günal family)",
+  "source": "https://www.mining.com/controlling-shareholder-grabs-avesoro-resources/"
+ },
+ {
+  "name": "Anvil Mining Congo SARL",
+  "home": "SG",
+  "state": false,
+  "kind": "company",
+  "parent": "Trafigura (via Galena / Mawson West)",
+  "note": "Mawson West 90%; Mawson West was taken over and delisted by Trafigura's Galena Private Equity; Trafigura Group is Singapore-incorporated",
+  "source": "https://en.wikipedia.org/wiki/Dikulushi_Mine"
+ },
+ {
+  "name": "Mawson West Ltd.",
+  "home": "SG",
+  "state": false,
+  "kind": "company",
+  "parent": "Trafigura (via Galena Private Equity)",
+  "note": "Australian company taken over and delisted by Trafigura's Galena Private Equity; Trafigura Group is Singapore-incorporated",
+  "source": "https://en.wikipedia.org/wiki/Dikulushi_Mine"
+ },
+ {
+  "name": "Eurasian Resources Group (ERG)",
+  "home": "LU",
+  "state": false,
+  "kind": "company",
+  "parent": "Eurasian Resources Group",
+  "note": "Kazakh state holds 40%",
+  "source": null
+ },
+ {
+  "name": "Randgold Resources Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Randgold Resources",
+  "note": "Jersey-incorporated, London-listed; merged into Barrick Jan 2019",
+  "source": null
+ },
+ {
+  "name": "Jinchuan Group International Resources Co. Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Jinchuan Group",
+  "note": "HK-listed subsidiary of Gansu SOE Jinchuan Group",
+  "source": null
+ },
+ {
+  "name": "Zijin Mining Group Company Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Zijin Mining",
+  "note": "state-linked (Minxi Xinghang State-owned Investment ~25%), not majority state",
+  "source": null
+ },
+ {
+  "name": "Banro Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Banro Corp.",
+  "note": "Toronto-based; taken private in 2017-18 restructuring, creditors Gramercy (US) and Baiyin Nonferrous (CN) became main owners",
+  "source": "https://www.mining.com/web/after-two-tumultuous-decades-congo-gold-miner-is-back-from-the-brink/"
+ },
+ {
+  "name": "Eritrean National Mining Corp. (ENAMCO)",
+  "home": "ER",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Eritrea (ENAMCO)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Midroc Gold Mine Plc",
+  "home": "ET",
+  "state": false,
+  "kind": "company",
+  "parent": "MIDROC (Mohammed Al Amoudi)",
+  "note": "MIDROC group owned by Saudi-Ethiopian billionaire Mohammed Al Amoudi; licence suspended May 2018; SA if classed by owner's main nationality",
+  "source": "https://en.wikipedia.org/wiki/Lega_Dembi_Mine"
+ },
+ {
+  "name": "Midroc Group",
+  "home": "ET",
+  "state": false,
+  "kind": "company",
+  "parent": "MIDROC (Mohammed Al Amoudi)",
+  "note": "MIDROC group owned by Saudi-Ethiopian billionaire Mohammed Al Amoudi; SA if classed by owner's main nationality",
+  "source": "https://en.wikipedia.org/wiki/Lega_Dembi_Mine"
+ },
+ {
+  "name": "Eramet Group",
+  "home": "FR",
+  "state": false,
+  "kind": "company",
+  "parent": "Eramet",
+  "note": "French state ~26% (not majority); Duval family largest holder",
+  "source": null
+ },
+ {
+  "name": "Newmont Mining Corp.",
+  "home": "US",
+  "state": false,
+  "kind": "company",
+  "parent": "Newmont Mining",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Resolute Mining Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Resolute Mining",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Golden Star Resources Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Golden Star Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Kinross Gold Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Kinross Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "United Company RUSAL Plc",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "UC Rusal (Oleg Deripaska / En+)",
+  "note": "Jersey-incorporated, HK-listed, Moscow head office in 2018",
+  "source": null
+ },
+ {
+  "name": "ArcelorMittal (Liberia) Ltd.",
+  "home": "LU",
+  "state": false,
+  "kind": "company",
+  "parent": "ArcelorMittal",
+  "note": "ArcelorMittal 85%, Government of Liberia 15%",
+  "source": null
+ },
+ {
+  "name": "ArcelorMittal",
+  "home": "LU",
+  "state": false,
+  "kind": "company",
+  "parent": "ArcelorMittal",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "KRAOMA Mining S.A.",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Ferrum Mining LLC",
+  "note": "JV formed Aug 2018: Russia's Ferrum Mining 80%, state-owned Kraomita Malagasy 20%",
+  "source": "https://en.malina.mg/articles/kraoma-mining-a-joint-venture-at-the-center-of-attention/"
+ },
+ {
+  "name": "Ferrum Mining LLC",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Ferrum Mining LLC",
+  "note": "little-known Russian company; ownership opaque",
+  "source": "https://en.malina.mg/articles/ferrum-mining-kraomas-new-shadowy-partner/"
+ },
+ {
+  "name": "KRAOMA",
+  "home": "MG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Madagascar (Kraomita Malagasy)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Paladin Energy Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Paladin Energy",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Barrick Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Barrick Gold",
+  "note": "Loulo-Gounkoto and Morila were Randgold (GB/Jersey) assets until the Jan 2019 Barrick merger",
+  "source": null
+ },
+ {
+  "name": "Akka Gold Mining Co. (AGM)",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Managem (Al Mada)",
+  "note": "Managem subsidiary",
+  "source": null
+ },
+ {
+  "name": "Compagnie Minière de Guemassa (CMG)",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Managem (Al Mada)",
+  "note": "Managem subsidiary",
+  "source": null
+ },
+ {
+  "name": "Bureau de Recherches de Participations Minières (BRPM)",
+  "home": "MA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Morocco",
+  "note": "BRPM merged into ONHYM in 2003",
+  "source": null
+ },
+ {
+  "name": "Desert Lion Energy, Inc.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Desert Lion Energy",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Huni-Urib Holdings (Pty) Ltd.",
+  "home": "NA",
+  "state": false,
+  "kind": "company",
+  "parent": "Huni-Urib Holdings",
+  "note": "Namibian partner (local company); not verified",
+  "source": null
+ },
+ {
+  "name": "Epangelo Mining Company (Pty) Ltd.",
+  "home": "NA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Namibia (Epangelo)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Rio Tinto Group",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rio Tinto",
+  "note": "dual-listed, London head office",
+  "source": null
+ },
+ {
+  "name": "Areva Group",
+  "home": "FR",
+  "state": true,
+  "kind": "company",
+  "parent": "Areva / Orano",
+  "note": "French state majority; renamed Orano in 2018",
+  "source": null
+ },
+ {
+  "name": "Sierra Rutile Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Iluka Resources",
+  "note": "acquired by Iluka Dec 2016",
+  "source": null
+ },
+ {
+  "name": "Iluka Resources Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Iluka Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Royal Bafokeng Platinum Ltd. (RBPlat)",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Royal Bafokeng Holdings",
+  "note": "JSE-listed; controlled by Royal Bafokeng Holdings (community-owned)",
+  "source": null
+ },
+ {
+  "name": "Royal Bafokeng Nation",
+  "home": "ZA",
+  "state": false,
+  "kind": "local",
+  "parent": "Royal Bafokeng Nation",
+  "note": "traditional community",
+  "source": null
+ },
+ {
+  "name": "Trans Hex Group",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Trans Hex Group",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Hernic Ferrochrome (Pty) Ltd.",
+  "home": "JP",
+  "state": false,
+  "kind": "company",
+  "parent": "Mitsubishi Corp.",
+  "note": "Mitsubishi ~51%; Hernic in business rescue since Sep 2017",
+  "source": "https://www.engineeringnews.co.za/article/hernic-ferrochrome-in-business-rescue-mitsubishi-2017-09-22"
+ },
+ {
+  "name": "Mitsubishi Corp.",
+  "home": "JP",
+  "state": false,
+  "kind": "company",
+  "parent": "Mitsubishi Corp.",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Northam Platinum Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Northam Platinum",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Mvelaphanda Resources Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Mvelaphanda Resources",
+  "note": "black economic empowerment company",
+  "source": null
+ },
+ {
+  "name": "Samancor Chrome (Pty) Ltd.",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "International Mineral Resources BV (via Kermas)",
+  "note": "Kermas bought Samancor Chrome 2005; IMR, linked to ERG founders Chodiev, Ibragimov and Mashkevich, held ~77% of Kermas by 2010; IMR also described as Swiss-based",
+  "source": "https://www.dailymaverick.co.za/article/2019-10-02-the-great-samancor-heist/"
+ },
+ {
+  "name": "International Mineral Resources BV",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "International Mineral Resources BV",
+  "note": "Dutch BV linked to ERG founders Chodiev, Ibragimov and Mashkevich; also described as Swiss-based",
+  "source": "https://www.dailymaverick.co.za/article/2019-10-02-the-great-samancor-heist/"
+ },
+ {
+  "name": "Tronox Ltd.",
+  "home": "US",
+  "state": false,
+  "kind": "company",
+  "parent": "Tronox",
+  "note": "Australian-incorporated in 2018 with head office in Stamford, Connecticut; redomiciled to UK 2019",
+  "source": "https://www.sec.gov/Archives/edgar/data/1530804/000114036118011324/s002093x1_10k.htm"
+ },
+ {
+  "name": "Exxaro Resources Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Exxaro Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Impala Platinum Holdings Ltd. (Implats)",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Impala Platinum Holdings",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Hotazel Manganese Mines (Pty) Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "jv",
+  "parent": "South32 (via Samancor Manganese)",
+  "note": "South32 44.4%, Anglo American 29.6%, BEE 26%; South32 controls Samancor Manganese (60:40 with Anglo)",
+  "source": "https://www.south32.net/our-business/southern-africa"
+ },
+ {
+  "name": "BHP Billiton Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "BHP",
+  "note": "this stake passed to South32 (AU) in the 2015 demerger; USGS label stale",
+  "source": "https://www.south32.net/our-business/southern-africa"
+ },
+ {
+  "name": "Impala Platinum Holdings Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Impala Platinum Holdings",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "De Beers Consolidated Mines Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc (De Beers)",
+  "note": "De Beers 74%, Ponahalo BEE 26%",
+  "source": null
+ },
+ {
+  "name": "Yarmouk Industrial Services Co. Ltd.",
+  "home": "SD",
+  "state": null,
+  "kind": "company",
+  "parent": "Yarmouk Industrial Services",
+  "note": "Sudanese company; possible link to the military Yarmouk Industrial Complex unconfirmed",
+  "source": "https://www.gem.wiki/Fodikwan_Mine"
+ },
+ {
+  "name": "Ingessana Hills Mining Corp.",
+  "home": "SD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Sudan (Sudanese Mining Corp.)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sudanese Mining Corp. (Government)",
+  "home": "SD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Sudan",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "China Nonferrous Metal Mining (Group) Co. Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Nonferrous Metal Mining (CNMC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Kansanshi Mining Plc",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "First Quantum Minerals",
+  "note": "FQM 80%, ZCCM-IH 20%",
+  "source": null
+ },
+ {
+  "name": "Primarily artisanal and small scale miners (ASM)",
+  "home": "ZM",
+  "state": false,
+  "kind": "local",
+  "parent": "Zambian artisanal miners",
+  "note": "generic local holder; Zambia only",
+  "source": null
+ },
+ {
+  "name": "Local cooperatives and small-scale miners",
+  "home": "ZW",
+  "state": false,
+  "kind": "local",
+  "parent": "Zimbabwean cooperatives and small-scale miners",
+  "note": "generic local holder; Zimbabwe only",
+  "source": null
+ },
+ {
+  "name": "Bindura Nickel Corp. Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Asa Resource Group plc",
+  "note": "ZSE-listed; Asa 74.73%; Asa in UK administration in 2018",
+  "source": "https://en.wikipedia.org/wiki/Bindura_Nickel_Corporation"
+ },
+ {
+  "name": "Asa Resources Group Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Asa Resource Group plc",
+  "note": "formerly Mwana Africa; London AIM company, delisted and in administration 2018; largest shareholder Chinese-linked",
+  "source": "https://en.wikipedia.org/wiki/Asa_Resources_Group"
+ },
+ {
+  "name": "Common shares",
+  "home": "ZW",
+  "state": false,
+  "kind": "local",
+  "parent": "public shareholders",
+  "note": "minority free float on the Zimbabwe Stock Exchange",
+  "source": null
+ },
+ {
+  "name": "RioZim Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "RioZim Ltd",
+  "note": "Zimbabwe Stock Exchange-listed; largest shareholder GEM (private equity, Harpal Randhawa)",
+  "source": "https://insiderzim.com/rio-tinto-quits-zimbabwe/"
+ },
+ {
+  "name": "Olympus Mines Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "New Dawn Mining (via Central African Gold)",
+  "note": "Olympus Gold Mines, 100% Central African Gold",
+  "source": "https://www.miningmx.com/news/gold/24974-shareholders-ditch-central-african-gold/"
+ },
+ {
+  "name": "Central African Gold Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "New Dawn Mining",
+  "note": "UK plc ~89% owned by Canadian-listed New Dawn Mining since 2010",
+  "source": "https://www.miningmx.com/news/gold/24974-shareholders-ditch-central-african-gold/"
+ },
+ {
+  "name": "New Dawn Mining Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "New Dawn Mining",
+  "note": "Canadian-listed, Zimbabwe-focused",
+  "source": "https://www.mindat.org/loc-248700.html"
+ },
+ {
+  "name": "Société des Mines de Phosphates S.p.A. (SOMIPHOS)",
+  "home": "DZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Algeria (Ferphos)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Ferphos Group S.p.A.",
+  "home": "DZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Algeria",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sociedade Mineira do Lucapa Ltd. (SME)",
+  "home": "AO",
+  "state": true,
+  "kind": "jv",
+  "parent": "ENDIAMA",
+  "note": "Calonda JV; Portugal's SPE (49%) agreed in 2015-16 to sell its stake to ENDIAMA",
+  "source": "https://www.verangola.net/va/pt/112016/MateriasPrimasTransformacao/6232/Portugal-deixa-sector-dos-diamantes-em-Angola-mais-de-um-século-depois.htm"
+ },
+ {
+  "name": "Sociedade Portuguesa de Empreendimentos",
+  "home": "PT",
+  "state": true,
+  "kind": "company",
+  "parent": "Parpública (Portuguese state)",
+  "note": "SPE 81% owned by Parpública; agreed 2015-16 to sell its 49% of SML to ENDIAMA, exiting Angola",
+  "source": "https://www.verangola.net/va/pt/112016/MateriasPrimasTransformacao/6232/Portugal-deixa-sector-dos-diamantes-em-Angola-mais-de-um-século-depois.htm"
+ },
+ {
+  "name": "LUMANHE Lda.<null>",
+  "home": "AO",
+  "state": false,
+  "kind": "company",
+  "parent": "LUMANHE",
+  "note": "Angolan company reportedly owned by senior Angolan army generals",
+  "source": "https://business-humanrights.org/en/sociedade-mineira-do-cuango-joint-venture-itm-mining-endiama-lumanhe"
+ },
+ {
+  "name": "ITM Mining Ltd.<null>",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "partner in Angolan diamond JVs; ownership and domicile not found",
+  "source": "https://business-humanrights.org/en/sociedade-mineira-do-cuango-joint-venture-itm-mining-endiama-lumanhe"
+ },
+ {
+  "name": "Sociedade Mineira de Catoca, Lda.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sociedade Mineira de Catoca",
+  "note": "2018: ENDIAMA (AO, state) 41%, ALROSA (RU, state) 41%, LL International Holding (China Sonangol) 18%",
+  "source": "https://en.wikipedia.org/wiki/Catoca_diamond_mine"
+ },
+ {
+  "name": "ALROSA S.A.",
+  "home": "RU",
+  "state": true,
+  "kind": "company",
+  "parent": "ALROSA",
+  "note": "Russian federal and Yakutia governments hold a majority",
+  "source": null
+ },
+ {
+  "name": "LL International Holding B.V.",
+  "home": "HK",
+  "state": false,
+  "kind": "company",
+  "parent": "China Sonangol International Holding",
+  "note": "Dutch BV sold by Lev Leviev to China Sonangol in 2011; China Sonangol is HK-registered, 70% Dayuan (Queensway group), 30% Sonangol; stake seized by Angola 2021-22",
+  "source": "https://en.wikipedia.org/wiki/Catoca_diamond_mine"
+ },
+ {
+  "name": "Sociedade Mineira do Chitotolo, Lda",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sociedade Mineira do Chitotolo",
+  "note": "JV of ENDIAMA (AO, state), ITM Mining (owner unknown) and LUMANHE (AO)",
+  "source": null
+ },
+ {
+  "name": "LUMANHE Mineira Lda.",
+  "home": "AO",
+  "state": false,
+  "kind": "company",
+  "parent": "LUMANHE",
+  "note": "Angolan company reportedly owned by senior Angolan army generals",
+  "source": "https://business-humanrights.org/en/sociedade-mineira-do-cuango-joint-venture-itm-mining-endiama-lumanhe"
+ },
+ {
+  "name": "Sociedade Mineira do Cuango Lda.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sociedade Mineira do Cuango",
+  "note": "JV of ENDIAMA (AO, state), ITM Mining (owner unknown) and LUMANHE (AO)",
+  "source": "https://business-humanrights.org/en/sociedade-mineira-do-cuango-joint-venture-itm-mining-endiama-lumanhe"
+ },
+ {
+  "name": "LUMANHE Lda.",
+  "home": "AO",
+  "state": false,
+  "kind": "company",
+  "parent": "LUMANHE",
+  "note": "Angolan company reportedly owned by senior Angolan army generals",
+  "source": "https://business-humanrights.org/en/sociedade-mineira-do-cuango-joint-venture-itm-mining-endiama-lumanhe"
+ },
+ {
+  "name": "Sociedade Mineira Do Lulo (SML)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sociedade Mineira do Lulo",
+  "note": "Lucapa (AU) 40%, ENDIAMA (AO, state) 32%, Rosas & Pétalas (AO) 28%",
+  "source": "https://www.miningweekly.com/print-version/lucapa-receives-further-a88m-tranche-from-sociedade-mineira-do-lulo-2022-12-14"
+ },
+ {
+  "name": "Rosas e Petalas S.A.",
+  "home": "AO",
+  "state": false,
+  "kind": "company",
+  "parent": "Rosas & Pétalas",
+  "note": "Angolan private company (local)",
+  "source": "https://www.miningweekly.com/print-version/lucapa-receives-further-a88m-tranche-from-sociedade-mineira-do-lulo-2022-12-14"
+ },
+ {
+  "name": "Sociedade de Desenvolvimento Mineiro de Angola S.A.R.L. (SDM)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sociedade de Desenvolvimento Mineiro",
+  "note": "Luzamba JV of state ENDIAMA and Brazil's Odebrecht; split not verified",
+  "source": null
+ },
+ {
+  "name": "Somiluana – Sociedade Mineira S.A.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Somiluana",
+  "note": "Trans Hex (ZA) 33%, ENDIAMA (AO, state), Angolan private investors 28%",
+  "source": null
+ },
+ {
+  "name": "Trans Hex Group Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Trans Hex Group",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Domestic private investors",
+  "home": "AO",
+  "state": false,
+  "kind": "local",
+  "parent": "Angolan private investors",
+  "note": "generic local holder; Angola only",
+  "source": null
+ },
+ {
+  "name": "Cupric Canyon Capital LP (CCC)",
+  "home": "US",
+  "state": false,
+  "kind": "company",
+  "parent": "Cupric Canyon Capital",
+  "note": "US-based private equity, management-owned, backed by ex-Barclays Natural Resource Investments",
+  "source": "https://www.miningmx.com/off-the-wires/13154-barclays-backed-firm-to-build-botswana-mine/"
+ },
+ {
+  "name": "Lucara Diamond Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Lucara Diamond",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Kimberley Diamonds Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Kimberley Diamonds Ltd",
+  "note": "Sydney-based; Lerala under judicial management from 2017 and auctioned to a Botswana-based consortium in May 2018",
+  "source": "https://www.miningweekly.com/article/halted-botswana-diamond-mine-to-be-sold-at-online-auction-2018-05-01"
+ },
+ {
+  "name": "Cradle Arc Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Cradle Arc plc",
+  "note": "AIM-listed; 60% of Mowana owner Leboam (ZCI 40%); Leboam in judicial management Dec 2018",
+  "source": "https://www.mining-technology.com/news/cradle-arc-files-application-for-provisional-liquidation-of-leboam/"
+ },
+ {
+  "name": "La Générale des Carrières et des Mines SA (Gécamines)<null>",
+  "home": "CD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of DR Congo (Gécamines)",
+  "note": "USGS lists Gécamines at Botswana's Mowana mine, almost certainly a data error (the 40% partner was ZCI)",
+  "source": "https://www.mining-technology.com/news/cradle-arc-files-application-for-provisional-liquidation-of-leboam/"
+ },
+ {
+  "name": "Galane Gold Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Galane Gold",
+  "note": "TSX-V-listed (Toronto), also Botswana Stock Exchange",
+  "source": "https://www.globenewswire.com/news-release/2022/05/03/2435129/0/en/Galane-Gold-Ltd-Announces-the-Completion-of-the-Disposition-of-its-Mupane-Property.html"
+ },
+ {
+  "name": "Bissa Gold S.A.",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Nordgold",
+  "note": "Nordgold 90%, Burkina Faso state 10%",
+  "source": null
+ },
+ {
+  "name": "Essakane S.A.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "IAMGOLD",
+  "note": "IAMGOLD 90%",
+  "source": null
+ },
+ {
+  "name": "Société des Mines de Bélahouro S.A.",
+  "home": "GH",
+  "state": false,
+  "kind": "company",
+  "parent": "Balaji Group",
+  "note": "Avocet sold Inata to Ghana-based Balaji Group, completed Feb 2018",
+  "source": "https://www.mining-technology.com/news/avocet-reaches-deal-sell-burkina-faso-assets-ghanas-balaji-group/"
+ },
+ {
+  "name": "Balaji Group",
+  "home": "GH",
+  "state": false,
+  "kind": "company",
+  "parent": "Balaji Group",
+  "note": "Ghana-based group; bought Inata from Avocet in Feb 2018",
+  "source": "https://www.mining-technology.com/news/avocet-reaches-deal-sell-burkina-faso-assets-ghanas-balaji-group/"
+ },
+ {
+  "name": "Semafo Burkina Faso S.A.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Semafo",
+  "note": "Semafo 90%",
+  "source": null
+ },
+ {
+  "name": "Semafo Inc.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Semafo",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Pinsapo Gold S.A. (Pinsapo Group AG)",
+  "home": "CH",
+  "state": false,
+  "kind": "company",
+  "parent": "Pinsapo Group AG",
+  "note": "Swiss mining company",
+  "source": "https://burkina24.com/2011/09/15/les-installations-de-lentreprise-miniere-pinsapo-gold-incendiees-par-la-population/"
+ },
+ {
+  "name": "Société des Mines de Taparko S.A.",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Nordgold",
+  "note": "Nordgold 90%",
+  "source": null
+ },
+ {
+  "name": "DUTEZANYIMBERE",
+  "home": "BI",
+  "state": false,
+  "kind": "local",
+  "parent": "Burundian cooperative",
+  "note": "local cooperative",
+  "source": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-burundi.pdf"
+ },
+ {
+  "name": "Rainbow Rare Earths Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rainbow Rare Earths",
+  "note": "Guernsey-incorporated, LSE-listed",
+  "source": null
+ },
+ {
+  "name": "CDP",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Burundian tantalum operator listed by USGS; identity not found",
+  "source": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-burundi.pdf"
+ },
+ {
+  "name": "CODEMIBU",
+  "home": "BI",
+  "state": false,
+  "kind": "local",
+  "parent": "Burundian cooperative",
+  "note": "local cooperative/company per USGS; not verified",
+  "source": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-burundi.pdf"
+ },
+ {
+  "name": "Other cooperatives and artisanal and small scale miners (ASM)",
+  "home": "BI",
+  "state": false,
+  "kind": "local",
+  "parent": "Burundian cooperatives and artisanal miners",
+  "note": "generic local holder; Burundi only",
+  "source": null
+ },
+ {
+  "name": "Chemaf SPRL",
+  "home": "AE",
+  "state": false,
+  "kind": "company",
+  "parent": "Shalina Resources (Virji family)",
+  "note": "Shalina 95%, DRC state 5%; Dubai-registered private group",
+  "source": "https://www.arabnews.com/node/1287381"
+ },
+ {
+  "name": "Shalina Resources Ltd.",
+  "home": "AE",
+  "state": false,
+  "kind": "company",
+  "parent": "Shalina Resources (Virji family)",
+  "note": "Dubai-registered private group",
+  "source": "https://www.arabnews.com/node/1287381"
+ },
+ {
+  "name": "Comika Mining SAS",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Norinco (via Wanbao Mining)",
+  "note": "Wanbao 70%",
+  "source": "https://en.wikipedia.org/wiki/Wanbao_Mining"
+ },
+ {
+  "name": "Wanbao Mining Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Norinco (China North Industries)",
+  "note": "wholly owned subsidiary of state defence group Norinco",
+  "source": "https://en.wikipedia.org/wiki/Wanbao_Mining"
+ },
+ {
+  "name": "Société de Développement Industriel et Minere du Congo (SODIMICO)",
+  "home": "CD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of DR Congo (SODIMICO)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "MMG Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Minmetals",
+  "note": "HK-listed, Melbourne-run; ~68% China Minmetals",
+  "source": "https://www.mining.com/web/more-companies-to-reconsider-investments-in-drc-says-mmg-exec/"
+ },
+ {
+  "name": "Tiger Resources Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Tiger Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "La Compagnie Minière de Musonoie Global SAS",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Zijin Mining",
+  "note": "Zijin 72%, Gécamines 28%",
+  "source": null
+ },
+ {
+  "name": "Sicomines",
+  "home": "CN",
+  "state": true,
+  "kind": "jv",
+  "parent": "China Railway Group / PowerChina (Sinohydro)",
+  "note": "Chinese side 68% (CREC 33%, Sinohydro 30%, Huayou 5%), Gécamines 20%, Simco 12%",
+  "source": "https://china.aiddata.org/projects/91875"
+ },
+ {
+  "name": "China Railway Group Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Railway Group (CREC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sinohydro Corp.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "PowerChina (Sinohydro)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "La Générale des Carrières et des Mines S.A. (Gecamines)",
+  "home": "CD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of DR Congo (Gécamines)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "CNMC Huachin Mining Mabende",
+  "home": "CN",
+  "state": null,
+  "kind": "company",
+  "parent": "CNMC / Huachin",
+  "note": "JV of state-owned CNMC and Chinese private Huachin; split not verified",
+  "source": null
+ },
+ {
+  "name": "La Minière de Kalumbwe Myunga (MKM)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Railway Group (CREC)",
+  "note": "CREC ~80%, Congolese partner ~20%",
+  "source": "https://congomines.org/shareholder-information/?id=20"
+ },
+ {
+  "name": "Société Minière de Bakwanga (MIBA)",
+  "home": "CD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of DR Congo",
+  "note": "MIBA 80% state, 20% Sibeka",
+  "source": null
+ },
+ {
+  "name": "Sibeka Group",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Asa Resource Group plc",
+  "note": "Mwana Africa (later Asa Resource) bought Sibeka from Umicore in 2006",
+  "source": "https://congomines.org/shareholder-information/?id=27"
+ },
+ {
+  "name": "Shituru Mining Corp. SPRL",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Pengxin (Shanghai Pengxin Group)",
+  "note": "East China Capital Holdings 72.5%, Gécamines 27.5%",
+  "source": "https://congomines.org/shareholder-information/?id=122"
+ },
+ {
+  "name": "Minière de Kasombo",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Zhejiang Huayou Cobalt",
+  "note": "Gécamines 28%; Huayou the rest per Congomines/EITI data",
+  "source": "https://congomines.org/shareholder-information/?id=120"
+ },
+ {
+  "name": "Boss Mining SPRL",
+  "home": "LU",
+  "state": false,
+  "kind": "company",
+  "parent": "Eurasian Resources Group",
+  "note": "Kazakh state holds 40%",
+  "source": null
+ },
+ {
+  "name": "Eurasian Resources Group Plc",
+  "home": "LU",
+  "state": false,
+  "kind": "company",
+  "parent": "Eurasian Resources Group",
+  "note": "Kazakh state holds 40%",
+  "source": null
+ },
+ {
+  "name": "Mutanda Mining SPRL",
+  "home": "CH",
+  "state": false,
+  "kind": "company",
+  "parent": "Glencore plc",
+  "note": "Glencore 100% since Feb 2017",
+  "source": null
+ },
+ {
+  "name": "Fleurette Properties Ltd.",
+  "home": "IL",
+  "state": false,
+  "kind": "company",
+  "parent": "Fleurette Group (Dan Gertler)",
+  "note": "offshore vehicle of Israeli businessman Dan Gertler; sold its 31% of Mutanda to Glencore in Feb 2017",
+  "source": "https://www.prnewswire.co.uk/news-releases/fleurette-group---sale-of-stake-in-mutanda-to-glencore-613602113.html"
+ },
+ {
+  "name": "Congo Dong Fang International Mining sprl",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Zhejiang Huayou Cobalt",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Ruashi Mining SPRL",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Jinchuan Group (via Metorex)",
+  "note": "Metorex 75%, Gécamines 25%",
+  "source": null
+ },
+ {
+  "name": "Jinchuan Group International Resources Co. Ltd. (via wholly owned subsidiary Metorex)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Jinchuan Group",
+  "note": "via wholly owned Metorex",
+  "source": null
+ },
+ {
+  "name": "Société Minière du Katanga SPRL (Somika)",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "Vinmart group (Chetan Chug)",
+  "note": "Lubumbashi group founded by Tanzania's Vinmart; shareholders are offshore companies (Kalvain, Shukruna); ultimate home unclear",
+  "source": "https://www.developmentaid.org/organizations/view/431133/somika-group"
+ },
+ {
+  "name": "VINMART Group",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "Vinmart group (Chetan Chug)",
+  "note": "founded in Tanzania 1997, now Lubumbashi-based; ultimate ownership not found",
+  "source": "https://www.developmentaid.org/organizations/view/431133/somika-group"
+ },
+ {
+  "name": "Tenke Fungurume Mining SARL",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "China Molybdenum (CMOC)",
+  "note": "CMOC 80%, Gécamines 20%; CMOC has state-linked shareholders",
+  "source": null
+ },
+ {
+  "name": "China Molybdenum Co. Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "China Molybdenum (CMOC)",
+  "note": "state-linked shareholders (Luoyang Mining Group ~25%), not majority state",
+  "source": null
+ },
+ {
+  "name": "Societe Anhui-Congo d'Investissment Minier SPRL (SACIM)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "SACIM",
+  "note": "50/50 Anhui Foreign Economic Construction (CN, state) and SCIM (DRC state)",
+  "source": "https://ipisresearch.be/publication/diamonds-in-the-drc-a-sector-struggling-to-shine-again/"
+ },
+ {
+  "name": "Anhui Foreign Economic Construction Group",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Anhui Foreign Economic Construction Group",
+  "note": "Anhui provincial state-owned enterprise",
+  "source": null
+ },
+ {
+  "name": "Societe Congolaise d'Investissment Minier",
+  "home": "CD",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of DR Congo",
+  "note": "state-controlled diamond company replaced by SACIM",
+  "source": "https://ipisresearch.be/publication/diamonds-in-the-drc-a-sector-struggling-to-shine-again/"
+ },
+ {
+  "name": "Agbaou Gold Operations S.A.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Endeavour Mining",
+  "note": "Endeavour 85%; Endeavour Cayman-incorporated, TSX-listed, London corporate office in 2018",
+  "source": "https://www.globaldata.com/company-profile/endeavour-mining-corporation/locations/"
+ },
+ {
+  "name": "Taurian Manganese & Ferro Alloy",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Dharni Sampda Pvt Ltd",
+  "note": "Indian company",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-cote%20divoire.pdf"
+ },
+ {
+  "name": "Dharni Sampda Private Ltd.",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Dharni Sampda Pvt Ltd",
+  "note": "Indian company",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-cote%20divoire.pdf"
+ },
+ {
+  "name": "LGL Mines CI S.A.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "F&M Gold Resources / Africa Finance Corp. (from Mar 2018)",
+  "note": "Newcrest (AU) sold its 89.9% to a Forbes & Manhattan (CA) and Africa Finance Corporation consortium, completed Mar 2018",
+  "source": "https://www.fratmat.info/index.php/region/hire-les-mines-d-or-de-bonikro-et-de-hire-gerees-par-newcrest-cedees-a-afrique-gold"
+ },
+ {
+  "name": "Newcrest Mining Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Newcrest Mining",
+  "note": "sold its Bonikro stake, completed March 2018",
+  "source": "https://www.miningweekly.com/article/newcrest-sells-bonikro-gold-mine-for-81m-2017-12-13"
+ },
+ {
+  "name": "Minority shareholder",
+  "home": "CI",
+  "state": false,
+  "kind": "local",
+  "parent": "minority shareholder",
+  "note": "generic local holder; Côte d'Ivoire only",
+  "source": null
+ },
+ {
+  "name": "Société des Mines d'Ity",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Endeavour Mining",
+  "note": "Endeavour 80%; Endeavour Cayman-incorporated, TSX-listed, London corporate office in 2018",
+  "source": "https://www.globaldata.com/company-profile/endeavour-mining-corporation/locations/"
+ },
+ {
+  "name": "Société pour le Développement Minier (SODEMI)",
+  "home": "CI",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Côte d'Ivoire (SODEMI)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Didier Drogba Group",
+  "home": "CI",
+  "state": false,
+  "kind": "company",
+  "parent": "Didier Drogba",
+  "note": "Ivorian private investor (local)",
+  "source": null
+ },
+ {
+  "name": "Compagnie Minière du Littoral",
+  "home": "CI",
+  "state": true,
+  "kind": "jv",
+  "parent": "SODEMI",
+  "note": "SODEMI 51%, China National Geological & Mining Corp (CN, state) 39%, private 10%",
+  "source": null
+ },
+ {
+  "name": "Société pour le Développement Minier de la Côte d'Ivoire (SODEMI)",
+  "home": "CI",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Côte d'Ivoire (SODEMI)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "China National Geological and Mining Corp.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China National Geological & Mining Corp.",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Private interests",
+  "home": "CI",
+  "state": false,
+  "kind": "local",
+  "parent": "private interests",
+  "note": "generic local holder; Côte d'Ivoire only",
+  "source": null
+ },
+ {
+  "name": "Société des Mines de Tongon S.A.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Randgold Resources",
+  "note": "Randgold 89%; Jersey-incorporated, London-listed",
+  "source": null
+ },
+ {
+  "name": "Local Ivorian company",
+  "home": "CI",
+  "state": false,
+  "kind": "local",
+  "parent": "local Ivorian company",
+  "note": "generic local holder; Côte d'Ivoire only",
+  "source": null
+ },
+ {
+  "name": "Yaouré Mining S.A.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Perseus Mining",
+  "note": "Amara Mining taken over by Perseus in April 2016",
+  "source": "https://www.sustainabilityreports.com/perseus-mining/2016/annual-report"
+ },
+ {
+  "name": "Amara Mining Plc",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Perseus Mining",
+  "note": "UK AIM company taken over by Perseus Mining (AU) in April 2016",
+  "source": "https://www.sustainabilityreports.com/perseus-mining/2016/annual-report"
+ },
+ {
+  "name": "Egyptian Iron and Steel Co. (Hadisolb)",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt",
+  "note": "majority held by the Holding Company for Metallurgical Industries",
+  "source": null
+ },
+ {
+  "name": "Hamash Misr for Gold Mines",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Hamash Misr",
+  "note": "50/50 Egyptian state (EMRA/ECMR) and Cyprus-registered Matz Holdings",
+  "source": "https://icij.org/?p=26473"
+ },
+ {
+  "name": "Cypriot Matz Holdings",
+  "home": "CY",
+  "state": false,
+  "kind": "company",
+  "parent": "Matz Holdings Ltd",
+  "note": "Cyprus-registered; ICIJ reports Sudanese businessman Abdelbasit Hamza as an owner",
+  "source": "https://icij.org/?p=26473"
+ },
+ {
+  "name": "Tantalum Egypt J.S.C.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Tantalum Egypt",
+  "note": "50/50 Tantalum International (AU) and Egyptian state (ECMR); disputed after Egypt took the project in 2015, settled 2021",
+  "source": "https://en.wikipedia.org/wiki/Abu_Dabab_mine"
+ },
+ {
+  "name": "Tantalum International Pty",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Arrowhead Resources (formerly Gippsland Ltd)",
+  "note": "Australian ASX/AIM company",
+  "source": "https://en.wikipedia.org/wiki/Abu_Dabab_mine"
+ },
+ {
+  "name": "Sinai Manganese Co.",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt (Chemical Industries Holding Co.)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Chemical Industries Holding Co.",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt",
+  "note": "state holding company",
+  "source": null
+ },
+ {
+  "name": "Phosphate Misr Co. S.A.E.",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt",
+  "note": "owned by state bank and state petroleum holdings",
+  "source": null
+ },
+ {
+  "name": "National Investment Bank",
+  "home": "EG",
+  "state": true,
+  "kind": "dfi",
+  "parent": "Government of Egypt",
+  "note": "state investment bank",
+  "source": null
+ },
+ {
+  "name": "Ganoub El Wadi Holding Co.",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt",
+  "note": "petroleum ministry holding company",
+  "source": null
+ },
+ {
+  "name": "Egyptian General Petroleum Corp.",
+  "home": "EG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Egypt (EGPC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sukari Gold Mine Co.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sukari Gold Mines",
+  "note": "50/50 Centamin (GB, Jersey) and Egyptian Mineral Resources Authority",
+  "source": null
+ },
+ {
+  "name": "Centamin Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Centamin",
+  "note": "Jersey-incorporated, London-listed",
+  "source": null
+ },
+ {
+  "name": "Bisha Mining Share Co.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Zijin Mining (via Nevsun)",
+  "note": "60% Nevsun Resources (CA); Zijin's takeover offer for Nevsun closed 28 Dec 2018 with ~89% tendered (CA for most of 2018); 40% ENAMCO",
+  "source": "https://www.globalminingreview.com/finance-business/08012019/zijin-mining-purchases-further-nevsun-resources-shares/"
+ },
+ {
+  "name": "Zara Mining Share Co.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Shanghai SFECO Group",
+  "note": "SFECO 60%, ENAMCO 40%",
+  "source": null
+ },
+ {
+  "name": "China Shanghai Corporation for Foreign and Technological Cooperation (SFECO)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Shanghai SFECO Group",
+  "note": "Shanghai state-owned enterprise",
+  "source": null
+ },
+ {
+  "name": "Lufafa Mine PTY Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Lufafa Mine (Pty) Ltd",
+  "note": "SDZ Holdings 50%, Ingwenyama 25%, Government of Eswatini 25%",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-eswatini.pdf"
+ },
+ {
+  "name": "SDZ Holdings LLC.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "owner unclear; 2015 reporting tied the 50% to US jeweller Jacob & Co (Jacob Arabo)",
+  "source": "https://mg.co.za/article/2015-12-11-00-bling-king-is-mswatis-golden-boy"
+ },
+ {
+  "name": "Ingwenyama",
+  "home": "SZ",
+  "state": true,
+  "kind": "state",
+  "parent": "King of Eswatini (Ingwenyama)",
+  "note": "held in trust for the Swazi nation",
+  "source": "https://gov.sz/images/lufafa.pdf"
+ },
+ {
+  "name": "Ethiopian Minerals, Petroleum and Biofuel Co.",
+  "home": "ET",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Ethiopia",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Ressources Golden Grams SARL",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Managem (Al Mada)",
+  "note": "Managem subsidiary; stopped Bakoudou operations Oct 2017",
+  "source": "https://ledesk.ma/2016/01/06/colere-contre-la-compagnie-royale-managem-au-gabon/"
+ },
+ {
+  "name": "Compagnie Industrielle et Commerciale des Mines de Huazhou (CICMHZ)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "CITIC Group (via CITIC Dameng)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Citic Dameng Holdings Ltd. (DAMENG)]",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "CITIC Group",
+  "note": "HK-listed; controlled by state-owned CITIC Group and Guangxi Dameng",
+  "source": null
+ },
+ {
+  "name": "Compagnie Minierè de l'Ogooué S.A. (Comilog)",
+  "home": "FR",
+  "state": false,
+  "kind": "company",
+  "parent": "Eramet",
+  "note": "Eramet 63.7%, Gabon state 28.9%",
+  "source": null
+ },
+ {
+  "name": "Société Equatoriale des Mines (SEM)",
+  "home": "GA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Gabon (SEM)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Formang Holding BV",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Netherlands-registered holder of ~7% of Comilog; beneficial owner not found",
+  "source": "https://www.financialafrik.com/2018/05/21/gabon-bons-resultats-pour-la-comilog-au-cours-du-1er-trimestre-2018/"
+ },
+ {
+  "name": "Other",
+  "home": "GA",
+  "state": false,
+  "kind": "local",
+  "parent": "other shareholders",
+  "note": "generic local holder; Gabon only",
+  "source": null
+ },
+ {
+  "name": "Asanko Gold Inc.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Asanko Gold",
+  "note": "Asanko 45%, Gold Fields 45%, Ghana 10%",
+  "source": null
+ },
+ {
+  "name": "Ghana Bauxite Company Ltd. (GBCL)",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Bosai Minerals Group",
+  "note": "Bosai 80%, Ghana 20%",
+  "source": null
+ },
+ {
+  "name": "Bosai Minerals Group Co. Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Bosai Minerals Group",
+  "note": "private Chongqing group",
+  "source": null
+ },
+ {
+  "name": "Resolute (Bibiani) Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Resolute Mining",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Golden Star (Bogoso/Prestea) Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Golden Star Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Chirano Gold Mine Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Kinross Gold",
+  "note": "Kinross 90%",
+  "source": null
+ },
+ {
+  "name": "Abosso Goldfields Ltd",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Gold Fields",
+  "note": "Gold Fields 71.1%, IAMGOLD 18.9%, Ghana 10%",
+  "source": null
+ },
+ {
+  "name": "Gold Fields Ghana Holdings Limited",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Gold Fields",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "IAMGold",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "IAMGOLD",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Perseus Mining Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Perseus Mining",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Ghana Manganese Company Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Ningxia Tianyuan Manganese",
+  "note": "Tian Yuan 90%, Ghana 10%",
+  "source": null
+ },
+ {
+  "name": "Tian Yuan Manganese Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Ningxia Tianyuan Manganese",
+  "note": "private Chinese group",
+  "source": null
+ },
+ {
+  "name": "Great Consolidated Diamond Ghana Ltd.",
+  "home": "GH",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Ghana",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Association pour la Recherche et l'Explotation du Diamant et de l'Or",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "Batax Bouna International Mining",
+  "note": "owner not identified",
+  "source": null
+ },
+ {
+  "name": "Batax Bouna International Mining Corp.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "owner not identified",
+  "source": null
+ },
+ {
+  "name": "Hongqiao Group Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "China Hongqiao Group",
+  "note": "private (Zhang family)",
+  "source": null
+ },
+ {
+  "name": "Compagnie des Bauxites de Kindia S.A. (CBK)",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "UC Rusal",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Friguia Bauxite and Alumina Complex",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "UC Rusal",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Société Minière de Dinguiraye",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Nordgold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Compagnie des Bauxites de Guinée (CBG)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Compagnie des Bauxites de Guinée",
+  "note": "Government of Guinea 49%, Halco 51% (Alcoa 45%, Rio Tinto 45%, Dadco 10%)",
+  "source": "https://en.wikipedia.org/wiki/Halco_Mining"
+ },
+ {
+  "name": "Alcoa Inc.",
+  "home": "US",
+  "state": false,
+  "kind": "company",
+  "parent": "Alcoa Corp.",
+  "note": "Alcoa Inc. split in 2016; bauxite assets went to Alcoa Corp.",
+  "source": null
+ },
+ {
+  "name": "Rio Tinto Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rio Tinto",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Dadco Group",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Dadco (Dahdaleh family)",
+  "note": "privately owned group chaired by Victor Dahdaleh; UK/Channel Islands-based",
+  "source": "https://dadcoalumina.com/about/"
+ },
+ {
+  "name": "Société AngloGold Ashanti de Guinée S.A.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "AngloGold Ashanti",
+  "note": "AngloGold 85%, Guinea 15%",
+  "source": null
+ },
+ {
+  "name": "Geofirm (EA) Ltd.",
+  "home": "KE",
+  "state": false,
+  "kind": "company",
+  "parent": "Geofirm (EA) Ltd",
+  "note": "local company (by name); not verified",
+  "source": null
+ },
+ {
+  "name": "Samruddha Resources Kenya Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Kenyan-registered with Indian management and exports to India; parent not found",
+  "source": "https://www.businessdailyafrica.com/bd/corporate/companies/miner-to-resume-taveta-operations-eyes-new-orders-4719714"
+ },
+ {
+  "name": "Base Resources Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Base Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Storm Mountain Diamonds (Proprietary) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "Namakwa Diamonds",
+  "note": "Namakwa 62.5-75%, Government of Lesotho 25%; Namakwa's 2018 owners unclear",
+  "source": "https://www.engineeringnews.co.za/article/namakwa-diamonds-likely-to-delist-from-the-aim-2013-02-08"
+ },
+ {
+  "name": "Namakwa Diamonds Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "AIM-delisted 2013, then ~75% held by BVI vehicles of Ukrainian Eduard Prutnik; 2018 owners not confirmed",
+  "source": "https://www.engineeringnews.co.za/article/namakwa-diamonds-likely-to-delist-from-the-aim-2013-02-08"
+ },
+ {
+  "name": "Kimberlite Investments Lesotho Ltd.",
+  "home": "LS",
+  "state": false,
+  "kind": "company",
+  "parent": "Kimberlite Investments Lesotho",
+  "note": "local company (by name); not verified",
+  "source": null
+ },
+ {
+  "name": "Letšeng Diamonds (Proprietary) Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Gem Diamonds",
+  "note": "Gem Diamonds 70%, Lesotho 30%",
+  "source": null
+ },
+ {
+  "name": "Liqhobong Mining Development Company (Proprietary) Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Firestone Diamonds",
+  "note": "Firestone 75%",
+  "source": null
+ },
+ {
+  "name": "Firestone Diamonds Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Firestone Diamonds",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Mothae Diamonds (Pty) Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Lucapa Diamond Co.",
+  "note": "Lucapa 70%",
+  "source": null
+ },
+ {
+  "name": "China Union Investment (Liberia) Bong Mines Co.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "WISCO (China Baowu)",
+  "note": "WISCO 60% per USGS; concession held with China-Union (Hong Kong) Mining",
+  "source": "https://www.resourcecontracts.org/contract/ocds-591adf-6387856838"
+ },
+ {
+  "name": "Wuhan Iron and Steel (Group) Corp. (WISCO)",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Baowu Steel",
+  "note": "WISCO merged into China Baowu in 2016",
+  "source": null
+ },
+ {
+  "name": "Bea Mountain Mining Corp.",
+  "home": "TR",
+  "state": false,
+  "kind": "company",
+  "parent": "MNG Group (via Avesoro Resources)",
+  "note": "Avesoro 90%",
+  "source": "https://www.mining.com/controlling-shareholder-grabs-avesoro-resources/"
+ },
+ {
+  "name": "Avesoro Resources Inc.",
+  "home": "TR",
+  "state": false,
+  "kind": "company",
+  "parent": "MNG Group (Avesoro Jersey)",
+  "note": "~73% held by Avesoro Jersey Ltd, part of Turkey's MNG Group",
+  "source": "https://www.mining.com/controlling-shareholder-grabs-avesoro-resources/"
+ },
+ {
+  "name": "Ambatovy Minerals S.A.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Ambatovy",
+  "note": "Sumitomo (JP) 47.7%, KORES (KR, state) 40.3%, Sherritt (CA) 12%",
+  "source": null
+ },
+ {
+  "name": "Sumitomo Corp.",
+  "home": "JP",
+  "state": false,
+  "kind": "company",
+  "parent": "Sumitomo Corp.",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Korea Resources Corp.",
+  "home": "KR",
+  "state": true,
+  "kind": "state",
+  "parent": "Korea Resources Corp. (KORES)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sherritt International Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Sherritt International",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Etablissements Gallois S.A.",
+  "home": "MG",
+  "state": false,
+  "kind": "company",
+  "parent": "Etablissements Gallois",
+  "note": "Malagasy graphite producer (local company); owners not confirmed",
+  "source": "https://projectblue.com/blue/news-analysis/901/expansions-for-gallois-graphite-in-malaysia-"
+ },
+ {
+  "name": "Bass Metals Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Bass Metals",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "QIT Madagascar Minerals S.A.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rio Tinto",
+  "note": "Rio Tinto 80%, Madagascar state 20%",
+  "source": null
+ },
+ {
+  "name": "QIT Fer et Titane of Canada",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rio Tinto",
+  "note": "Canadian subsidiary of Rio Tinto",
+  "source": null
+ },
+ {
+  "name": "Power Stand Development (H.K.) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Hong Kong-registered (per name), presumably Chinese-owned; owners not found",
+  "source": null
+ },
+ {
+  "name": "Tirupati Graphite Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Tirupati Graphite plc",
+  "note": "London-based plc set up 2017 by Indian founders; bought Sahamamy Jan 2018",
+  "source": "https://www.globalminingreview.com/exploration-development/28032019/tirupati-graphite-plc-commences-first-flake-graphite-production-at-newly-constructed-madagascar-plant/"
+ },
+ {
+  "name": "Optichem (2000) Ltd.",
+  "home": "MW",
+  "state": false,
+  "kind": "company",
+  "parent": "Optichem (2000) Ltd",
+  "note": "Blantyre fertiliser maker (local company); owners not found",
+  "source": "https://apps.usgs.gov/minerals-information-archives/myb3/updates/myb3-2008-malawi.pdf"
+ },
+ {
+  "name": "Société d'Éxploitation des Mines d'Or de Kalana S.A.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Endeavour Mining",
+  "note": "Endeavour 80%; Endeavour Cayman-incorporated, TSX-listed, London corporate office in 2018",
+  "source": "https://www.globaldata.com/company-profile/endeavour-mining-corporation/locations/"
+ },
+ {
+  "name": "Société des Mines de Loulo S.A. (Somilo)",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Randgold Resources",
+  "note": "Randgold 80%, Mali 20%",
+  "source": null
+ },
+ {
+  "name": "Société des Mines de Morila S.A.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Morila",
+  "note": "Randgold (GB) 40%, AngloGold Ashanti (ZA) 40%, Mali 20%",
+  "source": null
+ },
+ {
+  "name": "Société d'Éxploitation des Mines d'Or de Sadiola S.A.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "SEMOS (Sadiola)",
+  "note": "AngloGold Ashanti (ZA) 41%, IAMGOLD (CA) 41%, Mali 18%",
+  "source": null
+ },
+ {
+  "name": "Société des Mines de Syama S.A.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Resolute Mining",
+  "note": "Resolute 80%",
+  "source": null
+ },
+ {
+  "name": "Sadiola Exploration Company Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Sadiola Exploration (Yatela)",
+  "note": "AngloGold Ashanti (ZA) 40%, IAMGOLD (CA) 40%, Mali 20%",
+  "source": null
+ },
+ {
+  "name": "Mauritanian Copper Mines S.A. (MCM)",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "First Quantum Minerals",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Tasiast Mauritanie Ltd. S.A.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Kinross Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Société Minière de Bou Gaffer (SOMIFER)",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Managem (Al Mada)",
+  "note": "Managem subsidiary",
+  "source": null
+ },
+ {
+  "name": "Compagnie de Tifnout Tighanimine (CTT)",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Managem (Al Mada)",
+  "note": "Managem subsidiary",
+  "source": null
+ },
+ {
+  "name": "Société d'Exploitation des Mines du Rif (SEFERIF)",
+  "home": "MA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Morocco (ONHYM)",
+  "note": "USGS lists ONHYM as 100% owner",
+  "source": null
+ },
+ {
+  "name": "Société Anonyme Chérifienne d'Etudes Minières (SACEM)",
+  "home": "MA",
+  "state": null,
+  "kind": "company",
+  "parent": "BRPM-ONHYM (Moroccan state) / Comilog",
+  "note": "Moroccan state (BRPM, now ONHYM) largest holder at 43%, Comilog (Eramet) 30%; chaired by ONHYM's head",
+  "source": "https://www.kerix.net/fr/annuaire-entreprise/sacem"
+ },
+ {
+  "name": "Compagnie Minière de l'Ogooué SA (COMILOG)",
+  "home": "FR",
+  "state": false,
+  "kind": "company",
+  "parent": "Eramet",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Compagnie Minière de Touissit (CMT)",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Compagnie Minière de Touissit",
+  "note": "Casablanca-listed; largest holder Osead Maroc Mining (~37%), private-equity held",
+  "source": "https://echanges.dila.gouv.fr/OPENDATA/AMF/ACT/2018/05/FCACT042631_20180507.pdf"
+ },
+ {
+  "name": "Emerging Capital Partners",
+  "home": "US",
+  "state": false,
+  "kind": "company",
+  "parent": "Emerging Capital Partners",
+  "note": "Washington DC-based Africa private equity firm",
+  "source": "https://www.infrastructureinvestor.com/ecp-truffle-pay-53m-for-moroccan-mines/"
+ },
+ {
+  "name": "Truffle Capital",
+  "home": "FR",
+  "state": false,
+  "kind": "company",
+  "parent": "Truffle Capital",
+  "note": "Paris private equity firm",
+  "source": "https://www.infrastructureinvestor.com/ecp-truffle-pay-53m-for-moroccan-mines/"
+ },
+ {
+  "name": "Compagnie Miniere de Oumjrane S.A (CMO)",
+  "home": "MA",
+  "state": false,
+  "kind": "company",
+  "parent": "Managem (Al Mada)",
+  "note": "Managem subsidiary",
+  "source": null
+ },
+ {
+  "name": "GK Ancuabe Graphite Mine S.A.",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "AMG Advanced Metallurgical Group",
+  "note": "Graphit Kropfmühl (DE, AMG subsidiary) 90%, EMEM 10%",
+  "source": null
+ },
+ {
+  "name": "Graphit Kropfmühl GmbH",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "AMG Advanced Metallurgical Group",
+  "note": "German subsidiary of Amsterdam-based AMG",
+  "source": null
+ },
+ {
+  "name": "Empresa Moçambicana de Exploração Mineira, S.A. (EMEM)",
+  "home": "MZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Mozambique (EMEM)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Syrah Resources Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Syrah Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Twigg Exploration and Mining Limitada",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Syrah Resources",
+  "note": "Syrah subsidiary",
+  "source": null
+ },
+ {
+  "name": "Xtract Resources Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Xtract Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Explorator Limitada",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Xtract Resources",
+  "note": "Xtract subsidiary",
+  "source": null
+ },
+ {
+  "name": "Noventa Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Noventa Ltd",
+  "note": "Jersey-registered, AIM-listed; Marropino halted 2013",
+  "source": "https://en.wikipedia.org/wiki/Marropino_mine"
+ },
+ {
+  "name": "Haiyu (Mozambique) Mining Company Lda.",
+  "home": "CN",
+  "state": null,
+  "kind": "company",
+  "parent": "Haiyu (Chinese group)",
+  "note": "Chinese-owned; parent group and state status not confirmed",
+  "source": "https://clubofmozambique.com/news/mozambique-400-sq-kilometres-of-inhambane-beach-to-be-mined-by-joseph-hanlon/"
+ },
+ {
+  "name": "Kenmare Resources Plc",
+  "home": "IE",
+  "state": false,
+  "kind": "company",
+  "parent": "Kenmare Resources",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "De Beers Marine Namibia (Pty) Ltd. (Debmarine)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Debmarine Namibia",
+  "note": "50/50 De Beers (Anglo American, GB) and Government of Namibia",
+  "source": null
+ },
+ {
+  "name": "Swakop Uranium (Pty) Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China General Nuclear (CGN)",
+  "note": "Taurus Minerals (CGN 60%, CADFund 40%) 90%, Epangelo 10%",
+  "source": "https://en.wikipedia.org/wiki/Husab_Mine"
+ },
+ {
+  "name": "Taurus Minerals Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China General Nuclear (CGN)",
+  "note": "CGN 60%, China-Africa Development Fund 40%",
+  "source": "https://en.wikipedia.org/wiki/Husab_Mine"
+ },
+ {
+  "name": "Langer Heinrich Uranium (Pty.) Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Paladin Energy",
+  "note": "Paladin 75%, CNNC 25%",
+  "source": null
+ },
+ {
+  "name": "CNNC Overseas Uranium Holdings Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China National Nuclear Corp. (CNNC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sakawe Mining Corp. (Samicor)",
+  "home": "IL",
+  "state": false,
+  "kind": "company",
+  "parent": "Leviev Group (Lev Leviev)",
+  "note": "Leviev 76%, Namibian partners and workers the rest",
+  "source": "https://idexonline.com/FullArticle?Id=24293"
+ },
+ {
+  "name": "Leviev Group",
+  "home": "IL",
+  "state": false,
+  "kind": "company",
+  "parent": "Leviev Group (Lev Leviev)",
+  "note": "Israeli businessman Lev Leviev's group",
+  "source": null
+ },
+ {
+  "name": "Longlife Mining Corp.",
+  "home": "NA",
+  "state": false,
+  "kind": "company",
+  "parent": "Longlife Mining",
+  "note": "Namibian black empowerment group (local)",
+  "source": "https://idexonline.com/FullArticle?Id=24293"
+ },
+ {
+  "name": "Sakawe Mining Corp. employees",
+  "home": "NA",
+  "state": false,
+  "kind": "local",
+  "parent": "Samicor employees",
+  "note": "employee trust",
+  "source": null
+ },
+ {
+  "name": "Guinea Fowl Investments Twenty Six",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "QKR Corporation",
+  "note": "QKR Namibia operating company; QKR's major shareholders Qatar Holding (QA, state) and Kulczyk Investments (LU/PL), split not found",
+  "source": "https://www.miningweekly.com/article/private-company-buys-navachab-from-anglogold-2014-02-10"
+ },
+ {
+  "name": "QKR Corp. Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "QKR Corporation",
+  "note": "major shareholders Qatar Holding (QA, state) and Kulczyk Investments (LU/PL), split not found",
+  "source": "https://www.miningweekly.com/article/private-company-buys-navachab-from-anglogold-2014-02-10"
+ },
+ {
+  "name": "Imerys Gecko Holdings (Pty) Ltd.",
+  "home": "BE",
+  "state": false,
+  "kind": "company",
+  "parent": "Groupe Bruxelles Lambert (via Imerys)",
+  "note": "Imerys 51%, Gecko Namibia 49%; Paris-listed Imerys ~54% owned by Belgium's GBL (FR if classed by Imerys)",
+  "source": "https://en.wikipedia.org/wiki/Imerys"
+ },
+ {
+  "name": "Imerys Group",
+  "home": "BE",
+  "state": false,
+  "kind": "company",
+  "parent": "Groupe Bruxelles Lambert",
+  "note": "Paris-listed, ~54% owned by Belgium's GBL; listed subsidiary takes parent's home (FR if classed by Imerys)",
+  "source": "https://en.wikipedia.org/wiki/Imerys"
+ },
+ {
+  "name": "Gecko Namibia (Pty) Ltd.",
+  "home": "NA",
+  "state": false,
+  "kind": "company",
+  "parent": "Gecko Namibia",
+  "note": "Namibian private group",
+  "source": "https://www.northerngraphite.com/northern-graphite-to-acquire-two-graphite-mines-from-imerys-group/"
+ },
+ {
+  "name": "B2Gold Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "B2Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "EVI Mining (Pty) Ltd.",
+  "home": "NA",
+  "state": false,
+  "kind": "company",
+  "parent": "EVI Mining",
+  "note": "Namibian empowerment company",
+  "source": "https://www.sec.gov/Archives/edgar/data/1429937/000106299320001433/exhibit99-1.htm"
+ },
+ {
+  "name": "Purity Manganese (Pty) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Otjozondu owners changed (Shaw River Manganese, AU, then MN Holdings); 2018 owner unclear",
+  "source": "https://www.northernminer.com/news/banner-acquisition-hits-snag/1000094818/"
+ },
+ {
+  "name": "Rössing Uranium Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rio Tinto",
+  "note": "Rio Tinto 68.6% in 2018; sold to CNNC (CN) in 2019",
+  "source": null
+ },
+ {
+  "name": "Iranian Foreign Investment Company",
+  "home": "IR",
+  "state": true,
+  "kind": "dfi",
+  "parent": "Government of Iran",
+  "note": "Iranian sovereign investment vehicle",
+  "source": null
+ },
+ {
+  "name": "Industrial Development Corp. of South Africa Ltd.",
+  "home": "ZA",
+  "state": true,
+  "kind": "dfi",
+  "parent": "Industrial Development Corporation (South Africa)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Government of Namibia",
+  "home": "NA",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Namibia",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Compagnie Minière d'Akouta (COMINAK)",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "COMINAK",
+  "note": "Areva/Orano (FR, state) 34%, SOPAMIN (NE, state) 31%, OURD (JP) 25%, ENUSA (ES, state) 10%",
+  "source": "https://en.wikipedia.org/wiki/COMINAK"
+ },
+ {
+  "name": "Overseas Uranium Resources Development Co.",
+  "home": "JP",
+  "state": false,
+  "kind": "company",
+  "parent": "Overseas Uranium Resources Development Co.",
+  "note": "Japanese company; stake bought by Orano in 2021",
+  "source": "https://en.wikipedia.org/wiki/COMINAK"
+ },
+ {
+  "name": "ENUSA Industrias Avanzadas S.A.",
+  "home": "ES",
+  "state": true,
+  "kind": "company",
+  "parent": "SEPI (Spanish state)",
+  "note": "Spanish state-owned nuclear fuel company",
+  "source": "https://en.wikipedia.org/wiki/COMINAK"
+ },
+ {
+  "name": "Société des Mines de l'Aïr (SOMAIR)",
+  "home": "FR",
+  "state": true,
+  "kind": "company",
+  "parent": "Areva / Orano",
+  "note": "Areva 63.4%, SOPAMIN 36.6%",
+  "source": null
+ },
+ {
+  "name": "Société des Mines d'Azelik S.A.",
+  "home": "CN",
+  "state": true,
+  "kind": "jv",
+  "parent": "CNNC (via SinoU)",
+  "note": "CNNC 37.2%, ZXJOY Invest (CN) 24.8%, SOPAMIN 33%, Korean state 5%",
+  "source": "https://en.wikipedia.org/wiki/Oil_and_mining_industry_of_Niger"
+ },
+ {
+  "name": "National Iron Ore Mining Co. Ltd.",
+  "home": "NG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Nigeria (NIOMCO)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Astro Minerals Ltd.",
+  "home": "NG",
+  "state": false,
+  "kind": "company",
+  "parent": "Astro Minerals Ltd",
+  "note": "Plateau State company; owners not found (local assumed)",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-nigeria.pdf"
+ },
+ {
+  "name": "Sodex Mines Nigeria Ltd.",
+  "home": "NG",
+  "state": false,
+  "kind": "company",
+  "parent": "Sodex Mines Nigeria Ltd",
+  "note": "Nigerian company; owners not found (local assumed)",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-nigeria.pdf"
+ },
+ {
+  "name": "Chengzhou Mining Company Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Nigerian operator with a Chinese-sounding name; owners not found",
+  "source": null
+ },
+ {
+  "name": "Coltan Minerals Ltd.",
+  "home": "NG",
+  "state": false,
+  "kind": "company",
+  "parent": "Coltan Minerals Ltd",
+  "note": "Plateau State company; owners not found (local assumed)",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-nigeria.pdf"
+ },
+ {
+  "name": "First Premier Mining & Exploration Ltd.",
+  "home": "NG",
+  "state": false,
+  "kind": "company",
+  "parent": "First Premier Mining & Exploration Ltd",
+  "note": "Nigerian company; owners not found (local assumed)",
+  "source": null
+ },
+ {
+  "name": "Taoshi Mining and Exploration Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Nigerian operator with a Chinese-sounding name; owners not found",
+  "source": "https://pubs.usgs.gov/myb/vol3/2017-18/myb3-2017-18-nigeria.pdf"
+ },
+ {
+  "name": "Rutongo Mines Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Kemet International (Brian Menell)",
+  "note": "Tinco 100% per USGS; Tinco controlled by Kemet International, private vehicle of South African Brian Menell; domicile of Kemet not found",
+  "source": "https://www.prnewswire.co.uk/news-releases/tinco-completes-placing-145094725.html"
+ },
+ {
+  "name": "Tinco Investments Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Kemet International (Brian Menell)",
+  "note": "controlled by Kemet International, private vehicle of South African Brian Menell; domicile of Kemet not found",
+  "source": "https://www.prnewswire.co.uk/news-releases/tinco-completes-placing-145094725.html"
+ },
+ {
+  "name": "TiZir Ltd.",
+  "home": "FR",
+  "state": false,
+  "kind": "company",
+  "parent": "Eramet",
+  "note": "50/50 Eramet-Mineral Deposits until Eramet took over MDL in Aug 2018",
+  "source": "https://www.miningweekly.com/article/eramet-to-acquire-remaining-mdl-shares-2018-08-06"
+ },
+ {
+  "name": "Mineral Deposits Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Mineral Deposits Ltd",
+  "note": "ASX-listed; taken over by Eramet (FR) in Aug 2018",
+  "source": "https://www.miningweekly.com/article/eramet-to-acquire-remaining-mdl-shares-2018-08-06"
+ },
+ {
+  "name": "Oromin Joint Venture Group",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Teranga Gold",
+  "note": "Teranga 90%",
+  "source": null
+ },
+ {
+  "name": "Teranga Gold Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Teranga Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Industries Chimiques du Sénégal Group",
+  "home": "SG",
+  "state": false,
+  "kind": "company",
+  "parent": "Indorama Corporation",
+  "note": "Indorama 66% since 2014; IFFCO/Government of India and Senegal state minorities",
+  "source": "https://www.eib.org/en/press/all/2016-264-la-bei-soutient-les-industries-chimiques-au-senegal"
+ },
+ {
+  "name": "Archean Group",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Archean Group",
+  "note": "USGS shares may predate Indorama's 2014 takeover",
+  "source": null
+ },
+ {
+  "name": "Government of India",
+  "home": "IN",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of India",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Indian Farmers Fertilizer Cooperative Ltd.",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Indian Farmers Fertiliser Cooperative (IFFCO)",
+  "note": "farmers' cooperative",
+  "source": null
+ },
+ {
+  "name": "Government of Senegal",
+  "home": "SN",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Senegal",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Timis Corp.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "Timis Corporation (Frank Timis)",
+  "note": "private vehicle of Romanian-born Australian businessman Frank Timis; domicile not found",
+  "source": "https://www.cityam.com/timis-swoops-save-iron-mine-sierra-leone/"
+ },
+ {
+  "name": "Sierra Mineral Holdings I Ltd.",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "Vimetco N.V.",
+  "note": "Vimetco 100%",
+  "source": "https://alcircle.com/news/vimetco-subsidiary-smhl-suspends-bauxite-mining-operations-in-sierra-leone-89743"
+ },
+ {
+  "name": "Vimetco N.V.",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "Vimetco N.V.",
+  "note": "Dutch holding chaired and controlled by the Machitski family (Russian-born); owns Romania's Alro",
+  "source": "https://aluminiumtoday.com/news/vimetco-2010-financial-results"
+ },
+ {
+  "name": "Tonkolili Iron Ore (SL) Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Shandong Iron & Steel Group",
+  "note": "Shandong 100% since Apr 2015; USGS shares stale",
+  "source": "https://www.prnewswire.co.uk/news-releases/shandong-iron-and-steel-group-acquires-remaining-stake-in-tonkolili-iron-ore-project-500899801.html"
+ },
+ {
+  "name": "African Minerals Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "African Minerals Ltd",
+  "note": "Bermuda-incorporated, AIM-listed, London-based; in administration since 2015, lost Tonkolili to Shandong",
+  "source": "https://www.prnewswire.co.uk/news-releases/shandong-iron-and-steel-group-acquires-remaining-stake-in-tonkolili-iron-ore-project-500899801.html"
+ },
+ {
+  "name": "Shandong Iron and Steel Group Co. Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Shandong Iron & Steel Group",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "OCTÉA Diamond Group",
+  "home": "IL",
+  "state": false,
+  "kind": "company",
+  "parent": "BSG Resources (Beny Steinmetz)",
+  "note": "Guernsey-registered Octéa/BSGR (in administration Mar 2018), ultimately held for the family of Israeli Beny Steinmetz; GG if classed by registration",
+  "source": "https://www.mining.com/web/beny-steinmetzs-mining-firm-bsgr-enters-administration-protect/"
+ },
+ {
+  "name": "BSG Resources Ltd.",
+  "home": "IL",
+  "state": false,
+  "kind": "company",
+  "parent": "BSG Resources (Beny Steinmetz)",
+  "note": "Guernsey-registered, in administration Mar 2018; ultimately held for the family of Israeli Beny Steinmetz; GG if classed by registration",
+  "source": "https://www.mining.com/web/beny-steinmetzs-mining-firm-bsgr-enters-administration-protect/"
+ },
+ {
+  "name": "Sedibeng Iron Ore (Pty) Ltd.",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Tata Steel (via Black Ginger 461)",
+  "note": "Black Ginger 64%, BEE 26%, IDC 10%; Swiss-based IMR took over management c. 2018-19",
+  "source": "https://www.engineeringnews.co.za/article/tata-idc-to-set-up-beneficiation-plant-at-n-cape-mine-2013-06-25"
+ },
+ {
+  "name": "Black Ginger (Pty) Ltd.",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Tata Steel",
+  "note": "Tata Steel subsidiary",
+  "source": "https://www.engineeringnews.co.za/article/tata-idc-to-set-up-beneficiation-plant-at-n-cape-mine-2013-06-25"
+ },
+ {
+  "name": "Black Mountain Mineral Development Co. (Pty) Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Vedanta Resources",
+  "note": "Vedanta 74%; Vedanta controlled by Indian Anil Agarwal; Indian parent Vedanta Ltd",
+  "source": null
+ },
+ {
+  "name": "Vedanta Resources plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Vedanta Resources",
+  "note": "controlled by Indian Anil Agarwal; Indian parent Vedanta Ltd",
+  "source": null
+ },
+ {
+  "name": "Atlatsa Resource Corp.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Atlatsa Resources",
+  "note": "JSE/TSX-listed; ~62% held by BEE vehicle Atlatsa Holdings (Pelawan), Anglo American Platinum ~23%",
+  "source": "https://www.newswire.ca/news-releases/atlatsa-resources-corporation---revised-restructure-plan-announced-512145611.html"
+ },
+ {
+  "name": "Sibanye Gold Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Sibanye-Stillwater",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "ASA Metals (Pty) Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Sinosteel",
+  "note": "Sinosteel 60%, Limpopo provincial agency 40%",
+  "source": null
+ },
+ {
+  "name": "Sinosteel Corp.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Sinosteel",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Limpopo Economic Development Enterprise",
+  "home": "ZA",
+  "state": true,
+  "kind": "state",
+  "parent": "Limpopo provincial government",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Afrimat Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Afrimat",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Assore Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Assore",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "DRDGold Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "DRDGold",
+  "note": "Sibanye-Stillwater took 38% in 2018",
+  "source": null
+ },
+ {
+  "name": "Phosphate Development Corp. Ltd.",
+  "home": "ZA",
+  "state": true,
+  "kind": "company",
+  "parent": "Industrial Development Corporation (via Foskor)",
+  "note": "Foskor ~59% (ordinary shares) owned by state IDC",
+  "source": "https://www.miningmx.com/news/markets/54540-idc-revives-plan-to-list-foskor-after-phosphate-producer-posts-profit/"
+ },
+ {
+  "name": "Foskor (Pty) Ltd.",
+  "home": "ZA",
+  "state": true,
+  "kind": "company",
+  "parent": "Industrial Development Corporation",
+  "note": "~59% (ordinary shares) owned by state IDC; Coromandel (IN) 14%",
+  "source": "https://www.miningmx.com/news/markets/54540-idc-revives-plan-to-list-foskor-after-phosphate-producer-posts-profit/"
+ },
+ {
+  "name": "Jagersfontein Developments (Pty) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Superkolong consortium, later Reinet Investments (LU, Johann Rupert), sold to Stargems (AE) 2022; 2018 owner not confirmed",
+  "source": "https://www.mining.com/web/dubai-based-owner-of-south-africa-mine-waste-dam-probing-breach/"
+ },
+ {
+  "name": "United Manganese of Kalahari (Pty) Ltd. (UMK)",
+  "home": "ZA",
+  "state": false,
+  "kind": "jv",
+  "parent": "Majestic Silver Trading 40 / Renova",
+  "note": "Majestic Silver Trading 40 (ZA, BEE) 51%, Renova (RU) 49%",
+  "source": "https://www.miningmx.com/news/markets/20884-russians-launch-manganese-mine-in-sa/"
+ },
+ {
+  "name": "Majestic Silver Trading 40 (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Majestic Silver Trading 40",
+  "note": "South African empowerment consortium",
+  "source": "https://www.miningmx.com/news/markets/20884-russians-launch-manganese-mine-in-sa/"
+ },
+ {
+  "name": "Renova Group of Russia",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Renova Group (Viktor Vekselberg)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Ekapa Mining (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Ekapa Mining",
+  "note": "private South African company; Ekapa Minerals JV with Petra (49.9%)",
+  "source": "https://www.kimberley.org.za/petra-diamonds-ekapa-mining-finalize-kimberley-joint-venture/"
+ },
+ {
+  "name": "Kroondal Platinum Mines",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Kroondal",
+  "note": "50/50 Sibanye-Stillwater (ZA) and Anglo American Platinum (GB via Anglo American)",
+  "source": null
+ },
+ {
+  "name": "Asia Minerals Ltd. (AML)",
+  "home": "HK",
+  "state": false,
+  "kind": "company",
+  "parent": "Asia Minerals Ltd",
+  "note": "Hong Kong-based manganese group founded 1993; holds 49% of Kudumane",
+  "source": "https://www.manganese.org/en/sponsor/asia-minerals-limited-aml"
+ },
+ {
+  "name": "DiamondCorp Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "DiamondCorp plc",
+  "note": "AIM-listed",
+  "source": null
+ },
+ {
+  "name": "Guangxi N&H Metallurgy Development Co.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown Guangxi (China) company",
+  "note": "name indicates Guangxi, China; owners not found",
+  "source": null
+ },
+ {
+  "name": "Evraz Highveld Steel and Vanadium Corp. Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "EVRAZ plc",
+  "note": "Evraz 85% of Highveld; Highveld and Mapochs in business rescue since 2015; EVRAZ plc London-listed, controlled by Russian shareholders (Abramovich, Abramov, Frolov)",
+  "source": "https://www.prnewswire.co.uk/news-releases/evraz-highveld-files-for-business-rescue-what-will-be-the-impact-on-the-vanadium-market-500127191.html"
+ },
+ {
+  "name": "Ervaz Group S.A.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "EVRAZ plc",
+  "note": "Evraz Group S.A. is the Luxembourg subsidiary of London-listed EVRAZ plc (Russian-controlled)",
+  "source": "https://www.prnewswire.co.uk/news-releases/evraz-highveld-files-for-business-rescue-what-will-be-the-impact-on-the-vanadium-market-500127191.html"
+ },
+ {
+  "name": "Platinum Group Metals Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Platinum Group Metals Ltd",
+  "note": "sold Maseve to RBPlat in 2018",
+  "source": null
+ },
+ {
+  "name": "Gold One International Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Baiyin Nonferrous (via BCX consortium)",
+  "note": "BCX (Baiyin 60%, China-Africa Development Fund 30%, Long March 10%) holds ~89% since 2011",
+  "source": "https://www.miningmx.com/news/gold/26149-jintu-deal-sealed-as-gold-one-hits-target/"
+ },
+ {
+  "name": "Modikwa Platinum Mine",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Modikwa",
+  "note": "ARM (ZA) 50% incl. community, Anglo American Platinum (GB via Anglo American) 50%",
+  "source": null
+ },
+ {
+  "name": "African Rainbow Minerals",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "African Rainbow Minerals",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Nkomati",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Nkomati",
+  "note": "50/50 Norilsk Nickel (RU) and ARM (ZA)",
+  "source": null
+ },
+ {
+  "name": "MMC Norilsk Nickel",
+  "home": "RU",
+  "state": false,
+  "kind": "company",
+  "parent": "Norilsk Nickel",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Richards Bay Minerals (RBM)",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Rio Tinto",
+  "note": "Rio Tinto 74%, Blue Horizon 24%, employees 2%",
+  "source": null
+ },
+ {
+  "name": "Blue Horizon Investments",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Blue Horizon Investments",
+  "note": "BEE consortium including host communities",
+  "source": "https://en.wikipedia.org/wiki/Richards_Bay_Minerals"
+ },
+ {
+  "name": "Palabora Mining Co. Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "HBIS-led Chinese consortium",
+  "note": "HBIS, Tewoo, General Nice and CADFund hold ~80% via Smart Union; IDC and BEE partners the rest",
+  "source": "https://china.aiddata.org/projects/92120"
+ },
+ {
+  "name": "Sedibelo Platinum Mines Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "Sedibelo Platinum Mines",
+  "note": "no majority holder: Pallinghurst/Gemfields-led consortium ~28%, Bakgatla-Ba-Kgafela ~26%, IDC ~16%; Guernsey-incorporated",
+  "source": "https://www.miningmx.com/news/markets/44365-gemfields-invites-offers-for-stake-in-forgotten-child-of-sas-pgms-sedibelo-platinum/"
+ },
+ {
+  "name": "Bayer (Pty) Ltd.",
+  "home": "DE",
+  "state": false,
+  "kind": "company",
+  "parent": "LANXESS AG (Bayer spin-off)",
+  "note": "USGS label stale: mine was 74% LANXESS (spun off from Bayer 2004) in 2018",
+  "source": "https://lanxess.com/en/media/press-releases/2021/09/lanxess-completes-sale-of-its-stake-in--chrome-ore-mine-in-south-africa"
+ },
+ {
+  "name": "Batla Minerals S.A.",
+  "home": "FR",
+  "state": false,
+  "kind": "company",
+  "parent": "Batla Minerals",
+  "note": "Euronext Paris-listed, based in Saint-Raphaël",
+  "source": "https://www.tradingsat.com/batla-minerals-FR0010436170/actualites/batla-minerals-perte-d-exploitation-reduite-au-1er-semestre-295762.html"
+ },
+ {
+  "name": "Sylvania Platinum Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Sylvania Platinum",
+  "note": "Bermuda-incorporated, AIM-listed; management and all operations in South Africa (GB if classed by listing)",
+  "source": "https://fidelity.co.uk/factsheet-data/factsheet/BMG864081044-sylvania-platinum-ltd/profile"
+ },
+ {
+  "name": "Village Main Reef Ltd.",
+  "home": "CN",
+  "state": false,
+  "kind": "company",
+  "parent": "Heaven-Sent Capital",
+  "note": "Chinese private equity firm bought out and delisted VMR in 2015",
+  "source": "https://www.engineeringnews.co.za/article/village-shareholders-approve-buy-out-by-heaven-sent-2015-04-07"
+ },
+ {
+  "name": "Cronimet Chrome Mining SA (Pty) Ltd.",
+  "home": "DE",
+  "state": false,
+  "kind": "company",
+  "parent": "Cronimet Holding",
+  "note": "private German group",
+  "source": null
+ },
+ {
+  "name": "Tharisa Minerals (Pty) Ltd.",
+  "home": "CY",
+  "state": false,
+  "kind": "company",
+  "parent": "Tharisa plc",
+  "note": "Cyprus-incorporated with registered office in Paphos; JSE/LSE-listed; mines and company secretary in South Africa (ZA if classed by operations)",
+  "source": "https://data.fca.org.uk/artefacts/NSM/RNS/5468111.html"
+ },
+ {
+  "name": "Mineral Commodities Ltd. (MCL)",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Mineral Commodities Ltd",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Tshipi e Ntle Manganese Mining (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "jv",
+  "parent": "Ntsimbintle Mining / Jupiter Mines",
+  "note": "Ntsimbintle (ZA) 50.1%, Jupiter Mines (AU) 49.9%",
+  "source": null
+ },
+ {
+  "name": "Ntsimbitntle Mining (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Ntsimbintle Mining",
+  "note": "South African empowerment company",
+  "source": null
+ },
+ {
+  "name": "Jupiter Mines Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Jupiter Mines",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Two Rivers Platinum Mine (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "jv",
+  "parent": "African Rainbow Minerals / Implats",
+  "note": "ARM 54%, Implats 46%",
+  "source": null
+ },
+ {
+  "name": "Siyanda Resources (Pty) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Siyanda Resources",
+  "note": "black-owned South African company",
+  "source": null
+ },
+ {
+  "name": "Vametco Minerals Corp.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Bushveld Minerals",
+  "note": "Bushveld 100% from Dec 2017",
+  "source": "https://www.morningstar.com.au/investments/security/LSE/BMN"
+ },
+ {
+  "name": "Bushveld Minerals Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Bushveld Minerals",
+  "note": "AIM-listed, head office Johannesburg",
+  "source": "https://www.morningstar.com.au/investments/security/LSE/BMN"
+ },
+ {
+  "name": "Rida Mining Co.",
+  "home": "SD",
+  "state": false,
+  "kind": "company",
+  "parent": "Golden United Group",
+  "note": "family-owned Sudanese group",
+  "source": "https://macro.market/company/shumookh-golden-united"
+ },
+ {
+  "name": "Golden United Group",
+  "home": "SD",
+  "state": false,
+  "kind": "company",
+  "parent": "Golden United Group",
+  "note": "family-owned Sudanese group (began as Rida Mining)",
+  "source": "https://macro.market/company/shumookh-golden-united"
+ },
+ {
+  "name": "Sahari Company for Gold Mining",
+  "home": "SD",
+  "state": false,
+  "kind": "company",
+  "parent": "Sahari Company for Gold Mining",
+  "note": "local company (by name); not verified",
+  "source": null
+ },
+ {
+  "name": "Delgo Mining Co. Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "conflicting reports: Qatari/Turkish private owners vs a Sudanese government-Tahe Mining (TR) JV",
+  "source": "https://www.dabangasudan.org/en?p=20030735"
+ },
+ {
+  "name": "Ariab Mining Co. Ltd. (AMC)",
+  "home": "SD",
+  "state": true,
+  "kind": "company",
+  "parent": "Government of Sudan",
+  "note": "100% state since the 2015 buyout of La Mancha's 44%",
+  "source": "https://english.ahram.org.eg/News/127745.aspx"
+ },
+ {
+  "name": "Islamic Development Bank",
+  "home": null,
+  "state": true,
+  "kind": "dfi",
+  "parent": "Islamic Development Bank",
+  "note": "multilateral, Jeddah-based, owned by member states",
+  "source": null
+ },
+ {
+  "name": "Sudamin Co. Ltd.",
+  "home": "SD",
+  "state": null,
+  "kind": "company",
+  "parent": "Sudamin Co.",
+  "note": "Sudanese tailings processor; ownership not found",
+  "source": "https://leadingedgeguides.com/guide-sudan-2016-striking-gold-sudamin/"
+ },
+ {
+  "name": "Stamigold Co. Ltd.",
+  "home": "TZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Tanzania (Stamico)",
+  "note": "Stamico subsidiary",
+  "source": null
+ },
+ {
+  "name": "State Mining Corp.",
+  "home": "TZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Tanzania (Stamico)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Tanzanian Gold Corp.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Tanzanian Royalty Exploration Corp.",
+  "note": "TRX (renamed TanzaniAn Gold 2019); Buckreef JV 55% TRX, 45% Stamico",
+  "source": "https://www.mining-technology.com/projects/buckreef-gold-project-tanzania/"
+ },
+ {
+  "name": "Tanzanian Royalty Exploration Corp. (TRX)",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Tanzanian Royalty Exploration Corp.",
+  "note": "",
+  "source": "https://www.mining-technology.com/projects/buckreef-gold-project-tanzania/"
+ },
+ {
+  "name": "State Mining Corp. of Tanzania (Stamico)",
+  "home": "TZ",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Tanzania (Stamico)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Geita Gold Mining Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "AngloGold Ashanti",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Minjingu Mines and Fertilizers Ltd.",
+  "home": "TZ",
+  "state": false,
+  "kind": "company",
+  "parent": "Mac Group",
+  "note": "Mac Group 100% per USGS; Tanzanian group",
+  "source": "https://ceo-roundtable.co.tz/member/mac-group-ltd"
+ },
+ {
+  "name": "Mac Group of Companies",
+  "home": "TZ",
+  "state": false,
+  "kind": "company",
+  "parent": "Mac Group",
+  "note": "Tanzanian group founded by Yogesh Manek",
+  "source": "https://ceo-roundtable.co.tz/member/mac-group-ltd"
+ },
+ {
+  "name": "Shanta Gold Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Shanta Gold",
+  "note": "Guernsey-registered, AIM-listed",
+  "source": "https://www.Shantagold.com/_resources/Annual_Report_and_Accounts_2018.pdf?v=0508"
+ },
+ {
+  "name": "Williamson Diamonds Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Petra Diamonds",
+  "note": "Petra 75%, Tanzania 25%",
+  "source": null
+ },
+ {
+  "name": "MM Mining S.A.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "M M Investment Holding Ltd",
+  "note": "2006 convention names a Bahamas-registered holding; USGS says 100% Togolese private interests",
+  "source": "https://itietogo.org/wp-content/uploads/2024/10/Convention-dinvestissement_MM-MINING_07-08-2006.pdf"
+ },
+ {
+  "name": "Togolese private interests",
+  "home": "TG",
+  "state": false,
+  "kind": "local",
+  "parent": "Togolese private interests",
+  "note": "generic local holder; Togo only",
+  "source": null
+ },
+ {
+  "name": "Société Nouvelle des Phosphates du Togo (SNPT)",
+  "home": "TG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Togo (SNPT)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Kilembe Mines Ltd.",
+  "home": "UG",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Uganda",
+  "note": "99% state after the Tibet Hima concession was cancelled in 2017",
+  "source": "https://www.monitor.co.ug/uganda/news/national/president-cancels-shs600b-mining-project-1707644"
+ },
+ {
+  "name": "3T Mining Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Ugandan tantalum miner; owners not found",
+  "source": "https://www.itsci.org/2018/02/12/itsci-extends-pilot-activities-uganda/"
+ },
+ {
+  "name": "Phosphates de Bou Craa S.A.",
+  "home": "MA",
+  "state": true,
+  "kind": "company",
+  "parent": "Government of Morocco (OCP)",
+  "note": "OCP subsidiary in Western Sahara (under Moroccan administration, sovereignty disputed)",
+  "source": null
+ },
+ {
+  "name": "Chambishi Metals Plc",
+  "home": "LU",
+  "state": false,
+  "kind": "company",
+  "parent": "Eurasian Resources Group",
+  "note": "ERG ~90%, ZCCM 10%; Kazakh state holds 40%; USGS lists it as Chibuluma South operator, which was Metorex's (Jinchuan)",
+  "source": null
+ },
+ {
+  "name": "Metorex Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "Jinchuan Group",
+  "note": "Metorex wholly owned by Jinchuan",
+  "source": null
+ },
+ {
+  "name": "Lubambe Copper Mine Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "EMR Capital",
+  "note": "EMR Capital (AU private equity) bought Vale's and ARM's 80% in 2017; ZCCM-IH 20%",
+  "source": "https://dealstreetasia.com/stories/emr-capital-completes-80-acquisition-zambia-copper-mine-89334"
+ },
+ {
+  "name": "Vale S.A.",
+  "home": "BR",
+  "state": false,
+  "kind": "company",
+  "parent": "Vale",
+  "note": "sold its Lubambe stake to EMR Capital in 2017; USGS share stale",
+  "source": "https://dealstreetasia.com/stories/emr-capital-completes-80-acquisition-zambia-copper-mine-89334"
+ },
+ {
+  "name": "Lumwana Mining Company Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "Barrick Gold",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Kaboko Mining Ltd.",
+  "home": "AU",
+  "state": false,
+  "kind": "company",
+  "parent": "Kaboko Mining",
+  "note": "ASX-listed; status in 2018 unclear",
+  "source": "https://www.miningweekly.com/article/kaboko-to-receive-further-3m-from-noble-for-zambia-project-2013-02-07"
+ },
+ {
+  "name": "Mkushi Copper Joint Venture Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Mkushi Copper Joint Venture",
+  "note": "Seringa Mining (CGA Mining, AU; CGA merged into B2Gold 2013) 51%, Katanga Resources (African Eagle, GB) 49%; 2018 status unclear",
+  "source": "https://www.lse.co.uk/rns/AFE/drilling-report-32g44ai1645x068.html"
+ },
+ {
+  "name": "Seringa Mining Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Zambian subsidiary of CGA Mining (AU) in 2007; CGA merged into B2Gold (CA) 2013; 2018 owner not verified",
+  "source": null
+ },
+ {
+  "name": "Katanga Resources Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Zambian subsidiary of African Eagle Resources (GB, AIM) in 2007; 2018 owner not verified",
+  "source": "https://www.lse.co.uk/rns/AFE/drilling-report-32g44ai1645x068.html"
+ },
+ {
+  "name": "Jin Tuo Investments Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "Chinese-named operator at Munali; owner not found",
+  "source": null
+ },
+ {
+  "name": "Consolidated Nickel Mines Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Consolidated Nickel Mines plc",
+  "note": "UK company running Munali on a 10-year lease from Jinchuan (licence holder); backed by London-based Plinian Capital and CE Mining",
+  "source": "https://www.engineeringnews.co.za/article/munali-mine-zambia-2020-08-07"
+ },
+ {
+  "name": "Sino-Metals Leach Zambia Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Nonferrous Metal Mining (CNMC)",
+  "note": "CNMC 55%, Chinese partner 30%, NFCA 15%",
+  "source": "https://global.chinadaily.com.cn/a/202409/05/WS66d90d0ba3108f29c1fca3f2.html"
+ },
+ {
+  "name": "China Nonferrous Metals Mining (Group) Co. Ltd.",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Nonferrous Metal Mining (CNMC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Sino-Africa Mining Investments Ltd.<null>",
+  "home": "CN",
+  "state": null,
+  "kind": "company",
+  "parent": "Hainan Sino-Africa Mining",
+  "note": "Chinese holder of 30% of Sino-Metals; state status unknown",
+  "source": "https://global.chinadaily.com.cn/a/202409/05/WS66d90d0ba3108f29c1fca3f2.html"
+ },
+ {
+  "name": "NFC Africa Mining Plc<null>",
+  "home": "CN",
+  "state": true,
+  "kind": "company",
+  "parent": "China Nonferrous Metal Mining (CNMC)",
+  "note": "CNMC 85%, ZCCM-IH 15%",
+  "source": null
+ },
+ {
+  "name": "China Hainan Construction Co. Ltd.<null>",
+  "home": "CN",
+  "state": null,
+  "kind": "company",
+  "parent": "China Hainan Construction",
+  "note": "Chinese company; state status unknown",
+  "source": null
+ },
+ {
+  "name": "Zimbabwe Alloys Ltd. (Zim Alloys)",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Benscore Investments (Farai Rwodzi)",
+  "note": "Benscore ~83%; under judicial management; 2018 plan to sell 70% to India's Balasore collapsed",
+  "source": "https://nehandaradio.com/2018/01/12/balasore-confirms-zim-alloys-deal/"
+ },
+ {
+  "name": "Mimosa Holdings (Private) Ltd.",
+  "home": "ZA",
+  "state": false,
+  "kind": "jv",
+  "parent": "Implats / Sibanye-Stillwater",
+  "note": "50/50 Implats and Sibanye-Stillwater, both South African",
+  "source": null
+ },
+ {
+  "name": "Sibanye-Stillwater",
+  "home": "ZA",
+  "state": false,
+  "kind": "company",
+  "parent": "Sibanye-Stillwater",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Unki Mines (Private) Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "Anglo American Platinum 100%; ~78% owned by Anglo American plc (GB); listed subsidiary takes parent's home",
+  "source": null
+ },
+ {
+  "name": "Anglo Platinum Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Anglo American plc",
+  "note": "Anglo American Platinum, ~78% owned by Anglo American plc (GB); listed subsidiary takes parent's home",
+  "source": null
+ },
+ {
+  "name": "Murowa Diamonds (Private) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "RZ Murowa Holdings / RioZim",
+  "note": "RZ Murowa 77.8% (vehicle reportedly of GEM, Harpal Randhawa), RioZim 22.2%; domicile of RZ Murowa unconfirmed",
+  "source": "https://insiderzim.com/rio-tinto-quits-zimbabwe/"
+ },
+ {
+  "name": "RZ Murowa Holdings Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "RZ Murowa Holdings",
+  "note": "bought Rio Tinto's 78% in 2015; reportedly a vehicle of RioZim's top shareholder GEM (Harpal Randhawa); domicile unconfirmed",
+  "source": "https://insiderzim.com/rio-tinto-quits-zimbabwe/"
+ },
+ {
+  "name": "Zimbabwe Consolidated Diamond Co. (ZCDC)",
+  "home": "ZW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Zimbabwe (ZCDC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Limpopo Minerals Resources Ltd.",
+  "home": "AE",
+  "state": false,
+  "kind": "company",
+  "parent": "Rani Investment (Aujan Group, Dubai)",
+  "note": "Rani 80%, Khupukile 20%; River Ranch in liquidation since 2012",
+  "source": "https://insiderzim.com/is-there-still-anything-to-mine-at-river-ranch/"
+ },
+ {
+  "name": "Rani Investment LLC.",
+  "home": "AE",
+  "state": false,
+  "kind": "company",
+  "parent": "Rani Investment (Aujan Group, Dubai)",
+  "note": "Dubai-based holding linked to the Aujan family group",
+  "source": "https://insiderzim.com/is-there-still-anything-to-mine-at-river-ranch/"
+ },
+ {
+  "name": "Khupukile Resources Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Khupukile Resources",
+  "note": "Mujuru family interests (local)",
+  "source": "https://insiderzim.com/is-there-still-anything-to-mine-at-river-ranch/"
+ },
+ {
+  "name": "Pan Reef Mining Company (Private) Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Pan Reef Mining",
+  "note": "local company; owners not found",
+  "source": null
+ },
+ {
+  "name": "F.A. Stewart (Private) Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "F.A. Stewart",
+  "note": "local company",
+  "source": null
+ },
+ {
+  "name": "Sabi Gold Mines",
+  "home": "ZW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Zimbabwe (ZMDC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Falcon Gold Zimbabwe Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "New Dawn Mining",
+  "note": "Falcon Gold 84.7% New Dawn",
+  "source": "https://www.heraldonline.co.zw/new-dawn-plans-falcon-takeover/"
+ },
+ {
+  "name": "Jena Mine (Private) Ltd.",
+  "home": "ZW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Zimbabwe (ZMDC)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "DTZ-OZGEO (Private) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "DTZ-OZGEO",
+  "note": "50/50 Development Trust of Zimbabwe and a Russian partner (Zarubezhgeologia per USGS, Econedra per Zimbabwean press)",
+  "source": "https://insiderzim.com/zimbabwe-diamond-firm-negotiating-to-acquire-full-control-of-dtz-ozgeo-claims/"
+ },
+ {
+  "name": "Development Trust of Zimbabwe",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Development Trust of Zimbabwe",
+  "note": "trust founded under Joshua Nkomo (not state)",
+  "source": "https://insiderzim.com/zimbabwe-diamond-firm-negotiating-to-acquire-full-control-of-dtz-ozgeo-claims/"
+ },
+ {
+  "name": "JSC Zarubezhgeologia",
+  "home": "RU",
+  "state": true,
+  "kind": "company",
+  "parent": "Rosgeo (Russian state)",
+  "note": "international arm of state geology holding Rosgeo",
+  "source": "https://interfax.com/newsroom/top-stories/79793/"
+ },
+ {
+  "name": "John Mack and Co.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "John Mack and Co.",
+  "note": "local company",
+  "source": null
+ },
+ {
+  "name": "Casmyn Mining Zimbabwe (Private) Ltd.",
+  "home": "CA",
+  "state": false,
+  "kind": "company",
+  "parent": "New Dawn Mining",
+  "note": "Casmyn name stale; Turk-Angelus owned by New Dawn (CA) in the 2010s",
+  "source": "https://www.heraldonline.co.zw/new-dawn-to-dispose-assets/"
+ },
+ {
+  "name": "Blanket Mine (1983) (Private) Ltd.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Caledonia Mining",
+  "note": "Caledonia 49% (controls), NIEEF 16%, Fremiro 15%, employee and community trusts 20%; Caledonia Jersey-incorporated",
+  "source": null
+ },
+ {
+  "name": "Caledonia Mining Corp.",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Caledonia Mining",
+  "note": "Jersey-incorporated, TSX/AIM/NYSE American-listed",
+  "source": null
+ },
+ {
+  "name": "National Indigenisation and Economic Empowerment Fund",
+  "home": "ZW",
+  "state": true,
+  "kind": "state",
+  "parent": "Government of Zimbabwe (NIEEF)",
+  "note": "",
+  "source": null
+ },
+ {
+  "name": "Fremiro Investments",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Fremiro Investments",
+  "note": "Zimbabwean indigenous investor (local)",
+  "source": null
+ },
+ {
+  "name": "Blanket Employee Trust Services (Private) Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "local",
+  "parent": "Blanket Mine employee trust",
+  "note": "employee trust",
+  "source": null
+ },
+ {
+  "name": "Asa Resource Group Plc",
+  "home": "GB",
+  "state": false,
+  "kind": "company",
+  "parent": "Asa Resource Group plc",
+  "note": "London AIM company, delisted and in administration 2018",
+  "source": "https://en.wikipedia.org/wiki/Asa_Resources_Group"
+ },
+ {
+  "name": "Zimbabwe German Graphite Mines (Private) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "jv",
+  "parent": "Zimbabwe German Graphite Mines",
+  "note": "AMG/Graphit Kropfmühl (NL/DE) 50%, ZMDC (ZW, state) 50%",
+  "source": null
+ },
+ {
+  "name": "Graphite Kropmühl division of AMG Advanced Metallurgical Group N.V.",
+  "home": "NL",
+  "state": false,
+  "kind": "company",
+  "parent": "AMG Advanced Metallurgical Group",
+  "note": "Amsterdam-based AMG",
+  "source": null
+ },
+ {
+  "name": "Steelmakers Zimbabwe (Private) Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Steelmakers Ltd",
+  "note": "Redcliff-based steel group; owners not found (local)",
+  "source": "https://insiderzim.com/steelmakers-in-155-million-expansion-project/amp"
+ },
+ {
+  "name": "Steelmakers Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "Steelmakers Ltd",
+  "note": "Redcliff-based steel group; owners not found (local)",
+  "source": "https://insiderzim.com/steelmakers-in-155-million-expansion-project/amp"
+ },
+ {
+  "name": "NewZim Minerals Private Ltd.",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Essar Group (Ruia family)",
+  "note": "Essar Africa Holdings 80% per USGS; set up with the Zimbabwe government in the 2011 Zisco deal",
+  "source": "https://www.aist.org/government-of-zimbabwe,-essar-africa-holdings-announce-new-steel-and-mining-entity"
+ },
+ {
+  "name": "Essar Africa Holdings Ltd.",
+  "home": "IN",
+  "state": false,
+  "kind": "company",
+  "parent": "Essar Group (Ruia family)",
+  "note": "Mauritius-registered arm of India's Essar Group",
+  "source": "https://www.aist.org/government-of-zimbabwe,-essar-africa-holdings-announce-new-steel-and-mining-entity"
+ },
+ {
+  "name": "Iron Duke Pyrites",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "GAT Investments (Victor Gapare)",
+  "note": "GAT 100%",
+  "source": "https://www.globalminingreview.com/mining/06012023/caledonia-mining-completes-acquisition-of-bilboes-gold-project/amp/"
+ },
+ {
+  "name": "GAT Investments (Private) Ltd.",
+  "home": "ZW",
+  "state": false,
+  "kind": "company",
+  "parent": "GAT Investments (Victor Gapare)",
+  "note": "Zimbabwean company controlled by Victor Gapare",
+  "source": "https://www.globalminingreview.com/mining/06012023/caledonia-mining-completes-acquisition-of-bilboes-gold-project/amp/"
+ },
+ {
+  "name": "Bikita Minerals (Private) Ltd.",
+  "home": null,
+  "state": null,
+  "kind": "company",
+  "parent": "unknown",
+  "note": "pre-2022 owners: two Mauritius companies (~74%, one held by German investor Wilfried Pabst) and Zimbabwean minorities; 2018 split not confirmed",
+  "source": "https://insiderzim.com/chinas-sinomine-buys-bikita-minerals-plans-us200m-expansion/amp/"
+ },
+ {
+  "name": "Dorowa Minerals (Private) Ltd.",
+  "home": "ZW",
+  "state": true,
+  "kind": "company",
+  "parent": "Industrial Development Corp. of Zimbabwe (via Chemplex)",
+  "note": "Chemplex subsidiary; Chemplex wholly owned by state IDCZ",
+  "source": "https://chemplex.co.zw/dorowa/"
+ },
+ {
+  "name": "Chemplex Corporation Ltd.",
+  "home": "ZW",
+  "state": true,
+  "kind": "company",
+  "parent": "Industrial Development Corp. of Zimbabwe",
+  "note": "wholly owned by state IDCZ",
+  "source": "https://nehandaradio.com/2018/01/04/idc-raise-funds-chemplex/"
+ }
+]

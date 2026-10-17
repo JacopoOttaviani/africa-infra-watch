@@ -7,6 +7,9 @@ Reads   data/*.geojson  +  data/africa_basemap.json  +  data/africa_basemap_10m.
         for the country label anchors)
 Writes  dashboard.html   (payload injected inline)
 
+With AIW_REGION=sea the same script reads data/sea/ and writes the Southeast
+Asia edition under docs/se-asia/ (see region.py).
+
 The dashboard has to be self-contained: the publishing sandbox blocks runtime
 requests to any external host, so there is no tile server and no fetch() —
 the basemap and every project record ship inside the page. That is also why
@@ -20,63 +23,38 @@ import re
 import sys
 
 from fetch_basemap import WIN, dp, ring_area, rnd, touches
+from region import REGION
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
-    DASHBOARD_LAYERS, DOCS, EUR_USD, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
+    BANK, DASHBOARD_LAYERS, DATA, DOCS, EUR_USD, LOCAL_NOTE, LOCAL_USD, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
     SITE_NAME, china_span, payload_meta, site_facts, wrap_document,
 )
 
 ROOT = pathlib.Path(__file__).parent
-DATA = ROOT / "data"
 
 from build_debt import dashboard_payload as debt_payload  # noqa: E402
 TEMPLATE = ROOT / "dashboard.template.html"
 OUT = ROOT / "dashboard.html"
 
-# GEM uses country names; IATI uses ISO-3166-1 alpha-2. Bridge them.
-NAME_TO_ISO = {
-    "Algeria": "DZ", "Angola": "AO", "Benin": "BJ", "Botswana": "BW",
-    "Burkina Faso": "BF", "Burundi": "BI", "Cameroon": "CM",
-    "Cape Verde": "CV", "Cabo Verde": "CV", "Central African Republic": "CF",
-    "Chad": "TD", "Comoros": "KM", "Congo": "CG",
-    "Republic of the Congo": "CG", "Democratic Republic of Congo": "CD",
-    "DR Congo": "CD", "Djibouti": "DJ", "Egypt": "EG",
-    "Equatorial Guinea": "GQ", "Eritrea": "ER", "Eswatini": "SZ",
-    "Ethiopia": "ET", "Gabon": "GA", "Gambia": "GM", "Ghana": "GH",
-    "Guinea": "GN", "Guinea-Bissau": "GW", "Ivory Coast": "CI",
-    "Cote d'Ivoire": "CI", "Côte d'Ivoire": "CI", "Kenya": "KE",
-    "Lesotho": "LS", "Liberia": "LR", "Libya": "LY", "Madagascar": "MG",
-    "Malawi": "MW", "Mali": "ML", "Mauritania": "MR", "Mauritius": "MU",
-    "Morocco": "MA", "Mozambique": "MZ", "Namibia": "NA", "Niger": "NE",
-    "Nigeria": "NG", "Rwanda": "RW", "Sao Tome and Principe": "ST",
-    "Senegal": "SN", "Seychelles": "SC", "Sierra Leone": "SL",
-    "Somalia": "SO", "South Africa": "ZA", "South Sudan": "SS",
-    "Sudan": "SD", "Tanzania": "TZ", "Togo": "TG", "Tunisia": "TN",
-    "Uganda": "UG", "Zambia": "ZM", "Zimbabwe": "ZW",
-    "Western Sahara": "EH", "The Gambia": "GM", "Democratic Republic of the Congo": "CD",
-}
+# GEM uses country names; IATI uses ISO-3166-1 alpha-2. Bridge them (the
+# region's table, region.py; first name wins for ISO -> name).
+NAME_TO_ISO = dict(REGION.names)
 ISO_TO_NAME = {}
 for _n, _i in NAME_TO_ISO.items():
     ISO_TO_NAME.setdefault(_i, _n)
 
 # Islands too small to appear in Natural Earth 110m — drawn as markers so
 # their projects don't float in blank ocean.
-ISLANDS = [
-    {"n": "Cabo Verde", "iso": "CV", "lon": -23.6, "lat": 15.1},
-    {"n": "São Tomé and Príncipe", "iso": "ST", "lon": 6.6, "lat": 0.25},
-    {"n": "Comoros", "iso": "KM", "lon": 43.3, "lat": -11.6},
-    {"n": "Mauritius", "iso": "MU", "lon": 57.55, "lat": -20.3},
-    {"n": "Seychelles", "iso": "SC", "lon": 55.5, "lat": -4.6},
-]
+ISLANDS = REGION.islands
 
 def load_10m():
-    p = DATA / "africa_basemap_10m.json"
+    p = DATA / REGION.basemap_10m
     if not p.exists():
-        sys.exit("missing data/africa_basemap_10m.json — run fetch_basemap.py first")
+        sys.exit(f"missing {p} — run fetch_basemap.py first")
     return json.loads(p.read_text())
 
 
 def build_labels():
-    """One label anchor per African country, as the map page draws them:
+    """One label anchor per country of the region, as the map page draws them:
     Natural Earth's LABEL_X/Y and MIN_LABEL, with NE's short map name
     ("Dem. Rep. Congo"), which is the right form for a label even though
     the dropdowns use the full one."""
@@ -94,7 +72,7 @@ def build_context():
     out = []
     for c in load_10m()["countries"]:
         if c["af"]:
-            continue   # Africa comes from the 110m file, with its own styling and hit-testing
+            continue   # the region comes from the coarse file, with its own styling and hit-testing
         polys = []
         for poly in c["p"]:
             near = touches(poly[0], WIN)
@@ -112,9 +90,9 @@ def build_context():
 
 # The finance layer's two lenders: file, short lender code as the payload
 # carries it, and how their amounts reach US dollars. AfDB reports in XDR
-# (IMF SDR); the World Bank in USD. Kept in step with build_map.py.
-FINANCE_FILES = [("iati_afdb_finance.geojson", "AfDB"), ("iati_worldbank_finance.geojson", "WB")]
-TO_USD = {"XDR": SDR_USD, "USD": 1.0}
+# (IMF SDR); ADB and the World Bank in USD. Kept in step with build_map.py.
+FINANCE_FILES = [(f"iati_{REGION.bank['publisher']}_finance.geojson", BANK), ("iati_worldbank_finance.geojson", "WB")]
+TO_USD = {"XDR": SDR_USD, "USD": 1.0, **LOCAL_USD}
 
 # DAC 5-digit purpose codes → the dashboard's sector vocabulary.
 DAC_SECTOR = [
@@ -183,7 +161,7 @@ def locate(x, y, idx):
 # from Europe to India is drawn only where it runs around the continent, so
 # the frame stays readable and the payload small. The margin lets a route run
 # off the canvas rather than stop at its edge.
-LINE_WINDOW = (-32.0, -48.0, 66.0, 50.0)
+LINE_WINDOW = REGION.line_window
 
 
 def simplify_line(coords, tol=0.012):
@@ -322,7 +300,11 @@ def build_finance():
                 if sector:
                     break
             com, pub = p.get("commitment"), p.get("commitment_published")
-            rate = TO_USD.get(p.get("currency") or ("XDR" if ln == "AfDB" else "USD"))
+            cur = p.get("currency") or (REGION.bank["currency"] if ln == BANK else "USD")
+            rate = TO_USD.get(cur)
+            cnote = p.get("counted_note")
+            if cur in LOCAL_USD:      # a loan published in the borrower's currency
+                cnote = "; ".join(x for x in (cnote, f"published in {cur}, converted at 1 {cur} = {LOCAL_USD[cur]:g} USD ({LOCAL_NOTE})") if x)
             best[key] = (rank, [
                 (p.get("name") or "").strip()[:88],
                 p.get("country") or "", r(lon), r(lat), p.get("dash_status"),
@@ -442,8 +424,8 @@ def build_pipelines(idx, simp=simplify_line):
 
 
 def build_cables(idx, simp=simplify_line, rnd=r):
-    """One record per submarine cable landing in Africa. The marker sits at
-    the centre of its African landing points, so a cable that also reaches
+    """One record per submarine cable landing in the region. The marker sits at
+    the centre of its landing points there, so a cable that also reaches
     India or Europe is filed where it touches the continent. `rnd` rounds
     coordinates, so each page keeps its own precision."""
     rows = []
@@ -674,7 +656,7 @@ def mattei_summary(m):
 # ------------------------------------------------------------------- build
 
 def main():
-    base = json.loads((DATA / "africa_basemap.json").read_text())
+    base = json.loads((DATA / REGION.basemap_110).read_text())
     countries = base["countries"]
     idx = build_lookup(countries)
 
@@ -685,8 +667,8 @@ def main():
     print("finance …")
     finance = build_finance()
     fc = finance["cols"]
-    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in ("AfDB", "WB")}
-    print(f"   {len(finance['rows']):,} projects ({by_ln['AfDB']:,} AfDB, {by_ln['WB']:,} World Bank)")
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB")}
+    print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank)")
 
     print("ground  …")
     ground = build_ground(idx)
@@ -701,7 +683,7 @@ def main():
     print("cables  …")
     cables = build_cables(idx)
     nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
-    print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
+    print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} {REGION.adj} landing points")
 
     print("china   …")
     china = build_china(idx)
@@ -714,16 +696,18 @@ def main():
     eu = build_eu(idx)
     print(f"   {eu_summary(eu)}")
 
-    print("mattei  …")
-    mattei = build_mattei(idx)
-    print(f"   {mattei_summary(mattei)}")
+    mattei = None
+    if "mattei" in REGION.layers:
+        print("mattei  …")
+        mattei = build_mattei(idx)
+        print(f"   {mattei_summary(mattei)}")
 
     labels = build_labels()
     print(f"   {len(labels):,} country labels")
 
     print("context …")
     context = build_context()
-    print(f"   {len(context):,} countries beyond Africa, {sum(len(r) for c in context for p in c for r in p):,} vertices")
+    print(f"   {len(context):,} countries beyond {REGION.name}, {sum(len(r) for c in context for p in c for r in p):,} vertices")
 
     # Natural Earth's NAME field carries map abbreviations ("Dem. Rep. Congo",
     # "Eq. Guinea"). Those are right for a cramped label on a map and wrong for
@@ -735,21 +719,12 @@ def main():
     names.update(ISO_TO_NAME)
     # ISO_TO_NAME is built by first-wins from the GEM alias table, which
     # yields some exonyms. Prefer the official forms for display.
-    # the same display names as the map's (build_map.py), so the two rails read alike
-    names.update({"CI": "Côte d'Ivoire", "CV": "Cabo Verde", "CD": "DR Congo",
-                  "CG": "Republic of the Congo", "-99": "Somaliland",
-                  "EH": "Western Sahara", "TZ": "Tanzania", "SZ": "Eswatini",
-                  "ST": "São Tomé and Príncipe", "GM": "The Gambia"})
-    # Natural Earth draws Somaliland (no ISO code, hence "-99") and Western
-    # Sahara as polygons separate from Somalia and Morocco. That is the
-    # boundary source's cartographic choice; label them plainly rather than
-    # leaving records attributed to an unnamed code.
-    names["-99"] = "Somaliland"
-    names["EH"] = "Western Sahara"
+    # the same display names as the map's (build_map.py), so the two rails
+    # read alike: the region's table (for Africa, Natural Earth's Somaliland,
+    # "-99", and Western Sahara labelled plainly, and the islands only cables reach)
+    names.update(REGION.display)
     for i in ISLANDS:
         names[i["iso"]] = i["n"]
-    # islands that only submarine cables reach
-    names.update({"YT": "Mayotte", "RE": "Réunion", "SH": "Saint Helena"})
 
     payload = {
         "meta": payload_meta(load_meta(), DASHBOARD_LAYERS),
@@ -764,8 +739,9 @@ def main():
         "eu": eu,
         "mattei": mattei,
         # country-year debt by creditor for the "Who it owes" box; None until
-        # fetch_debt.py has run (the box then hides itself)
-        "debt": debt_payload(),
+        # fetch_debt.py has run, and for an edition without a debt section
+        # (the box then hides itself)
+        "debt": debt_payload() if REGION.debt else None,
     }
 
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
@@ -777,7 +753,8 @@ def main():
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
     for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei"):
-        print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
+        if payload.get(k) is not None:
+            print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
     if kb > 15000:
         print("  ! approaching the 16 MB artifact ceiling")
 
@@ -786,14 +763,14 @@ def main():
     (DOCS / "dashboard.html").write_text(wrap_document(
         page, title=SITE_NAME, path="dashboard.html", kind="dashboard",
         facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei),
-        description="Dashboard of announced, approved and ongoing infrastructure in Africa: "
-                    "power plants and oil and gas pipelines (Global Energy Monitor), African "
-                    "Development Bank and World Bank finance, Chinese-financed projects "
+        description=f"Dashboard of announced, approved and ongoing infrastructure in {REGION.name}: "
+                    f"power plants and oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']} "
+                    "and World Bank finance, Chinese-financed projects "
                     f"{china_span()[0]}–{china_span()[1]} (AidData), European Union finance (European Commission and EIB), "
-                    "Italy's Piano Mattei projects, "
+                    + ("Italy's Piano Mattei projects, " if mattei is not None else "") +
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "
                     "with charts by country and sector and a sortable project table."))
-    print(f"→ docs/dashboard.html")
+    print(f"→ {(DOCS / 'dashboard.html').relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

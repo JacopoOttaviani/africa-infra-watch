@@ -1,0 +1,202 @@
+<!-- The execution gap: the prose and section order of docs/execution-gap/.
+     Tokens (double-underscore names) are filled by build_execution_gap.py from
+     data/gem_power_assets.geojson and data/aiddata_china_finance.geojson, so
+     every figure the page states is recomputed at build time. Status keeps the
+     site's --st-* tokens. The --eg-* colours are the owners' homes in the solar
+     chart: the China, Europe and Gulf slots of the site's validated categorical
+     order (the debt page's --dg-*, the corridors page's --cf-*), which pass the
+     dataviz validator as an adjacent-order stack in both themes; "other states"
+     takes the order's red slot only if a unit of theirs appears, and a named
+     owner no list resolves takes the neutral grey. -->
+<style>
+  :root{ --eg-china:#1baf7a; --eg-europe:#eda100; --eg-gulf:#e87ba4; --eg-other:#e34948; --eg-unresolved:#a9b3ad; }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){ --eg-china:#199e70; --eg-europe:#c98500; --eg-gulf:#d55181; --eg-other:#e66767; --eg-unresolved:#56625b; }
+  }
+  :root[data-theme="dark"]{ --eg-china:#199e70; --eg-europe:#c98500; --eg-gulf:#d55181; --eg-other:#e66767; --eg-unresolved:#56625b; }
+
+  .kicker .proto{display:inline-block;margin-left:8px;padding:1px 6px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-2);letter-spacing:.08em}
+  .chart.wide{margin-top:18px}
+  .chart.wide svg{overflow:visible}
+  .cscroll{position:relative}
+  @media (max-width:760px){
+    .cscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+    .cscroll svg{min-width:640px}
+  }
+  .chart .sub a{color:var(--ink-2)}
+
+  /* ---- the charts drawn at build time */
+  .eg .seg.announced{fill:var(--st-announced)} .eg .seg.approved{fill:var(--st-approved)}
+  .eg .seg.under_construction{fill:var(--st-construction)} .eg .seg.operating{fill:var(--st-operating)}
+  .eg .seg.stalled{fill:none;stroke:var(--st-stalled);stroke-width:1.5}
+  .eg .seg.h-china{fill:var(--eg-china)} .eg .seg.h-europe{fill:var(--eg-europe)} .eg .seg.h-gulf{fill:var(--eg-gulf)}
+  .eg .seg.h-other{fill:var(--eg-other)} .eg .seg.h-unresolved{fill:var(--eg-unresolved)}
+  .eg .seg.h-blank{fill:var(--surface-2);stroke:var(--rule);stroke-width:1}
+  .eg .row:hover .seg{filter:brightness(.92)}
+  .eg .hitrow,.eg .hitcol{fill:transparent}
+  .eg .rl{font:500 11.5px var(--display);fill:var(--ink)}
+  .eg .end{font:500 11px var(--mono);fill:var(--ink-2)}
+  .eg .inl{font:600 10.5px var(--display);fill:#fff;pointer-events:none}
+  .eg .inl.on-announced,.eg .inl.on-stalled,.eg .inl.on-china,.eg .inl.on-europe,.eg .inl.on-gulf,.eg .inl.on-other,
+  .eg .inl.on-unresolved,.eg .inl.on-blank{fill:var(--ink)}
+  .eg .brk{fill:none;stroke:var(--ink-3);stroke-width:1}
+  .eg .brl{font:500 11px var(--display);fill:var(--ink-2)}
+  .eg .gl{stroke:var(--rule-soft)}
+  .eg .col{fill:var(--accent)}
+  .eg .row:hover .col,.eg g:hover>.col{filter:brightness(.9)}
+  #c-hist .med{stroke:var(--ink);stroke-width:1.2;stroke-dasharray:none}
+  #c-hist .medl{font:600 11px var(--display);fill:var(--ink)}
+  .eg .iqr{fill:var(--accent);fill-opacity:.28}
+  #c-sector .med,#c-funder .med{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+  .eg .nn{font:10.5px var(--mono);fill:var(--ink-3)}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .eg .inl{fill:var(--paper)}
+    :root:not([data-theme="light"]) .eg .inl.on-stalled,:root:not([data-theme="light"]) .eg .inl.on-unresolved,
+    :root:not([data-theme="light"]) .eg .inl.on-blank{fill:var(--ink)}
+  }
+  :root[data-theme="dark"] .eg .inl{fill:var(--paper)}
+  :root[data-theme="dark"] .eg .inl.on-stalled,:root[data-theme="dark"] .eg .inl.on-unresolved,:root[data-theme="dark"] .eg .inl.on-blank{fill:var(--ink)}
+
+  /* ---- keys and tooltips */
+  .dkeys{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 2px;font-size:12px;color:var(--ink-2)}
+  .dk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .sk,.tip i.k{width:10px;height:10px;border-radius:2px;flex:none;display:inline-block}
+  .tip i.k{margin-right:5px;vertical-align:-1px}
+  .sk.announced,.tip i.k.announced{background:var(--st-announced)} .sk.approved,.tip i.k.approved{background:var(--st-approved)}
+  .sk.under_construction,.tip i.k.under_construction{background:var(--st-construction)}
+  .sk.operating,.tip i.k.operating{background:var(--st-operating)}
+  .sk.stalled,.tip i.k.stalled{box-shadow:inset 0 0 0 1.5px var(--st-stalled)}
+  .sk.h-china,.tip i.k.h-china{background:var(--eg-china)} .sk.h-europe,.tip i.k.h-europe{background:var(--eg-europe)}
+  .sk.h-gulf,.tip i.k.h-gulf{background:var(--eg-gulf)} .sk.h-other,.tip i.k.h-other{background:var(--eg-other)}
+  .sk.h-unresolved,.tip i.k.h-unresolved{background:var(--eg-unresolved)}
+  .sk.h-blank,.tip i.k.h-blank{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--rule)}
+  .tip{max-width:340px}
+  .tip b:not(:first-child){display:inline;margin:0;font-size:10px;letter-spacing:.06em;color:var(--accent-ink)}
+
+  /* ---- the owner × stage matrix */
+  table.matrix th .dk{font:inherit;letter-spacing:inherit;text-transform:inherit}
+  table.matrix td.name{white-space:nowrap}
+  td.mx{min-width:112px;vertical-align:middle}
+  td.mx .cell{display:flex;flex-direction:column;align-items:flex-end;gap:2px;width:100%;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  td.mx .cell b{font-weight:600;color:var(--ink);line-height:1.1}
+  td.mx .cell .n{font-size:10px;color:var(--ink-3)}
+  td.mx .shb{display:block;height:6px;border-radius:1px;align-self:flex-start;flex:none}   /* width set per cell, 76 px = the whole group; not .bar, which is the frame's header */
+  td.mx .shb.announced{background:var(--st-announced)} td.mx .shb.approved{background:var(--st-approved)}
+  td.mx .shb.under_construction{background:var(--st-construction)} td.mx .shb.operating{background:var(--st-operating)}
+  td.mx .shb.stalled{box-shadow:inset 0 0 0 1.5px var(--st-stalled)}
+  table.matrix tr.sep td{border-top:2px solid var(--rule)}
+
+  table.eg-t td.name{white-space:nowrap}
+  .chip.warn{vertical-align:1px;margin-left:4px}
+  #method .spec dd{min-width:0}
+  #method code{overflow-wrap:anywhere}
+  ul.fold{margin:6px 0 0;padding-left:18px;columns:2;column-gap:24px}
+  ul.fold li{margin:2px 0;font-size:12.5px;break-inside:avoid}
+  @media (max-width:600px){ul.fold{columns:1}}
+</style>
+
+<div class="head">
+  <span class="kicker">Deep dive · Global Energy Monitor and AidData <span class="proto">prototype, not yet published</span></span>
+  <h1>The execution gap</h1>
+  <p class="lede"><strong>Africa has __GW_PAPER__ GW of power capacity announced or approved and __GW_UC__ GW under construction.</strong> Of everything in the pipeline, being built or not yet begun, __PAPER_OF_PIPELINE__% has not broken ground; a further __GW_ST__ GW has been cancelled, shelved or mothballed, __ST_TO_UC__ what is being built. The continent's working fleet is __GW_OP__ GW. Those are the __N_UNITS__ units Global Energy Monitor tracks across __N_COUNTRIES__ countries and territories, every technology, in its release of __GEM_FRESH__.</p>
+  <p class="lede">Solar is where the gap is widest and most concentrated: __GW_PV_PAPER__ GW of photovoltaic capacity is announced or approved, __PV_SHARE_OF_PAPER__% of everything on paper, and __PV_TOP6_SHARE__% of it sits in six countries. Mauritania's __MR_GW__ GW is __N_MR_H2__ green-hydrogen schemes: __MR_H2__. Among the owners the site's lender profiles can name, Chinese-owned generation stalls more than it runs, __CN_ST_GW__ GW stalled against __CN_OP_GW__ GW operating; Gulf-owned capacity is the most active foreign-owned capacity, with __GULF_APPR_GW__ GW approved and __GULF_UC_GW__ GW being built. And when China finances a project, AidData's records say it takes a median __AD_MEDIAN__ years from the commitment to completion: __EXIM_MED__ for an Eximbank loan, __UNSPEC_MED__ for a grant from an unnamed government body.</p>
+  <p class="asof">Global Energy Monitor, Global Integrated Power Tracker, release <b>__GEM_RELEASE__</b> published <b>__GEM_FRESH__</b>, fetched <b>__GEM_FETCHED__</b> · AidData, <b>__AD_RELEASE__</b>, <b>__AD_FRESH__</b>, fetched <b>__AD_FETCHED__</b> · every figure recomputed from the two files at build time</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__GW_PAPER__ GW</dt><dd><b>announced or approved</b>: __GW_ANN__ GW announced, __GW_APPR__ GW approved, __PAPER_SHARE__% of everything GEM tracks</dd></div>
+  <div class="kpi"><dt>__GW_UC__ GW</dt><dd><b>under construction</b> in __N_UC__ units, __UC_SHARE__% of the tracker; __PAPER_TO_UC__ GW on paper for every GW being built</dd></div>
+  <div class="kpi"><dt>__GW_ST__ GW</dt><dd><b>stalled</b>: cancelled, shelved or mothballed, in __N_ST__ units, against __GW_OP__ GW operating</dd></div>
+  <div class="kpi"><dt>__AD_MEDIAN__ years</dt><dd><b>commitment to completion</b> for a Chinese-financed project, the median of __AD_N_LAG__ AidData records with both years; quartiles __AD_Q1__ to __AD_Q3__</dd></div>
+</dl>
+
+<section id="stage">
+  <h2>The pipeline by stage</h2>
+  <p class="lead">One bar for the whole tracker, then one for each technology. Capacity is each unit's as GEM files it, including the “future phases” placeholders of the hydrogen schemes; a stalled unit is cancelled, shelved or mothballed. Hover a segment for the units behind it.</p>
+  <div class="chart wide">
+    <h3>Everything GEM tracks in Africa, by stage, GW</h3>
+    <p class="sub">__N_UNITS__ units, __GW_ALL__ GW. The bracket above is the paper: announced plus approved. The bracket below is what is being built.</p>
+    <div class="cscroll">__HEADLINE_BAR__</div>
+    <div class="dkeys">__STATUS_KEY__</div>
+  </div>
+  <div class="chart wide">
+    <h3>By technology, GW</h3>
+    <p class="sub">Each bar is one technology; the segments are its stages. Wind holds the hydrogen schemes' wind halves; “not stated” is a unit GEM gives no technology and whose name says none.</p>
+    <div class="cscroll">__CHART_TECH__</div>
+    <div class="dkeys">__STATUS_KEY__</div>
+  </div>
+  <p class="note">__N_PAPER_MORE__ of the __N_COUNTRIES__ countries and territories have more capacity on paper than operating; the map beside the title shades them. “On paper” is announced plus approved.</p>
+  __TABLE_TECH__
+</section>
+
+<section id="solar">
+  <h2>Where the solar is</h2>
+  <p class="lead">Announced or approved solar PV by country, each bar cut into its owners and coloured by the owner's home where one of the site's lender-profile owner lists names it. Most of the big developers are not on those lists, which is a finding in itself: the grey is a named company whose home the site has not yet resolved, the hollow a unit with no owner stated. H₂ marks a unit of a green-hydrogen scheme.</p>
+  <div class="chart wide">
+    <h3>Solar PV announced or approved, by country and owner, GW</h3>
+    <p class="sub">The ten largest countries, then the rest together. Owners under 1 GW in a country are folded into one segment per home. Hover a bar for every owner; a segment for its units.</p>
+    <div class="cscroll">__CHART_PV__</div>
+    <div class="dkeys">__OWNER_KEY__</div>
+  </div>
+  <p class="note">__GW_H2_PV__ GW of the __GW_PV_PAPER__ GW, __H2_SHARE_PV__%, is the solar half of a green-hydrogen scheme, tagged by name (__N_H2__ projects in all, their wind halves another __GW_H2_ALL__ GW on paper with the solar). They are export schemes for ammonia and hydrogen, not generation for the grid, and GEM files their future phases as announced units.</p>
+  __TABLE_PV__
+</section>
+
+<section id="owners">
+  <h2>Who owns what stalls</h2>
+  <p class="lead">The __N_GROUPS__ owner lists of the lender profiles (__OWNER_LISTS__) resolve a home for __N_RESOLVED__ of the __N_UNITS__ units; __N_BLANK__ units, __GW_BLANK__ GW, carry no owner at all. Among the units the lists do name, China's stalled generation, __CN_ST_N__ units and __CN_ST_GW__ GW, led by __CN_STALLED_BIG__, is many times its operating capacity of __CN_OP_GW__ GW; the Gulf's companies have __GULF_APPR_GW__ GW approved, __GULF_UC_GW__ GW under construction and __GULF_OP_GW__ GW running. The __UNRES_UC_GW__ GW under construction with named owners the lists do not resolve, and __BLANK_UC_GW__ GW more with no owner stated, say how much a proper ownership register would add.</p>
+  __MATRIX__
+  <p class="note">A unit counts in every list its owner string matches (__N_MULTI__ units match two), so the rows do not add up to the tracker. The lists are regular expressions on company names, written for the lender profiles, not an ownership register: they miss __MISSES__, and “__FP_NAME__” is read as American through “General Electric” (__FP_GW__ GW). Global Energy Monitor's Global Energy Ownership Tracker, which resolves each owner to a parent and a country, is the way to close the gap.</p>
+</section>
+
+<section id="lag">
+  <h2>How long a Chinese-financed project takes</h2>
+  <p class="lead">AidData dates each Chinese official commitment to Africa and, where the project was finished, its completion. Of __AD_N__ infrastructure records committed __AD_FROM__–__AD_TO__, __AD_N_LAG__ carry both years: a median of __AD_MEDIAN__ years from commitment to completion, a mean of __AD_MEAN__. __SLOWEST_SECTOR__ is slowest at __SLOWEST_MED__ years (__SLOWEST_N__ projects), __FASTEST_SECTOR__ fastest at __FASTEST_MED__ (__FASTEST_N__). An Eximbank loan takes __EXIM_MED__ years (__EXIM_N__ projects, quartiles __EXIM_Q__), a Ministry of Commerce grant __MOFCOM_MED__ (__MOFCOM_N__), a grant from an unnamed government body __UNSPEC_MED__ (__UNSPEC_N__).</p>
+  <div class="chart wide">
+    <h3>Years from commitment to completion, __AD_N_LAG__ Chinese-financed projects</h3>
+    <p class="sub">One column per year of lag. “&lt;0” is a project completed before its commitment year, financing recorded after the fact; __AD_NEG__ records.</p>
+    <div class="cscroll">__CHART_HIST__</div>
+  </div>
+  <div class="charts">
+    <div class="chart"><h3>By sector</h3><p class="sub">The box runs from the first to the third quartile, the dot is the median; sectors with ten projects or more. Left out: __DROPPED_SECTORS__.</p>__CHART_SECTOR__</div>
+    <div class="chart"><h3>By funder and kind of flow</h3><p class="sub">The first funder AidData names on the record; groups of thirty projects or more.</p>__CHART_FUNDER__</div>
+  </div>
+  <p class="note">Only a finished project has a completion year, so the __AD_N_LAG__ are the ones that got done: __AD_UC_NOC__ records under construction, __AD_APPR_NOC__ approved and __AD_ST_NOC__ stalled have none, and __AD_OP_NOC__ records AidData marks completed carry no completion year. Commitments run only to __AD_TO__ and the newest cohorts are not yet finished (__AD_YOUNG_DONE__ of the __AD_YOUNG__ records committed since 2021 are), so the median leans short.</p>
+  __TABLE_LAG__
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>Sources</dt><dd><b>Global Energy Monitor, Global Integrated Power Tracker</b>, release __GEM_RELEASE__ published __GEM_FRESH__, fetched __GEM_FETCHED__ by <code>fetch_sources.py gem</code>: every power unit in Africa, with its status, technology, capacity and owner as GEM files them (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>). <b>AidData, __AD_RELEASE__</b>, __AD_FRESH__, fetched __AD_FETCHED__ by <code>fetch_sources.py china</code>: the infrastructure commitments of Chinese official lenders and donors to African recipients, with commitment and completion years, funder, sector and flow (<a href="https://opendatacommons.org/licenses/by/1-0/" target="_blank" rel="noopener noreferrer">ODC-By 1.0</a>; the locations the site draws come from GCDF 3.0 and its OpenStreetMap footprints, ODbL, and are not used here). Both sources allow commercial use with attribution.</dd>
+    <dt>Stage</dt><dd>GEM's own statuses are folded into the site's five, by <code>GEM_STATUS</code> in <code>fetch_sources.py</code>; this page prints the result and changes nothing:<ul class="fold">__GEM_FOLD__</ul>“Retired” units count as operating by that rule and “stalled” mixes a cancelled project with a shelved one; GEM's status is on every unit's page.</dd>
+    <dt>Capacity</dt><dd>Each unit's <code>capacity_mw</code>, summed. GEM files the hydrogen schemes' later phases as “future phases” units of tens of gigawatts (the largest, __H2_BIGGEST__); they are counted as announced, which is what they are, and tagged H₂ so the reader can see them. Nothing is weighted by ownership share or probability.</dd>
+    <dt>Technology</dt><dd>GEM's <code>tech</code> field (its technology type, or the fuel where the tracker has no type) folded into ten groups: PV and assumed PV are solar; onshore, offshore and the wind tracker's “Unknown” mount type (__N_WIND_PH__ units, every one a wind farm by name, checked at build time) are wind; gas turbines, combined cycles, steam turbines, engines and the integrated solar combined cycles are gas and oil; subcritical to ultra-supercritical are coal; and so on. __N_RULE__ units carry no technology at all; __N_RULE_SORTED__ of them are sorted by a word in their name (nuclear, hydroelectric, coal, wind, solar, geothermal, gas, oil) and the other __N_NOT_STATED__, __GW_NOT_STATED__ GW, mostly a “power station” with no fuel, stay “not stated”.</dd>
+    <dt>Owners</dt><dd>The owner string GEM gives each unit, matched against the lender profiles' owner lists in <code>fetch_donors.py</code> (<code>CHINESE_OWNER</code>, <code>GULF_OWNER</code>, …): regular expressions on company names, written to find each lender's assets, not to classify the tracker. They resolve __N_RESOLVED__ of __N_UNITS__ units. A unit matching two lists counts in both (__N_MULTI__ units); the first match colours it in the solar chart, in the order China, Gulf, France, Nordics, Italy, Germany, Spain, Türkiye, United States, Japan. In the solar chart the European lists are one colour. Known misses: __MISSES__; “__FP_NAME__” matches the American list.</dd>
+    <dt>Hydrogen</dt><dd>A unit is tagged H₂ when its name or owner matches a pattern of the known green-hydrogen schemes (<code>hydrogen</code>, Megaton Moon, AMAN, Conjuncta, Project Nour, Hyphen, Zhero, NAYRAH, White Dunes, Tsau). The matched projects are listed in the page's data file so the tag can be checked.</dd>
+    <dt>The lag</dt><dd>AidData's <code>commitment_year</code> and <code>completion_year</code>, the difference in whole years; a record enters only with both. Quartiles by the inclusive method. The sector is AidData's, folded to the site's buckets by <code>fetch_sources.py</code>; the funder is the first institution AidData names, grouped as China Eximbank, the Ministry of Commerce, China Development Bank, the state commercial banks (ICBC, Bank of China, CCB, CITIC), the embassy, and “unspecified government body” where AidData could not name one. The flow is AidData's loan or grant. Because only finished projects have a completion year, the distribution is of what got done, not of what was promised; a project that never finishes has no lag.</dd>
+    <dt>What is not here</dt><dd>The AfDB, World Bank and EU finance layers on the site carry no dates, so nothing on this page uses them for speed. OpenStreetMap's construction works are not joined to GEM's units. Hypothesis 3 of the survey, that stated start dates slip, needs the next GEM release diffed against this one and is not tested. The owner lists resolve a tenth of the units; the full owner view needs GEM's Global Energy Ownership Tracker.</dd>
+    <dt>Reproduce</dt><dd><code>python3 build_execution_gap.py</code> reads the two files in <code>data/</code> and writes this page and <a href="__DATA_URL__">__DATA_FILE__</a>, which holds every table behind every chart, the rules above and the lists the caveats name.</dd>
+  </dl>
+</section>
+
+<script>
+/* tooltips for the charts drawn at build time: every mark carries its own in data-tip,
+   a row a summary of its segments; the nearest one under the pointer shows */
+{
+  document.querySelectorAll("svg.eg").forEach(svg => {
+    const box = svg.closest(".chart") || svg.parentNode, tip = document.createElement("div");
+    tip.className = "tip"; box.appendChild(tip);
+    svg.addEventListener("mousemove", ev => {
+      const t = ev.target.closest ? ev.target.closest("[data-tip]") : null;
+      if (!t) { tip.style.display = "none"; return; }
+      tip.innerHTML = t.dataset.tip; tip.style.display = "block";
+      const r = box.getBoundingClientRect();
+      let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 12;
+      if (x + 350 > r.width) x = Math.max(4, ev.clientX - r.left - 354);
+      tip.style.left = x + "px"; tip.style.top = y + "px";
+    });
+    svg.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+  });
+}
+</script>

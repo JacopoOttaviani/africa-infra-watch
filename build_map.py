@@ -6,7 +6,8 @@ build_dashboard.py, so both pages compile the same rows; only the geometry
 simplification differs.
 
 Reads   data/*.geojson  +  data/africa_basemap_10m.json  (+ africa_basemap.json
-        for the fast country lookup)
+        for the fast country lookup); with AIW_REGION=sea, data/sea/ and the
+        Southeast Asia basemaps, written under docs/se-asia/ (region.py)
 Writes  map.html            payload inlined — for the Claude artifact, whose
                             sandbox blocks fetch() and any tile server
         docs/index.html     the same page as a complete HTML document that
@@ -26,8 +27,10 @@ import re
 import shutil
 import sys
 
+from region import REGION  # noqa: E402
+
 ROOT = pathlib.Path(__file__).parent
-DATA = ROOT / "data"
+DATA = REGION.data_dir
 TEMPLATE = ROOT / "map.template.html"
 OUT = ROOT / "map.html"
 
@@ -39,8 +42,9 @@ from build_dashboard import (  # noqa: E402
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
-    DOCS, SITE_NAME, brand_assets, china_span, inline_vendor, load_meta, payload_meta, site_facts, wrap_document,
-    write_site_index,
+    BANK, DOCS, LOCAL_NOTE, LOCAL_USD, SITE_NAME, SITE_WORDMARK, brand_assets, china_span, inline_vendor, load_meta, payload_meta,
+    site_facts,
+    wrap_document, write_site_index,
 )
 
 
@@ -96,9 +100,9 @@ def build_assets():
 
 # The finance layer's two lenders: file, short lender code as the payload
 # carries it, and how their amounts reach US dollars. AfDB reports in XDR
-# (IMF SDR); the World Bank in USD.
-FINANCE_FILES = [("iati_afdb_finance.geojson", "AfDB"), ("iati_worldbank_finance.geojson", "WB")]
-TO_USD = {"XDR": SDR_USD, "USD": 1.0}
+# (IMF SDR); ADB and the World Bank in USD.
+FINANCE_FILES = [(f"iati_{REGION.bank['publisher']}_finance.geojson", BANK), ("iati_worldbank_finance.geojson", "WB")]
+TO_USD = {"XDR": SDR_USD, "USD": 1.0, **LOCAL_USD}
 # raw layers drawn on the map but not offered as downloads in docs/data
 NOT_REDISTRIBUTED = {"telegeography_cables.geojson"}
 
@@ -109,7 +113,8 @@ def build_finance():
 
     Precision rank per location: 0 = exact site (IATI exactness 1, AfDB);
     1 = a named place or site (World Bank location-class 2 or 4, which the
-    Bank still marks exactness 2); 2 = a country or region centroid."""
+    Bank still marks exactness 2; an ADB location named after a province or
+    a town rather than the country); 2 = a country or region centroid."""
     best = {}
     for fname, ln in FINANCE_FILES:
         if not (DATA / fname).exists():
@@ -123,7 +128,7 @@ def build_finance():
             lon, lat = f["geometry"]["coordinates"]
             if p.get("geo_precision") == "1":
                 rank = 0
-            elif p.get("location_class") in ("2", "4"):
+            elif p.get("location_class") in ("2", "4") or p.get("location_named"):
                 rank = 1
             else:
                 rank = 2
@@ -147,7 +152,11 @@ def build_finance():
                 break
         com, dis = p.get("commitment"), p.get("disbursed")
         pub, pub_dis = p.get("commitment_published"), p.get("disbursed_published")
-        rate = TO_USD.get(p.get("currency") or ("XDR" if ln == "AfDB" else "USD"))
+        cur = p.get("currency") or (REGION.bank["currency"] if ln == BANK else "USD")
+        rate = TO_USD.get(cur)
+        cnote = p.get("counted_note")
+        if cur in LOCAL_USD:      # a loan published in the borrower's currency
+            cnote = "; ".join(x for x in (cnote, f"published in {cur}, converted at 1 {cur} = {LOCAL_USD[cur]:g} USD ({LOCAL_NOTE})") if x)
         locs = rec["locs"]
         if len(locs) <= 1:
             locs = None
@@ -162,7 +171,7 @@ def build_finance():
             pid, codes[0] if codes else None, locs, ln, p.get("project_url") or None,
             # the lender's own figures where the counted ones differ, and why
             round(pub * rate / 1e6, 2) if pub and rate else None,
-            round(pub_dis * rate / 1e6, 2) if pub_dis and rate else None, p.get("counted_note"),
+            round(pub_dis * rate / 1e6, 2) if pub_dis and rate else None, cnote,
         ])
     return {"cols": ["name", "iso", "lon", "lat", "status", "sector", "usd_m",
                      "dis_m", "prec", "place", "iid", "dac", "locs", "ln", "purl", "pub_m", "pub_dis_m", "cnote"],
@@ -228,11 +237,11 @@ def build_ground(idx):
 # ------------------------------------------------------------------- build
 
 def main():
-    base110 = json.loads((DATA / "africa_basemap.json").read_text())
+    base110 = json.loads((DATA / REGION.basemap_110).read_text())
     idx = build_lookup(base110["countries"])
-    bm_path = DATA / "africa_basemap_10m.json"
+    bm_path = DATA / REGION.basemap_10m
     if not bm_path.exists():
-        sys.exit("missing data/africa_basemap_10m.json — run fetch_basemap.py first")
+        sys.exit(f"missing {bm_path} — run fetch_basemap.py first")
     basemap = json.loads(bm_path.read_text())
 
     print("assets  …")
@@ -242,8 +251,8 @@ def main():
     finance = build_finance()
     fc = finance["cols"]
     multi = sum(1 for x in finance["rows"] if x[fc.index("locs")])
-    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in ("AfDB", "WB")}
-    print(f"   {len(finance['rows']):,} projects ({by_ln['AfDB']:,} AfDB, {by_ln['WB']:,} World Bank; "
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB")}
+    print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank; "
           f"{multi:,} with several precise sites)")
     print("ground  …")
     ground = build_ground(idx)
@@ -256,7 +265,7 @@ def main():
     print("cables  …")
     cables = build_cables(idx, lambda part: [simplify(part, 0.001)], rnd=r)
     nlp = sum(len(x[cables["cols"].index("lps")] or []) for x in cables["rows"])
-    print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} African landing points")
+    print(f"   {len(cables['rows']):,} submarine cables, {nlp:,} {REGION.adj} landing points")
     print("china   …")
     # footprints keep every ring (a hospital block is visible at the closest
     # zoom), thinned at ~150 m and to at most 400 vertices per record
@@ -272,20 +281,19 @@ def main():
     eu = build_eu(idx, rnd=r)
     print(f"   {eu_summary(eu)}")
 
-    print("mattei  …")
-    mattei = build_mattei(idx, rnd=r)
-    print(f"   {mattei_summary(mattei)}")
+    mattei = None
+    if "mattei" in REGION.layers:
+        print("mattei  …")
+        mattei = build_mattei(idx, rnd=r)
+        print(f"   {mattei_summary(mattei)}")
 
     names = {}
     for c in basemap["countries"]:
         if c["af"] and c["iso"]:
             names[c["iso"]] = c["n"]
-    names.update({"CI": "Côte d'Ivoire", "CV": "Cabo Verde", "CD": "DR Congo",
-                  "CG": "Republic of the Congo", "-99": "Somaliland",
-                  "EH": "Western Sahara", "TZ": "Tanzania", "SZ": "Eswatini",
-                  "ST": "São Tomé and Príncipe", "GM": "The Gambia",
-                  # islands that only submarine cables reach
-                  "YT": "Mayotte", "RE": "Réunion", "SH": "Saint Helena"})
+    # the region's display names (for Africa: Natural Earth's Somaliland and
+    # Western Sahara labelled plainly, and the islands only submarine cables reach)
+    names.update(REGION.display)
     for iso, n in ISO_TO_NAME.items():
         names.setdefault(iso, n)
 
@@ -313,18 +321,19 @@ def main():
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
     for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei"):
-        print(f"   {k:8s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
+        if payload.get(k) is not None:
+            print(f"   {k:8s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
 
     # 2. GitHub Pages build: complete document, payload fetched at runtime by a
     #    module script (top-level await), with a loading state until it lands.
-    n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables, china, eu, mattei))
+    n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables, china, eu, mattei) if x)
     # The data URL carries a digest of the payload. Pages and CDN caches keep
     # index.html and map.json for ten minutes each, independently; without
     # this a freshly deployed page can load the previous deploy's data and
     # draw a layer with zero records.
     digest = hashlib.sha1(blob.encode()).hexdigest()[:10]
     loader = f'''<div class="loading" id="loading" role="status">
-  <div class="lbox"><b>{SITE_NAME}</b>
+  <div class="lbox"><b>{SITE_WORDMARK}</b>
   <span>Loading the basemap and {n_records:,} records, about {len(blob.encode()) / 1024 / 1024:.0f} MB…</span><i></i></div>
 </div>
 <script>
@@ -338,7 +347,7 @@ async function loadPayload(){{
     return data;
   }}catch(e){{
     box.classList.add("err");
-    box.querySelector("span").textContent = "The map data could not be loaded (" + e.message + "). Reload to try again.";
+    box.querySelector(".lbox > span").textContent = "The map data could not be loaded (" + e.message + "). Reload to try again.";
     throw e;
   }}
 }}
@@ -346,29 +355,30 @@ async function loadPayload(){{
 <div class="app">'''
     pages = html.replace('<div class="app">', loader, 1)
     pages = pages.replace(marker, '<script type="module">\nconst DATA = await loadPayload();', 1)
-    DOCS.mkdir(exist_ok=True)
+    DOCS.mkdir(parents=True, exist_ok=True)
     (DOCS / "data").mkdir(exist_ok=True)
     facts = site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei)
     (DOCS / "index.html").write_text(wrap_document(
         pages, title=SITE_NAME, path="", kind="map", facts=facts,
-        description="Interactive open-data map of infrastructure across Africa: power plants and "
-                    "oil and gas pipelines (Global Energy Monitor), African Development Bank "
+        description=f"Interactive open-data map of infrastructure across {REGION.name}: power plants and "
+                    f"oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']} "
                     f"and World Bank projects, Chinese-financed infrastructure {china_span()[0]}–{china_span()[1]} (AidData), "
-                    "European Union finance (European Commission and EIB), Italy's Piano Mattei projects, "
+                    "European Union finance (European Commission and EIB), "
+                    + ("Italy's Piano Mattei projects, " if mattei is not None else "") +
                     "construction works traced in OpenStreetMap and submarine cables "
                     "(TeleGeography). Filter by country, status and sector."))
     write_site_index(facts)
     (DOCS / "data" / "map.json").write_text(blob)
     # every raw layer as a download, except TeleGeography's: its terms put
     # the map under CC BY-SA but keep the underlying data for subscribers
-    for f in sorted(DATA.glob("*.geojson")) + [DATA / "meta.json", DATA / "africa_basemap_10m.json"]:
+    for f in sorted(DATA.glob("*.geojson")) + [DATA / "meta.json", DATA / REGION.basemap_10m]:
         if f.name in NOT_REDISTRIBUTED:
             (DOCS / "data" / f.name).unlink(missing_ok=True)
             continue
         shutil.copy(f, DOCS / "data" / f.name)
     (DOCS / ".nojekyll").write_text("")
     total = sum(p.stat().st_size for p in DOCS.rglob("*") if p.is_file()) / 1024 / 1024
-    print(f"→ docs/  index.html + dashboard.html + sitemap.xml + llms.txt + data/ ({total:.1f} MB for GitHub Pages)")
+    print(f"→ {DOCS.relative_to(ROOT)}/  index.html + dashboard.html + sitemap.xml + llms.txt + data/ ({total:.1f} MB for GitHub Pages)")
     if not (DOCS / "social.png").exists():
         print("   ! docs/social.png missing — run build_social.py for the link-preview image")
 

@@ -1,0 +1,535 @@
+<!-- Africa's minerals: the prose and section order of docs/minerals/. Tokens
+     (double-underscore names) are filled by build_minerals.py from
+     data/minerals.json (BGS, USGS, UN Comtrade; fetch_minerals.py), the USGS
+     deposits in data/minerals_sites.geojson and the rare-earth register
+     data/minerals_ree.json, so every figure the page states comes from them.
+     Colours: the share chart's --sc-1..7 are the seven leading producers
+     (build_minerals.share_countries), in the validated categorical order and
+     stacked in that order in every bar, other African producers one grey;
+     the map's countries are one blue ramp (--q1..--q5, the site's
+     sequential hue, stepped for each theme); the deposits are one orange
+     (--dep) ringed in the surface colour. The destinations in "Where it goes"
+     are the site's validated categorical order (--td-*), China, Europe, the
+     Gulf and the United States keeping the hues the debt and corridors pages
+     give them; checked for colour-blind separation of neighbours in both
+     themes, and every bar carries a label, a tooltip and a table view.
+     Production and reserves are slots 1 and 2 (blue, orange). Stage colours
+     in the rare-earth section are the site's --st-* tokens. -->
+<style>
+  :root{
+    --q1:#cde2fb; --q2:#86b6ef; --q3:#3987e5; --q4:#1c5cab; --q5:#0d366b;
+    --dep:#eb6834; --mp:#2a78d6; --mr:#eb6834; --sbar:#2a78d6;
+    --td-china:#1baf7a; --td-europe:#eda100; --td-gulf:#e87ba4; --td-india:#4a3aa7;
+    --td-us:#008300; --td-eastasia:#2a78d6; --td-africa:#eb6834; --td-other:#a9b3ad;
+    --og-state:#e87ba4; --og-local:#2a78d6; --og-africa:#eb6834; --og-china:#1baf7a; --og-europe:#eda100;
+    --og-namerica:#008300; --og-australia:#4a3aa7; --og-other:#e34948;
+    --sc-1:#2a78d6; --sc-2:#eb6834; --sc-3:#1baf7a; --sc-4:#eda100; --sc-5:#e87ba4; --sc-6:#008300;
+    --sc-7:#4a3aa7; --sc-other:#8d9892;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --q1:#1b3352; --q2:#184f95; --q3:#2a78d6; --q4:#6da7ec; --q5:#b7d3f6;
+      --dep:#d95926; --mp:#3987e5; --mr:#d95926; --sbar:#3987e5;
+      --td-china:#199e70; --td-europe:#c98500; --td-gulf:#d55181; --td-india:#9085e9;
+      --td-us:#008300; --td-eastasia:#3987e5; --td-africa:#d95926; --td-other:#56625b;
+      --og-state:#d55181; --og-local:#3987e5; --og-africa:#d95926; --og-china:#199e70; --og-europe:#c98500;
+      --og-namerica:#008300; --og-australia:#9085e9; --og-other:#e66767;
+      --sc-1:#3987e5; --sc-2:#d95926; --sc-3:#199e70; --sc-4:#c98500; --sc-5:#d55181; --sc-6:#008300;
+      --sc-7:#9085e9; --sc-other:#6f7c75;
+    }
+  }
+  :root[data-theme="dark"]{
+    --q1:#1b3352; --q2:#184f95; --q3:#2a78d6; --q4:#6da7ec; --q5:#b7d3f6;
+    --dep:#d95926; --mp:#3987e5; --mr:#d95926; --sbar:#3987e5;
+    --td-china:#199e70; --td-europe:#c98500; --td-gulf:#d55181; --td-india:#9085e9;
+    --td-us:#008300; --td-eastasia:#3987e5; --td-africa:#d95926; --td-other:#56625b;
+    --og-state:#d55181; --og-local:#3987e5; --og-africa:#d95926; --og-china:#199e70; --og-europe:#c98500;
+    --og-namerica:#008300; --og-australia:#9085e9; --og-other:#e66767;
+    --sc-1:#3987e5; --sc-2:#d95926; --sc-3:#199e70; --sc-4:#c98500; --sc-5:#d55181; --sc-6:#008300;
+    --sc-7:#9085e9; --sc-other:#6f7c75;
+  }
+
+  .draft{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:2px;background:var(--st-announced);color:var(--paper);font-weight:700;letter-spacing:.12em}
+  section h2{scroll-margin-top:80px}
+  .tblbox{margin-top:12px}
+  .tblbox>summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--accent-ink);list-style:none;display:inline-flex;align-items:center;gap:6px}
+  .tblbox>summary::-webkit-details-marker{display:none}
+  .tblbox>summary::before{content:"";border:4px solid transparent;border-left-color:currentColor;margin-left:2px;transition:transform .15s}
+  .tblbox[open]>summary::before{transform:rotate(90deg) translate(2px,2px)}
+  .keys{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:10px 0 8px;font-size:12px;color:var(--ink-2)}
+  .kl{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .dk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .gk{width:10px;height:10px;border-radius:2px;flex:none;display:inline-block}
+  .qk{width:22px;height:10px;border-radius:1px;display:inline-block;flex:none}
+  .dk .dd{width:9px;height:9px;border-radius:50%;background:var(--dep);box-shadow:0 0 0 1.5px var(--surface);display:inline-block}
+  #mkey.all .dd,#mkey.all .dsq{background:var(--ink-2)}
+  #mkey.all .drg{border-color:var(--ink-2)}
+  .seg-btns{display:inline-flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+  .seg-btns button{font:500 12px var(--display);padding:5px 11px;border:0;background:var(--surface);color:var(--ink-2);cursor:pointer}
+  .seg-btns button+button{border-left:1px solid var(--rule)}
+  .seg-btns button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+  .orow{cursor:default;outline:none}
+  .orow:hover .shit,.orow:focus .shit{fill:var(--surface-3)}
+  .orow.oall .sname{font-weight:700}
+  .dk .dn{width:9px;height:9px;border-radius:50%;background:var(--ink-2);box-shadow:0 0 0 1.5px var(--surface);display:inline-block}
+
+  /* ---- charts drawn as rows: the share chart, reserves and trade */
+  .rowchart{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:14px 16px 8px;margin-top:16px;position:relative}
+  .rowchart svg{display:block;width:100%;height:auto;overflow:visible}
+  .sgrid{stroke:var(--rule-soft);stroke-width:1}
+  .sname{font:600 12.5px var(--display);fill:var(--ink)}
+  .sfam{font:10.5px var(--display);fill:var(--ink-3)}
+  .strack{fill:var(--surface-2)}
+  .sseg{fill:var(--sc-other)}
+  .slab{font:600 10.5px var(--display);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+  .sval{font:11.5px var(--display);fill:var(--ink-2)}
+  .sval .sbig{font:600 13px var(--mono);fill:var(--ink)}
+  .sval .dim{fill:var(--ink-3)}
+  .shit{fill:transparent}
+  .srow,.rrow,.trow{cursor:default;outline:none}
+  .srow:hover .shit,.srow:focus .shit,.rrow:hover .shit,.rrow:focus .shit,.trow:hover .shit,.trow:focus .shit{fill:var(--surface-3)}
+  .rlink{stroke:var(--border);stroke-width:2}
+  .rp{fill:var(--mp);stroke:var(--surface);stroke-width:2}
+  .rr{fill:var(--mr);stroke:var(--surface);stroke-width:2}
+  .tseg{stroke:none}
+  .tlab{font:600 10.5px var(--mono);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+  .rowchart .tip{max-width:330px}
+  .tip ul{margin:4px 0 0;padding:0;list-style:none}
+  .tip li{display:flex;justify-content:space-between;gap:14px;font-size:11.5px;line-height:1.5}
+  .tip li>span:last-child{font-family:var(--mono);color:var(--ink)}
+  .tip .tsub{display:block;margin-top:6px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+  .tip .tnote{display:block;margin-top:6px;font-size:11px;color:var(--ink-3)}
+  .tip .gk{margin-right:6px;vertical-align:-1px}
+
+  /* ---- the map */
+  .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:14px 0 8px}
+  .mchips{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 4px}
+  .mchip{font:500 12px var(--display);padding:5px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink-2);cursor:pointer}
+  .mchip:hover{color:var(--ink);border-color:var(--border)}
+  .mchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+  .mwrap{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:16px;align-items:start;margin-top:6px}
+  .mwrap>*{min-width:0}
+  .mapscroll{position:relative}
+  #mmap{display:block;width:100%;height:auto;background:var(--sea);border-radius:3px;border:1px solid var(--rule)}
+  #mmap .land{fill:var(--land);stroke:var(--border);stroke-width:.5;stroke-linejoin:round}
+  #mmap .land.ctx{fill:var(--land-ctx)}
+  #mmap .land.c{cursor:default;transition:fill .15s}
+  #mmap .land.c.q1{fill:var(--q1)} #mmap .land.c.q2{fill:var(--q2)} #mmap .land.c.q3{fill:var(--q3)}
+  #mmap .land.c.q4{fill:var(--q4)} #mmap .land.c.q5{fill:var(--q5)}
+  #mmap .land.c.on{stroke:var(--ink);stroke-width:1.4}
+  #mmap .lake{fill:var(--lake)}
+  #mmap .sea{font:italic 11px var(--serif);fill:var(--ink-3);opacity:.85;pointer-events:none}
+  #mmap .mk{fill:var(--dep);stroke:var(--surface);stroke-width:1;cursor:pointer}
+  #mmap .mk.exp{fill:var(--surface);stroke:var(--dep);stroke-width:1.6}
+  #mmap.all .mk{fill:var(--ink-2);opacity:.7}
+  #mmap.all .mk.exp{fill:var(--surface);stroke:var(--ink-2)}
+  #mmap .mk.off{display:none}
+  #mmap .mk:hover,#mmap .mk:focus{stroke:var(--ink);stroke-width:1.5;opacity:1}
+  .dk .dsq{width:8px;height:8px;background:var(--dep);box-shadow:0 0 0 1.5px var(--surface);display:inline-block}
+  .dk .drg{width:8px;height:8px;border-radius:50%;border:1.6px solid var(--dep);display:inline-block}
+  .mlayers{margin:4px 0 2px}
+  .mside{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:12px 12px 10px;max-height:640px;overflow:auto}
+  .mside h3{font-size:13px;font-weight:700;margin:0}
+  .mside .sub{font-size:11.5px;color:var(--ink-3);margin:3px 0 8px;line-height:1.4}
+  .mside ol{list-style:none;margin:0;padding:0}
+  .mside li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:5px 0;border-top:1px solid var(--rule-soft);font-size:12px}
+  .mside li:first-child{border-top:0}
+  .mside li b{font-weight:600;color:var(--ink)}
+  .mside li .v{font-family:var(--mono);color:var(--ink)}
+  .mside li .mbar{grid-column:1/-1;display:block;height:4px;border-radius:2px;background:var(--sbar)}
+  .mside li .d{grid-column:1/-1;font-size:11px;color:var(--ink-3)}
+  #mtip{max-width:300px}
+  @media (max-width:900px){.mwrap{grid-template-columns:1fr}.mside{max-height:none}}
+  @media (max-width:760px){
+    .mapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .mapscroll .mapbox{min-width:600px}
+    .rowchart{overflow-x:auto}
+    .rowchart svg{min-width:720px}
+  }
+
+  /* ---- the trend panels */
+  .charts.tri{grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:960px){.charts.tri{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:620px){.charts.tri{grid-template-columns:1fr}}
+  .tp{margin:0}
+  .tp .area{fill:var(--sbar);fill-opacity:.12}
+  .tp .series{stroke:var(--sbar)}
+  .tp .tend{fill:var(--sbar);stroke:var(--surface);stroke-width:2}
+  .tp .tval{font:600 11px var(--mono);fill:var(--ink)}
+  .tp .xh{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
+  .tp .xd{fill:var(--sbar);stroke:var(--surface);stroke-width:2;opacity:0}
+  .tp .thit{fill:transparent;cursor:crosshair}
+  .tp.on .xh,.tp.on .xd{opacity:1}
+
+  /* ---- rare earths */
+  .reegrid{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:22px;align-items:start;margin-top:14px}
+  .reegrid>*{min-width:0}
+  .reebox{position:relative;background:var(--sea);border:1px solid var(--rule);border-radius:3px}
+  #reemap{display:block;width:100%;height:auto}
+  #reemap .rl{fill:var(--land);stroke:var(--border);stroke-width:.5}
+  #reemap .rl.ctx{fill:var(--land-ctx)}
+  #reemap .rdep{fill:var(--ink-3);opacity:.6}
+  #reemap .rp{stroke:var(--surface);stroke-width:2;cursor:default}
+  #reemap .rp.operating{fill:var(--st-operating)} #reemap .rp.under_construction{fill:var(--st-construction)}
+  #reemap .rp.approved{fill:var(--st-approved)} #reemap .rp.announced{fill:var(--st-announced)}
+  #reemap .rp.stalled{fill:var(--surface);stroke:var(--st-stalled);stroke-width:2.2}
+  #reemap .rn{font:600 10px var(--display);fill:var(--ink);paint-order:stroke;stroke:var(--sea);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+  #reemap .rpj{outline:none}
+  #reemap .rpj:hover .rp,#reemap .rpj:focus .rp{stroke:var(--ink)}
+  ul.facts{margin:10px 0 0;padding:0 0 0 18px;color:var(--ink-2);font-size:13px;line-height:1.5}
+  ul.facts li{margin:0 0 6px}
+  ul.facts a{font-size:11.5px}
+  table.reetab td.name{min-width:150px}
+  table.reetab .pc{display:block;font-size:11.5px;font-weight:400;margin-top:2px}
+  table.reetab td.latest{min-width:240px;max-width:380px;color:var(--ink-2)}
+  table.reetab td.deals{min-width:220px;max-width:340px;font-size:12px;line-height:1.5}
+  table.reetab td.deals b{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-right:4px}
+  table.reetab td.deals a{border:0}
+  .tblbox.review>summary{color:var(--st-announced)}
+  .tblbox ul.facts{margin-top:8px}
+  table.reetab .srcs{display:block;margin-top:5px;font-size:11px}
+  @media (max-width:900px){.reegrid{grid-template-columns:1fr}}
+</style>
+
+<div class="head">
+  <span class="kicker">Deep dive · minerals and mining<span class="draft">Draft for review</span></span>
+  <h1>Africa's minerals</h1>
+  <p class="lede"><strong>Africa mines __S_COBALT__ of the world's cobalt, __S_PLATINUM__ of its platinum and __S_MANGANESE__ of its manganese ore.</strong> Of the __N_MINERALS__ minerals on this page it produces half or more of the world's output of __N_HALF__: __HALF_LIST__. Most of it comes from a handful of countries. In __BGS_YEAR__ __TOP_COBALT__ alone mined __TOPS_COBALT__ of the world's cobalt, __TOP_PLATINUM__ __TOPS_PLATINUM__ of its platinum and __TOPS_CHROMIUM__ of its chromium ore, __TOP_BAUXITE__ __TOPS_BAUXITE__ of its bauxite and __TOP_TITANIUM__ __TOPS_TITANIUM__ of its titanium minerals.</p>
+  __TRADE_LEDE__
+  <p class="lede"><strong>Rare earths are the exception.</strong> Africa mined about __S_REE__ of the world's rare earths in __MCS_YEAR__, from Madagascar and Nigeria, against China's __MCS_REE_CN__ tonnes. But the USGS puts __MCSR_REE_TZ__ tonnes of rare-earth oxide in Tanzania's reserves and __MCSR_REE_ZA__ in South Africa's, and the projects to mine them are contested. A Chinese company, Shenghe, bought Tanzania's Ngualla in 2025; the United States, the European Union and Japan back projects in South Africa, Malawi, Angola, Namibia and Madagascar. Of the __REE_N__ projects in this page's register, __REE_PRODUCING__ are producing and __REE_CONSTRUCTION__ are being built.</p>
+  <p class="asof">Data fetched <b>__FETCHED__</b> · production from the <b>BGS</b> (__BGS_FIRST__–__BGS_YEAR__) and the <b>USGS</b> (__MCS_YEAR__) · <b>__N_FACS__</b> mines and plants and <b>__N_DEPOSITS__</b> deposits from the USGS · trade from <b>UN Comtrade</b> (__TRADE_YEAR__) · a draft, not linked from the site</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__S_COBALT__</dt><dd><b>of the world's cobalt</b>, __TOPS_COBALT__ from __TOP_COBALT__ alone (BGS, __BGS_YEAR__)</dd></div>
+  <div class="kpi"><dt>__S_PLATINUM__</dt><dd><b>of its platinum</b> and __S_RHODIUM__ of its rhodium, nearly all from __TOP_PLATINUM__ and Zimbabwe</dd></div>
+  <div class="kpi"><dt>__S_MANGANESE__</dt><dd><b>of its manganese ore</b> and __S_CHROMIUM__ of its chromium ore, the metals that make steel</dd></div>
+  <div class="kpi"><dt>__R_PHOSPHATE__</dt><dd><b>of the world's phosphate reserves</b>, most of them Morocco's, and __R_PLATINUM__ of its platinum-group reserves (USGS)</dd></div>
+</dl>
+
+<section id="share">
+  <h2>How much of the world's supply</h2>
+  <p class="lead">Africa's share of world mine production, mineral by mineral, cut by producing country. Seven countries, each Africa's largest producer of at least one of them, keep one colour in every row; the other African producers are dark grey and the rest of the world is the pale track. Hover a row for every African producer and the world's largest.</p>
+  <div class="keys">__SHARE_KEY__</div>
+  <div class="rowchart">
+    __SHARE_CHART__
+    <div class="tip" id="stip"></div>
+  </div>
+  <p class="mapnote">Production in __BGS_YEAR__ from the British Geological Survey, which names every producing country; lithium, tantalum and rare earths in __MCS_YEAR__ from the USGS, whose tables for them are cleaner but fold small producers into "other countries", so their African share is a floor. Ores (manganese, chromium, bauxite, iron, phosphate, titanium, zircon) are by gross weight, metals by metal content, diamonds by carats.</p>
+  <details class="tblbox"><summary>Show as a table</summary>__SHARE_TABLE__</details>
+</section>
+
+<section id="map-s">
+  <h2>Where the mines are</h2>
+  <p class="lead">__N_MINES__ mines and __N_PLANTS__ processing plants of these minerals that the USGS located across Africa for 2018, with their operators and owners; __N_DEPOSITS__ known deposits; and __N_EXPS__ exploration projects. Pick a layer and a mineral: the countries take that mineral's share of world production and only its sites stay on the map. Hover a country or a site for the detail.</p>
+  <div class="ctl mlayers"><span class="seg-btns" role="group" aria-label="Sites shown on the map"><button type="button" data-layer="fac" aria-pressed="true">Mines and plants (2018)</button><button type="button" data-layer="dep" aria-pressed="false">Deposits</button><button type="button" data-layer="exp" aria-pressed="false">Exploration</button></span></div>
+  <div class="mchips" role="group" aria-label="Mineral shown on the map">__CHIPS__</div>
+  <div class="keys" id="mkey"></div>
+  <div class="mwrap">
+    <div class="mapscroll">
+      <div class="mapbox">
+        <svg id="mmap" class="all" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with the USGS mines, processing plants, deposits and exploration projects, and each country's share of world mine production">
+__BASEMAP__
+__DEPOSITS__
+        </svg>
+        <div class="tip" id="mtip"></div>
+      </div>
+    </div>
+    <div class="mside" id="mside" aria-live="polite"></div>
+  </div>
+  <p class="mapnote"><b>Mines and plants</b> are the USGS's compilation of Africa's mineral industry (2021), from its Minerals Yearbook country chapters for 2018: a site's status is as of 2018 ("assumed active" means the yearbook listed it without a note), its capacity is the yearbook's, and owners are as reported then; some have changed hands since. Only sites of the page's minerals are drawn; the cement, steel, salt, coal and other industrial-mineral sites are in the data file, and oil and gas are left out. <b>Deposits</b> are where the USGS records ore, not a list of working mines: from its major mineral deposits of Africa and the Middle East (Open-File Report 2005-1294) and its critical-mineral deposits of the world (Professional Paper 1802, 2017); a deposit in both is drawn once. <b>Exploration</b> projects are from the USGS World Minerals Exploration Database, each last confirmed active between 2004 and 2018. Shares of world production as in the chart above. Borders and lakes from Natural Earth.</p>
+</section>
+
+<section id="owners">
+  <h2>Who owned the mines</h2>
+  <p class="lead">The __N_OWN_MINES__ mines of the page's minerals that the USGS compilation lists as working or being built in 2018 (not those on care and maintenance or closed), by where their owners were based. Each mine counts once, split by its owners' equity stakes; an owner counts for the home country of its ultimate parent, and a government or company of the mine's own country counts as "host". This is a count of mines, not of their output or value: a small gold mine weighs as much as Kamoto. __OWN_CLASSIFIED__ of the equity could be classified; the rest is the grey track. Hover a row for the largest owners.</p>
+  <p class="lead">Across all of them, companies and miners of the mine's own country held __OWN_ALL_LOCAL__ of the equity and its government __OWN_ALL_STATE__; European companies __OWN_ALL_EUROPE__, Chinese __OWN_ALL_CHINA__ and North American __OWN_ALL_NAMERICA__. In the copper and cobalt mines, European companies, Glencore first, held __OWN_COPPER_EUROPE__ and __OWN_COBALT_EUROPE__, Chinese companies __OWN_COPPER_CHINA__ and __OWN_COBALT_CHINA__. Australian companies held __OWN_TITANIUM_AUSTRALIA__ of the titanium mines, governments __OWN_PHOSPHATE_STATE__ of the phosphate mines, and local and artisanal miners most of the tin and tantalum mines.</p>
+  <div class="keys">__OWN_KEY__</div>
+  <div class="rowchart">
+    __OWN_CHART__
+    <div class="tip" id="otip"></div>
+  </div>
+  <p class="mapnote">Owners and stakes from the USGS compilation (2018 reference year). Their home countries were classified for this page, from each parent company's own filings and stock-exchange listings, as of 2018: Glencore counts for Switzerland, Anglo American for the United Kingdom, AngloGold Ashanti for South Africa, CMOC for China, Vedanta for the United Kingdom (its Indian-controlled parent is noted). Mines with several minerals count for each. Europe is the EU, the United Kingdom, Switzerland, Norway and the Channel Islands.</p>
+  __OWN_TABLE__
+</section>
+
+<section id="trend">
+  <h2>Twenty-five years of output</h2>
+  <p class="lead">Africa's share of world mine production each year from __BGS_FIRST__ to __BGS_YEAR__, from the BGS. Hover a panel for the year, the share and the largest African producer.</p>
+  <div class="charts tri">__TRENDS__</div>
+</section>
+
+<section id="reserves">
+  <h2>What is left in the ground</h2>
+  <p class="lead">Africa's share of the world's known reserves (<span class="dk"><i class="gk" style="background:var(--mr);border-radius:50%"></i>orange</span>) beside its share of __MCS_YEAR__ mine output (<span class="dk"><i class="gk" style="background:var(--mp);border-radius:50%"></i>blue</span>), for __N_RES__ minerals, from the USGS. Reserves are what can be mined at a profit with today's knowledge and prices, as companies and governments report them, so they move with prices and with exploration.</p>
+  <div class="rowchart">
+    __RES_CHART__
+    <div class="tip" id="rtip"></div>
+  </div>
+  <p class="mapnote">The USGS names only the larger reserve holders and leaves some countries' reserves unreported ("NA"), so Africa's share is a floor. Platinum-group reserves are for all six metals; output is platinum's. Iron is by iron content, bauxite and phosphate by marketable rock, titanium as TiO2 in ilmenite.</p>
+</section>
+
+<section id="trade">
+  <h2>Where it goes</h2>
+  <p class="lead">What the rest of the world reported importing from African countries in __TRADE_YEAR__, by destination: ores and concentrates, and the first metals made near the mine (cobalt hydroxide, copper cathodes, ferrochrome, gold bars, rough diamonds). Hover a row for the values and the largest exporters.</p>
+  <div class="keys">__TRADE_KEY__</div>
+  <div class="rowchart">
+    __TRADE_CHART__
+    <div class="tip" id="ttip"></div>
+  </div>
+  <p class="mapnote">UN Comtrade, imports reported by partner countries ("mirror" data, which is more complete than many African customs' own), in US dollars at the importer's border. Trade through a hub shows the hub: gold refined in Switzerland or the Emirates, diamonds sorted in Belgium or Dubai, cobalt and copper that cross Zambia or South Africa on their way. Europe here is the EU, the United Kingdom, Switzerland and Norway; "everywhere else" is led by Indonesia for chromium, Thailand and Malaysia for copper, Canada and Australia for gold, and Pakistan and Türkiye for phosphate.__UAE_NOTE__</p>
+  <details class="tblbox"><summary>Show as a table</summary>__TRADE_TABLE__</details>
+</section>
+
+<section id="ree">
+  <h2>Rare earths</h2>
+  <p class="lead">The seventeen metals in the magnets of wind turbines, electric motors and guided missiles. China mines most of the world's and refines nearly all of it. Africa mined __S_REE__ of world output in __MCS_YEAR__ (USGS: Madagascar __MCS_REE_MG__ tonnes of rare-earth oxide, estimated from China's imports, and Nigeria __MCS_REE_NG__, against China's __MCS_REE_CN__), but holds known reserves of __MCSR_REE_TZ__ tonnes in Tanzania and __MCSR_REE_ZA__ in South Africa, and some of the most advanced projects outside China. __REE_N__ of them are in the register below, compiled on __REE_COMPILED__ from ministries', regulators' and the owners' own filings: __REE_PRODUCING__ producing, __REE_CONSTRUCTION__ being built, __REE_FEASIBILITY__ at feasibility, __REE_EXPLORATION__ earlier and __REE_STALLED__ stalled.</p>
+  <div class="keys"><span class="kl">Stage</span>__REE_STAGE_KEY__<span class="dk"><i class="dn" style="background:var(--ink-3)"></i>other USGS rare-earth deposits</span></div>
+  <div class="reegrid">
+    <div class="reebox">__REE_MAP__<div class="tip" id="etip"></div></div>
+    <div>__REE_FACTS__</div>
+  </div>
+  __REE_TABLE__
+</section>
+
+<section id="countries">
+  <h2>Country by country</h2>
+  <p class="lead">Every African country that mines 1% or more of the world's output of one of these minerals, has three or more deposits on the map or exported more than USD 50 million of them in __TRADE_YEAR__. The platinum-group metals count once.</p>
+  __COUNTRY_TABLE__
+</section>
+
+<section id="method">
+  <h2>How this page was made</h2>
+  <dl class="spec">
+    <dt>Production</dt><dd>The British Geological Survey's World Mineral Statistics, through its open API, for mine production by country from __BGS_FIRST__ to __BGS_YEAR__. It names every producing country, so Africa's share is a whole share. Where a country reports a total and its parts (gem and industrial diamonds, grades of ore), the total is taken. Contains British Geological Survey materials © UKRI 2026, used with the acknowledgement BGS asks for. For lithium, tantalum and rare earths, whose BGS tables mix ores, concentrates and contained metal country by country, the USGS's __MCS_YEAR__ figures are used instead.</dd>
+    <dt>Reserves</dt><dd>The USGS Mineral Commodity Summaries 2026 (public domain), read from its "World Mine Production and Reserves" tables. The USGS folds smaller producers into "other countries" and leaves some reserves unreported, so Africa's shares from it are floors.</dd>
+    <dt>Mines and plants</dt><dd>The USGS <a href="https://doi.org/10.5066/P97EQWXP">Compilation of Geospatial Data (GIS) for the Mineral Industries and Related Infrastructure of Africa</a> (2021): every mine and processing plant in the USGS Minerals Yearbook's African country chapters for 2018, located, with its commodities, capacity, status, operator and equity owners. A site listed once per commodity is drawn once. Oil and gas fields and refineries are left out. Status and owners are as of 2018. Its exploration layer (the USGS World Minerals Exploration Database) is the map's third layer.</dd>
+    <dt>Owners</dt><dd>The owners' home countries are this page's classification, not the USGS's: each owner counts for the home country of its ultimate parent in 2018, from the parent's filings and listing; a government or company of the mine's own country counts as "host". The full list is in the review table under the chart, and in <a href="__OWNERS_URL__">minerals_owners.json</a>. A mine's equity is split by the stakes the USGS gives; owners listed without a stake share what is left.</dd>
+    <dt>Deposits</dt><dd>Two USGS datasets from its ArcGIS server: <a href="https://doi.org/10.3133/ofr20051294">Open-File Report 2005-1294</a> (major mineral deposits of Africa and the Middle East) and <a href="https://doi.org/10.5066/F7GH9GQR">Professional Paper 1802</a> (critical-mineral deposits of the world, 2017). Each point is placed in a country by its coordinates; a deposit listed in both, within about 8 km and with a mineral in common, is drawn once.</dd>
+    <dt>Trade</dt><dd>UN Comtrade's public API: imports reported by every other country in __TRADE_YEAR__ from each African country that mines the mineral (per the BGS and USGS), for the HS headings of its ores and first products (listed in the table). Values are at the importer's border, in US dollars; goods refined or re-exported in a country count as that country's. A country that has not reported a year is missing from it: in __TRADE_YEAR__ that is the United Arab Emirates, whose last reported year is given beside the chart and never added in. Lithium's heading, 2530.90, also holds other minerals, so its row is approximate. Rare earths are left out: Africa's concentrates ship under headings shared with other ores.</dd>
+    <dt>Rare earths</dt><dd>A register kept by hand in <a href="__REE_URL__">minerals_ree.json</a>: each project with its owners and their home countries, its stage, resource, buyers and lenders, and the address each fact was read from: ministries, regulators' filings (ASX, TSX, LSE, JSE), technical reports and development banks' own pages.</dd>
+    <dt>Files</dt><dd><a href="__DATA_URL__">minerals.json</a> (production, reserves, trade), <a href="__SITES_URL__">minerals_sites.geojson</a> (deposits), <a href="__FACS_URL__">minerals_facilities.geojson</a> (mines and plants) and <a href="__EXPS_URL__">minerals_exploration.geojson</a>. Rebuilt with fetch_minerals.py and build_minerals.py.</dd>
+  </dl>
+</section>
+
+<script>
+/* the minerals page: map, chart tooltips and the trend crosshairs */
+{
+  const MD = /*__MPAYLOAD__*/;
+  const N = iso => MD.names[iso] || iso;
+  const pc = x => { const v = x * 100; return v === 0 ? "0%" : v < 0.1 ? "<0.1%" : v >= 9.5 ? v.toFixed(0) + "%" : v.toFixed(1) + "%"; };
+  const num = v => v >= 1e6 ? (v / 1e6).toLocaleString("en", {maximumFractionDigits: 1}) + " million" : Math.round(v).toLocaleString("en");
+  const usd = v => v >= 1e9 ? "USD " + (v / 1e9).toFixed(1) + " bn" : v >= 1e6 ? "USD " + Math.round(v / 1e6) + " m" : "USD " + Math.round(v / 1e3) + " k";
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+  const li = (a, b) => `<li><span>${a}</span><span>${b}</span></li>`;
+  function place(tip, box, ev) {
+    const r = box.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14;
+    if (x + w > r.width) x = Math.max(4, ev.clientX - r.left - w - 14);
+    if (y + h > r.height + 40) y = Math.max(4, ev.clientY - r.top - h - 10);
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  function hover(els, box, tip, html) {
+    els.forEach(e => {
+      e.addEventListener("mousemove", ev => { tip.innerHTML = html(e); tip.style.display = "block"; place(tip, box, ev); });
+      e.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+      e.addEventListener("focus", () => { tip.innerHTML = html(e); tip.style.display = "block"; tip.style.left = "12px"; tip.style.top = "12px"; });
+      e.addEventListener("blur", () => { tip.style.display = "none"; });
+    });
+  }
+
+  /* ---- share chart */
+  const sbox = document.querySelector("#share .rowchart");
+  hover(sbox.querySelectorAll(".srow"), sbox, document.getElementById("stip"), e => {
+    const s = MD.share[e.dataset.k];
+    const dot = iso => `<i class="gk" style="background:var(--sc-${MD.shareSlot[iso] || "other"})"></i>`;
+    const af = s.af.slice(0, 9).map(([iso, v, x]) => li(dot(iso) + esc(N(iso)), pc(x))).join("");
+    const top = s.top.map(([iso, x]) => li(esc(N(iso)), pc(x))).join("");
+    return `<b>${esc(s.name)}: Africa ${pc(s.africa)}</b>World output ${num(s.world)} ${esc(s.unit)}, ${s.src} ${s.year}` +
+      `<span class="tsub">African producers</span><ul>${af || li("none", "")}</ul>` +
+      (s.af.length > 9 ? `<span class="tnote">and ${s.af.length - 9} more</span>` : "") +
+      `<span class="tsub">World's largest</span><ul>${top}</ul>` + (s.note ? `<span class="tnote">${esc(s.note)}</span>` : "");
+  });
+
+  /* ---- the map: three layers (one shown at a time), a mineral, the countries' shares */
+  const svg = document.getElementById("mmap"), mbox = svg.closest(".mapbox"), mtip = document.getElementById("mtip");
+  const side = document.getElementById("mside"), key = document.getElementById("mkey");
+  const M = MD.map, chipName = Object.fromEntries(M.chips.map(c => [c[0], c[1]]));
+  const ctry = [...svg.querySelectorAll(".land.c")];
+  const groups = Object.fromEntries([...svg.querySelectorAll("g[data-layer]")].map(g => [g.dataset.layer, g]));
+  // the marks, from the payload: a circle for a mine, a deposit or (hollow) an exploration project, a square for a plant
+  const NS = "http://www.w3.org/2000/svg";
+  Object.entries(M.pts).forEach(([l, rows]) => {
+    const g = groups[l], frag = document.createDocumentFragment();
+    rows.forEach(([x, y, m, k], i) => {
+      let e;
+      if (l === "fac" && k === "p") {
+        e = document.createElementNS(NS, "rect");
+        e.setAttribute("x", (x - 2.4).toFixed(1)); e.setAttribute("y", (y - 2.4).toFixed(1));
+        e.setAttribute("width", "4.8"); e.setAttribute("height", "4.8");
+      } else {
+        e = document.createElementNS(NS, "circle");
+        e.setAttribute("cx", x); e.setAttribute("cy", y); e.setAttribute("r", l === "fac" ? "2.9" : l === "exp" ? "2.7" : "2.6");
+      }
+      e.setAttribute("class", "mk " + l);
+      e.dataset.i = i; e.dataset.m = m;
+      frag.appendChild(e);
+    });
+    g.appendChild(frag);
+  });
+  const marks = l => groups[l] ? [...groups[l].querySelectorAll(".mk")] : [];
+  let cur = "all", layer = groups.fac ? "fac" : "dep";
+  const KEYMARK = {fac: `<span class="dk"><i class="dd"></i>mine</span><span class="dk"><i class="dsq"></i>processing plant</span>`,
+                   dep: `<span class="dk"><i class="dd"></i>deposit</span>`, exp: `<span class="dk"><i class="drg"></i>exploration project</span>`};
+  const cls = (v, steps) => v == null || v <= 0 ? "" : "q" + (1 + steps.filter(s => v >= s).length);
+  const KEYQ = (labels) => labels.map((l, i) => `<span class="dk"><i class="qk" style="background:var(--q${i + 1})"></i>${l}</span>`).join("");
+  const nSites = c => (M.count[layer] || {})[c] || 0;
+  function draw(c) {
+    cur = c;
+    document.querySelectorAll(".mchip").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.c === c)));
+    document.querySelectorAll(".mlayers button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.layer === layer)));
+    Object.entries(groups).forEach(([l, g]) => { g.hidden = l !== layer; });
+    svg.classList.toggle("all", c === "all");
+    key.classList.toggle("all", c === "all");
+    ctry.forEach(p => {
+      p.classList.remove("q1", "q2", "q3", "q4", "q5");
+      const iso = p.dataset.iso;
+      const q = c === "all" ? cls((M.all[iso] || []).length, M.allSteps) : cls(M.val[c][iso], M.steps);
+      if (q) p.classList.add(q);
+    });
+    Object.entries(groups).forEach(([l, g]) => marks(l).forEach(d => {
+      const off = c !== "all" && !d.dataset.m.split(" ").includes(c);
+      d.classList.toggle("off", off);
+      // only the sites of the layer and mineral shown take keyboard focus, and none under "All"
+      if (l === layer && c !== "all" && !off) d.setAttribute("tabindex", "0"); else d.removeAttribute("tabindex");
+    }));
+    const marksKey = KEYMARK[layer] + ` <span class="dk dim">(${nSites(c).toLocaleString("en")} shown)</span>`;
+    if (c === "all") {
+      key.innerHTML = `<span class="kl">Minerals with 1% or more of world output</span>` + KEYQ(["1", "2–3", "4–5", "6–8", "9 or more"]) + marksKey;
+      const rows = Object.entries(M.all).sort((a, b) => b[1].length - a[1].length || b[1][0][1] - a[1][0][1]);
+      side.innerHTML = `<h3>All minerals</h3><p class="sub">Countries by the number of the page's minerals of which they mine 1% or more of world output.</p><ol>` +
+        rows.map(([iso, ms]) => `<li><b>${esc(N(iso))}</b><span class="v">${ms.length}</span><span class="d">${ms.slice(0, 4).map(m => esc(m[0]) + " " + pc(m[1])).join(", ")}${ms.length > 4 ? "…" : ""}</span></li>`).join("") + "</ol>";
+    } else {
+      const s = MD.share[M.chips.find(x => x[0] === c)[2]];
+      key.innerHTML = `<span class="kl">Share of world ${esc(s.name.toLowerCase())} output, ${s.src} ${s.year}</span>` +
+        KEYQ(["under 1%", "1–5%", "5–15%", "15–40%", "40% or more"]) + marksKey;
+      const max = s.af.length ? s.af[0][2] : 1;
+      const counts = ["fac", "dep", "exp"].filter(l => groups[l]).map(l => `${(M.count[l] || {})[c] || 0} ${{fac: "mines and plants", dep: "deposits", exp: "exploration projects"}[l]}`).join(", ");
+      side.innerHTML = `<h3>${esc(chipName[c])}</h3><p class="sub">Africa ${pc(s.africa)} of world output in ${s.year} (${s.src}). On the map: ${counts}.</p><ol>` +
+        (s.af.map(([iso, v, x]) => `<li><b>${esc(N(iso))}</b><span class="v">${pc(x)}</span><span class="mbar" style="width:${Math.max(2, x / max * 100)}%"></span></li>`).join("") || "<li>No African producer recorded.</li>") + "</ol>" +
+        (s.note ? `<p class="sub">${esc(s.note)}</p>` : "");
+    }
+  }
+  document.querySelectorAll(".mchip").forEach(b => b.addEventListener("click", () => draw(b.dataset.c)));
+  document.querySelectorAll(".mlayers button").forEach(b => {
+    if (!groups[b.dataset.layer]) { b.hidden = true; return; }
+    b.addEventListener("click", () => { layer = b.dataset.layer; draw(cur); });
+  });
+  hover(ctry, mbox, mtip, p => {
+    const iso = p.dataset.iso;
+    if (cur === "all") {
+      const ms = M.all[iso] || [];
+      return `<b>${esc(N(iso))}</b>` + (ms.length ? `<ul>${ms.map(m => li(esc(m[0]), pc(m[1]))).join("")}</ul><span class="tnote">Share of world output</span>` : "None of the page's minerals at 1% of world output or more.");
+    }
+    const s = MD.share[M.chips.find(x => x[0] === cur)[2]];
+    const row = s.af.find(a => a[0] === iso);
+    return `<b>${esc(N(iso))}</b>` + (row ? `${esc(s.name)}: ${pc(row[2])} of world output<br>${num(row[1])} ${esc(s.unit)} in ${s.year}` : `No ${esc(s.name.toLowerCase())} output recorded in ${s.year}.`);
+  });
+  ctry.forEach(p => { p.addEventListener("mouseenter", () => p.classList.add("on")); p.addEventListener("mouseleave", () => p.classList.remove("on")); });
+  const SRC = {ofr: "USGS major deposits (OFR 2005-1294)", pp1802: "USGS critical minerals (PP 1802)"};
+  const STAT = {"Assumed Active": "assumed active in 2018", "Active": "active in 2018", "C&M": "on care and maintenance in 2018",
+                "Suspended": "suspended in 2018", "Closed": "closed in 2018", "Construction": "under construction in 2018", "Development": "in development in 2018"};
+  hover(marks("dep"), mbox, mtip, d => {
+    const [name, com, type, src, url, iso, also] = M.deps[+d.dataset.i];
+    return `<b>${esc(name)}</b>${esc(N(iso))} · ${esc(com)}${type ? "<br>" + esc(type) : ""}` +
+      (also ? `<br><span class="tnote">also listed as ${esc(also)}</span>` : "") + `<span class="tnote">${SRC[src]}; click for its record</span>`;
+  });
+  const DEP_URL = {ofr: id => id ? "https://mrdata.usgs.gov/major-deposits/show-ofr20051294.php?rec_id=" + id : "https://doi.org/10.3133/ofr20051294",
+                   pp1802: () => "https://doi.org/10.5066/F7GH9GQR"};
+  marks("dep").forEach(d => d.addEventListener("click", () => { const r = M.deps[+d.dataset.i]; window.open(DEP_URL[r[3]](r[4]), "_blank", "noopener"); }));
+  hover(marks("fac"), mbox, mtip, d => {
+    const [name, iso, kind, status, year, op, own, items, approx] = M.facs[+d.dataset.i];
+    const ow = own.map(([n, st, home]) => li(esc(n) + (home ? ` <span class="dim">(${esc(N(home))})</span>` : ""), st != null ? st + "%" : "")).join("");
+    const it = items.map(([c, cap]) => li(esc(c), esc(cap))).join("");
+    return `<b>${esc(name)}</b>${esc(N(iso))} · ${kind === "plant" ? "processing plant" : "mine"}, ${esc(STAT[status] || status)}` +
+      `<span class="tsub">Produces (capacity a year)</span><ul>${it}</ul>` +
+      (op ? `<span class="tsub">Operator</span>${esc(op)}` : "") + (own.length ? `<span class="tsub">Owners</span><ul>${ow}</ul>` : "") +
+      `<span class="tnote">USGS mineral facilities of Africa, ${year} reference year${approx ? "; location approximate" : ""}</span>`;
+  });
+  hover(marks("exp"), mbox, mtip, d => {
+    const [name, iso, stage, com, owner, share, verified] = M.exps[+d.dataset.i];
+    return `<b>${esc(name)}</b>${esc(N(iso))} · ${esc(com)}<br>${esc(stage)}${owner ? "<br>" + esc(owner) + (share ? " " + esc(share) + "%" : "") : ""}` +
+      `<span class="tnote">USGS World Minerals Exploration Database${verified ? ", last confirmed active " + verified : ""}</span>`;
+  });
+  draw("all");
+
+  /* ---- who owned the mines */
+  const obox = document.querySelector("#owners .rowchart");
+  if (obox && MD.own && MD.own.rows.length) {
+    const G = MD.own.groups, R = Object.fromEntries(MD.own.rows.map(r => [r.key, r]));
+    hover(obox.querySelectorAll(".orow"), obox, document.getElementById("otip"), e => {
+      const r = R[e.dataset.k];
+      const g = G.filter(([id]) => r.g[id]).map(([id, lab]) => li(`<i class="gk" style="background:var(--og-${id})"></i>${esc(lab)}`, pc(r.g[id]))).join("");
+      const top = r.top.map(([n, v, home]) => li(esc(n) + (home ? ` <span class="dim">(${esc(N(home))})</span>` : ""), v.toFixed(1))).join("");
+      return `<b>${esc(r.name)}: ${r.n} mines</b>Equity-weighted share of the mines<ul>${g}</ul>` +
+        (r.g.none ? `<span class="tnote">Not classified: ${pc(r.g.none)}</span>` : "") +
+        `<span class="tsub">Largest owners (mines, equity-weighted)</span><ul>${top}</ul>`;
+    });
+  }
+
+  /* ---- trend panels: a crosshair per panel */
+  document.querySelectorAll(".tp").forEach(fig => {
+    const t = MD.trends[fig.dataset.k], hit = fig.querySelector(".thit"), tip = fig.querySelector(".ttip");
+    const xh = fig.querySelector(".xh"), xd = fig.querySelector(".xd"), sv = fig.querySelector("svg");
+    const x0 = +hit.dataset.x0, x1 = +hit.dataset.x1, pt = +hit.dataset.pt, h = +hit.dataset.h;
+    const n = t.years.length;
+    hit.addEventListener("mousemove", ev => {
+      const r = sv.getBoundingClientRect(), vb = sv.viewBox.baseVal, sx = (ev.clientX - r.left) * vb.width / r.width;
+      const i = Math.max(0, Math.min(n - 1, Math.round((sx - x0) / (x1 - x0) * (n - 1))));
+      const x = x0 + i / (n - 1) * (x1 - x0), s = t.share[i], y = pt + (1 - s) * h;
+      xh.setAttribute("x1", x); xh.setAttribute("x2", x); xd.setAttribute("cx", x); xd.setAttribute("cy", y);
+      fig.classList.add("on");
+      const [lead, ls] = t.lead[i];
+      tip.innerHTML = `<b>${t.years[i]}: Africa ${pc(s)}</b>Largest African producer: ${esc(N(lead))}, ${pc(ls)} of world output`;
+      tip.style.display = "block"; place(tip, fig, ev);
+    });
+    hit.addEventListener("mouseleave", () => { fig.classList.remove("on"); tip.style.display = "none"; });
+  });
+
+  /* ---- reserves */
+  const rbox = document.querySelector("#reserves .rowchart");
+  hover(rbox.querySelectorAll(".rrow"), rbox, document.getElementById("rtip"), e => {
+    const r = MD.res[e.dataset.k];
+    const af = Object.entries(r.res_af).sort((a, b) => b[1] - a[1]).map(([iso, v]) => li(esc(N(iso)), num(v))).join("");
+    return `<b>${esc(r.name)}</b>Reserves: Africa ${pc(r.res)} of the world's ${num(r.world_res)} ${esc(r.res_unit)}<br>Output: Africa ${pc(r.prod)} of the world's` +
+      `<span class="tsub">African reserves (${esc(r.res_unit)})</span><ul>${af}</ul>` +
+      (r.other_res ? `<span class="tnote">"Other countries": ${num(r.other_res)}</span>` : "");
+  });
+
+  /* ---- trade */
+  const tbox = document.querySelector("#trade .rowchart");
+  if (tbox && MD.trade) {
+    const G = MD.trade.groups;
+    hover(tbox.querySelectorAll(".trow"), tbox, document.getElementById("ttip"), e => {
+      const m = MD.trade.m[e.dataset.k], tot = Object.values(m.total).reduce((a, b) => a + b, 0);
+      const rows = G.filter(g => m.total[g.id]).map(g => li(`<i class="gk" style="background:var(--td-${g.id})"></i>${esc(g.label)}`, `${usd(m.total[g.id])} · ${pc(m.total[g.id] / tot)}`)).join("");
+      const ex = Object.entries(m.by).map(([iso, by]) => [iso, Object.values(by).reduce((a, b) => a + b, 0)]).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const u = MD.trade.uae && MD.trade.uae[e.dataset.k];
+      return `<b>${esc(m.label)}: ${usd(tot)}</b>${esc(m.what)}<span class="tsub">Bought by</span><ul>${rows}</ul>` +
+        `<span class="tsub">Largest African exporters</span><ul>${ex.map(([iso, v]) => li(esc(N(iso)) + (m.top[iso] ? ` <span class="dim">→ ${esc(N(m.top[iso]))}</span>` : ""), usd(v))).join("")}</ul>` +
+        (u ? `<span class="tnote">Not counted: the United Arab Emirates, which had not reported ${MD.trade.year}; in ${MD.trade.uae.year} it reported ${usd(u.total)} from African countries.</span>` : "");
+    });
+  }
+
+  /* ---- rare earths map */
+  const ebox = document.querySelector(".reebox");
+  if (ebox && MD.ree && MD.ree.tips) {
+    hover(ebox.querySelectorAll(".rpj"), ebox, document.getElementById("etip"), g => {
+      const p = MD.ree.tips[g.dataset.id];
+      return `<b>${esc(p.name)}</b>${esc(p.country)} · ${esc(p.stage)}${p.type ? " · " + esc(p.type) : ""}` +
+        (p.owners ? `<br>${esc(p.owners)}` : "") + (p.res ? `<br><span class="dim">${esc(p.res)}</span>` : "") +
+        (p.note ? `<span class="tnote">${esc(p.note)}</span>` : "") + (p.loc ? `<span class="tnote">Placed at: ${esc(p.loc)}</span>` : "");
+    });
+  }
+}
+</script>

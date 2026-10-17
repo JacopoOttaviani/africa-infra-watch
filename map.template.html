@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geopolitics of Africa: __SITE_NAME__</title>
+<title>__KICKER__: __SITE_NAME__</title>
 <!--__FAVICON__-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
@@ -367,12 +367,12 @@
   .loading{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:var(--paper);padding:20px}
   .lbox{display:flex;flex-direction:column;gap:8px;width:min(340px,100%);padding:20px 22px;border:1px solid var(--rule);border-radius:4px;background:var(--surface);box-shadow:var(--shadow-lg)}
   .lbox b{font-size:15px;font-weight:700;letter-spacing:-.01em}
-  .lbox span{font-size:12.5px;color:var(--ink-2);line-height:1.45}
+  .lbox > span{font-size:12.5px;color:var(--ink-2);line-height:1.45}
   .lbox i{display:block;height:3px;margin-top:6px;background:var(--surface-2);border-radius:2px;overflow:hidden;position:relative}
   .lbox i::after{content:"";position:absolute;left:-40%;width:40%;height:100%;background:var(--accent);border-radius:2px;animation:lslide 1.1s ease-in-out infinite}
   @keyframes lslide{to{left:100%}}
   .loading.err .lbox i{display:none}
-  .loading.err .lbox span{color:var(--st-construction)}
+  .loading.err .lbox > span{color:var(--st-construction)}
   .readmore a.pages-only{align-self:flex-start;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none}
   .readmore a.pages-only:hover{text-decoration:underline}
 
@@ -509,10 +509,10 @@
   <aside class="rail" id="rail" aria-label="Filters and records">
     <div class="brand">
       <div class="row">
-        <span class="kicker">Geopolitics of Africa</span>
+        <span class="kicker">__KICKER__</span>
         <button class="close" id="railclose" aria-label="Close filters">×</button>
       </div>
-      <div class="titlerow"><a class="home" href="__HOME_URL__"><!--__LOGO__--><h1>__SITE_NAME__</h1></a></div>
+      <div class="titlerow"><a class="home" href="__HOME_URL__"><!--__LOGO__--><h1>__SITE_WORDMARK__</h1></a></div>
       <p class="made">made with <span class="heart" aria-hidden="true">♥</span><span class="sr">love</span> by Jacopo Ottaviani (<a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">LinkedIn</a>, <a href="__WEB_URL__" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani's website">Web</a>)</p>
       <p class="lede" id="lede"></p>
       <p class="asof" id="asof"></p>
@@ -575,7 +575,7 @@
     </div>
 
     <div class="readmore map-only">
-      <span>Where the data comes from, how the ten sources are aligned, and what it cannot tell you.</span>
+      <span>Where the data comes from, how the __N_DATASETS__ sources are aligned, and what it cannot tell you.</span>
       <button id="tomethod">Read the methodology →</button>
     </div>
 
@@ -588,7 +588,7 @@
   </aside>
 
   <main class="stage" id="stage">
-    <canvas id="map" role="img" aria-label="Map of Africa with power assets, AfDB and World Bank projects, Chinese-financed projects, EU-financed projects, Piano Mattei projects, construction works, oil and gas pipelines and submarine cables"></canvas>
+    <canvas id="map" role="img" aria-label="Map of __REGION__ with power assets, __BANK__ and World Bank projects, Chinese-financed projects, EU-financed projects, <!--__IF:mattei__-->Piano Mattei projects, <!--__ENDIF__-->construction works, oil and gas pipelines and submarine cables"></canvas>
     <div id="lmap" hidden aria-hidden="true"></div>
 
     <div class="hud hud-tl">
@@ -606,7 +606,7 @@
     <div class="hud hud-tr">
       <button class="ib" id="zin" title="Zoom in" aria-label="Zoom in">+</button>
       <button class="ib" id="zout" title="Zoom out" aria-label="Zoom out">−</button>
-      <button class="ib" id="zrst" title="Whole continent" aria-label="Reset view">
+      <button class="ib" id="zrst" title="__WHOLE__" aria-label="Reset view">
         <svg viewBox="0 0 24 24"><path d="M3 12 12 4l9 8M6 10v10h12V10"/></svg>
       </button>
       <button class="ib share" id="share" title="Copy a link to this view" aria-label="Copy link to this view">
@@ -631,7 +631,7 @@
         <span>Buy me a coffee</span>
       </a>
       <div class="scale" id="scale"></div>
-      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · AfDB, World Bank, European Commission and EIB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a> · <a href="https://www.aiddata.org/" target="_blank" rel="noopener noreferrer">AidData</a> · <a href="https://www.governo.it/en/piano-mattei/progetti/" target="_blank" rel="noopener noreferrer">Piano Mattei portal</a></div>
+      <div class="credit"><span id="satcredit" hidden></span>Natural Earth · Global Energy Monitor · __BANK__, World Bank, European Commission and EIB via IATI · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors · <a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">TeleGeography</a> · <a href="https://www.aiddata.org/" target="_blank" rel="noopener noreferrer">AidData</a><!--__IF:mattei__--> · <a href="https://www.governo.it/en/piano-mattei/progetti/" target="_blank" rel="noopener noreferrer">Piano Mattei portal</a><!--__ENDIF__--></div>
     </div>
 
     <article id="method" aria-label="Methodology">
@@ -665,15 +665,36 @@ const CN_META = (DATA.meta && DATA.meta.china_meta) || {};
 const CN_Y = CN_META.years || [2000, 2023], CN_BASE = CN_META.base_year || 2023, CN_NEW = CN_META.new_records || 0;
 const CN_SPAN = `${CN_Y[0]}–${CN_Y[1]}`;
 const SOURCE_LOGOS = /*__SOURCE_LOGOS__*/{};
+/* The edition's words, frame and lenders (region.py, DATA.meta.region). The
+   Africa site's values are the defaults, so a payload without the block draws
+   the original site unchanged. */
+const R = Object.assign({key:"africa", name:"Africa", adj:"African", kicker:"Geopolitics of Africa",
+  regional:"Africa, regional", landings:"African landings", wide:"Africa-wide", land:"the continent",
+  eu_point_note:"the Commission's point for Africa, in Chad", eu_point_where:"in Chad",
+  layers:["assets","finance","ground","pipelines","cables","china","eu","mattei"],
+  lenders:["AfDB","WB","EC","EIB","CN","IT"],
+  family:[["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["Italy",["IT"]]],
+  bank:{code:"AfDB", name:"African Development Bank", group:"African Development Bank Group", currency:"XDR",
+        file:"iati_afdb_finance.geojson", logo:"african-development-bank", home:"https://www.afdb.org/"},
+  center:[17, 2], zoom_win:[-30, -45, 70, 45], bounds:{x0:-19, y0:-36, x1:53, y1:39}, home_exclude:["CV","MU","SC"]},
+  (DATA.meta && DATA.meta.region) || {});
+const BANK = R.bank.code, LAND = R.land;
+const HAS = k => R.layers.includes(k);
+const an = w => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
+const NUM_WORD = {7:"seven", 8:"eight", 9:"nine", 10:"ten", 11:"eleven"};
+/* one public dataset per source card, and the EU card is two (Commission and EIB) */
+const N_DATASETS = NUM_WORD[DATA.meta.sources.length + 1] || String(DATA.meta.sources.length + 1);
+const N_LAYERS = NUM_WORD[R.layers.length] || String(R.layers.length);
+const cap = s => s[0].toUpperCase() + s.slice(1);
 
 /* ================= vocabulary ================= */
 const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
 const STATUS_KEY   = {announced:"an",approved:"ap",under_construction:"uc",operating:"op",stalled:"st"};
 const KEY_STATUS   = Object.fromEntries(Object.entries(STATUS_KEY).map(([k,v])=>[v,k]));
-const LAYER_ORDER  = ["assets","finance","ground","pipelines","cables","china","eu","mattei"];
+const LAYER_ORDER  = R.layers;
 const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World Bank`,ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
 /* The rail lists the data in two groups. "Layers" is what is built: power
    units, works on the ground, pipelines, cables. "Lenders" is who is paying:
    the finance layer's two banks (squares and diamonds), the EU layer's two
@@ -682,12 +703,12 @@ const LAYER_SUB    = {assets:"Global Energy Monitor",finance:"AfDB · World Bank
    flags are derived from the lenders (syncLayers), so everything that reads
    the layer flags keeps working. */
 const RAIL_LAYERS  = ["assets","ground","pipelines","cables"];
-const LENDER_ORDER = ["AfDB","WB","EC","EIB","CN","IT"];
-const LENDER_NAME  = {AfDB:"African Development Bank", WB:"World Bank", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
-const LENDER_SUB   = {AfDB:"IATI activity files", WB:"IATI activity files", EC:"DG INTPA · DG NEAR · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal"};
-const LENDER_LAYER = {AfDB:"finance", WB:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
-const LENDER_GLYPH = {AfDB:"finance", WB:"finance_wb", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
-const LENDER_FAMILY = [["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["Italy",["IT"]]];
+const LENDER_ORDER = R.lenders;
+const LENDER_NAME  = {AfDB:"African Development Bank", ADB:"Asian Development Bank", WB:"World Bank", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
+const LENDER_SUB   = {AfDB:"IATI activity files", ADB:"IATI activity files", WB:"IATI activity files", EC:R.key==="africa" ? "DG INTPA · DG NEAR · IATI" : "DG INTPA · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal"};
+const LENDER_LAYER = {AfDB:"finance", ADB:"finance", WB:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
+const LENDER_GLYPH = {AfDB:"finance", ADB:"finance", WB:"finance_wb", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
+const LENDER_FAMILY = R.family;
 const allLendersOn = () => Object.fromEntries(LENDER_ORDER.map(k=>[k,true]));
 /* a record of a two-lender layer names its own lender: AfDB or World Bank, Commission or EIB */
 const sourceOf     = r => r.layer==="finance" || r.layer==="eu" ? (LENDER_NAME[r.lender]||LAYER_SUB[r.layer]) : LAYER_SUB[r.layer];
@@ -743,13 +764,13 @@ const invLat = y => Math.atan(Math.sinh(Math.PI*(1-2*y)))/D2R;
 /* ZMIN is a floor set per viewport (see setZoomFloor): a touch past the
    whole continent, never the whole world. */
 let ZMIN = 2.2; const ZMAX = 12.6;
-const view = {cx:mx(17), cy:my(2), z:3.6};
+const view = {cx:mx(R.center[0]), cy:my(R.center[1]), z:3.6};
 let W=0, H=0, S=256, OX=0, OY=0;
 /* The basemap is drawn in repeating world copies (see draw), the records only
    once, in the copy that holds Africa. Keeping the centre within half a world
    of the continent means that copy is always the one nearest the viewer, so
    panning east past the Pacific comes back round to the marked Africa. */
-const AFRICA_CX = mx(17);
+const AFRICA_CX = mx(R.center[0]);
 function setScale(){
   view.cx -= Math.round(view.cx - AFRICA_CX);
   S = 256*Math.pow(2,view.z); OX = W/2 - view.cx*S; OY = H/2 - view.cy*S;
@@ -791,7 +812,7 @@ const ADMIN1 = BM.admin1.map(a => ({a3:a.a3, rings:a.r.map(prepRing)}));
 const LABELS = BM.labels.map(l => ({...l, X:mx(l.x), Y:my(l.y)}));
 const PLACES = BM.places.map(p => ({...p, X:mx(p.x), Y:my(p.y)}))
   .sort((a,b) => (b.cap-a.cap) || (a.z-b.z) || (b.pop-a.pop));
-const HOME_BOX = unionBox(AFRICA.filter(c=>!["CV","MU","SC"].includes(c.iso)).map(c=>({b:c.b})));
+const HOME_BOX = unionBox(AFRICA.filter(c=>!R.home_exclude.includes(c.iso)).map(c=>({b:c.b})));
 
 /* ================= records ================= */
 function inflate(layer, block){
@@ -809,7 +830,7 @@ const MATTEI  = inflate("mattei",    DATA.mattei    || {cols:[], rows:[]});
 
 /* A pipeline into Spain or a cable on to India is African without all of it
    being so: "zoom to" fits the part inside this window, not the whole route. */
-const ZOOM_WIN = [mx(-30), my(45), mx(70), my(-45)];
+const ZOOM_WIN = [mx(R.zoom_win[0]), my(R.zoom_win[3]), mx(R.zoom_win[2]), my(R.zoom_win[1])];
 function zoomBox(parts, fallback){
   const b=[2,2,-1,-1]; let any=false;
   for(const p of parts){ const a=p.a; for(let i=0;i<a.length;i+=2){
@@ -835,11 +856,11 @@ function unify(){
     text:[a.name,a.owner,a.sub,NAMES[a.iso],a.tech].filter(Boolean).join(" ").toLowerCase(),
   });
   for(const f of FINANCE) out.push({
-    ref:f, layer:"finance", lender:f.ln||"AfDB", name:f.name||"(untitled activity)", iso:f.iso,
+    ref:f, layer:"finance", lender:f.ln||BANK, name:f.name||"(untitled activity)", iso:f.iso,
     country:f.iso ? (NAMES[f.iso]||f.iso) : "Multinational",
     status:f.status, kind:SECTOR_LABEL[f.sector]||f.sector||"—", sector:f.sector||"other", size:f.usd_m, unit:"$m",
     x:mx(f.lon), y:my(f.lat), lon:f.lon, lat:f.lat,
-    text:[f.name,f.place,f.iso?NAMES[f.iso]:"multinational",f.iid,LENDER_NAME[f.ln||"AfDB"],f.ln||"AfDB"].filter(Boolean).join(" ").toLowerCase(),
+    text:[f.name,f.place,f.iso?NAMES[f.iso]:"multinational",f.iid,LENDER_NAME[f.ln||BANK],f.ln||BANK].filter(Boolean).join(" ").toLowerCase(),
   });
   for(const g of GROUND){
     g.parts = g.g.map(prepRing);
@@ -884,7 +905,7 @@ function unify(){
     if(c.g){ c.parts = c.g.map(prepRing); c.b = unionBox(c.parts); delete c.g; }
     out.push({
       ref:c, layer:"china", lender:"CN", name:c.name||"(untitled project)", iso:c.iso,
-      country:c.iso ? (NAMES[c.iso]||c.iso) : "Africa, regional",
+      country:c.iso ? (NAMES[c.iso]||c.iso) : R.regional,
       status:c.status, kind:SECTOR_LABEL[c.sector]||c.sector||"—", sector:c.sector||"other", size:c.usd_m, unit:"$m",
       x:mx(c.lon), y:my(c.lat), lon:c.lon, lat:c.lat, b:c.b||null,
       text:[c.name,c.funders,c.impl,c.cofin,c.place,NAMES[c.iso],c.flow,c.cls,OECD_SECTOR[c.sc],"china chinese aiddata",c.aid].filter(Boolean).join(" ").toLowerCase(),
@@ -896,7 +917,7 @@ function unify(){
      ref.locs, ringed when picked */
   for(const e of EU) out.push({
     ref:e, layer:"eu", lender:e.pub==="EIB"?"EIB":"EC", name:e.name||"(untitled activity)", iso:e.iso, isos:e.isos||null,
-    country:e.isos ? countryList(e.isos, e.iso) : (e.iso ? (NAMES[e.iso]||e.iso) : "Africa, regional"),
+    country:e.isos ? countryList(e.isos, e.iso) : (e.iso ? (NAMES[e.iso]||e.iso) : R.regional),
     status:e.status, kind:SECTOR_LABEL[e.sector]||e.sector||"—", sector:e.sector||"other", size:e.usd_m, unit:"$m",
     x:mx(e.lon), y:my(e.lat), lon:e.lon, lat:e.lat,
     text:[e.name,e.parent,e.impl,e.place,NAMES[e.iso],...(e.isos||[]).map(i=>NAMES[i]),e.iid,e.slabel,e.pub,e.instr,"eu european union commission eib"].filter(Boolean).join(" ").toLowerCase(),
@@ -907,7 +928,7 @@ function unify(){
      on ref.locs, ringed when picked */
   for(const pm of MATTEI) out.push({
     ref:pm, layer:"mattei", lender:"IT", name:pm.name||"(untitled project)", iso:pm.iso||null, isos:pm.isos||null,
-    country:pm.isos ? countryList(pm.isos, pm.iso) : (pm.iso ? (NAMES[pm.iso]||pm.iso) : "Africa, regional"),
+    country:pm.isos ? countryList(pm.isos, pm.iso) : (pm.iso ? (NAMES[pm.iso]||pm.iso) : R.regional),
     status:pm.status, kind:SECTOR_LABEL[pm.sector]||pm.sector||"—", sector:pm.sector||"other", size:pm.usd_m, unit:"$m",
     x:mx(pm.lon), y:my(pm.lat), lon:pm.lon, lat:pm.lat,
     text:[pm.name,pm.name_it,pm.dirs,pm.obj,pm.impl,pm.partners,pm.intl,pm.funds,pm.place,NAMES[pm.iso],...(pm.isos||[]).map(i=>NAMES[i]),pm.stage,"italy italia piano mattei plan"].filter(Boolean).join(" ").toLowerCase(),
@@ -969,7 +990,7 @@ const SAT_SRC = {
   maxZ: 14,   /* 10 m imagery; the map itself stops at 12.6 */
   tip: `Show satellite imagery under the records (Sentinel-2 cloudless ${SAT_YEAR}, 10 m)`,
   credit: `<a href="https://cloudless.eox.at" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless ${SAT_YEAR}</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX</a>, CC BY-NC-SA 4.0, modified Copernicus Sentinel data ${SAT_YEAR} · `,
-  method: `a cloud-free mosaic of the whole continent stitched by EOX IT Services from European Space Agency
+  method: `a cloud-free mosaic of the whole <!--__IF:africa__-->continent<!--__ENDIF__--><!--__IF:!africa__-->globe<!--__ENDIF__--> stitched by EOX IT Services from European Space Agency
       Sentinel-2 scenes taken across ${SAT_YEAR}, at 10 m per pixel, fetched tile by tile from EOX's servers as you pan`,
   licence: `Sentinel-2 cloudless ${SAT_YEAR} by EOX IT Services GmbH, CC BY-NC-SA 4.0, containing modified Copernicus Sentinel data ${SAT_YEAR}`,
 };
@@ -1445,15 +1466,15 @@ const glyphStatus = (layer, status, lender) => {
   return (glyph[layer] || glyph.ground)(col);
 };
 
-const SHORT = {assets:"GEM", finance:"AfDB", finance_wb:"World Bank", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", mattei:"Piano Mattei"};
+const SHORT = {assets:"GEM", finance:BANK, finance_wb:"World Bank", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", mattei:"Piano Mattei"};
 function renderLede(){
   el("asof").innerHTML = "Data as of " + DATA.meta.sources.map(s =>
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   el("lede").innerHTML =
-    `What is being built across Africa, and who is paying for it. Ten public datasets on one map: power
-     plants, pipelines, cables and road, rail and airport works, plus the projects of the AfDB, the World
-     Bank, China, the EU and Italy's Piano Mattei. Click a marker for its record and source.`;
+    `What is being built across ${R.name}, and who is paying for it. ${cap(N_DATASETS)} public datasets on one map: power
+     plants, pipelines, cables and road, rail and airport works, plus the projects of the ${BANK}, the World
+     Bank, China${HAS("mattei") ? ", the EU and Italy's Piano Mattei" : " and the EU"}. Click a marker for its record and source.`;
 }
 
 /* Each panel counts what it would show with its own filter open: the same
@@ -1544,7 +1565,7 @@ function renderLegend(){
     <div class="col sizes">
       <div class="lh">Shape · source</div>
       <div class="lg">${glyph.assets(COL.ink)}<span><b>Power unit</b> · size = MW</span></div>
-      <div class="lg">${glyph.finance(COL.ink)}<span><b>AfDB project</b> · size = commitment</span></div>
+      <div class="lg">${glyph.finance(COL.ink)}<span><b>${BANK} project</b> · size = commitment</span></div>
       <div class="lg">${glyph.finance_wb(COL.ink)}<span><b>World Bank project</b> · size = commitment</span></div>
       <div class="lg">${glyph.ground(COL.ink)}<span><b>Works traced</b> in OpenStreetMap</span></div>
       <div class="lg">${glyph.pipelines(COL.ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
@@ -1552,7 +1573,7 @@ function renderLegend(){
       <div class="lg">${glyph.china(COL.ink)}<span><b>Chinese-financed project</b> · size = commitment</span></div>
       <div class="lg">${glyph.eu(COL.ink)}<span><b>European Commission record</b> · size = commitment</span></div>
       <div class="lg">${glyph.eu_eib(COL.ink)}<span><b>EIB operation</b> · size = commitment</span></div>
-      <div class="lg">${glyph.mattei(COL.ink)}<span><b>Piano Mattei project</b> · size = stated amount</span></div>
+<!--__IF:mattei__-->      <div class="lg">${glyph.mattei(COL.ink)}<span><b>Piano Mattei project</b> · size = stated amount</span></div><!--__ENDIF__-->
       <div class="lg"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8 15 4" stroke="${COL.ink}" stroke-width="2.2" stroke-dasharray="3.5 2.5" stroke-linecap="round" fill="none"/></svg><span>dashed = not yet built</span></div>
       ${S_.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status mix</span></div>` : ""}
     </div>`;
@@ -1587,19 +1608,19 @@ function renderView(){
     <div class="stat"><span class="glyph">${glyph.assets(COL.operating)}</span>
       <span><span class="k">Power</span><br><span class="v">${fmt(A.length)} units · ${fmt1(gw)} GW <span>· ${fmt1(pipeGw)} GW in pipeline</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.finance(COL.approved)}</span>
-      <span><span class="k">Development finance</span><br><span class="v">${fmt(F.length)} projects · AfDB $${fmt1(usd-usdW)}bn · WB $${fmt1(usdW)}bn <span>committed, each on its own</span></span></span></div>
+      <span><span class="k">Development finance</span><br><span class="v">${fmt(F.length)} projects · ${BANK} $${fmt1(usd-usdW)}bn · WB $${fmt1(usdW)}bn <span>committed, each on its own</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.ground(COL.under_construction)}</span>
       <span><span class="k">Ground works</span><br><span class="v">${fmt(G.length)} works · ${fmt(km)} km <span>traced</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.pipelines(COL.copper)}</span>
       <span><span class="k">Oil & gas pipelines</span><br><span class="v">${fmt(P.length)} segments · ${fmt(pkm)} km <span>of route</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.cables(COL.approved)}</span>
-      <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>African landings</span></span></span></div>
+      <span><span class="k">Submarine cables</span><br><span class="v">${fmt(C.length)} cables · ${fmt(landings)} <span>${R.landings}</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.china(COL.operating)}</span>
       <span><span class="k">Chinese finance</span><br><span class="v">${fmt(N.length)} projects · $${fmt1(cnUsd)}bn <span>committed ${CN_SPAN} · ${fmt(cnLoans)} loans · ${CN_BASE} USD</span></span></span></div>
     <div class="stat"><span class="glyph">${glyph.eu(COL.approved)}</span>
       <span><span class="k">EU finance</span><br><span class="v">${fmt(E.length)} records · Commission €${fmt1(euEur-euEurEib)}bn · EIB €${fmt1(euEurEib)}bn <span>committed, each on its own · ${fmt(E.length-euEib)} and ${fmt(euEib)} records</span></span></span></div>
-    <div class="stat"><span class="glyph">${glyph.mattei(COL.under_construction)}</span>
-      <span><span class="k">Piano Mattei</span><br><span class="v">${fmt(M.length)} projects · €${fmt2(pmEur)}bn <span>stated by the portal · ${fmt(pmOn)} ongoing</span></span></span></div>`;
+<!--__IF:mattei__-->    <div class="stat"><span class="glyph">${glyph.mattei(COL.under_construction)}</span>
+      <span><span class="k">Piano Mattei</span><br><span class="v">${fmt(M.length)} projects · €${fmt2(pmEur)}bn <span>stated by the portal · ${fmt(pmOn)} ongoing</span></span></span></div><!--__ENDIF__-->`;
 
   const CAP = 60, FIRST = 10;
   const ranked = v.filter(r=>r.size!=null).sort((a,b)=>(b.size/P95[b.layer])-(a.size/P95[a.layer]));
@@ -1743,11 +1764,11 @@ function renderDetail(){
     else if(f.pub_dis_m!=null) rows.push(["Disbursed", `<span class="num">$${fmt2(f.pub_dis_m)}m</span> <span>· as published, not counted</span>`]);
     rows.push(["Location", f.prec===0 ? "exact site" : f.prec===1 ? "named place or district <span>· the Bank marks it approximate</span>" : "country or region centroid"]);
     rows.push(["IATI identifier", `<span class="m">${esc(f.iid)}</span>`]);
-    if(wb && f.purl){ link = [f.purl, "World Bank project page"]; link2 = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"]; }
+    if(f.purl){ link = [f.purl, `${wb ? "World Bank" : BANK} project page`]; link2 = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"]; }
     else link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
     note = wb
-      ? "World Bank commitment from IATI type-2 transactions, in US dollars as published. World Bank money only; co-financiers, including AfDB, are not counted."
-      : `AfDB commitment from IATI type-2 transactions, converted at ${DATA.meta.sdr_note}. AfDB money only; co-financiers, including the World Bank, are not counted.`;
+      ? `World Bank commitment from IATI type-2 transactions, in US dollars as published. World Bank money only; co-financiers, including ${BANK}, are not counted.`
+      : `${BANK} commitment from IATI type-2 transactions, ${R.bank.currency==="XDR" ? `converted at ${DATA.meta.sdr_note}` : "in US dollars as published"}. ${BANK} money only; co-financiers, including the World Bank, are not counted.`;
   } else if(r.layer==="pipelines"){
     rows.push(["Fuel", esc(f.fuel||"—")]);
     rows.push(["Status", `${STATUS_LABEL[r.status]} <span>· GEM "${esc(f.status==="announced"?"proposed":f.status==="under_construction"?"construction":f.status)}"</span>`]);
@@ -1766,8 +1787,8 @@ function renderDetail(){
     if(f.rfs) rows.push([f.planned ? "Ready for service" : "In service since", esc(f.rfs)]);
     rows.push(["Length", f.km!=null ? `<span class="num">${fmt(f.km)} km</span> <span>· whole system${f.km_est ? ", estimated from the drawn route: TeleGeography publishes no length" : ""}</span>` : "—"]);
     const lps = f.lps || [];
-    rows.push(["African landings", lps.length ? esc(lps.map(l=>l[2]).join(", ")) + ` <span>· ${lps.length} of ${fmt(f.lp_total)} landing points, ringed on the map</span>` : "—"]);
-    rows.push(["Countries connected", `${fmt(f.n_cts)} <span>· ${esc(countryList(f.isos, f.iso))} in Africa</span>`]);
+    rows.push([R.landings, lps.length ? esc(lps.map(l=>l[2]).join(", ")) + ` <span>· ${lps.length} of ${fmt(f.lp_total)} landing points, ringed on the map</span>` : "—"]);
+    rows.push(["Countries connected", `${fmt(f.n_cts)} <span>· ${esc(countryList(f.isos, f.iso))} in ${R.name}</span>`]);
     if(f.owners) rows.push(["Owners", esc(f.owners)]);
     if(f.suppliers) rows.push(["Supplier", esc(f.suppliers)]);
     if(f.notes) rows.push(["Note", esc(f.notes)]);
@@ -1819,7 +1840,7 @@ function renderDetail(){
     if(f.syr || f.eyr) rows.push(["Timeline", [f.syr ? `from ${f.syr}` : null, f.eyr ? `to ${f.eyr}` : null].filter(Boolean).join(" ")]);
     rows.push(["Location", f.prec===1 ? "named place <span>· as the Commission places it; no exactness is published</span>"
       : f.prec===2 ? (eib ? "country only <span>· the EIB publishes no locations; placed at the country's point</span>" : "country point <span>· the Commission's default point for the country</span>")
-      : "Africa-wide <span>· a regional programme, drawn at the Commission's point for Africa, in Chad</span>"]);
+      : `${R.wide} <span>· a regional programme, drawn at ${R.eu_point_note}</span>`]);
     rows.push(["IATI identifier", `<span class="m">${esc(f.iid)}</span>`]);
     if(f.purl){ link = [f.purl, "EIB project page"]; link2 = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"]; }
     else link = ["https://d-portal.org/ctrack.html?aid="+encodeURIComponent(f.iid), "IATI activity"];
@@ -2479,12 +2500,13 @@ function statusTable(){
   const dash = "<span class='dim'>—</span>";
   const rows = [
     ["announced", "Announced", "Pipeline", "Proposed (dashed line)", "Proposed (dashed)", "Planned, RFS later than next year (dashed)", "<span class='dim'>Pledges left out</span>", "Pipeline (a decision not yet contracted)", "Identified, Formulated"],
-    ["approved", "Pre-construction (permits, land or finance still sought)", "AfDB: pipeline, with a commitment on record", dash, dash, dash, "Pipeline: Commitment", dash, "Approved"],
+    ["approved", "Pre-construction (permits, land or finance still sought)", `${BANK}: pipeline, with a commitment on record`, dash, dash, dash, "Pipeline: Commitment", dash, "Approved"],
     ["under_construction", "Construction", "Implementation", "Construction", "Construction", "Planned, RFS by next year", "Implementation", "Implementation", "Ongoing"],
     ["operating", "Operating, retired", "Completed, closed", dash, "Operating", "In service", "Completion", "Completed, closed", "Completed"],
     ["stalled", "Cancelled, shelved, mothballed", "Cancelled, suspended", dash, "Cancelled, shelved, idle", dash, "Cancelled, suspended", "Cancelled, suspended", "<span class='dim'>No such step</span>"],
   ];
-  return rows.map(([s,...cells]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td>${cells.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
+  /* the last column is the Piano Mattei portal's, an Africa-only layer */
+  return rows.map(([s,...cells]) => `<tr><td><span class="sw ${s}" style="background:${statusColor(s)}"></span>${STATUS_LABEL[s]}</td>${(HAS("mattei") ? cells : cells.slice(0, -1)).map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
 }
 
 /* a data-source tile: the organisation's mark, monochrome in the current ink; name and role live in the tooltip */
@@ -2600,7 +2622,7 @@ function renderMethod(){
     ["m-cables","Submarine cables","sub"],
     ["m-china","Chinese finance","sub"],
     ["m-eu","EU finance","sub"],
-    ["m-mattei","Piano Mattei","sub"],
+    ...(HAS("mattei") ? [["m-mattei","Piano Mattei","sub"]] : []),
     ["m-status","One status scale"],
     ["m-draw","How to read the map"],
     ["m-limits","What to keep in mind"],
@@ -2621,12 +2643,12 @@ function renderMethod(){
   <span class="kicker">Methodology · __SITE_NAME__</span>
   <h1>Where the data comes from, and what it can and cannot say</h1>
   <p class="standfirst">
-    This map brings together ten public datasets in eight layers. Each answers a different question:
+    This map brings together ${N_DATASETS} public datasets in ${N_LAYERS} layers. Each answers a different question:
     <strong>what is being built</strong>, <strong>who is paying for it</strong>,
     <strong>what has broken ground</strong>, <strong>where oil and gas move</strong>,
-    <strong>where the continent connects to the internet</strong>, <strong>where two decades of
-    Chinese official finance went</strong>, <strong>where the European Union's own money
-    goes</strong> and <strong>what Italy's Piano Mattei has put on the map</strong>. They share no common project ID, so they are shown as
+    <strong>where ${LAND} connects to the internet</strong>, <strong>where two decades of
+    Chinese official finance went</strong><!--__IF:mattei__-->,<!--__ENDIF__--><!--__IF:!mattei__--> and<!--__ENDIF__--> <strong>where the European Union's own money
+    goes</strong><!--__IF:mattei__--> and <strong>what Italy's Piano Mattei has put on the map</strong><!--__ENDIF__-->. They share no common project ID, so they are shown as
     separate layers and never added up across layers.
   </p>
 
@@ -2634,16 +2656,16 @@ function renderMethod(){
     <div class="eyebrow"><span>01</span><span>What this map shows</span></div>
     <h2>What each source answers</h2>
     <p class="lead">
-      No single dataset covers infrastructure in Africa. This map uses ten public sources that
-      complement each other, and keeps them apart rather than merging them. The ten: Global Energy
+      No single dataset covers infrastructure in ${R.name}. This map uses ${N_DATASETS} public sources that
+      complement each other, and keeps them apart rather than merging them. The ${N_DATASETS}: Global Energy
       Monitor's power tracker and its gas and oil pipeline trackers (one source for the pipeline
-      layer), the African Development Bank's and the World Bank's IATI files, OpenStreetMap,
+      layer), the ${R.bank.name}'s and the World Bank's IATI files, OpenStreetMap,
       TeleGeography's Submarine Cable Map, AidData's Chinese finance dataset with its geospatial
-      companion, the European Commission's and the European Investment Bank's IATI files, and the
-      Italian Government's Piano Mattei portal. Two lenders share the
+      companion<!--__IF:mattei__-->, the European Commission's and the European Investment Bank's IATI files, and the
+      Italian Government's Piano Mattei portal<!--__ENDIF__--><!--__IF:!mattei__-->, and the European Commission's and the European Investment Bank's IATI files<!--__ENDIF__-->. Two lenders share the
       finance layer, told apart by shape; Chinese official lenders and the European Union's
-      institutions have layers of their own, and Italy's Piano Mattei is the one government plan
-      published project by project; none of the five is ever summed into one project cost.
+      institutions have layers of their own<!--__IF:mattei__-->, and Italy's Piano Mattei is the one government plan
+      published project by project; none of the five is ever summed into one project cost<!--__ENDIF__--><!--__IF:!mattei__-->; none of the four is ever summed into one project cost<!--__ENDIF__-->.
     </p>
     <div class="twrap"><table>
       <thead><tr><th>Layer</th><th>Source</th><th>Records</th><th>Answers</th><th>Data as of</th></tr></thead>
@@ -2653,14 +2675,14 @@ function renderMethod(){
         <tr><td>${glyph.finance_wb(COL.approved)} Development finance</td><td>${esc(src.finance_wb.name)}<br><span class="dim">${esc(src.finance_wb.detail)}</span></td><td class="m">${fmt(FW.length)} projects</td><td>The same question for the World Bank, on the Bank's own geocoded project sites</td><td class="dim">${esc(src.finance_wb.fresh)}</td></tr>
         <tr><td>${glyph.ground(COL.under_construction)} Ground truth</td><td>${esc(src.ground.name)}<br><span class="dim">${esc(src.ground.detail)}</span></td><td class="m">${fmt(G.length)} works</td><td>Where road, rail and airport works have been traced on the ground</td><td class="dim">${esc(src.ground.fresh)}</td></tr>
         <tr><td>${glyph.pipelines(COL.copper)} Oil &amp; gas pipelines</td><td>${esc(src.pipelines.name)}<br><span class="dim">${esc(src.pipelines.detail)}</span></td><td class="m">${fmt(P.length)} segments</td><td>Which oil, NGL and gas pipelines run, are being laid or are proposed, and where they go</td><td class="dim">${esc(src.pipelines.fresh)}</td></tr>
-        <tr><td>${glyph.cables(COL.approved)} Submarine cables</td><td>${esc(src.cables.name)}<br><span class="dim">${esc(src.cables.detail)}</span></td><td class="m">${fmt(C.length)} cables</td><td>Which submarine cables reach the continent, where they land, who owns them and when</td><td class="dim">${esc(src.cables.fresh)}</td></tr>
+        <tr><td>${glyph.cables(COL.approved)} Submarine cables</td><td>${esc(src.cables.name)}<br><span class="dim">${esc(src.cables.detail)}</span></td><td class="m">${fmt(C.length)} cables</td><td>Which submarine cables reach ${LAND}, where they land, who owns them and when</td><td class="dim">${esc(src.cables.fresh)}</td></tr>
         <tr><td>${glyph.china(COL.operating)} Chinese finance</td><td>${esc(src.china.name)}<br><span class="dim">${esc(src.china.detail)}</span></td><td class="m">${fmt(N.length)} projects</td><td>What Chinese official lenders and agencies committed to infrastructure from ${CN_Y[0]} to ${CN_Y[1]}, where, on what terms, and what was built</td><td class="dim">${esc(src.china.fresh)}</td></tr>
         <tr><td>${glyph.eu(COL.approved)} EU finance</td><td>${esc(src.eu.name)}<br><span class="dim">${esc(src.eu.detail)}</span></td><td class="m">${fmt(E.length)} records</td><td>What the European Commission has contracted and the European Investment Bank has signed for infrastructure, where, through whom, and how much is paid out</td><td class="dim">${esc(src.eu.fresh)}</td></tr>
-        <tr><td>${glyph.mattei(COL.under_construction)} Piano Mattei</td><td>${esc(src.mattei.name)}<br><span class="dim">${esc(src.mattei.detail)}</span></td><td class="m">${fmt(M.length)} projects</td><td>What Italy counts under its Piano Mattei per l'Africa, in which country, at what stage, through whom, and for how much as the Government states it</td><td class="dim">${esc(src.mattei.fresh)}</td></tr>
+<!--__IF:mattei__-->        <tr><td>${glyph.mattei(COL.under_construction)} Piano Mattei</td><td>${esc(src.mattei.name)}<br><span class="dim">${esc(src.mattei.detail)}</span></td><td class="m">${fmt(M.length)} projects</td><td>What Italy counts under its Piano Mattei per l'Africa, in which country, at what stage, through whom, and for how much as the Government states it</td><td class="dim">${esc(src.mattei.fresh)}</td></tr><!--__ENDIF__-->
       </tbody>
     </table></div>
     <p>
-      The same project can appear in more than one layer. A power plant financed by AfDB and
+      The same project can appear in more than one layer. A power plant financed by ${BANK} and
       traced by OpenStreetMap mappers shows up three times; a gas pipeline feeding it may be a
       fourth record. That is useful, because the layers confirm each other, but it also means
       counts should never be added across layers. Together the layers touch
@@ -2675,7 +2697,7 @@ function renderMethod(){
     <dl class="spec">
       <dt>Source</dt><dd><strong>Global Energy Monitor</strong>, a non-profit research organisation. ${esc(src.assets.detail)}, released under ${esc(src.assets.lic)}. <a href="${src.assets.url}" target="_blank" rel="noopener noreferrer">Project page ↗</a></dd>
       <dt>One record is</dt><dd>A <strong>generating unit</strong>, not a whole plant. A plant with four turbines is four records. The <strong>${fmt(A.length)} units</strong> here belong to <strong>${fmt(aPids)} projects</strong>.</dd>
-      <dt>What is included</dt><dd>Every unit located in Africa, in every status, including cancelled and retired ones, so the pipeline can be read against what was abandoned.</dd>
+      <dt>What is included</dt><dd>Every unit located in ${R.name}, in every status, including cancelled and retired ones, so the pipeline can be read against what was abandoned.</dd>
       <dt>Location</dt><dd><strong>${pct(aExact, A.length)}</strong> of units have exact coordinates. The rest sit near the reported town or district.</dd>
     </dl>
     <div class="facts">
@@ -2706,22 +2728,24 @@ function renderMethod(){
 
   <section id="m-afdb">
     <div class="eyebrow"><span class="sk finance">Layer · Development finance</span><span class="m">squares and diamonds</span></div>
-    <h2>African Development Bank and World Bank</h2>
-    <p class="lead">Two lenders' project portfolios, as each publishes them to the open IATI standard: one record per loan or grant, with money committed and paid out, sector and location. AfDB is drawn as squares, the World Bank as diamonds.</p>
+    <h2>${R.bank.name} and World Bank</h2>
+    <p class="lead">Two lenders' project portfolios, as each publishes them to the open IATI standard: one record per loan or grant, with money committed and paid out, sector and location. ${BANK} is drawn as squares, the World Bank as diamonds.</p>
     <dl class="spec">
-      <dt>Sources</dt><dd><strong>African Development Bank Group</strong> and <strong>the World Bank</strong>, both publishing through the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development banks disclose their activities. AfDB: ${esc(src.finance.detail)}, licence ${esc(src.finance.lic)}, <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">publisher page ↗</a>. World Bank: ${esc(src.finance_wb.detail)}, licence ${esc(src.finance_wb.lic)}, <a href="${src.finance_wb.url}" target="_blank" rel="noopener noreferrer">publisher page ↗</a>.</dd>
+      <dt>Sources</dt><dd><strong>${R.bank.group}</strong> and <strong>the World Bank</strong>, both publishing through the <strong>International Aid Transparency Initiative</strong> (IATI), the open standard through which development banks disclose their activities. ${BANK}: ${esc(src.finance.detail)}, licence ${esc(src.finance.lic)}, <a href="${src.finance.url}" target="_blank" rel="noopener noreferrer">publisher page ↗</a>. World Bank: ${esc(src.finance_wb.detail)}, licence ${esc(src.finance_wb.lic)}, <a href="${src.finance_wb.url}" target="_blank" rel="noopener noreferrer">publisher page ↗</a>.</dd>
       <dt>One record is</dt><dd>An <strong>activity</strong>: a project, loan or grant with one identifier at one lender. Each gets one marker, placed on the most precise site the lender gives. A project co-financed by both banks is two records, one square and one diamond, each with its own bank's share, never added into one project cost.</dd>
-      <dt>What is included</dt><dd>Infrastructure sectors only, by DAC purpose code: transport, energy, communications, water, industry, trade and environment. An activity counts when any of its codes is infrastructure, and only the infrastructure share of its money is counted, by the bank's own sector percentages: a project that is 60% schools and 40% roads counts 40%. Health, education and agriculture are left out that way; budget support, which the banks tag as such (aid-type A01 or A02), is left out whole${fin.wb_budget_support!=null ? `: ${fmt(fin.wb_budget_support)} World Bank and ${fmt(fin.afdb_budget_support||0)} AfDB activities in this release` : ""}. The World Bank also publishes its own theme codes; those are ignored for the filter.</dd>
-      <dt>Money</dt><dd>Commitments and disbursements from IATI transactions, the lender's own money only: the AfDB files the borrowing government's counterpart funds beside its own loans (South Africa's UA 5.44 billion for Medupi, say), and those are not counted. Cancelled and suspended activities stay on the map, hollow, but their money is not counted. The card shows the bank's own figure beside the counted one wherever they differ. AfDB reports in its accounting currency (SDR), converted to US dollars at <strong>${esc(DATA.meta.sdr_note)}</strong>; change the rate and every AfDB figure moves with it. The World Bank reports in US dollars, taken as published.</dd>
-      <dt>Location</dt><dd>AfDB: <strong>${pct(fExact, FA.length)}</strong> of markers sit on a site the Bank marks exact, though many of those are a region's point; the rest on a named town, often the capital, or at the centre of a country or region, and the detail card says which. World Bank: the Bank marks every location approximate but states its class, and <strong>${pct(wPlace, FW.length)}</strong> of its markers sit on a named place, district or site rather than a region centroid. <strong>${fmt(fMulti)} activities</strong> are multinational (${fmt(fMulti - wMulti)} AfDB, ${fmt(wMulti)} World Bank regional programmes); they are labelled so and drawn where the lender places them.</dd>
-      <dt>Not covered</dt><dd>The World Bank publishes no IATI file for Algeria, Equatorial Guinea, Eritrea or Libya, and its files carry no activity before board approval, so it has no "announced" records.</dd>
+      <dt>What is included</dt><dd>Infrastructure sectors only, by DAC purpose code: transport, energy, communications, water, industry, trade and environment. An activity counts when any of its codes is infrastructure, and only the infrastructure share of its money is counted, by the bank's own sector percentages: a project that is 60% schools and 40% roads counts 40%. Health, education and agriculture are left out that way; budget support, which the banks tag as such (aid-type A01 or A02), is left out whole${fin.wb_budget_support!=null ? `: ${fmt(fin.wb_budget_support)} World Bank and ${fmt(fin.afdb_budget_support||0)} ${BANK} activities in this release` : ""}. The World Bank also publishes its own theme codes; those are ignored for the filter.</dd>
+<!--__IF:africa__-->      <dt>Money</dt><dd>Commitments and disbursements from IATI transactions, the lender's own money only: the AfDB files the borrowing government's counterpart funds beside its own loans (South Africa's UA 5.44 billion for Medupi, say), and those are not counted. Cancelled and suspended activities stay on the map, hollow, but their money is not counted. The card shows the bank's own figure beside the counted one wherever they differ. AfDB reports in its accounting currency (SDR), converted to US dollars at <strong>${esc(DATA.meta.sdr_note)}</strong>; change the rate and every AfDB figure moves with it. The World Bank reports in US dollars, taken as published.</dd>
+<!--__ENDIF__--><!--__IF:!africa__-->      <dt>Money</dt><dd>Commitments and disbursements from IATI transactions, the lender's own money only. Cancelled and suspended activities stay on the map, hollow, but their money is not counted. The card shows the bank's own figure beside the counted one wherever they differ. ${BANK} reports in US dollars, and a few of its non-sovereign loans in the borrower's currency (Thai baht, Philippine pesos), converted at a fixed, stated rate that the card gives; the World Bank reports in US dollars, taken as published.</dd>
+<!--__ENDIF__--><!--__IF:africa__-->      <dt>Location</dt><dd>AfDB: <strong>${pct(fExact, FA.length)}</strong> of markers sit on a site the Bank marks exact, though many of those are a region's point; the rest on a named town, often the capital, or at the centre of a country or region, and the detail card says which. World Bank: the Bank marks every location approximate but states its class, and <strong>${pct(wPlace, FW.length)}</strong> of its markers sit on a named place, district or site rather than a region centroid. <strong>${fmt(fMulti)} activities</strong> are multinational (${fmt(fMulti - wMulti)} AfDB, ${fmt(wMulti)} World Bank regional programmes); they are labelled so and drawn where the lender places them.</dd>
+<!--__ENDIF__--><!--__IF:!africa__-->      <dt>Location</dt><dd>${BANK}: the Bank marks every location approximate (IATI exactness 2) and names it; <strong>${pct(FA.filter(x=>x.prec===1).length, FA.length)}</strong> of its markers sit on a named province or town rather than the country's point, and the detail card says which. World Bank: the Bank marks every location approximate but states its class, and <strong>${pct(wPlace, FW.length)}</strong> of its markers sit on a named place, district or site rather than a region centroid. <strong>${fmt(fMulti)} activities</strong> are multinational (${fmt(fMulti - wMulti)} ${BANK}, ${fmt(wMulti)} World Bank regional programmes); they are labelled so and drawn where the lender places them.</dd>
+<!--__ENDIF__-->      <dt>Not covered</dt><dd><!--__IF:africa__-->The World Bank publishes no IATI file for Algeria, Equatorial Guinea, Eritrea or Libya, and its<!--__ENDIF__--><!--__IF:sea__-->Neither bank publishes an IATI file for Brunei, Malaysia or Singapore, and their<!--__ENDIF__--> files carry no activity before board approval, so <!--__IF:africa__-->it has<!--__ENDIF__--><!--__IF:!africa__-->they have<!--__ENDIF__--> no "announced" records.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
       <div class="fig">
-        <div><b>${fmt(F.length)}</b><span>activities in ${fCts} countries, plus multinational · ${fmt(FA.length)} AfDB, ${fmt(FW.length)} World Bank</span></div>
-        <div><b>$${fmt1(sumUsd(FA))}bn · $${fmt1(sumUsd(FW))}bn</b><span>committed to infrastructure, AfDB · World Bank, each on its own</span></div>
-        <div><b>${pct(sumDis(FA), sumUsd(FA))} · ${pct(sumDis(FW), sumUsd(FW))}</b><span>of those commitments disbursed so far, AfDB · World Bank</span></div>
+        <div><b>${fmt(F.length)}</b><span>activities in ${fCts} countries, plus multinational · ${fmt(FA.length)} ${BANK}, ${fmt(FW.length)} World Bank</span></div>
+        <div><b>$${fmt1(sumUsd(FA))}bn · $${fmt1(sumUsd(FW))}bn</b><span>committed to infrastructure, ${BANK} · World Bank, each on its own</span></div>
+        <div><b>${pct(sumDis(FA), sumUsd(FA))} · ${pct(sumDis(FW), sumUsd(FW))}</b><span>of those commitments disbursed so far, ${BANK} · World Bank</span></div>
         <div><b>${pct(fExact + wPlace, F.length)}</b><span>of markers on a site or named place</span></div>
       </div>
       ${sbar(byStatus(F), F.length, "Finance activities by status")}
@@ -2736,7 +2760,7 @@ function renderMethod(){
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
         <li><strong>Total project cost.</strong> Only each bank's own share is here, and the two shares are never added into one project cost. China Exim, private lenders and national budgets are not counted.</li>
-        <li>Anything not financed by these two banks. Read totals as "AfDB and World Bank exposure", never as "investment in Africa".</li>
+        <li>Anything not financed by these two banks. Read totals as "${BANK} and World Bank exposure", never as "investment in ${R.name}".</li>
         <li>Physical progress. "Implementation" is a bank's stage, which may mean procurement or studies rather than earthworks.</li>
         <li>A precise World Bank site. The Bank's own flag says every location is approximate; the class says how close.</li>
       </ul></div>
@@ -2750,7 +2774,7 @@ function renderMethod(){
     <dl class="spec">
       <dt>Source</dt><dd><strong>OpenStreetMap contributors</strong>, a volunteer-built map of the world. Licence: ${esc(src.ground.lic)}, which requires the attribution "© OpenStreetMap contributors". <a href="${src.ground.url}" target="_blank" rel="noopener noreferrer">Copyright and licence ↗</a></dd>
       <dt>One record is</dt><dd>A set of traced line segments that share a name and sector. A highway drawn in twenty pieces is one work; unnamed pieces stand alone. The <strong>${fmt(G.length)} works</strong> here come from <strong>${fmt(gWays)} segments</strong>.</dd>
-      <dt>What is included</dt><dd>Major roads (motorway to secondary), railways and airports. Small residential and service streets are excluded: without that filter the query returns about nine times as many segments (an October 2026 count), two thirds of them residential street stubs inside housing estates. Airports are the works outlines mappers tag under construction: a runway, a terminal, or the site of a new airport. Island states are not covered: Cabo Verde, Mauritius, Seychelles and Réunion lie outside the query's box, and works on Comoros, Mayotte and São Tomé and Príncipe fall outside the outlines the layer is clipped to.</dd>
+      <dt>What is included</dt><dd>Major roads (motorway to secondary), railways and airports. Small residential and service streets are excluded: without that filter the query returns about nine times as many segments (an October 2026 count), two thirds of them residential street stubs inside housing estates. Airports are the works outlines mappers tag under construction: a runway, a terminal, or the site of a new airport.<!--__IF:africa__--> Island states are not covered: Cabo Verde, Mauritius, Seychelles and Réunion lie outside the query's box, and works on Comoros, Mayotte and São Tomé and Príncipe fall outside the outlines the layer is clipped to.<!--__ENDIF__--></dd>
       <dt>Length</dt><dd>The length actually traced, not the project's design length. A project traced only in part will read short.</dd>
     </dl>
     <div class="facts">
@@ -2782,8 +2806,8 @@ function renderMethod(){
     <p class="lead">Two more of Global Energy Monitor's trackers: the Global Gas Infrastructure Tracker (gas transmission pipelines) and the Global Oil Infrastructure Tracker (crude and natural-gas-liquids pipelines), with routes, from proposal to operation.</p>
     <dl class="spec">
       <dt>Source</dt><dd><strong>Global Energy Monitor</strong>, ${esc(src.pipelines.detail)}, released under ${esc(src.pipelines.lic)}. The official download is a form on GEM's site; the route geometry drawn here is the GeoJSON that GEM's own tracker maps load from its public data bucket. <a href="${src.pipelines.url}" target="_blank" rel="noopener noreferrer">Gas tracker ↗</a> · <a href="https://globalenergymonitor.org/projects/global-oil-infrastructure-tracker/" target="_blank" rel="noopener noreferrer">Oil tracker ↗</a></dd>
-      <dt>One record is</dt><dd>A <strong>pipeline segment</strong> with a published route. GEM splits long systems into segments with their own status and start year, so one pipeline can be several records; the <strong>${fmt(P.length)} segments</strong> here belong to <strong>${fmt(pSystems)} pipeline systems</strong>. Segments without a usable route are not drawn${pUnrouted!=null ? ` (<strong>${fmt(pUnrouted)}</strong> in this release)` : ""}, among them Medgaz's sea crossing, which the tracker draws across the Sahara instead of under the sea.</dd>
-      <dt>What is included</dt><dd>Every segment with at least one African country on its route, in every status. Pipelines to Europe are therefore in: Transmed and Greenstream are drawn to Sicily, Medgaz to the Algerian coast, and the proposed Nigeria–Morocco line from the Gulf of Guinea to Spain; its first stretch, from Lagos, is the existing West African Gas Pipeline, a record of its own.</dd>
+      <dt>One record is</dt><dd>A <strong>pipeline segment</strong> with a published route. GEM splits long systems into segments with their own status and start year, so one pipeline can be several records; the <strong>${fmt(P.length)} segments</strong> here belong to <strong>${fmt(pSystems)} pipeline systems</strong>. Segments without a usable route are not drawn${pUnrouted!=null ? ` (<strong>${fmt(pUnrouted)}</strong> in this release)` : ""}<!--__IF:africa__-->, among them Medgaz's sea crossing, which the tracker draws across the Sahara instead of under the sea<!--__ENDIF__-->.</dd>
+      <dt>What is included</dt><dd>Every segment with at least one ${R.adj} country on its route, in every status.<!--__IF:africa__--> Pipelines to Europe are therefore in: Transmed and Greenstream are drawn to Sicily, Medgaz to the Algerian coast, and the proposed Nigeria–Morocco line from the Gulf of Guinea to Spain; its first stretch, from Lagos, is the existing West African Gas Pipeline, a record of its own.<!--__ENDIF__--><!--__IF:!africa__--> A pipeline that crosses the region's borders is therefore drawn in full, to its far terminal outside it.<!--__ENDIF__--></dd>
       <dt>Length and capacity</dt><dd>GEM's own figures per segment: length in km (measured where known, estimated otherwise) and capacity in the source's units, with a conversion to bcm/y or barrels of oil equivalent per day where GEM gives one. Where a stated length is plainly wrong in the release${pm_.length_fixes ? ` (${fmt(pm_.length_fixes)} segments, such as Wafa–Mellitah's 5,246 km for a 525 km pipeline)` : ""}, the figure from GEM's own wiki replaces it and the card says so.</dd>
       <dt>Location</dt><dd>Routes are indicative, digitised from public maps and filings; a segment's country is the first on its route list. Filtering by country keeps every segment that crosses it.</dd>
     </dl>
@@ -2800,7 +2824,7 @@ function renderMethod(){
     </div>
     <div class="split">
       <div class="yes"><h4>What it tells you</h4><ul>
-        <li>Which corridors carry, or are meant to carry, oil and gas: across the Sahara, out of the Niger Delta, along the East African coast, under the Mediterranean.</li>
+        <li>Which corridors carry, or are meant to carry, oil and gas<!--__IF:africa__-->: across the Sahara, out of the Niger Delta, along the East African coast, under the Mediterranean<!--__ENDIF__--><!--__IF:!africa__--> across the region, between its countries and out of it<!--__ENDIF__-->.</li>
         <li>Ownership and scale, segment by segment, and how much proposed route exists against what actually operates.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
@@ -2815,19 +2839,19 @@ function renderMethod(){
   <section id="m-cables">
     <div class="eyebrow"><span class="sk cables">Layer · Submarine cables</span><span class="m">lines with landing dots</span></div>
     <h2>TeleGeography</h2>
-    <p class="lead">The Submarine Cable Map, the reference public map of the world's fibre-optic submarine cables, maintained continuously by the research firm TeleGeography: every cable system with an African landing point, in service or planned.</p>
+    <p class="lead">The Submarine Cable Map, the reference public map of the world's fibre-optic submarine cables, maintained continuously by the research firm TeleGeography: every cable system with ${an(R.adj)} landing point, in service or planned.</p>
     <dl class="spec">
       <dt>Source</dt><dd><strong>TeleGeography</strong>, Submarine Cable Map, read from the map's own JSON feeds (routes, landing points, one record per cable). TeleGeography puts the map under CC BY-SA 4.0, attribution "TeleGeography", and keeps the data behind it for subscribers, so the routes and records are drawn here but the layer is not offered as a download. <a href="${src.cables.url}" target="_blank" rel="noopener noreferrer">Submarine Cable Map ↗</a></dd>
-      <dt>One record is</dt><dd>A <strong>cable system</strong>, drawn along its whole route, with its African landing points marked. A cable landing in Mombasa and Mumbai is one record, filed under Kenya.</dd>
-      <dt>What is included</dt><dd>Every cable with at least one landing point in an African country or island, including Réunion, Mayotte and Saint Helena. Cables that only pass offshore, and the Canary Islands (Spain), are left out.</dd>
+      <dt>One record is</dt><dd>A <strong>cable system</strong>, drawn along its whole route, with its ${R.adj} landing points marked. <!--__IF:africa__-->A cable landing in Mombasa and Mumbai is one record, filed under Kenya.<!--__ENDIF__--><!--__IF:!africa__-->A cable landing in Singapore and Mumbai is one record, filed under its first landing in the region.<!--__ENDIF__--></dd>
+      <dt>What is included</dt><dd><!--__IF:africa__-->Every cable with at least one landing point in an African country or island, including Réunion, Mayotte and Saint Helena. Cables that only pass offshore, and the Canary Islands (Spain), are left out.<!--__ENDIF__--><!--__IF:!africa__-->Every cable with at least one landing point in one of the region's countries. Cables that only pass through its waters, and landings outside it, such as Christmas Island (Australia), are left out.<!--__ENDIF__--></dd>
       <dt>Status</dt><dd>TeleGeography knows two states, <em>in service</em> and <em>planned</em>, plus the ready-for-service (RFS) year. In service is <strong>operating</strong>. A planned cable due by ${cYear+1} is shown as <strong>under construction</strong>, since it is being manufactured or laid; one due later is <strong>announced</strong>. This is an inference from the RFS year, stated on every card.</dd>
-      <dt>Length</dt><dd>The whole system's length as published, not the African portion. ${cEst.length ? `${fmt(cEst.length)} cables publish none; for them the drawn route's length stands in, marked as an estimate on the card. ` : ""}It sizes the "largest in view" list; it is not a measure of investment in Africa.</dd>
+      <dt>Length</dt><dd>The whole system's length as published, not the ${R.adj} portion. ${cEst.length ? `${fmt(cEst.length)} cables publish none; for them the drawn route's length stands in, marked as an estimate on the card. ` : ""}It sizes the "largest in view" list; it is not a measure of investment in ${R.name}.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
       <div class="fig">
         <div><b>${fmt(C.length)}</b><span>cables landing in ${cCts} countries and territories</span></div>
-        <div><b>${fmt(cLand)}</b><span>African landings, at ${fmt(cSites)} landing points</span></div>
+        <div><b>${fmt(cLand)}</b><span>${R.landings}, at ${fmt(cSites)} landing points</span></div>
         <div><b>${fmt(cPlanned)}</b><span>planned, not yet in service</span></div>
         <div><b>${fmt(cKm)} km</b><span>of cable system as published, whole routes${cEst.length ? `, plus about ${fmt(cKmEst)} km estimated for ${fmt(cEst.length)} that publish no length` : ""}</span></div>
       </div>
@@ -2836,7 +2860,7 @@ function renderMethod(){
     </div>
     <div class="split">
       <div class="yes"><h4>What it tells you</h4><ul>
-        <li>Where the continent's international bandwidth comes ashore, and which coasts and islands depend on a single cable.</li>
+        <li>Where ${LAND}'s international bandwidth comes ashore, and which coasts and islands depend on a single cable.</li>
         <li>Who owns the systems, who built them, and when the next ones are due.</li>
       </ul></div>
       <div class="no"><h4>What it cannot tell you</h4><ul>
@@ -2855,9 +2879,9 @@ function renderMethod(){
     <dl class="spec">
       <dt>Source</dt><dd><strong>AidData</strong>, ${esc(src.china.detail)}. The records are the CLG 1.0 workbook (released November 2025, ${esc(src.china.lic).split(" (")[0]}). CLG 1.0 publishes no locations and has no geospatial companion yet, but keeps the record IDs of its predecessor, the Global Chinese Development Finance Dataset 3.0 (November 2023), so a record carried over takes the location that release published: its precision, its district or province, and the footprint from its geospatial companion (GeoGCDF 3.0, June 2024), OpenStreetMap features that stay under OSM's ODbL. The ${fmt(CN_NEW)} records new in CLG 1.0 sit at their country's centre. <a href="${src.china.url}" target="_blank" rel="noopener noreferrer">Dataset page ↗</a> · <a href="https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0" target="_blank" rel="noopener noreferrer">GCDF 3.0 ↗</a> · <a href="https://github.com/aiddata/gcdf-geospatial-data" target="_blank" rel="noopener noreferrer">Footprints on GitHub ↗</a></dd>
       <dt>One record is</dt><dd>A <strong>project</strong> as AidData records it: one official commitment (a loan, a grant, a buyer's credit) from one or more Chinese official lenders or agencies to one recipient. A railway financed in three tranches is three records, each with the same footprint; a syndicated loan is one record or, as AidData often splits it, one per lender.</dd>
-      <dt>What is included</dt><dd>Every commitment to an African recipient that AidData flags as <strong>infrastructure</strong>: building, extending or maintaining a physical structure, from a power plant or a highway to a hospital, a stadium or a ministry building. Left out: <strong>${fmt(nOut.umbrella)} umbrella agreements</strong> (framework deals whose money reappears in the projects under them), <strong>${fmt(nOut.pledges)} pledges</strong> (MoUs and letters of intent that never became a signed commitment, which AidData excludes from its own aggregates) and <strong>${fmt(nOut.not_infrastructure)} records that AidData does not flag as physical infrastructure</strong>: cash, equipment and vehicle donations, scholarships, medical teams and most oil-backed credit lines to state companies${nOut.acquisitions ? `, and <strong>${fmt(nOut.acquisitions)} loans that buy a stake</strong> (AidData's M&amp;A flag: a share of a mine, an LNG vessel), which build nothing` : ""}. Kept: infrastructure loans AidData marks commodity-backed${nOut.commodity_backed ? ` (${fmt(nOut.commodity_backed)} records, $${fmt1((nOut.commodity_backed_usd||0)/1e9)}bn counted)` : ""}, repaid from oil or mineral exports, which build something however they are repaid.${nOut.unlocated ? ` ${fmt(nOut.unlocated)} regional records with no location at all are left off the map.` : ""}</dd>
+      <dt>What is included</dt><dd>Every commitment to ${an(R.adj)} recipient that AidData flags as <strong>infrastructure</strong>: building, extending or maintaining a physical structure, from a power plant or a highway to a hospital, a stadium or a ministry building. Left out: <strong>${fmt(nOut.umbrella)} umbrella agreements</strong> (framework deals whose money reappears in the projects under them), <strong>${fmt(nOut.pledges)} pledges</strong> (MoUs and letters of intent that never became a signed commitment, which AidData excludes from its own aggregates) and <strong>${fmt(nOut.not_infrastructure)} records that AidData does not flag as physical infrastructure</strong>: cash, equipment and vehicle donations, scholarships, medical teams and most oil-backed credit lines to state companies${nOut.acquisitions ? `, and <strong>${fmt(nOut.acquisitions)} loans that buy a stake</strong> (AidData's M&amp;A flag: a share of a mine, an LNG vessel), which build nothing` : ""}. Kept: infrastructure loans AidData marks commodity-backed${nOut.commodity_backed ? ` (${fmt(nOut.commodity_backed)} records, $${fmt1((nOut.commodity_backed_usd||0)/1e9)}bn counted)` : ""}, repaid from oil or mineral exports, which build something however they are repaid.${nOut.unlocated ? ` ${fmt(nOut.unlocated)} regional records with no location at all are left off the map.` : ""}</dd>
       <dt>Status</dt><dd>AidData's <em>Pipeline: Commitment</em> (signed, not started) is <strong>approved</strong>; <em>Implementation</em> is <strong>under construction</strong>; <em>Completion</em> is <strong>operating</strong>; <em>Suspended</em> and <em>Cancelled</em> are <strong>stalled</strong>. Because pledges are left out, this layer has no <em>announced</em> records.</dd>
-      <dt>Money</dt><dd>The commitment in <strong>constant ${CN_BASE} US dollars</strong>, as AidData converts it (original currency to nominal dollars at the commitment year's rate, then deflated), so amounts from 2003 and 2019 compare. ${fmt(nAmt)} of ${fmt(N.length)} records carry a counted amount; the rest, mostly grants, are placed but not sized. Suspended and cancelled commitments stay on the map, hollow, but their money is not counted, as AidData's own Recommended_for_Aggregates leaves them out${nWithdrawn.length ? ` (${fmt(nWithdrawn.length)} records, $${fmt1(nWithdrawnUsd)}bn)` : ""}. Chinese money is never added to AfDB or World Bank money.</dd>
+      <dt>Money</dt><dd>The commitment in <strong>constant ${CN_BASE} US dollars</strong>, as AidData converts it (original currency to nominal dollars at the commitment year's rate, then deflated), so amounts from 2003 and 2019 compare. ${fmt(nAmt)} of ${fmt(N.length)} records carry a counted amount; the rest, mostly grants, are placed but not sized. Suspended and cancelled commitments stay on the map, hollow, but their money is not counted, as AidData's own Recommended_for_Aggregates leaves them out${nWithdrawn.length ? ` (${fmt(nWithdrawn.length)} records, $${fmt1(nWithdrawnUsd)}bn)` : ""}. Chinese money is never added to ${BANK} or World Bank money.</dd>
       <dt>Location</dt><dd><strong>${pct(nPrec, N.length)}</strong> of records sit on the site itself, and <strong>${fmt(nFp)}</strong> of those carry a footprint drawn on the map from country zoom in; <strong>${pct(nApprox, N.length)}</strong> are approximate, within 5 km or at the centre of a district or province; <strong>${pct(nCountry, N.length)}</strong> sit at the centre of their country, flagged so on the card: records AidData found no location for, and the ${fmt(CN_NEW)} new in CLG 1.0.</dd>
       <dt>Coverage</dt><dd>Commitments made <strong>${nY0}–${nY1}</strong>, implementation followed to 2025. This layer is a <strong>historical baseline</strong>: where Chinese money went and what it built. It does not say what China is financing this year.</dd>
     </dl>
@@ -2891,20 +2915,20 @@ function renderMethod(){
   <section id="m-eu">
     <div class="eyebrow"><span class="sk eu">Layer · EU finance</span><span class="m">stars</span></div>
     <h2>European Commission and European Investment Bank</h2>
-    <p class="lead">What the European Union's own institutions put into African infrastructure, as the two that publish it project by project disclose it to the open IATI standard: the Commission's grants and contracts, through DG International Partnerships for sub-Saharan Africa and the continental programmes and DG Neighbourhood and Enlargement for the North African neighbours, and the EIB's own loans and direct equity. This is the EU's own share of "Team Europe"; the member states' agencies are not here.</p>
+    <p class="lead">What the European Union's own institutions put into ${R.adj} infrastructure, as the two that publish it project by project disclose it to the open IATI standard: the Commission's grants and contracts, <!--__IF:africa__-->through DG International Partnerships for sub-Saharan Africa and the continental programmes and DG Neighbourhood and Enlargement for the North African neighbours<!--__ENDIF__--><!--__IF:!africa__-->through DG International Partnerships' country files and its Far East Asia and Asia regional files<!--__ENDIF__-->, and the EIB's own loans and direct equity. This is the EU's own share of "Team Europe"; the member states' agencies are not here.</p>
     <dl class="spec">
-      <dt>Sources</dt><dd>${esc(src.eu.detail)}. The Commission's files fall under the EU's open-data decision, CC BY 4.0 (<a href="https://iatiregistry.org/publisher/ec-intpa" target="_blank" rel="noopener noreferrer">DG INTPA ↗</a>, <a href="https://iatiregistry.org/publisher/ec-near" target="_blank" rel="noopener noreferrer">DG NEAR ↗</a>); the EIB's under the Bank's own terms, attribution required (<a href="https://iatiregistry.org/publisher/eib" target="_blank" rel="noopener noreferrer">publisher page ↗</a>).</dd>
+      <dt>Sources</dt><dd>${esc(src.eu.detail)}. The Commission's files fall under the EU's open-data decision, CC BY 4.0 (<a href="https://iatiregistry.org/publisher/ec-intpa" target="_blank" rel="noopener noreferrer">DG INTPA ↗</a><!--__IF:africa__-->, <a href="https://iatiregistry.org/publisher/ec-near" target="_blank" rel="noopener noreferrer">DG NEAR ↗</a><!--__ENDIF__-->); the EIB's under the Bank's own terms, attribution required (<a href="https://iatiregistry.org/publisher/eib" target="_blank" rel="noopener noreferrer">publisher page ↗</a>).</dd>
       <dt>One record is</dt><dd>For the Commission, a <strong>contract</strong>: a grant, a delegation agreement with a development bank or a UN agency, a works or service contract, signed under a financing decision. The Commission publishes both levels and the money sits at both, so a <strong>financing decision</strong> is a record only when none of its contracts is published yet, and then carries its whole envelope, usually as an announced action. A decision for several countries is published once per country, each copy repeating the whole envelope: it counts once, or not at all when any copy has contracts. In this extract: ${fmt(eContracts)} contracts, ${fmt(eDecisions)} such decisions, ${fmt(eMeta.decisions_folded)} decisions folded into their contracts${eMeta.envelopes_dropped ? ` and ${fmt(eMeta.envelopes_dropped)} repeated copies dropped` : ""}. For the EIB, an <strong>operation</strong>: one signed loan or direct equity stake to one borrower, usually in one country.</dd>
       <dt>What is included</dt><dd>Infrastructure only, by the same rule as the finance layer: DAC purpose codes for transport, energy, communications, water, industry, trade and environment for the Commission; the EIB's own sector codes mapped to the same buckets (energy, water and sanitation, transport, telecoms, industry and construction). Left out: the EIB's global loans and credit lines to banks and its fund investments, kept by hand in a list of the Bank's project numbers because their sector codes name the sectors they lend to${eMeta.eib_left_out ? ` (${fmt(eMeta.eib_left_out)} operations)` : ""}; the operations the EIB runs with others' money${eMeta.eib_other_funder ? ` (${fmt(eMeta.eib_other_funder)})` : ""}: the Commission's blending grants, which the Commission publishes as its own contracts, and a member state agency's; and, for both institutions, health, education, agriculture, governance and budget support.</dd>
-      <dt>Status</dt><dd>IATI's own codes, read as for AfDB: <em>pipeline</em> is <strong>announced</strong>, <em>implementation</em> <strong>under construction</strong>, <em>completion</em> and <em>closed</em> <strong>operating</strong>, <em>cancelled</em> and <em>suspended</em> <strong>stalled</strong>. Neither institution publishes an "approved" stage. Cancelled and suspended records stay on the map, hollow, but their money is not counted${eStalledEur ? ` (€${fmt1(eStalledEur)}bn)` : ""}.</dd>
-      <dt>Money</dt><dd>Commitments from IATI type-2 transactions, in euros, converted at <strong>${esc(DATA.meta.eur_note)}</strong>; change the rate and every EU figure moves with it. A contract carries the contracted amount, a decision its envelope, an EIB operation the signed amount: the Bank's file repeats each commitment transaction once per tranche record, so the distinct ones are summed, which matches its project pages. Counted: the infrastructure share of each record by its sector percentages and, for an EIB operation that spans several regions, the African share by its recipient percentages; the card shows the published figure beside the counted one. Disbursements where published. A Commission grant to a project the EIB also lends to is two records, a star each, each counted once.</dd>
-      <dt>Location</dt><dd>The Commission publishes a point per activity but no exactness: <strong>${pct(ePlace, E.length)}</strong> of records sit on a named place or site; <strong>${pct(eCountry, E.length)}</strong> on a country's point, the Commission's default for that country, or the country's interior for the EIB, which publishes no locations at all; <strong>${pct(eRegional, E.length)}</strong> are Africa-wide programmes, drawn at the Commission's own regional point, in Chad. The card says which.</dd>
+      <dt>Status</dt><dd>IATI's own codes, read as for ${BANK}: <em>pipeline</em> is <strong>announced</strong>, <em>implementation</em> <strong>under construction</strong>, <em>completion</em> and <em>closed</em> <strong>operating</strong>, <em>cancelled</em> and <em>suspended</em> <strong>stalled</strong>. Neither institution publishes an "approved" stage. Cancelled and suspended records stay on the map, hollow, but their money is not counted${eStalledEur ? ` (€${fmt1(eStalledEur)}bn)` : ""}.</dd>
+      <dt>Money</dt><dd>Commitments from IATI type-2 transactions, in euros, converted at <strong>${esc(DATA.meta.eur_note)}</strong>; change the rate and every EU figure moves with it. A contract carries the contracted amount, a decision its envelope, an EIB operation the signed amount: the Bank's file repeats each commitment transaction once per tranche record, so the distinct ones are summed, which matches its project pages. Counted: the infrastructure share of each record by its sector percentages and, for an EIB operation that spans several regions, the ${R.adj} share by its recipient percentages; the card shows the published figure beside the counted one. Disbursements where published. A Commission grant to a project the EIB also lends to is two records, a star each, each counted once.</dd>
+      <dt>Location</dt><dd>The Commission publishes a point per activity but no exactness: <strong>${pct(ePlace, E.length)}</strong> of records sit on a named place or site; <strong>${pct(eCountry, E.length)}</strong> on a country's point, the Commission's default for that country, or the country's interior for the EIB, which publishes no locations at all; <strong>${pct(eRegional, E.length)}</strong> are ${R.wide} programmes, drawn at the Commission's own regional point, ${R.eu_point_where}. The card says which.</dd>
       <dt>Not covered</dt><dd>Guarantees under EFSD+ (the Commission publishes its provisioning of the guarantee fund, which sits outside the infrastructure sectors) and the Global Gateway label, which is not an activity of its own; the member states' bilateral agencies (AFD, KfW, Enabel, Sida…), which carry much of "Team Europe"; the EBRD, whose shareholders reach beyond the EU.</dd>
     </dl>
     <div class="facts">
       <div class="fh"><h4>In this extract</h4><span>derived from the payload</span></div>
       <div class="fig">
-        <div><b>${fmt(E.length)}</b><span>records in ${eCts} countries, plus Africa-wide · ${fmt(EC.length)} Commission, ${fmt(EB.length)} EIB</span></div>
+        <div><b>${fmt(E.length)}</b><span>records in ${eCts} countries, plus ${R.wide} · ${fmt(EC.length)} Commission, ${fmt(EB.length)} EIB</span></div>
         <div><b>€${fmt1(sumEur(EC))}bn · €${fmt1(sumEur(EB))}bn</b><span>committed to infrastructure, Commission · EIB, each on its own · $${fmt1(sumEur(EC)*EUR_RATE)}bn and $${fmt1(sumEur(EB)*EUR_RATE)}bn</span></div>
         <div><b>$${fmt1(eDis)}bn</b><span>disbursed so far, where published</span></div>
         <div><b>${pct(ePlace, E.length)}</b><span>of markers on a named place</span></div>
@@ -2927,7 +2951,7 @@ function renderMethod(){
     </div>
   </section>
 
-  <section id="m-mattei">
+<!--__IF:mattei__-->  <section id="m-mattei">
     <div class="eyebrow"><span class="sk mattei">Layer · Piano Mattei</span><span class="m">hexagons</span></div>
     <h2>Italy's Piano Mattei per l'Africa</h2>
     <p class="lead">What Italy's flagship Africa policy has put on the map, as the Italian Government itself lists it: the projects of the Piano Mattei per l'Africa (Mattei Plan), from the Presidency of the Council's project portal, one page per project. It is the whole plan as published, not an infrastructure subset: ${fmt(mEdu)} of the ${fmt(M.length)} projects carry the education, training and culture pillar, and the sector filter keeps the ones that build something.</p>
@@ -2964,19 +2988,19 @@ function renderMethod(){
         <li>Anything after the portal's last update: the stage is as read on ${esc(src.mattei.fresh)}.</li>
       </ul></div>
     </div>
-  </section>
+  </section><!--__ENDIF__-->
 
   <section id="m-status">
     <div class="eyebrow"><span>02</span><span>One status scale</span></div>
-    <h2>Five statuses across eight layers</h2>
+    <h2>Five statuses across ${N_LAYERS} layers</h2>
     <p class="lead">Each source describes progress in its own words. They are mapped onto five shared statuses so one filter works everywhere. The mapping is a judgement call, shown here so you can disagree with it.</p>
     <div class="twrap"><table>
-      <thead><tr><th>Shared status</th><th>GEM power</th><th>AfDB · World Bank (IATI)</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th><th>AidData</th><th>EC · EIB (IATI)</th><th>Piano Mattei portal</th></tr></thead>
+      <thead><tr><th>Shared status</th><th>GEM power</th><th>${BANK} · World Bank (IATI)</th><th>OpenStreetMap</th><th>GEM pipelines</th><th>TeleGeography</th><th>AidData</th><th>EC · EIB (IATI)</th><!--__IF:mattei__--><th>Piano Mattei portal</th><!--__ENDIF__--></tr></thead>
       <tbody>${statusTable()}</tbody>
     </table></div>
     <ul>
-      <li><strong>Approved exists for power, for the AfDB, for Chinese finance and for the Piano Mattei portal</strong>, and means a different step in each. For power it is GEM's <em>pre-construction</em>: a project actively seeking permits, land or finance, not yet a signed deal. For the AfDB it is an activity the Bank still marks <em>pipeline</em> although its commitment is on record, so its board has approved it. For Chinese finance it is a signed commitment whose works have not started. The Piano Mattei portal's "approved" step is the Government's own, a project cleared for financing. The other sources have no such stage. The World Bank publishes nothing before board approval, so it has no announced activities either; AidData's pledges are left out, so Chinese finance has none.</li>
-      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit or a pipeline segment, the lender's implementation stage for an AfDB, World Bank or EU-financed project, AidData's implementation stage for a Chinese-financed one, the Government's "ongoing" step for a Piano Mattei project, a mapper's tag for OpenStreetMap, and for a cable an inference from its ready-for-service year.</li>
+      <li><strong>Approved exists for power, for the ${BANK}<!--__IF:mattei__-->,<!--__ENDIF__--><!--__IF:!mattei__--> and<!--__ENDIF__--> for Chinese finance<!--__IF:mattei__--> and for the Piano Mattei portal<!--__ENDIF__--></strong>, and means a different step in each. For power it is GEM's <em>pre-construction</em>: a project actively seeking permits, land or finance, not yet a signed deal. For the ${BANK} it is an activity the Bank still marks <em>pipeline</em> although its commitment is on record, so its board has approved it. For Chinese finance it is a signed commitment whose works have not started.<!--__IF:mattei__--> The Piano Mattei portal's "approved" step is the Government's own, a project cleared for financing.<!--__ENDIF__--> The other sources have no such stage. The World Bank publishes nothing before board approval, so it has no announced activities either; AidData's pledges are left out, so Chinese finance has none.</li>
+      <li><strong>Under construction means different things per layer:</strong> physical construction for a power unit or a pipeline segment, the lender's implementation stage for ${an(BANK)}, World Bank or EU-financed project, AidData's implementation stage for a Chinese-financed one,<!--__IF:mattei__--> the Government's "ongoing" step for a Piano Mattei project,<!--__ENDIF__--> a mapper's tag for OpenStreetMap, and for a cable an inference from its ready-for-service year.</li>
       <li><strong>Operating includes the past.</strong> Retired units and closed projects stay visible rather than vanishing from every filter.</li>
       <li><strong>Stalled is drawn hollow</strong>, so abandoned projects stay on the map without competing with live ones.</li>
     </ul>
@@ -2987,15 +3011,15 @@ function renderMethod(){
     <h2>Shape is source, colour is status, size is scale</h2>
     <div class="glyphs">
       <div>${glyph.assets(COL.ink)}<div><b>Circle · power unit</b><span>Area scales with capacity in MW, capped so one giant announcement does not blanket a country.</span></div></div>
-      <div>${glyph.finance(COL.ink)}<div><b>Square · AfDB project</b><span>Area scales with the AfDB commitment in US dollars.</span></div></div>
+      <div>${glyph.finance(COL.ink)}<div><b>Square · ${BANK} project</b><span>Area scales with the ${BANK} commitment in US dollars.</span></div></div>
       <div>${glyph.finance_wb(COL.ink)}<div><b>Diamond · World Bank project</b><span>Same layer, same scale, the other lender.</span></div></div>
       <div>${glyph.ground(COL.ink)}<div><b>Line · traced works</b><span>Drawn along the traced route. Solid for construction, dashed for proposed.</span></div></div>
       <div>${glyph.pipelines(COL.ink)}<div><b>Haloed line · pipeline</b><span>Drawn along the route with a translucent halo of its own colour, so it reads as a pipe. Dashed while proposed.</span></div></div>
-      <div>${glyph.cables(COL.ink)}<div><b>Line with dots · submarine cable</b><span>Drawn along the whole route; a dot at each African landing point. Dashed until in service.</span></div></div>
+      <div>${glyph.cables(COL.ink)}<div><b>Line with dots · submarine cable</b><span>Drawn along the whole route; a dot at each ${R.adj} landing point. Dashed until in service.</span></div></div>
       <div>${glyph.china(COL.ink)}<div><b>Triangle · Chinese-financed project</b><span>Area scales with the commitment in constant ${CN_BASE} US dollars. Where AidData traced the works in OpenStreetMap, the footprint is outlined in the same colour from country zoom in.</span></div></div>
       <div>${glyph.eu(COL.ink)}<div><b>Star · European Commission record</b><span>A Commission contract or decision. Area scales with the commitment in euros, converted to US dollars at a stated rate.</span></div></div>
       <div>${glyph.eu_eib(COL.ink)}<div><b>Four-pointed star · EIB operation</b><span>Same layer, same scale, the other EU institution. The Bank publishes no locations, so every one sits on its country's point.</span></div></div>
-      <div>${glyph.mattei(COL.ink)}<div><b>Hexagon · Piano Mattei project</b><span>One project page of the Italian Government's portal. Area scales with the amount the portal states, in euros, converted at the same rate.</span></div></div>
+<!--__IF:mattei__-->      <div>${glyph.mattei(COL.ink)}<div><b>Hexagon · Piano Mattei project</b><span>One project page of the Italian Government's portal. Area scales with the amount the portal states, in euros, converted at the same rate.</span></div></div><!--__ENDIF__-->
       <div>${glyphStatus("assets","stalled")}<div><b>Hollow · stalled</b><span>Cancelled, shelved or suspended.</span></div></div>
     </div>
     <h3>Colour</h3>
@@ -3006,28 +3030,30 @@ function renderMethod(){
     </p>
     <h3>Position</h3>
     <p>
-      Power units sit at their reported coordinates. AfDB markers sit on an exact site when the Bank
+      Power units sit at their reported coordinates. <!--__IF:africa__-->AfDB markers sit on an exact site when the Bank
       gives one, otherwise at the centre of the country or region: a square in the middle of a
-      country means a project somewhere in that country, not a project in the desert. World Bank
+      country means a project somewhere in that country, not a project in the desert.<!--__ENDIF__--><!--__IF:!africa__-->${BANK} markers sit on the
+      province or town the Bank names, otherwise on the country's point: a square in the middle of a
+      country means a project somewhere in that country, not a project at that spot.<!--__ENDIF__--> World Bank
       diamonds sit on the Bank's own geocoded project sites, usually a town or district.
       OpenStreetMap works follow their traced route. Pipelines and cables follow their published
-      route, which for a cable may run to Europe or Asia; "zoom to" fits the African part.
+      route, which for a cable may run to Europe or Asia; "zoom to" fits the ${R.adj} part.
       Chinese-financed triangles sit on the works when AidData located them precisely, at the
       centre of the district or province when it could only get that close, and at the centre of
       the country when it found no location at all; the card says which. EU-financed stars sit on
       the named place the Commission gives, otherwise on its default point for the country, where
-      the EIB's operations sit too, since the Bank publishes no locations; Africa-wide programmes
-      sit on the Commission's regional point, in Chad. Piano Mattei hexagons sit on the site, town or
+      the EIB's operations sit too, since the Bank publishes no locations; ${R.wide} programmes
+      sit on the Commission's regional point, ${R.eu_point_where}.<!--__IF:mattei__--> Piano Mattei hexagons sit on the site, town or
       administrative area the portal's description names, otherwise on the country's point, and for a
       programme across several countries on one Africa-wide point for the layer, in the Central African
-      Republic, which is not a site.
+      Republic, which is not a site.<!--__ENDIF__-->
     </p>
     <h3>Clusters</h3>
     <p>
       <strong>Cluster markers</strong>, in the toolbar and on by default, groups records that would overlap at the
       current zoom into donuts. The number is how many records the donut holds; the slices are their
       status mix, in the status colours. Click a donut to zoom into it. Records that share one
-      location, such as AfDB projects placed at a country centroid, fan out around the donut at the
+      location, such as ${BANK} projects placed at a country centroid, fan out around the donut at the
       closest zoom. Pipelines and submarine cables are not clustered: a route across several countries
       has no single place to stand, so they stay drawn as lines in this view too. Grouping is done by
       Leaflet.markercluster on the same projection as the canvas.
@@ -3035,16 +3061,19 @@ function renderMethod(){
     <h3>Basemap</h3>
     <p>
       Borders, provinces, rivers, lakes and cities come from <strong>Natural Earth</strong>, a
-      public-domain dataset. The whole world is drawn: Africa in full detail, every other country
-      in grey as context, simplified harder the further it is from the continent, so a cable to
-      India or a pipeline into Spain ends on a coast rather than in open sea. Natural Earth draws
+      public-domain dataset. The whole world is drawn: ${R.name} in full detail, every other country
+      in grey as context, simplified harder the further it is from ${LAND}, so a cable to
+      India or a pipeline into <!--__IF:africa__-->Spain<!--__ENDIF__--><!--__IF:!africa__-->China<!--__ENDIF__--> ends on a coast rather than in open sea.<!--__IF:africa__--> Natural Earth draws
       Somaliland and Bir Tawil as shapes of their own and splits Western Sahara at the Moroccan
       berm: the part Morocco administers lies inside Morocco's shape, so works placed by their
       coordinates there count as Morocco, while power units follow Global Energy Monitor's own
       country field. That is the dataset's choice, not a position taken here. With Mayotte, Réunion
       and Saint Helena, which only submarine cables reach, it is why the map counts
       ${allCts} countries and territories against Africa's 54 UN member states (the African Union
-      has 55 members, the Sahrawi Republic among them).
+      has 55 members, the Sahrawi Republic among them).<!--__ENDIF__--><!--__IF:sea__--> Natural Earth draws the
+      Spratly Islands and Scarborough Reef, claimed by several states, as shapes of their own, so
+      they belong to no country here; that is the dataset's choice, not a position taken here. The
+      map counts ${allCts} countries and territories.<!--__ENDIF__-->
     </p>${PAGES ? `
     <p>
       <strong>Satellite</strong>, in the toolbar, swaps the drawn basemap for ${SAT_SRC.method}.
@@ -3058,7 +3087,7 @@ function renderMethod(){
       <li><strong>Numbers are never added across layers.</strong> The "In view" panel keeps units and gigawatts, projects and dollars, works and kilometres, pipeline kilometres and cable landings apart.</li>
       <li><strong>"In view" means what is on screen</strong> and matches the filters. Zoom into a province and you get that province's figures.</li>
       <li><strong>"Largest in view" ranks each record against its own layer</strong>, so a power plant, a loan and a railway can share one list.</li>
-      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> count every status except stalled: a closed project's money was spent, a cancelled or suspended one's was withdrawn or frozen, so stalled records are drawn but not counted. They count each lender's own infrastructure share only, and each lender's total is shown on its own line. Chinese commitments are in constant ${CN_BASE} dollars and are shown on their own line, never added to the IATI figures; EU commitments are euros converted at a stated rate, on a line of their own too; Piano Mattei amounts are the portal's stated figures, on a line of their own, and are not commitments.</li>
+      <li><strong>Pipeline gigawatts</strong> exclude operating and stalled units. <strong>Committed dollars</strong> count every status except stalled: a closed project's money was spent, a cancelled or suspended one's was withdrawn or frozen, so stalled records are drawn but not counted. They count each lender's own infrastructure share only, and each lender's total is shown on its own line. Chinese commitments are in constant ${CN_BASE} dollars and are shown on their own line, never added to the IATI figures; EU commitments are euros converted at a stated rate, on a line of their own too<!--__IF:mattei__-->; Piano Mattei amounts are the portal's stated figures, on a line of their own, and are not commitments<!--__ENDIF__-->.</li>
       <li><strong>Every number is computed from the source files.</strong></li>
     </ul>
   </section>
@@ -3066,15 +3095,16 @@ function renderMethod(){
   <section id="m-limits">
     <div class="eyebrow"><span>04</span><span>What to keep in mind</span></div>
     <h2>Limits of the data</h2>
-    <div class="callout"><p><strong>Money is four lenders and one government plan, kept apart.</strong> The dollar figures are AfDB's, the World Bank's, the European Union institutions' and Chinese official lenders' exposure, each on a line of its own and never added together; the Piano Mattei figures are the Italian Government's stated project amounts, which may include other funders' shares, and are never added to the lenders'. The Chinese figures are AidData's reconstruction from public sources and stop at commitments made in ${CN_Y[1]}. Private finance, domestic budgets, the EU member states' own agencies, Gulf and other bilateral lenders and the other multilaterals are absent, and for many corridors they are the larger share.</p></div>
+    <div class="callout"><p><strong>Money is four lenders<!--__IF:mattei__--> and one government plan<!--__ENDIF__-->, kept apart.</strong> The dollar figures are ${BANK}'s, the World Bank's, the European Union institutions' and Chinese official lenders' exposure, each on a line of its own and never added together<!--__IF:mattei__-->; the Piano Mattei figures are the Italian Government's stated project amounts, which may include other funders' shares, and are never added to the lenders'<!--__ENDIF__-->. The Chinese figures are AidData's reconstruction from public sources and stop at commitments made in ${CN_Y[1]}. Private finance, domestic budgets, the EU member states' own agencies, Gulf and other bilateral lenders and the other multilaterals are absent, and for many corridors they are the larger share.</p></div>
     <ul>
       <li><strong>Chinese finance is a baseline, not a feed.</strong> AidData's CLG 1.0 covers commitments made ${CN_SPAN}. Read it for where the money went and what it built; read the power, pipeline and OpenStreetMap layers for what is being built now. About ${pct(nCountry, N.length)} of its records sit at a country's centre for want of a location, the ${fmt(CN_NEW)} new in CLG 1.0 among them.</li>
       <li><strong>EU finance is what two institutions publish, at the level they publish it.</strong> The Commission's records are contracts, so an action's envelope shows only until something under it is contracted; the EIB's carry no location and sit at a country's point; guarantees and the member states' agencies, which deliver much of "Team Europe" and the Global Gateway, are not here.</li>
-      <li><strong>The Piano Mattei layer is a government's own list.</strong> It is the whole plan as the portal publishes it, training and culture included; a stated amount may be the whole project's value or Italy's share; the portal gives no coordinates, so a third of the records sit at one Africa-wide point and a third at a country's point.</li>
-      <li><strong>About ${pct(FA.length - fExact, FA.length)} of AfDB markers are approximate</strong>, and the World Bank marks all of its approximate. Check the location line on a card before drawing any conclusion finer than a district.</li>
-      <li><strong>OpenStreetMap coverage follows mappers.</strong> The layer can confirm works; it can never prove their absence.</li>
+<!--__IF:mattei__-->      <li><strong>The Piano Mattei layer is a government's own list.</strong> It is the whole plan as the portal publishes it, training and culture included; a stated amount may be the whole project's value or Italy's share; the portal gives no coordinates, so a third of the records sit at one Africa-wide point and a third at a country's point.</li><!--__ENDIF__-->
+<!--__IF:africa__-->      <li><strong>About ${pct(FA.length - fExact, FA.length)} of AfDB markers are approximate</strong>, and the World Bank marks all of its approximate. Check the location line on a card before drawing any conclusion finer than a district.</li>
+<!--__ENDIF__--><!--__IF:!africa__-->      <li><strong>Every ${BANK} marker is approximate</strong>, on a named province or town or at the country's point, and the World Bank marks all of its approximate too. Check the location line on a card before drawing any conclusion finer than a district.</li>
+<!--__ENDIF__-->      <li><strong>OpenStreetMap coverage follows mappers.</strong> The layer can confirm works; it can never prove their absence.</li>
       <li><strong>Energy and connectivity are over-represented.</strong> No comparable open project tracker exists for ports, water or electricity transmission.</li>
-      <li><strong>Pipeline routes are indicative and incomplete.</strong> About a third of GEM's African segments carry no route and are not drawn; length and capacity are GEM's figures, not measurements.</li>
+      <li><strong>Pipeline routes are indicative and incomplete.</strong> <!--__IF:africa__-->About a third of GEM's African segments carry<!--__ENDIF__--><!--__IF:!africa__-->${fmt(DATA.meta.unrouted_pipelines||0)} of GEM's ${R.adj} segments carry<!--__ENDIF__--> no route and are not drawn; length and capacity are GEM's figures, not measurements.</li>
       <li><strong>A cable's status is partly inferred.</strong> TeleGeography says planned or in service; the under-construction reading comes from the ready-for-service year.</li>
       <li><strong>Data is as fresh as each source</strong>, dated in the table above. A plant can be commissioned or a loan cancelled between two releases.</li>
       <li><strong>Announced is not planned.</strong> Much announced capacity is never built. Read it as a record of intent, and compare it with what is operating.</li>
@@ -3087,17 +3117,17 @@ function renderMethod(){
     <h2>Every figure can be traced back</h2>
     <p>
       Each record's detail card links to the source record it came from: the GEM wiki page for a
-      power unit or a pipeline, the IATI activity for an AfDB project, the Bank's project page for
+      power unit or a pipeline, the IATI activity for ${an(BANK)} project, the Bank's project page for
       a World Bank one, the OpenStreetMap way for traced works, the TeleGeography page for a cable,
       the AidData project page, with its sources listed, for a Chinese-financed project, the EIB
-      project page or the IATI activity on d-portal for an EU-financed record, the Government
-      portal's own page for a Piano Mattei project. If a figure
+      project page or the IATI activity on d-portal for an EU-financed record<!--__IF:mattei__-->, the Government
+      portal's own page for a Piano Mattei project<!--__ENDIF__-->. If a figure
       here looks wrong, check it against the source.
     </p>
     <p>
       The pipeline is a handful of scripts that fetch the layers, build the basemap and compile this page.
-      Re-running them refreshes every number, including the ones on this page. Other sources, such
-      as the African Union's PIDA pipeline and Boston University's Chinese Loans to Africa database,
+      Re-running them refreshes every number, including the ones on this page. Other sources<!--__IF:africa__-->, such
+      as the African Union's PIDA pipeline and Boston University's Chinese Loans to Africa database,<!--__ENDIF__-->
       were evaluated and left out; the ${DATA.meta.repo ? `<a href="${esc(DATA.meta.repo)}" target="_blank" rel="noopener noreferrer">repository README ↗</a>` : "repository README"} explains why.
     </p>
     ${PAGES ? `
@@ -3106,49 +3136,49 @@ function renderMethod(){
       The site publishes what it draws. <a href="data/map.json">map.json</a> is the compiled payload
       (${fmt(A.length + F.length + G.length + P.length + C.length + N.length + E.length + M.length)} records plus the basemap). The raw layers as GeoJSON:
       <a href="data/gem_power_assets.geojson">power assets</a>,
-      <a href="data/iati_afdb_finance.geojson">AfDB finance</a>,
+      <a href="data/${R.bank.file}">${BANK} finance</a>,
       <a href="data/iati_worldbank_finance.geojson">World Bank finance</a>,
       <a href="data/osm_construction.geojson">OpenStreetMap construction ways</a>,
       <a href="data/gem_oil_gas_pipelines.geojson">oil and gas pipelines</a>,
       <a href="data/aiddata_china_finance.geojson">Chinese-financed projects</a> (with their simplified footprints),
-      <a href="data/iati_eu_finance.geojson">EU-financed records</a> and
-      <a href="data/piano_mattei.geojson">Piano Mattei projects</a>;
+      <a href="data/iati_eu_finance.geojson">EU-financed records</a><!--__IF:mattei__--> and
+      <a href="data/piano_mattei.geojson">Piano Mattei projects</a><!--__ENDIF__-->;
       <a href="data/meta.json">meta.json</a> records when each was fetched. Submarine cables are
       drawn from TeleGeography's map but not offered as a file: its terms keep the data behind the
       map for subscribers.
     </p>` : ""}
     <h3>Attribution</h3>
     <p>
-      Power asset and pipeline data © Global Energy Monitor, CC BY 4.0. Finance data © African
-      Development Bank Group, published via IATI, and © The World Bank, CC BY 4.0, via IATI. Map data © OpenStreetMap contributors, ODbL.
+      Power asset and pipeline data © Global Energy Monitor, CC BY 4.0. Finance data © <!--__IF:africa__-->African
+      Development Bank Group<!--__ENDIF__--><!--__IF:!africa__-->${R.bank.group}<!--__ENDIF__-->, published via IATI, and © The World Bank, CC BY 4.0, via IATI. Map data © OpenStreetMap contributors, ODbL.
       Submarine cable routes and records © TeleGeography, Submarine Cable Map (the map is CC BY-SA 4.0). Chinese finance data
       © AidData at William &amp; Mary, China's Global Loans and Grants Dataset 1.0, ODC-By 1.0, located with its
       Global Chinese Development Finance Dataset 3.0 (ODC-By 1.0), with project footprints © OpenStreetMap
       contributors, ODbL, via AidData's Geospatial GCDF 3.0. EU finance data
       © European Union, published to IATI by the European Commission (CC BY 4.0), and © European Investment
-      Bank, published to IATI under the Bank's terms. Piano Mattei data © Presidenza del Consiglio dei
+      Bank, published to IATI under the Bank's terms.<!--__IF:mattei__--> Piano Mattei data © Presidenza del Consiglio dei
       Ministri, CC BY 3.0 IT, from its project portal, with the named places' coordinates © OpenStreetMap
-      contributors, ODbL. Basemap by Natural
+      contributors, ODbL.<!--__ENDIF__--> Basemap by Natural
       Earth, public domain. Clustering by Leaflet (BSD) and Leaflet.markercluster (MIT).${PAGES ? ` Satellite imagery: ${SAT_SRC.licence}, loaded only while the Satellite view is on.` : ""} When you reuse a figure from this map, attribute the layer it came from, not the map.
     </p>
     <div class="logos" aria-label="Data sources and publisher">
       ${logoTile("global-energy-monitor", "https://globalenergymonitor.org/", "Global Energy Monitor", "Power assets, oil and gas pipelines")}
-      ${logoTile("african-development-bank", "https://www.afdb.org/", "African Development Bank Group", "Finance")}
+      ${SOURCE_LOGOS[R.bank.logo] ? logoTile(R.bank.logo, R.bank.home, R.bank.group, "Finance") : ""}
       ${SOURCE_LOGOS["world-bank"] ? logoTile("world-bank", "https://www.worldbank.org/", "The World Bank", "Finance") : ""}
       ${logoTile("iati", "https://iatistandard.org/", "International Aid Transparency Initiative", "Data standard")}
       ${logoTile("openstreetmap", "https://www.openstreetmap.org/", "OpenStreetMap", "Ground truth")}
       ${SOURCE_LOGOS["telegeography"] ? logoTile("telegeography", "https://www.submarinecablemap.com/", "TeleGeography", "Submarine cables") : ""}
       ${SOURCE_LOGOS["aiddata"] ? logoTile("aiddata", "https://www.aiddata.org/", "AidData", "Chinese finance") : ""}
       ${SOURCE_LOGOS["european-union"] ? logoTile("european-union", "https://international-partnerships.ec.europa.eu/", "European Union", "EU finance: European Commission and EIB") : ""}
-      ${SOURCE_LOGOS["piano-mattei"] ? logoTile("piano-mattei", "https://www.governo.it/en/piano-mattei/progetti/", "Italian Government, Piano Mattei per l'Africa", "Piano Mattei projects") : ""}
+<!--__IF:mattei__-->      ${SOURCE_LOGOS["piano-mattei"] ? logoTile("piano-mattei", "https://www.governo.it/en/piano-mattei/progetti/", "Italian Government, Piano Mattei per l'Africa", "Piano Mattei projects") : ""}<!--__ENDIF__-->
       ${logoTile("natural-earth", "https://www.naturalearthdata.com/", "Natural Earth", "Basemap")}${PAGES ? `
       ${logoTile("eox", "https://cloudless.eox.at/", "EOX IT Services, Sentinel-2 cloudless", "Satellite imagery")}` : ""}
-      ${logoTile("code-for-africa", "https://codeforafrica.org/", "Code for Africa", "Publisher")}
+<!--__IF:africa__-->      ${logoTile("code-for-africa", "https://codeforafrica.org/", "Code for Africa", "Publisher")}<!--__ENDIF__-->
     </div>
     <p class="lnote">Logos are trademarks of their owners and appear here only to credit the data and its publisher.</p>
     <p class="foot">
-      Built ${esc(DATA.meta.built)} · AfDB commitments converted at ${esc(DATA.meta.sdr_note)}, World Bank in USD as published, EU institutions and Piano Mattei amounts at ${esc(DATA.meta.eur_note)} ·
-      ${fmt(A.length)} power units · ${fmt(FA.length)} AfDB and ${fmt(FW.length)} World Bank activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables · ${fmt(N.length)} Chinese-financed projects · ${fmt(E.length)} EU-financed records · ${fmt(M.length)} Piano Mattei projects ·
+      Built ${esc(DATA.meta.built)} · ${R.bank.currency==="XDR" ? `AfDB commitments converted at ${esc(DATA.meta.sdr_note)}, World Bank in USD as published` : `${BANK} and World Bank in USD as published`}, EU institutions${HAS("mattei") ? " and Piano Mattei amounts" : ""} at ${esc(DATA.meta.eur_note)} ·
+      ${fmt(A.length)} power units · ${fmt(FA.length)} ${BANK} and ${fmt(FW.length)} World Bank activities · ${fmt(G.length)} works · ${fmt(P.length)} pipeline segments · ${fmt(C.length)} cables · ${fmt(N.length)} Chinese-financed projects · ${fmt(E.length)} EU-financed records${HAS("mattei") ? ` · ${fmt(M.length)} Piano Mattei projects` : ""} ·
       ${allCts} countries and territories · __SITE_NAME__ · a project by
       <a href="__AUTHOR_URL__" target="_blank" rel="noopener noreferrer">Jacopo Ottaviani</a>
     </p>

@@ -7,6 +7,10 @@ The twice-a-year update, as one command.
     python3 refresh.py --basemap   also rebuild the Natural Earth basemap
     python3 refresh.py --force     build even if check_data.py objects
 
+    AIW_REGION=sea python3 refresh.py          the same for the Southeast Asia edition
+                                               (data/sea/, docs/se-asia/; no lender profiles,
+                                               debt, comparison or corridors, which are Africa's)
+
 Afterwards, look at the result locally
 
     python3 -m http.server 8791 --directory docs
@@ -25,8 +29,13 @@ import pathlib
 import subprocess
 import sys
 
+from region import REGION
+
 ROOT = pathlib.Path(__file__).parent
-BASEMAP = ROOT / "data" / "africa_basemap_10m.json"
+BASEMAP = REGION.data_dir / REGION.basemap_10m
+# the deep dives (lender profiles, debt, comparison, corridors) and the
+# cross-check of the figures they state are the Africa edition's
+AFRICA_ONLY = REGION.key != "africa"
 
 
 def run(label, script):
@@ -44,9 +53,9 @@ def main():
         if run("Fetch the ten map sources", "fetch_sources.py") != 0:
             sys.exit("\nfetch failed — nothing was rebuilt. Retry the failing layer alone, "
                      "then `python3 refresh.py --build`.")
-        if run("Fetch the lender-profile data", "fetch_donors.py") != 0:
+        if not AFRICA_ONLY and run("Fetch the lender-profile data", "fetch_donors.py") != 0:
             print("\nfetch_donors.py failed — the profiles are rebuilt from the data already in data/donors/", flush=True)
-        if run("Fetch debt by creditor (World Bank IDS)", "fetch_debt.py") != 0:
+        if not AFRICA_ONLY and run("Fetch debt by creditor (World Bank IDS)", "fetch_debt.py") != 0:
             print("\nfetch_debt.py failed — the debt section is rebuilt from data/debt.json", flush=True)
 
     if "--basemap" in args or not BASEMAP.exists():
@@ -68,8 +77,10 @@ def main():
     # must be the one they ship with.
     if run("Build the link-preview image", "build_social.py") != 0:
         print("\nbuild_social.py failed — the previous docs/social.png stays", flush=True)
-    for script in ("build_dashboard.py", "build_map.py", "build_donors.py", "build_debt.py", "build_compare.py",
-                   "build_corridors.py"):
+    scripts = ["build_dashboard.py", "build_map.py"]
+    if not AFRICA_ONLY:
+        scripts += ["build_donors.py", "build_debt.py", "build_compare.py", "build_corridors.py"]
+    for script in scripts:
         if run(f"Build {script}", script) != 0:
             sys.exit(f"\n{script} failed")
 
@@ -77,7 +88,7 @@ def main():
     # other place it is stated: the README, the hand-written proportions, the
     # profiles, the comparison and the debt page. A disagreement unbuilds
     # nothing, but the snapshot is not ready to publish.
-    if run("Cross-check the numbers", "check_numbers.py") != 0:
+    if not AFRICA_ONLY and run("Cross-check the numbers", "check_numbers.py") != 0:
         sys.exit("\ncheck_numbers.py found figures that disagree (listed above). The pages are built but not "
                  "ready to publish: fix each figure where it is written (README.md, donors/, sections/ or a "
                  "template), then `python3 refresh.py --build`.")

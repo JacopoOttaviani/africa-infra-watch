@@ -5,14 +5,20 @@ Build the vector basemap for the interactive map from Natural Earth 1:10m.
 Downloads (once, into a cache dir) the Natural Earth GeoJSON mirrors kept in
 the nvkelso/natural-earth-vector repository and writes a single compact file:
 
-    data/africa_basemap_10m.json
+    data/africa_basemap_10m.json          (AIW_REGION=sea: data/sea/sea_basemap_10m.json)
+
+and, for an edition that has none yet, the coarse country file the dashboard
+draws and the fetchers clip with (data/sea/sea_basemap.json): the region's
+countries cut from the same 1:10m shapes and simplified hard, so that an
+island state too small for Natural Earth 1:110m (Singapore) keeps a polygon.
+Africa's data/africa_basemap.json predates this script and is kept as it is.
 
 Layers kept, and why:
-  countries   the whole world. Africa in full detail; every other country as
+  countries   the whole world. The region in full detail; every other country as
               grey context, simplified harder, so wherever the map is panned
               there is land under it and a cable to India or a pipeline into
               Spain ends on a coast, not in open sea
-  admin1      first-level subdivisions, Africa only, for orientation when zoomed in
+  admin1      first-level subdivisions, the region only, for orientation when zoomed in
   lakes       the Rift lakes, Chad, Volta, Nasser, Kariba … in full; the large
               lakes of the rest of the world coarsely
   rivers      Nile, Congo, Niger, Zambezi, Orange … by Natural Earth scalerank;
@@ -32,10 +38,14 @@ import pathlib
 import sys
 import urllib.request
 
+from region import REGION, ROOT_DATA  # noqa: E402
+
 ROOT = pathlib.Path(__file__).parent
-DATA = ROOT / "data"
-CACHE = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else DATA / ".ne_cache"
-OUT = DATA / "africa_basemap_10m.json"
+DATA = REGION.data_dir
+# the Natural Earth download cache is shared by every edition
+CACHE = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT_DATA / ".ne_cache"
+OUT = DATA / REGION.basemap_10m
+OUT_COARSE = DATA / REGION.basemap_110
 
 BASE = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/"
 FILES = {
@@ -46,11 +56,11 @@ FILES = {
     "places": "ne_10m_populated_places_simple.geojson",
 }
 
-# Detail window: the continent plus enough margin that the Mediterranean, the
-# Arabian peninsula and the Mascarene islands are drawn with the same care.
-# Water inside it is kept at full detail; outside, only the large features,
-# coarsely. Land is kept everywhere.
-WIN = (-27.0, -41.0, 66.0, 43.0)  # lon0, lat0, lon1, lat1
+# Detail window: the region plus enough margin that its neighbours (for
+# Africa the Mediterranean, the Arabian peninsula and the Mascarene islands)
+# are drawn with the same care. Water inside it is kept at full detail;
+# outside, only the large features, coarsely. Land is kept everywhere.
+WIN = REGION.win  # lon0, lat0, lon1, lat1
 
 # The whole world in Web Mercator. Antarctica runs to the pole, which the
 # projection cannot place, so land is clipped at the usual 85° parallels.
@@ -161,6 +171,9 @@ def polys(g):
     return []
 
 
+polys_of = polys
+
+
 def lines(g):
     if g["type"] == "LineString":
         return [g["coordinates"]]
@@ -185,8 +198,9 @@ def build_countries(feats):
     africa = set()
     for f in feats:
         p = f["properties"]
-        # Natural Earth files Mauritius and Seychelles under "Seven seas".
-        is_af = p["CONTINENT"] == "Africa" or p["ADM0_A3"] in ("MUS", "SYC")
+        # the region's own countries (for Africa, Natural Earth files Mauritius
+        # and Seychelles under "Seven seas"; region.py knows)
+        is_af = REGION.ne_member(p)
         iso = p["ISO_A2_EH"]
         # Bir Tawil is unclaimed land between Egypt and Sudan; keep the
         # polygon so there is no hole, but it is not a country to filter by.
@@ -293,10 +307,46 @@ def build_places(feats, africa):
     return out
 
 
+def build_coarse(feats):
+    """The region's countries for the dashboard and the fetchers' clipping,
+    in the shape of data/africa_basemap.json ({"countries": [{"n", "iso",
+    "p"}]}, polygons of rings of [lon, lat]): the 1:10m shapes simplified to
+    about a kilometre and rounded to three decimals, keeping every polygon
+    larger than about 50 km² and each country's largest whatever its size."""
+    out = []
+    for f in feats:
+        p = f["properties"]
+        if not REGION.ne_member(p) or not p["ISO_A2_EH"] or p["ISO_A2_EH"] == "-99":
+            continue
+        polys = []
+        for poly in polys_of(f["geometry"]):
+            rings = []
+            for j, ring in enumerate(poly):
+                r = rnd(dp(ring, 0.01), 3)
+                if len(r) >= 4 and (j == 0 or ring_area(r) > 0.004):
+                    rings.append(r)
+            if rings:
+                polys.append((ring_area(rings[0]), rings))
+        if not polys:
+            continue
+        polys.sort(key=lambda x: -x[0])
+        kept = [rings for a, rings in polys if a > 0.004] or [polys[0][1]]
+        iso = p["ISO_A2_EH"]
+        out.append({"n": REGION.display.get(iso, p["NAME_EN"] or p["NAME"]), "iso": iso, "p": kept})
+    return out
+
+
 def main():
     print("countries …")
-    countries, labels, africa = build_countries(fetch("countries"))
-    print(f"   {len(countries)} countries, {sum(c['af'] for c in countries)} African")
+    feats = fetch("countries")
+    countries, labels, africa = build_countries(feats)
+    print(f"   {len(countries)} countries, {sum(c['af'] for c in countries)} {REGION.adj}")
+    if not OUT_COARSE.exists():
+        coarse = build_coarse(feats)
+        DATA.mkdir(parents=True, exist_ok=True)
+        OUT_COARSE.write_text(json.dumps({"countries": coarse}, separators=(",", ":"), ensure_ascii=False))
+        print(f"   → {OUT_COARSE.relative_to(ROOT)}: {len(coarse)} countries, "
+              f"{sum(len(poly) for c in coarse for poly in c['p'])} rings, for the dashboard and the clipping")
     print("admin1 …")
     admin1 = build_admin1(fetch("admin1"), africa)
     print(f"   {len(admin1)} units")
@@ -317,6 +367,7 @@ def main():
         "lakes": lakes, "rivers": rivers, "places": places,
     }
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    DATA.mkdir(parents=True, exist_ok=True)
     OUT.write_text(blob)
     print(f"\n→ {OUT.relative_to(ROOT)}  {len(blob) / 1024:.0f} KB")
     for k in ("countries", "admin1", "lakes", "rivers", "places", "labels"):
