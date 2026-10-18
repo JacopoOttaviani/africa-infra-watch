@@ -81,8 +81,9 @@ COFFEE_URL = os.environ.get("AIW_COFFEE_URL", "https://ko-fi.com/jacopoottaviani
 AUTHOR_URL = os.environ.get("AIW_AUTHOR_URL", "https://www.linkedin.com/in/jacopo-ottaviani/")
 WEB_URL = os.environ.get("AIW_WEB_URL", "https://jacopoottaviani.com/")
 
-# What the site is called in search results, link previews and structured data.
-SITE_NAME = "InfraRadar"
+# What the site is called in search results, link previews and structured data:
+# Africa Radar for the Africa site; other editions keep the umbrella name.
+SITE_NAME = "Africa Radar" if REGION.key == "africa" else "InfraRadar"
 # The edition's regional development bank, AfDB or ADB: short name, full name.
 BANK = REGION.bank["code"]
 BANK_NAME = REGION.bank["name"]
@@ -94,12 +95,13 @@ ROBOTS = "noindex,nofollow" if REGION.noindex else "index,follow,max-image-previ
 def an(word):
     """"an African", "a Southeast Asian", "an AfDB-financed": the article a word takes."""
     return ("an " if word[:1].lower() in "aeiou" else "a ") + word
-# The name beside the logo, as a two-colour wordmark, for the headers, the
-# footer and the loading box: "Africa" and "Radar" take the accent (the mark's
-# colour; .wm-r lives in LMENU_CSS), "Infra" between them keeps the surrounding
-# ink. The Africa edition writes the region in front, in one word; other
-# editions print "InfraRadar". Templates print it through __SITE_WORDMARK__.
-SITE_WORDMARK = ('<span class="wm-r">Africa</span>' if REGION.key == "africa" else "") + 'Infra<span class="wm-r">Radar</span>'
+# The name beside the logo, as a two-colour wordmark in one word, for the
+# headers, the footer and the loading box: "AfricaRadar", "Africa" in the
+# accent (the mark's colour; .wm-r lives in LMENU_CSS) and "Radar" in the
+# surrounding ink. Other editions print "InfraRadar", "Radar" in the accent.
+# Templates print it through __SITE_WORDMARK__.
+SITE_WORDMARK = ('<span class="wm-r">Africa</span>Radar' if REGION.key == "africa"
+                 else 'Infra<span class="wm-r">Radar</span>')
 AUTHOR_NAME = "Jacopo Ottaviani"
 # The link-preview image, docs/social.png, drawn by build_social.py.
 SOCIAL_IMAGE = "social.png"
@@ -299,7 +301,7 @@ LINKEDIN_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" 
 # /*__LMENU_CSS__*/ in every template's stylesheet with it. It uses the
 # site's tokens only, so it follows each theme.
 LMENU_CSS = """
-  .wm-r{color:var(--accent)}   /* "Africa" and "Radar" in the wordmark (SITE_WORDMARK) */
+  .wm-r{color:var(--accent)}   /* the accent half of the wordmark (SITE_WORDMARK) */
   /* ---------- the menu bar (shared.site_nav) ----------
      Map, Dashboard, the theme deep dives by name, the lender profiles in a
      dropdown, Methodology, Contact me. It folds in three steps as the window narrows:

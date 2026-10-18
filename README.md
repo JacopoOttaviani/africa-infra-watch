@@ -1,14 +1,15 @@
-# InfraRadar
+# Africa Radar
 
 An interactive map and dashboard of announced, approved and ongoing infrastructure
 in Africa, for investors, researchers and journalists.
 
-The project was first called Africa Infra Watch, then Africa Project Atlas. The
-repository and the live site's address still use the first slug,
+The project was first called Africa Infra Watch, then Africa Project Atlas, then
+InfraRadar. The repository and the live site's address still use the first slug,
 `africa-infra-watch`, so existing links keep working. The name shown on every
 page comes from `SITE_NAME` in `shared.py`; the headers, the footer and the map's
-loading box print it as a two-colour wordmark, `SITE_WORDMARK` ("Infra" in the
-ink, "Radar" in the accent), through the `__SITE_WORDMARK__` marker.
+loading box print it as a two-colour wordmark in one word, `SITE_WORDMARK`
+("Africa" in the accent, "Radar" in the ink), through the `__SITE_WORDMARK__`
+marker. Other editions (see "Editions" below) keep the umbrella name InfraRadar.
 
 **Interactive map:** https://claude.ai/code/artifact/ba74ed91-3123-4fe5-9f01-43708f368104
 **Dashboard:** https://claude.ai/code/artifact/e4229926-b67c-4c7b-ac4a-5b21b03b83fa

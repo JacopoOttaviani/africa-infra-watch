@@ -233,8 +233,12 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     out.append(f'<g color="{C["accent"]}">{mark}</g>')
     out.append(f'<text x="124" y="83" class="kicker">{esc(REGION.kicker)}</text>')
 
-    # the two-colour wordmark (SITE_WORDMARK in shared.py): "Infra" in the ink, "Radar" in the accent
-    out.append(f'<text x="62" y="262" class="title">Infra<tspan fill="{C["accent"]}">Radar</tspan></text>')
+    # the two-colour wordmark (SITE_WORDMARK in shared.py): "Africa" in the accent and "Radar"
+    # in the ink; other editions "Infra" in the ink and "Radar" in the accent
+    if REGION.key == "africa":
+        out.append(f'<text x="62" y="262" class="title"><tspan fill="{C["accent"]}">Africa</tspan>Radar</text>')
+    else:
+        out.append(f'<text x="62" y="262" class="title">Infra<tspan fill="{C["accent"]}">Radar</tspan></text>')
     out.append('<text x="64" y="400" class="sub">Announced, approved and ongoing projects across</text>')
     out.append(f'<text x="64" y="430" class="sub">{esc(REGION.land)}, from {N_DATASETS} public datasets.</text>')
 

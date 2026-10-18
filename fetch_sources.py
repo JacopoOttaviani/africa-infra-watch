@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate InfraRadar from the ten verified sources.
+Populate Africa Radar from the ten verified sources.
 
 Writes one normalised GeoJSON per layer into ./data/, all sharing a common
 `dash_status` vocabulary so a single filter works across every layer.
