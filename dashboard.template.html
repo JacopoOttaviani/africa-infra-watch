@@ -58,7 +58,7 @@
   .kicker{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 
   /* ---------- shell: the same two-column frame as the map ---------- */
-  .app{display:grid;grid-template-columns:356px 1fr;height:100vh;height:100dvh;width:100vw}
+  .app{display:grid;grid-template-columns:409px 1fr;height:100vh;height:100dvh;width:100vw}   /* the rail: 356px + 15% on desktop; the phone drawer below keeps its own width */
   .rail{position:relative;z-index:6;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:var(--paper);border-right:1px solid var(--rule);scrollbar-width:thin}
   .stage{position:relative;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--paper);scrollbar-width:thin}
   .shell{max-width:1240px;margin:0 auto;padding:0 22px 80px}
@@ -453,9 +453,9 @@
   /* the room the theme switch and the menu bar take on the top edge, which the top bar's
      pills leave free; it steps with the bar's folds (1480/1400/1180 px) */
   :root{--navw:790px}
-  @media (max-width:1480px){:root{--navw:710px}}
-  @media (max-width:1400px){:root{--navw:495px}}
-  @media (max-width:1180px){:root{--navw:205px}}
+  @media (max-width:1533px){:root{--navw:710px}}   /* fold points: the old 1480/1400/1180 plus the rail's extra 53px */
+  @media (max-width:1453px){:root{--navw:495px}}
+  @media (max-width:1233px){:root{--navw:205px}}
   .coffee{position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}
   .coffee svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}

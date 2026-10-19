@@ -95,7 +95,7 @@
   .kicker{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 
   /* ---------- shell ---------- */
-  .app{display:grid;grid-template-columns:356px 1fr;height:100vh;height:100dvh;width:100vw}
+  .app{display:grid;grid-template-columns:409px 1fr;height:100vh;height:100dvh;width:100vw}   /* the rail: 356px + 15% on desktop; the phone drawer below keeps its own width */
   .rail{position:relative;z-index:6;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:var(--paper);border-right:1px solid var(--rule);scrollbar-width:thin}
   .stage{position:relative;min-width:0;background:var(--sea);overflow:hidden}
   canvas#map{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}
@@ -245,7 +245,7 @@
      the "Deep dives" kicker goes, then the themes and the lenders fold into
      one "Deep dives" dropdown, then everything but Methodology folds into
      "Menu". The map and the dashboard (.snav.sn-app) fold sooner: the rail takes
-     356 px there, and their own controls share the top edge. */
+     409 px there, and their own controls share the top edge. */
   .snav{display:flex;align-items:center;gap:1px;height:34px;padding:0 3px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);font-family:var(--display)}
   .sn-a{display:inline-flex;align-items:center;gap:6px;height:26px;margin:0;padding:0 9px;border:0;border-radius:3px;background:none;color:var(--ink);font-family:var(--display);font-size:12px;font-weight:600;line-height:1;letter-spacing:.005em;white-space:nowrap;text-decoration:none;cursor:pointer;list-style:none;transition:background .15s,color .15s}
   .sn-a::-webkit-details-marker{display:none}
@@ -284,9 +284,9 @@
     .snav:not(.sn-app) .sn-more.cur[open]>.sn-a{background:var(--surface-2)}
   }
   /* the map and the dashboard */
-  @media (max-width:1480px){.snav.sn-app .sn-k{display:none}}
-  @media (max-width:1400px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
-  @media (max-width:1180px){
+  @media (max-width:1533px){.snav.sn-app .sn-k{display:none}}
+  @media (max-width:1453px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
+  @media (max-width:1233px){
     .snav.sn-app .sn-x,.snav.sn-app .sn-ml,.snav.sn-app .sn-meth .sn-l,.snav.sn-app .sn-contact .sn-l{display:none}
     .snav.sn-app .sn-ms{display:inline-flex}
     .snav.sn-app .sn-meth .sn-ico{display:block}
@@ -370,9 +370,9 @@
   /* the room the menu bar takes on the top edge, which the map's own controls and the
      methodology's top bar leave free; it steps with the bar's folds (1480/1400/1180 px) */
   :root{--navw:750px}
-  @media (max-width:1480px){:root{--navw:670px}}
-  @media (max-width:1400px){:root{--navw:455px}}
-  @media (max-width:1180px){:root{--navw:165px}}
+  @media (max-width:1533px){:root{--navw:670px}}   /* fold points: the old 1480/1400/1180 plus the rail's extra 53px */
+  @media (max-width:1453px){:root{--navw:455px}}
+  @media (max-width:1233px){:root{--navw:165px}}
   .coffee:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .coffee{position:relative;z-index:8;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 9px;border-radius:3px;background:#FFDD00;color:#1F1A00;border:1px solid #D9B900;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,background .22s}
   .coffee::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);transform:translateX(-130%)}

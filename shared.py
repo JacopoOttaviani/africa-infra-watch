@@ -309,7 +309,7 @@ LMENU_CSS = """
      the "Deep dives" kicker goes, then the themes and the lenders fold into
      one "Deep dives" dropdown, then everything but Methodology folds into
      "Menu". The map and the dashboard (.snav.sn-app) fold sooner: the rail takes
-     356 px there, and their own controls share the top edge. */
+     409 px there, and their own controls share the top edge. */
   .snav{display:flex;align-items:center;gap:1px;height:34px;padding:0 3px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);font-family:var(--display)}
   .sn-a{display:inline-flex;align-items:center;gap:6px;height:26px;margin:0;padding:0 9px;border:0;border-radius:3px;background:none;color:var(--ink);font-family:var(--display);font-size:12px;font-weight:600;line-height:1;letter-spacing:.005em;white-space:nowrap;text-decoration:none;cursor:pointer;list-style:none;transition:background .15s,color .15s}
   .sn-a::-webkit-details-marker{display:none}
@@ -348,9 +348,9 @@ LMENU_CSS = """
     .snav:not(.sn-app) .sn-more.cur[open]>.sn-a{background:var(--surface-2)}
   }
   /* the map and the dashboard */
-  @media (max-width:1480px){.snav.sn-app .sn-k{display:none}}
-  @media (max-width:1400px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
-  @media (max-width:1180px){
+  @media (max-width:1533px){.snav.sn-app .sn-k{display:none}}
+  @media (max-width:1453px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
+  @media (max-width:1233px){
     .snav.sn-app .sn-x,.snav.sn-app .sn-ml,.snav.sn-app .sn-meth .sn-l,.snav.sn-app .sn-contact .sn-l{display:none}
     .snav.sn-app .sn-ms{display:inline-flex}
     .snav.sn-app .sn-meth .sn-ico{display:block}
