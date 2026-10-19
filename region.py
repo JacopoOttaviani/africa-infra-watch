@@ -187,7 +187,7 @@ AFRICA = Region(
     social_win=(-18.5, 52.0, -35.5, 37.8),       # lon0, lon1, lat0, lat1 of the link-preview card
     bank={"publisher": "afdb", "code": "AfDB", "name": "African Development Bank",
           "group": "African Development Bank Group", "home": "https://www.afdb.org/",
-          "registry": "https://iatiregistry.org/publisher/afdb", "lic": "CC BY (per the IATI Registry)",
+          "registry": "https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-46002#view=main", "lic": "CC BY (per the IATI Registry)",
           "files": None, "currency": "XDR", "logo": "african-development-bank"},
     wb_files=[c.lower() for c in AFRICA_ISO] + ["289", "298"],
     eu_publishers={

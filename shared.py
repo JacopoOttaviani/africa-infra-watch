@@ -137,7 +137,7 @@ SOURCE_INFO = {
                "url": "https://globalenergymonitor.org/projects/global-integrated-power-tracker/"},
     "finance": {"name": BANK_NAME, "lic": REGION.bank["lic"], "url": REGION.bank["registry"]},
     "finance_wb": {"name": "World Bank", "lic": "CC BY 4.0",
-                   "url": "https://iatiregistry.org/publisher/worldbank"},
+                   "url": "https://d-portal.iatistandard.org/ctrack.html?publisher=44000#view=main"},
     "ground": {"name": "OpenStreetMap", "lic": "ODbL 1.0",
                "url": "https://www.openstreetmap.org/copyright"},
     "pipelines": {"name": "Global Energy Monitor", "lic": "CC BY 4.0",
@@ -154,7 +154,7 @@ SOURCE_INFO = {
     # the Commission's IATI files fall under the EU's open-data decision
     # (CC BY 4.0); the EIB's are under the Bank's own terms, attribution required
     "eu": {"name": "European Union", "lic": "CC BY 4.0 (Commission), attribution (EIB)",
-           "url": "https://iatiregistry.org/publisher/ec-intpa"},
+           "url": "https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_INTPA#view=main"},
     # the Italian Government's portal content is CC BY 3.0 IT (governo.it, Note
     # legali); the gazetteer coordinates behind the named places are OpenStreetMap's
     "mattei": {"name": "Italian Government", "lic": "CC BY 3.0 IT (gazetteer ODbL)",
@@ -1336,7 +1336,7 @@ def write_site_index(facts):
                     "  or administrative region. The pages say which for each record.")
         unrouted = f"the segments GEM lists for {REGION.name} without a route"
         borders = ""
-    near = (", [DG Neighbourhood and Enlargement](https://iatiregistry.org/publisher/ec-near)"
+    near = (", [DG Neighbourhood and Enlargement](https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_NEAR#view=main)"
             if "ec-near" in REGION.eu_publishers else "")
     (DOCS / "llms.txt").write_text(f"""# {SITE_NAME}
 
@@ -1438,8 +1438,8 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 ## Optional
 
 - [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
-- [{BANK_NAME} on the IATI Registry]({REGION.bank['registry']})
-- [European Commission, DG International Partnerships](https://iatiregistry.org/publisher/ec-intpa){near} and the [European Investment Bank](https://iatiregistry.org/publisher/eib) on the IATI Registry
+- [{BANK_NAME} on d-portal, IATI's data explorer]({REGION.bank['registry']})
+- [European Commission, DG International Partnerships](https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_INTPA#view=main){near} and the [European Investment Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-918-3#view=main) on d-portal
 {mattei_link}- [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
 - [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)
 - [Natural Earth](https://www.naturalearthdata.com/)
