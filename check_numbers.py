@@ -155,6 +155,10 @@ def main():
             check(f"{slug}.ids_bilateral is BLAT", pk["ids_bilateral"].get("series"), "BLAT")
     check("china_profile.projects == china layer", meta["china_profile"]["projects"], ch["records"])
     check("italy.mattei == mattei layer", meta["italy"]["mattei"], pm["records"])
+    if packs["italy"].get("aics"):
+        ai = packs["italy"]["aics"]
+        check("italy.aics == pack aics.n", meta["italy"].get("aics"), ai["n"])
+        check("italy aics.n == activities listed", ai["n"], len(ai["activities"]))
     check("eu_profile.layer_records == eu layer", meta["eu_profile"]["layer_records"], eu["records"])
     check("china pack aid.n == china layer", packs["china"]["aid"].get("n"), ch["records"])
     check("eu pack layer.n == eu layer", packs["eu"]["layer"].get("n"), eu["records"])

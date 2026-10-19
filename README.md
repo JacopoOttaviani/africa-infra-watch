@@ -378,8 +378,17 @@ NGOs and religious bodies), DAC2a net ODA, FDI positions (USD 29.9 bn in
 Africa at end-2024, Algeria and Egypt first) and the IDS for creditor `006`
 (43 debtors). The page says what the largest aid lines are (the 2021 HIPC
 cancellation of Somalia's debt, policy-based loans, the Climate Fund's bond
-subscriptions) and what is absent: Italy's IATI files (not read yet, the
-natural next layer), SACE's and CDP's books, GEM's extraction tracker.
+subscriptions) and what is absent: SACE's and CDP's books, GEM's extraction
+tracker. Since 2026-10-19 the pack also carries the development agency's own
+record (`aics_block`): AICS's IATI files, the ones behind its OpenAid portal,
+read through the registry (organisation `aics`, one file per African
+recipient plus the regional codes 189, 289 and 298). 1,889 activities, all
+grants, in euros, summed net of revisions; shown as a section of the profile
+with its own tables and charts, never added to the CRS dollars (they are the
+CRS rows reported under the agency's name, seen whole). Not on any map: the
+one location in the files is the agency's field office, one unnamed point per
+country. The "builds something" table uses the CRS rule with the words read
+on the title only, since the descriptions run to a page.
 
 **China**: the project-level record is AidData's, already the map's layer,
 so the profile aggregates `data/aiddata_china_finance.geojson` (by year,
@@ -1038,8 +1047,9 @@ These each cost real time to find. They are not in any of the upstream docs.
   project with a stable slug, countries, implementer, funding source, amount
   and stage, which is why it is a layer (2026-10-07) and the Global Gateway
   list is not.
-- **Italy's own IATI files** (AICS, the Foreign Ministry, CDP) were not joined
-  to the Piano Mattei layer. They carry Italy's whole cooperation portfolio,
+- **Italy's own IATI files** (AICS; the registry has no Foreign Ministry or
+  Cassa Depositi publisher, and its `cdp` is CDP Worldwide) were not joined
+  to the Piano Mattei layer, and are read only on the Italy profile (2026-10-19). They carry Italy's whole cooperation portfolio,
   not the plan's list, their activities do not name the plan, and the portal's
   projects have no IATI identifier to match on; the layer is the Government's
   list as published, and the IATI files would be an "Italian finance" layer of

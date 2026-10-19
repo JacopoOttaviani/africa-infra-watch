@@ -142,7 +142,9 @@
     "mattei": 76,
     "gem": 29,
     "pipelines": 27,
-    "cables": 8
+    "cables": 8,
+    "aics": 1889,
+    "aics_generated": "2026-10-01"
   },
   "china_profile": {
     "fetched": "2026-10-14",

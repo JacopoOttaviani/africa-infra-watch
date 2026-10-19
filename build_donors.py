@@ -32,6 +32,7 @@ ROOT = pathlib.Path(__file__).parent
 FRAME = ROOT / "donor.template.html"
 # the site's country names (fetch_donors keeps them beside the ISO table)
 from fetch_donors import NAME as NAMES
+from fetch_donors import AICS_ACTIVITY_URL, AICS_CHANNELS, AICS_STATUS, CRS_GROUPS
 # the lender's outline beside the head
 from headmap import head_wrap, lender_figure
 
@@ -565,6 +566,95 @@ def _line_items(recs, cls_from_status):
 MATTEI_SECTOR = {"education": "Education and training", "energy": "Energy", "agriculture": "Agriculture",
                  "water": "Water", "health": "Health", "ict": "Digital", "transport": "Transport", "other": "Other"}
 
+GROUP_NAME = {k: name for k, name, _ in CRS_GROUPS}
+GROUP_SHORT = {"agriculture": "agriculture", "humanitarian": "humanitarian aid", "health": "health", "education": "education",
+               "government": "governance and civil society", "social": "other social services", "environment": "the environment",
+               "water": "water and sanitation", "industry": "industry", "finance": "banking and business", "energy": "energy",
+               "transport": "transport", "comms": "communications", "budget": "budget support and food aid", "other": "unallocated aid"}
+# IATI activity status as the map reads it (fetch_sources.IATI_STATUS), for the
+# colour; the label stays the publisher's own word
+AICS_ST_CLS = {"1": "announced", "2": "under_construction", "3": "operating", "4": "operating",
+               "5": "stalled", "6": "stalled"}
+
+
+def _aics_where(x, a):
+    return _name(x["iso"]) if x["iso"] else a["regional"].get(x["region"], {}).get("name", x["region"] or "–")
+
+
+def _aics_row(x, a):
+    s = x["status"] or ""
+    status = (f'<span class="st {AICS_ST_CLS.get(s, "announced")}"><i></i>{esc(AICS_STATUS.get(s, s or "–"))}</span>'
+              + (f'<br><span class="dim">{x["start"]}–{x["end"] or ""}</span>' if x["start"] else ""))
+    paid = f'<br><span class="dim">{x["disb"] / 1e6:,.1f} paid</span>' if x["disb"] else ""
+    return [td(esc(_aics_where(x, a)), "name"), td(f"{x['commit'] / 1e6:,.1f}{paid}", "num"),
+            td(f'{esc(GROUP_NAME.get(x["group"], x["group"]))} <span class="dim m">{esc(x["code"])}</span>'),
+            td(f'{esc(x["title"])}<br><span class="dim">{esc(x["implementer"] or "implementer not stated")}</span>'),
+            td(status),
+            td(f'<a href="{esc(AICS_ACTIVITY_URL.format(id=x["id"]))}" target="_blank" rel="noopener noreferrer">OpenAid</a>')]
+
+
+def _aics(pack):
+    """The development agency's own record, from its IATI files: tokens,
+    tables and charts. Euros throughout; never added to the CRS dollars."""
+    a = pack["aics"]
+    by_id = {x["id"]: x for x in a["activities"]}
+    head = ["Recipient", "#EUR m committed", "Sector", "Title · implementer", "Status", "Link"]
+    t_large = table(f"The {len(a['largest'][:15])} largest of the agency's {a['n']:,} activities with an African recipient, "
+                    f"net commitments in EUR million (disbursed below), as its IATI files state them.",
+                    head, [_aics_row(by_id[i], a) for i in a["largest"][:15]])
+    t_hard = table(f"Agency activities that build, renovate, equip or drill something, by the CRS rule with the words read on the title: "
+                   f"{a['hard']['n']:,} of {a['n']:,} activities, EUR {a['hard']['eur'] / 1e6:,.1f} m of EUR {a['eur_commit'] / 1e6:,.1f} m "
+                   f"committed; the largest {len(a['hard']['rows'][:15])}.",
+                   head, [_aics_row(by_id[i], a) for i in a["hard"]["rows"][:15]])
+
+    ch = a["channels"]
+    eur = a["eur_commit"] or 1
+    st = a["status"]
+    ctry = sorted(a["countries"].items(), key=lambda kv: -kv[1]["eur"])
+    reg = a["regional"]
+    yrs = {int(y): v for y, v in a["years"].items()}
+    first = 2013                       # the files reach back to 1986; before 2013 a year is a handful of records
+    shown = {y: v for y, v in yrs.items() if y >= first}
+    peak = max(shown, key=lambda y: shown[y]["commit"])
+    before = [shown[y]["commit"] for y in range(peak - 5, peak) if y in shown]
+    ciheam = next((r for r in a["implementers"] if r[0].startswith("CIHEAM")), None)
+    crs_aics = next((n for name, n in pack["crs"]["agencies"] if name.lower().startswith("agenzia italiana")), 0)
+    tokens = {
+        "__AICS_N__": f"{a['n']:,}", "__AICS_EUR_BN__": f"{a['eur_commit'] / 1e9:,.2f}", "__AICS_DISB_BN__": f"{a['eur_disb'] / 1e9:,.2f}",
+        "__AICS_RUNNING__": f"{st.get('2', 0):,}", "__AICS_FINALISING__": f"{st.get('3', 0):,}",
+        "__AICS_CLOSED__": f"{st.get('4', 0):,}", "__AICS_CANCELLED__": f"{st.get('5', 0):,}",
+        "__AICS_COUNTRIES__": str(len(a["countries"])),
+        "__AICS_TOP3__": ", ".join(f"{_name(iso)} (EUR {v['eur'] / 1e6:,.0f} m)" for iso, v in ctry[:3]),
+        "__AICS_REGIONAL_N__": str(sum(v["n"] for v in reg.values())),
+        "__AICS_REGIONAL_EUR__": f"{sum(v['eur'] for v in reg.values()) / 1e6:,.0f}",
+        "__AICS_AGENCY_N__": f"{ch.get('agency', {}).get('n', 0):,}",
+        "__AICS_MULTI_PCT__": f"{100 * ch.get('multilateral', {}).get('eur', 0) / eur:.0f}",
+        "__AICS_NGO_N__": f"{ch.get('ngo', {}).get('n', 0):,}",
+        "__AICS_CIHEAM_N__": str(ciheam[1] if ciheam else 0), "__AICS_CIHEAM_EUR__": f"{(ciheam[2] if ciheam else 0) / 1e6:,.0f}",
+        "__AICS_PEAK_YEAR__": str(peak), "__AICS_PEAK_EUR__": f"{shown[peak]['commit'] / 1e6:,.0f}",
+        "__AICS_PRE_AVG__": f"{sum(before) / max(len(before), 1) / 1e6:,.0f}", "__AICS_PRE_FROM__": str(peak - 5), "__AICS_PRE_TO__": str(peak - 1),
+        "__AICS_HARD_N__": f"{a['hard']['n']:,}", "__AICS_HARD_EUR__": f"{a['hard']['eur'] / 1e6:,.0f}",
+        "__AICS_TOP_GROUPS__": (lambda g: ", ".join(g[:-1]) + " and " + g[-1])(
+            [GROUP_SHORT.get(k, k) for k, _ in sorted(a["groups"].items(), key=lambda kv: -kv[1]["eur"])[:3]]),
+        "__AICS_LOCATED__": f"{a['located']:,}", "__AICS_FILES__": str(a["files"]),
+        "__AICS_GENERATED__": fmt_date(a["generated"]), "__AICS_FETCHED__": fmt_date(a["fetched"]),
+        "__CRS_AICS_N__": f"{crs_aics:,}",
+        "__TABLE_AICS_LARGE__": t_large, "__TABLE_AICS_HARD__": t_hard,
+    }
+    charts = {
+        "c-aics-years": {"type": "columns", "rows": [{"x": str(y), "value": v["commit"], "text": f"{v['commit'] / 1e6:,.0f}"}
+                                                    for y, v in sorted(shown.items())]},
+        "c-aics-channel": {"type": "bars", "rows": [{"label": name.split(" (")[0].split(":")[0], "value": ch[k]["eur"],
+                                                     "text": f"{ch[k]['eur'] / 1e6:,.0f} ({ch[k]['n']:,})"}
+                                                    for k, name in AICS_CHANNELS if k in ch]},
+        "c-aics-sector": {"type": "bars", "rows": [{"label": GROUP_NAME.get(k, k)[:34], "value": v["eur"],
+                                                    "text": f"{v['eur'] / 1e6:,.0f} ({v['n']:,})"}
+                                                   for k, v in sorted(a["groups"].items(), key=lambda kv: -kv[1]["eur"])[:10]]},
+        "c-aics-ctry": {"type": "bars", "rows": [{"label": _name(iso), "value": v["eur"], "text": f"{v['eur'] / 1e6:,.0f}"}
+                                                 for iso, v in ctry[:12]]},
+    }
+    return tokens, charts
+
 
 def build_italy(pack):
     crs, oda, fdi, ids = pack["crs"], pack["oda"], pack["fdi"], pack["ids"]
@@ -613,9 +703,13 @@ def build_italy(pack):
         "__TABLE_MATTEI__": t_mattei, "__TABLE_ENERGY__": t_energy,
     })
 
+    aics_tokens, aics_charts = _aics(pack)
+    tokens.update(aics_tokens)
+
     charts = _oecd_charts(crs, oda, fdi)
     charts["c-mattei"] = {"type": "bars", "rows": [{"label": MATTEI_SECTOR.get(k, k), "value": v["eur"], "text": f"{v['eur'] / 1e6:,.0f} ({v['n']})"} for k, v in sectors]}
     charts["c-agency"] = _agency_chart(crs)
+    charts.update(aics_charts)
     payload = {
         "map": {"groups": [
             {"id": "g-aid", "kind": "circle", "cls": "loan", "items": _aid_bubbles(crs, ids, "Italian")},

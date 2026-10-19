@@ -334,7 +334,9 @@ CRS = ("https://sdmx.oecd.org/dcd-public/rest/data/OECD.DCD.FSD,DSD_CRS@DF_CRS,1
 # energy, water) plus the facility codes of the social sectors: the "hard" subset
 CRS_HARD_PREFIX = ("21", "22", "23", "14")
 CRS_HARD_CODES = {"12230", "11120"}   # basic health infrastructure, education facilities and training
-CRS_HARD_WORDS = re.compile(r"\bCONSTRUCT|\bRENOVAT|\bREHABILITAT|\bWELL(S)?\b|WATER (SUPPLY|SYSTEM|NETWORK)|\bROAD\b|\bBRIDGE\b|"
+# "wells" only: the singular matched every "as well as" and "well-established"
+# in the descriptions (127 of AICS's 1,886 records on that word alone)
+CRS_HARD_WORDS = re.compile(r"\bCONSTRUCT|\bRENOVAT|\bREHABILITAT|\bWELLS\b|WATER (SUPPLY|SYSTEM|NETWORK)|\bROAD\b|\bBRIDGE\b|"
                             r"\bBUILDING OF\b|\bBUILT\b|\bDRILL|\bHOSPITAL\b|\bCLINIC\b|\bIRRIGAT", re.I)
 
 # DAC purpose codes folded into broad sectors for the lender comparison
@@ -769,9 +771,172 @@ def _line_path(geom, step=3):
     return out
 
 
+# The Italian Agency for Development Cooperation (AICS) publishes every
+# initiative it manages to IATI, the same files its OpenAid portal is built
+# on: one file per recipient country (aics-et, aics-mz …) and per DAC region
+# (189 North of Sahara, 289 South of Sahara, 298 Africa regional; 998 is
+# "developing countries unspecified" and names no African recipient). As
+# read on 2026-10-19 (files generated 2026-10-01):
+#   - every activity is a grant (finance type 110) in EUR, hierarchy 1;
+#   - one activity is one funding line as AICS publishes it, so a phase or a
+#     second tranche of the same initiative (…-013017-01-0, …-01-1) is its
+#     own record, as on the portal;
+#   - transactions are commitments (2) and disbursements (3) only, and about
+#     one in eight is negative, a revision: sums are net;
+#   - the one <location> some activities carry is the agency's field office
+#     in the capital, one unnamed point per country with no exactness, so
+#     the records are placed no better than the CRS ones.
+AICS_REGIONS = {"189": "North of Sahara, regional", "289": "South of Sahara, regional", "298": "Africa, regional"}
+AICS_OWN_REF = "IT-CF-97871730584"          # the agency's tax code, as implementer
+AICS_ACTIVITY_URL = "https://openaid.aics.gov.it/en/iati-activity/{id}"   # one portal page per activity
+AICS_STATUS = {"1": "Pipeline", "2": "Implementation", "3": "Finalisation", "4": "Closed", "5": "Cancelled", "6": "Suspended"}
+AICS_CHANNELS = [("agency", "The agency itself (direct management)"), ("multilateral", "UN agencies and other multilaterals"),
+                 ("ngo", "NGOs and civil-society organisations"), ("public", "Public bodies: partner governments, Italian regions, universities"),
+                 ("other", "Other or not stated")]
+
+
+def _aics_channel(org):
+    if org is None:
+        return "other"
+    if org.get("ref") == AICS_OWN_REF:
+        return "agency"
+    t = org.get("type") or ""
+    if t == "40":
+        return "multilateral"
+    if t in ("21", "22", "23", "24", "60"):
+        return "ngo"
+    if t in ("10", "11", "15", "80"):
+        return "public"
+    return "other"
+
+
+def aics_block():
+    """AICS's own record of its projects in Africa, from its IATI files via
+    the registry: counts and euros by year, country, sector and channel, the
+    largest records, the subset that builds something (the CRS rule, words
+    on the title only), and a compact line per activity."""
+    import collections
+    import xml.etree.ElementTree as ET
+    from fetch_sources import REGISTRY
+    lang = "{http://www.w3.org/XML/1998/namespace}lang"
+
+    def narr(el, path):
+        ns = el.findall(f"{path}/narrative")
+        en = [n.text for n in ns if n.get(lang) == "en" and n.text]
+        return " ".join((en or [n.text for n in ns if n.text] or [""])[0].split())
+
+    def date(a, *types):
+        for t in types:
+            d = a.find(f"activity-date[@type='{t}']")
+            if d is not None and (d.get("iso-date") or "")[:4].isdigit():
+                return int(d.get("iso-date")[:4])
+        return None
+
+    meta = json.loads(get(f"{REGISTRY}?q=organization:aics&rows=300", timeout=90))
+    wanted = set(AFRICA.values()) | set(AICS_REGIONS)
+    pkgs = [pk for pk in meta["result"]["results"] if pk["name"].rsplit("-", 1)[-1].upper() in wanted]
+    # the registry lists a few files at http://, which the portal refuses (403)
+    urls = [r["url"].replace("http://", "https://", 1) for pk in pkgs for r in pk["resources"]]
+    acts, seen, generated, offices, other_cur = [], set(), set(), collections.defaultdict(set), 0
+    by_year = collections.defaultdict(lambda: {"commit": 0.0, "disb": 0.0})
+    for u in urls:
+        try:
+            root = ET.fromstring(get(u, timeout=300))
+        except Exception as e:                                # noqa: BLE001
+            print(f"  ! skipped {u.rsplit('/', 1)[-1]}: {e}")
+            continue
+        generated.add((root.get("generated-datetime") or "")[:10])
+        for a in root.iter("iati-activity"):
+            iid = (a.findtext("iati-identifier") or "").strip()
+            rc = [x.get("code") for x in a.findall("recipient-country") if x.get("code") in NAME]
+            rr = [x.get("code") for x in a.findall("recipient-region") if x.get("code") in AICS_REGIONS]
+            if not (rc or rr) or iid in seen:
+                continue
+            seen.add(iid)
+            commit = disb = 0.0
+            for t in a.findall("transaction"):
+                ty, v = t.find("transaction-type"), t.find("value")
+                if ty is None or v is None or ty.get("code") not in ("2", "3"):
+                    continue
+                if (v.get("currency") or a.get("default-currency")) != "EUR":
+                    other_cur += 1
+                    continue
+                eur = float(v.text or 0)
+                y = (t.find("transaction-date").get("iso-date") or "")[:4] if t.find("transaction-date") is not None else ""
+                k = "commit" if ty.get("code") == "2" else "disb"
+                if k == "commit":
+                    commit += eur
+                else:
+                    disb += eur
+                if y.isdigit():
+                    by_year[y][k] += eur
+            secs = [(s.get("code") or "", float(s.get("percentage") or 100)) for s in a.findall("sector")
+                    if (s.get("vocabulary") or "1") == "1"]
+            code = max(secs, key=lambda s: s[1])[0] if secs else ""
+            imp = next((p for p in a.findall("participating-org") if p.get("role") == "4"), None)
+            st = a.find("activity-status")
+            title = narr(a, "title")
+            iso = rc[0] if rc else None
+            for loc in a.findall("location"):
+                pos = loc.findtext("point/pos")
+                if pos:
+                    offices[iso or rr[0]].add(pos.strip())
+            acts.append({
+                "id": iid, "title": title, "iso": iso, "region": None if rc else rr[0],
+                "status": st.get("code") if st is not None else None,
+                "start": date(a, "2", "1"), "end": date(a, "4", "3"),
+                "code": code, "sectors": [c for c, _ in secs], "group": crs_group(code),
+                # the CRS rule, with the words read on the title only: the agency's
+                # descriptions run to a page and mention irrigation, a clinic or a
+                # rehabilitation in passing (a decentralisation programme matched)
+                "hard": code[:2] in CRS_HARD_PREFIX or code in CRS_HARD_CODES or CRS_HARD_WORDS.search(title) is not None,
+                "commit": round(commit, 2), "disb": round(disb, 2),
+                "implementer": " ".join((imp.findtext("narrative") or "").split()) if imp is not None else None,
+                "channel": _aics_channel(imp), "located": any(loc.findtext("point/pos") for loc in a.findall("location")),
+            })
+    if other_cur:
+        print(f"   ! {other_cur} AICS transactions not in EUR left out")
+
+    def tally(key):
+        out = collections.defaultdict(lambda: {"n": 0, "eur": 0.0})
+        for a in acts:
+            d = out[key(a)]
+            d["n"] += 1
+            d["eur"] += a["commit"]
+        return {k: {"n": v["n"], "eur": round(v["eur"], 2)} for k, v in out.items()}
+
+    hard = [a for a in acts if a["hard"]]
+    impl = tally(lambda a: a["implementer"] or "")
+    block = {
+        "source": "Italian Agency for Development Cooperation (AICS), IATI activity files behind the OpenAid portal",
+        "url": "https://openaid.aics.gov.it/en", "registry": f"{REGISTRY}?q=organization:aics&rows=300",
+        "activity_url": AICS_ACTIVITY_URL,
+        "licence": "CC BY (per the IATI Registry)", "files": len(urls), "generated": max(generated - {""}, default=None),
+        "fetched": today(),
+        "n": len(acts), "eur_commit": round(sum(a["commit"] for a in acts), 2), "eur_disb": round(sum(a["disb"] for a in acts), 2),
+        "status": dict(collections.Counter(a["status"] for a in acts)),
+        "years": {y: {"commit": round(v["commit"], 2), "disb": round(v["disb"], 2)} for y, v in sorted(by_year.items())},
+        "countries": {k: dict(v, name=NAME[k]) for k, v in tally(lambda a: a["iso"]).items() if k},
+        "regional": {k: dict(v, name=AICS_REGIONS[k]) for k, v in tally(lambda a: a["region"]).items() if k},
+        "groups": tally(lambda a: a["group"]),
+        "channels": tally(lambda a: a["channel"]),
+        "implementers": sorted(([k, v["n"], v["eur"]] for k, v in impl.items() if k), key=lambda r: -r[2])[:15],
+        "located": sum(1 for a in acts if a["located"]),
+        "points_per_place": max((len(v) for v in offices.values()), default=0),
+        "largest": [a["id"] for a in sorted(acts, key=lambda a: -a["commit"])[:20]],
+        "hard": {"n": len(hard), "eur": round(sum(a["commit"] for a in hard), 2),
+                 "rows": [a["id"] for a in sorted(hard, key=lambda a: -a["commit"])[:20]]},
+        "activities": sorted(acts, key=lambda a: (a["iso"] or "~" + (a["region"] or ""), a["id"])),
+    }
+    print(f"   AICS: {len(acts):,} African activities in {len(urls)} files, EUR {block['eur_commit'] / 1e6:,.0f} m committed, "
+          f"{block['eur_disb'] / 1e6:,.0f} m disbursed; {len(hard)} that build something; "
+          f"{block['located']} with a point, at most {block['points_per_place']} distinct point(s) per country")
+    return block
+
+
 def fetch_italy():
     print("italy   … OECD CRS microdata (donor ITA, one year at a time), DAC2a net ODA, FDI positions; "
-          "World Bank IDS counterpart 006; Piano Mattei, GEM, pipelines and cables from the site's own layers")
+          "World Bank IDS counterpart 006; AICS IATI files (OpenAid); Piano Mattei, GEM, pipelines and cables from the site's own layers")
     y0, y1 = 2018, 2024
     acts = crs_activities("ITA", y0, y1, per_year=True)
     crs = crs_block(acts, y0, y1, "Italy")
@@ -823,11 +988,14 @@ def fetch_italy():
                        "parts": _line_path(f["geometry"], step=4)})
     print(f"   cables: {len(cables)} with Sparkle among the owners")
 
+    aics = aics_block()
+
     pack = {"slug": "italy", "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
-            "ids_bilateral": ids_pack("006", "Italy", since=2000, kind="BLAT"), "mattei": mattei, "gem": gem, "pipelines": pipes, "cables": cables}
+            "ids_bilateral": ids_pack("006", "Italy", since=2000, kind="BLAT"), "mattei": mattei, "gem": gem, "pipelines": pipes, "cables": cables,
+            "aics": aics}
     update_meta("italy", fetched=today(), crs_from=y0, crs_to=y1, crs_activities=len(acts),
                 ids_updated=ids["updated"], data_to=ids["data_to"], mattei=len(mattei), gem=len(gem),
-                pipelines=len(pipes), cables=len(cables))
+                pipelines=len(pipes), cables=len(cables), aics=aics["n"], aics_generated=aics["generated"])
     return pack
 
 
