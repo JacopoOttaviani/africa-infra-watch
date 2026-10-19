@@ -1,15 +1,16 @@
-# Africa Infra Watch
+# AfricaWatch
 
 An interactive map and dashboard of announced, approved and ongoing infrastructure
 in Africa, for investors, researchers and journalists.
 
 The project was called Africa Infra Watch, then for a few days in October 2026
-Africa Project Atlas, InfraRadar and Africa Radar, and went back to Africa Infra
-Watch on 19 October 2026. The repository and the live site's address kept the
-slug `africa-infra-watch` throughout, so existing links keep working. The name
+Africa Project Atlas, InfraRadar and Africa Radar, went back to Africa Infra
+Watch and became AfricaWatch on 19 October 2026. The repository and the live
+site's address kept the slug `africa-infra-watch` throughout, so existing links
+keep working. The name
 shown on every page comes from `SITE_NAME` in `shared.py`; the headers, the
 footer and the map's loading box print it as a two-colour wordmark,
-`SITE_WORDMARK` ("Africa" in the accent, "Infra Watch" in the ink), through the
+`SITE_WORDMARK` (one word: "Africa" in the accent, "Watch" in the ink), through the
 `__SITE_WORDMARK__` marker. Other editions (see "Editions" below) keep the
 umbrella name InfraRadar.
 

@@ -1,5 +1,5 @@
 {
- "about": "The LAPSSET Corridor register of Africa Infra Watch: the parts of Kenya's Lamu Port–South Sudan–Ethiopia Transport corridor, with their status and every financing line, each with its source. Kept by hand; see build_lapsset.py for the rules.",
+ "about": "The LAPSSET Corridor register of AfricaWatch: the parts of Kenya's Lamu Port–South Sudan–Ethiopia Transport corridor, with their status and every financing line, each with its source. Kept by hand; see build_lapsset.py for the rules.",
  "compiled": "2026-10-12",
  "fx": {
   "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF?locations=KE",

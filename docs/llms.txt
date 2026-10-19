@@ -1,4 +1,4 @@
-# Africa Infra Watch
+# AfricaWatch
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
 > Africa, for investors, researchers and journalists. Compiled from ten public datasets:
@@ -10,11 +10,11 @@ Site: https://jacopoottaviani.com/africa-infra-watch/
 
 ## Pages
 
-- [Africa Infra Watch, map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
+- [AfricaWatch, map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the eight layers (finance holds two lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
-- [Africa Infra Watch, dashboard view](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
+- [AfricaWatch, dashboard view](https://jacopoottaviani.com/africa-infra-watch/dashboard.html): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
 - [Russia in Africa's infrastructure](https://jacopoottaviani.com/africa-infra-watch/russia/): What the open data holds on Russian money in African infrastructure: sovereign debt owed to the Russian Federation by every African government (World Bank International Debt Statistics), the energy assets with a Russian vendor or shareholder (Global Energy Monitor), Rosatom's nuclear agreements and the Bank of Russia's investment stocks, country by country. Data: https://jacopoottaviani.com/africa-infra-watch/data/donors/russia.json
 - [Turkey in Africa's infrastructure](https://jacopoottaviani.com/africa-infra-watch/turkey/): What the open data holds on Turkish money in Africa: Turkey's aid activities country by country from the OECD's Creditor Reporting System, net ODA by recipient, Turkish direct-investment stock by African country, sovereign debt owed to Turkey (World Bank International Debt Statistics), the power units with a Turkish owner in Global Energy Monitor's tracker, and the works that Türk Eximbank, Summa, Yapı Merkezi and Karpowership place on the map themselves. Data: https://jacopoottaviani.com/africa-infra-watch/data/donors/turkey.json
@@ -39,13 +39,13 @@ https://jacopoottaviani.com/africa-infra-watch/data/map.json. Fetch dates, relea
 https://jacopoottaviani.com/africa-infra-watch/data/meta.json. The raw layers as GeoJSON:
 
 - [Global Energy Monitor](https://globalenergymonitor.org/projects/global-integrated-power-tracker/): Global Integrated Power Tracker, release 2026-09. 4,295 records, data as of 24 Sep 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_power_assets.geojson
-- [African Development Bank](https://iatiregistry.org/publisher/afdb): IATI 2.03 activity files, 57 datasets (country, multinational and non-sovereign files). 1,683 records, data as of 14 Oct 2026, licence CC BY (per the IATI Registry). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson
-- [World Bank](https://iatiregistry.org/publisher/worldbank): IATI 2.03 activity files, 52 African country and regional datasets. 890 records, data as of 14 Oct 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson
+- [African Development Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-46002#view=main): IATI 2.03 activity files, 57 datasets (country, multinational and non-sovereign files). 1,683 records, data as of 14 Oct 2026, licence CC BY (per the IATI Registry). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson
+- [World Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=44000#view=main): IATI 2.03 activity files, 52 African country and regional datasets. 890 records, data as of 14 Oct 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson
 - [OpenStreetMap](https://www.openstreetmap.org/copyright): Overpass API, significant road/rail/air classes. 3,700 records, data as of 14 Oct 2026, licence ODbL 1.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson
 - [Global Energy Monitor](https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/): Global Gas and Global Oil Infrastructure Trackers, map files GGIT 2025-11 · GOIT 2026-07. 323 records, data as of 19 Mar 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson
 - [TeleGeography](https://www.submarinecablemap.com/): Submarine Cable Map, cables with an African landing point. 81 records, data as of 14 Oct 2026, licence © TeleGeography (map CC BY-SA 4.0). Not offered as a download (the publisher's terms): see https://www.submarinecablemap.com/
 - [AidData](https://www.aiddata.org/data/chinas-global-loans-and-grants-dataset-1-0): CLG-Global 1.0 · locations from GCDF 3.0 and GeoGCDF v3.0.1, official commitments to infrastructure 2000–2023, footprints from OpenStreetMap. 2,487 records, data as of Nov 2025 · to 2023, licence ODC-By 1.0 (footprints ODbL). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/aiddata_china_finance.geojson
-- [European Union](https://iatiregistry.org/publisher/ec-intpa): IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, 61 African country and regional datasets) and the European Investment Bank's global file (IATI 2.02). 2,008 records, data as of 30 Jan 2025, licence CC BY 4.0 (Commission), attribution (EIB). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_eu_finance.geojson
+- [European Union](https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_INTPA#view=main): IATI 2.03 activity files of the European Commission (DG INTPA and DG NEAR, 61 African country and regional datasets) and the European Investment Bank's global file (IATI 2.02). 2,008 records, data as of 30 Jan 2025, licence CC BY 4.0 (Commission), attribution (EIB). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_eu_finance.geojson
 - [Italian Government](https://www.governo.it/en/piano-mattei/progetti/): Piano Mattei per l'Africa project portal (Presidency of the Council of Ministers), one page per project, read in its Italian and English versions. 76 records, data as of 14 Oct 2026, licence CC BY 3.0 IT (gazetteer ODbL). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/piano_mattei.geojson
 
 Country outlines are Natural Earth (1:10m on the map, 1:110m on the dashboard). The
@@ -147,8 +147,8 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 ## Optional
 
 - [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
-- [African Development Bank on the IATI Registry](https://iatiregistry.org/publisher/afdb)
-- [European Commission, DG International Partnerships](https://iatiregistry.org/publisher/ec-intpa), [DG Neighbourhood and Enlargement](https://iatiregistry.org/publisher/ec-near) and the [European Investment Bank](https://iatiregistry.org/publisher/eib) on the IATI Registry
+- [African Development Bank on d-portal, IATI's data explorer](https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-46002#view=main)
+- [European Commission, DG International Partnerships](https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_INTPA#view=main), [DG Neighbourhood and Enlargement](https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_NEAR#view=main) and the [European Investment Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-918-3#view=main) on d-portal
 - [Piano Mattei per l'Africa, project portal of the Italian Government](https://www.governo.it/en/piano-mattei/progetti/)
 - [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
 - [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)

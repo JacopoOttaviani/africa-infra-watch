@@ -82,9 +82,9 @@ AUTHOR_URL = os.environ.get("AIW_AUTHOR_URL", "https://www.linkedin.com/in/jacop
 WEB_URL = os.environ.get("AIW_WEB_URL", "https://jacopoottaviani.com/")
 
 # What the site is called in search results, link previews and structured data:
-# Africa Infra Watch for the Africa site, as its address has always said; other
-# editions keep the umbrella name.
-SITE_NAME = "Africa Infra Watch" if REGION.key == "africa" else "InfraRadar"
+# AfricaWatch for the Africa site (since 19 October 2026; the address keeps the
+# africa-infra-watch slug); other editions keep the umbrella name.
+SITE_NAME = "AfricaWatch" if REGION.key == "africa" else "InfraRadar"
 # The edition's regional development bank, AfDB or ADB: short name, full name.
 BANK = REGION.bank["code"]
 BANK_NAME = REGION.bank["name"]
@@ -97,11 +97,11 @@ def an(word):
     """"an African", "a Southeast Asian", "an AfDB-financed": the article a word takes."""
     return ("an " if word[:1].lower() in "aeiou" else "a ") + word
 # The name beside the logo, as a two-colour wordmark, for the headers, the
-# footer and the loading box: "Africa" in the accent (the mark's colour; .wm-r
-# lives in LMENU_CSS), "Infra Watch" in the surrounding ink. Other editions
+# footer and the loading box, one word: "Africa" in the accent (the mark's colour;
+# .wm-r lives in LMENU_CSS), "Watch" in the surrounding ink. Other editions
 # print "InfraRadar", "Radar" in the accent. Templates print it through
 # __SITE_WORDMARK__.
-SITE_WORDMARK = ('<span class="wm-r">Africa</span> Infra Watch' if REGION.key == "africa"
+SITE_WORDMARK = ('<span class="wm-r">Africa</span>Watch' if REGION.key == "africa"
                  else 'Infra<span class="wm-r">Radar</span>')
 AUTHOR_NAME = "Jacopo Ottaviani"
 # The link-preview image, docs/social.png, drawn by build_social.py.
