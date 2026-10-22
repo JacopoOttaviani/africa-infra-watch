@@ -80,6 +80,8 @@ SITE_URL = ROOT_SITE_URL.rstrip("/") + "/" + REGION.url_slug
 COFFEE_URL = os.environ.get("AIW_COFFEE_URL", "https://ko-fi.com/jacopoottaviani")
 AUTHOR_URL = os.environ.get("AIW_AUTHOR_URL", "https://www.linkedin.com/in/jacopo-ottaviani/")
 WEB_URL = os.environ.get("AIW_WEB_URL", "https://jacopoottaviani.com/")
+# a WhatsApp username link opens a chat without showing the phone number
+WHATSAPP_URL = os.environ.get("AIW_WHATSAPP_URL", "https://wa.me/jacopoottaviani")
 
 # What the site is called in search results, link previews and structured data:
 # AfricaWatch for the Africa site (since 19 October 2026; the address keeps the
@@ -337,6 +339,14 @@ LMENU_CSS = """
   .sn-a.sn-contact:hover,.sn-a.sn-contact:focus-visible{background:#0B74DB;color:#fff}
   .sn-a.sn-contact:hover::before,.sn-a.sn-contact:focus-visible::before{animation:lishine .75s ease-out forwards}
   .sn-a.sn-contact:hover svg,.sn-a.sn-contact:focus-visible svg{animation:liflip .6s cubic-bezier(.34,1.56,.64,1)}
+  /* the map's coffee cup after it: the coffee button's yellow, icon only, steam always on; hover
+     runs that button's wiggle and steam (cwiggle, csteam, defined in each template) */
+  .sn-a.sn-coffee{margin-left:3px;padding:0 6px;background:#FFDD00;color:#1F1A00}
+  .sn-a.sn-coffee svg{width:16px;height:16px;overflow:visible}
+  .sn-a.sn-coffee .cup{transform-box:fill-box;transform-origin:50% 100%}
+  .sn-a.sn-coffee:hover,.sn-a.sn-coffee:focus-visible{background:#FFE733;color:#1F1A00}
+  .sn-a.sn-coffee:hover .cup,.sn-a.sn-coffee:focus-visible .cup{animation:cwiggle .55s ease}
+  .sn-a.sn-coffee:hover .steam,.sn-a.sn-coffee:focus-visible .steam{animation:csteam 1.1s ease-in-out infinite}
   .sn-more,.sn-ico,.lm-site{display:none}
   .sn-ms{display:none;align-items:center;gap:6px}
   /* the reading pages: their header is capped at the column's 1140 px, too narrow for the
@@ -389,7 +399,7 @@ LMENU_CSS = """
   @media (max-width:600px){
     .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
   }
-  @media (prefers-reduced-motion:reduce){.sn-a,.sn-dd .lm-car{transition:none}.sn-a.sn-contact::before,.sn-a.sn-contact svg{animation:none!important}}
+  @media (prefers-reduced-motion:reduce){.sn-a,.sn-dd .lm-car{transition:none}.sn-a.sn-contact::before,.sn-a.sn-contact svg,.sn-a.sn-coffee .cup,.sn-a.sn-coffee .steam{animation:none!important}}
 
   /* ---------- the footer (shared.site_footer) ----------
      every page in four columns: the site, Explore, the theme deep dives, the
@@ -476,7 +486,8 @@ NAV_SCRIPT = (
 def site_nav(current=None):
     """The menu bar on every page: Map, Dashboard, then the deep dives (the
     themes by name, the lender profiles in a dropdown), then Methodology and
-    Contact me (the author's LinkedIn). As the window narrows the themes and
+    Contact me (the author's LinkedIn), and on the map a coffee cup after
+    it. As the window narrows the themes and
     lenders fold into one "Deep dives" dropdown, then everything but
     Methodology and Contact me into "Menu" (LMENU_CSS). The
     dropdowns are <details>, so they open without scripts; NAV_SCRIPT only
@@ -570,6 +581,11 @@ def site_nav(current=None):
     bar.append(f'<a class="sn-a sn-contact" href="{AUTHOR_URL}" target="_blank" rel="noopener noreferrer" '
                f'title="Contact {esc(AUTHOR_NAME)} on LinkedIn (opens in a new tab)" '
                f'aria-label="Contact me on LinkedIn (opens in a new tab)">{LINKEDIN_ICON}<span class="sn-l">Contact me</span></a>')
+    if current == "map":
+        # the home's support cup sits in the bar beside Contact me; the other pages keep their own coffee button
+        bar.append(f'<a class="sn-a sn-coffee" href="{COFFEE_URL}" target="_blank" rel="noopener noreferrer" '
+                   'title="Buy me a coffee: support this project" '
+                   f'aria-label="Buy me a coffee (opens in a new tab)">{COFFEE_ICON}</a>')
     return (f'<nav class="snav{" sn-app" if app else ""}" aria-label="Site">' + "".join(bar) + "</nav>" + NAV_SCRIPT)
 
 
@@ -829,6 +845,7 @@ def brand_assets(page, donor=None, here=None):
                 .replace("/*__SOURCE_LOGOS__*/{}", json.dumps(SOURCE_LOGOS, ensure_ascii=False))
                 .replace("__HOME_URL__", SITE_URL)
                 .replace("__COFFEE_URL__", COFFEE_URL)
+                .replace("__WHATSAPP_URL__", WHATSAPP_URL)
                 .replace("__AUTHOR_URL__", AUTHOR_URL)
                 .replace("__WEB_URL__", WEB_URL)
                 .replace("__SITE_WORDMARK__", SITE_WORDMARK)
