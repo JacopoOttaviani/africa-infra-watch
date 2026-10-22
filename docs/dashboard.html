@@ -101,9 +101,15 @@
   .brand .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
   h1{font-size:23px;font-weight:800;letter-spacing:-.024em;line-height:1.08}
   .titlerow{display:flex;align-items:center;gap:11px}
-  .titlerow .mark{flex:none;font-size:38px;color:var(--accent);display:block}
-  .titlerow .home{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none;border-radius:4px}
-  .titlerow .home:hover .mark{opacity:.75}
+  /* the rail's mark drops in on load, then floats; hover flips it like the LinkedIn buttons
+     (mkin, mkidle, mkflip). The hover list repeats the first two so only mkflip starts:
+     a list without them would replay mkin when the pointer leaves */
+  .titlerow .mark{flex:none;font-size:58px;color:var(--accent);display:block;transform-origin:50% 55%;animation:mkin .9s cubic-bezier(.34,1.56,.64,1) both,mkidle 7s ease-in-out 1s infinite}
+  .titlerow .home{display:flex;align-items:center;gap:14px;color:inherit;text-decoration:none;border-radius:4px}
+  .titlerow .home:hover .mark,.titlerow .home:focus-visible .mark{animation:mkin .9s cubic-bezier(.34,1.56,.64,1) both,mkidle 7s ease-in-out 1s infinite,mkflip .8s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes mkin{from{opacity:0;transform:translateY(-10px) scale(.7) rotate(-20deg)}to{opacity:1;transform:none}}
+  @keyframes mkidle{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-4deg)}}
+  @keyframes mkflip{from{transform:perspective(320px) rotateY(0)}to{transform:perspective(320px) rotateY(360deg)}}
   .titlerow .home:hover h1{color:var(--accent)}
   .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .made{margin:-2px 0 0;font-size:13.2px;line-height:1.5;color:var(--ink-3)}   /* 11.5px + 15% */
