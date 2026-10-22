@@ -116,7 +116,10 @@
   @keyframes mkin{from{opacity:0;transform:translateY(-10px) scale(.7) rotate(-20deg)}to{opacity:1;transform:none}}
   @keyframes mkidle{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-4deg)}}
   @keyframes mkflip{from{transform:perspective(320px) rotateY(0)}to{transform:perspective(320px) rotateY(360deg)}}
-  .titlerow .home:hover h1{color:var(--accent)}
+  /* hover swaps the wordmark's two colours: the ink half turns accent, the accent half ink */
+  .titlerow h1,.titlerow .wm-r{transition:color .2s}
+  .titlerow .home:hover h1,.titlerow .home:focus-visible h1{color:var(--accent)}
+  .titlerow .home:hover .wm-r,.titlerow .home:focus-visible .wm-r{color:var(--ink)}
   .titlerow .home:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .made{margin:-2px 0 0;font-size:13.2px;line-height:1.5;color:var(--ink-3)}   /* 11.5px + 15% */
   .made .heart{color:var(--accent)}
