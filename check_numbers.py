@@ -170,6 +170,13 @@ def main():
         check("france pack layer: office + own points == n",
               (fl["left_out"].get("at_office") or 0) + (fl["left_out"].get("place_given") or 0), fl["n"])
         check("france pack layer.fetched == meta.finance_afd.fetched", fl.get("fetched"), meta["finance_afd"]["fetched"])
+    if packs["france"].get("implemented"):
+        im = packs["france"]["implemented"]
+        named = [f["properties"] for f in feats["iati_eu_finance"]
+                 if re.search(r"\bExpertise\s+France\b", str(f["properties"].get("implementers") or ""), re.I)]
+        check("france pack implemented.n == EU layer records naming Expertise France", im["n"], len(named))
+        check("france pack implemented.eur == their counted EUR m", im["eur"],
+              round(sum(p.get("commitment") or 0 for p in named) / 1e6, 1))
 
     cmp_path = DOCS / "data" / "compare.json"
     if cmp_path.exists():

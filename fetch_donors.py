@@ -1339,7 +1339,9 @@ PROFILES = {
                "gem": FRENCH_OWNER, "cables": FRENCH_OWNER,
                # the map's own AFD records (the finance layer's crosses), read as /eu/ reads the EU layer
                "layer": ("iati_afd_finance.geojson", "Agence française de développement financings from its IATI files",
-                         "commitment_year")},
+                         "commitment_year"),
+               # Expertise France publishes no records of its own: the EU layer's contracts it carries out
+               "implementer": ("iati_eu_finance.geojson", r"\bExpertise\s+France\b", "Expertise France")},
     "spain": {"label": "Spain", "adj": "Spanish", "donors": ["ESP"], "per_year": True, "cp": "050", "since": 2000,
               "gem": SPANISH_OWNER, "cables": SPANISH_OWNER},
     "japan": {"label": "Japan", "adj": "Japanese", "donors": ["JPN"], "per_year": True, "cp": "701", "since": 2000,
@@ -1373,6 +1375,52 @@ def afd_layer_block(spec):
     return block
 
 
+# the DAC's African regions, by code, as the EU layer's regional records carry them
+DAC_REGIONS = {**AICS_REGIONS, "1027": "Eastern Africa, regional", "1028": "Middle Africa, regional",
+               "1029": "Southern Africa, regional", "1030": "Western Africa, regional"}
+
+
+def implementer_block(spec):
+    """The records of one of the map's layers that a lender's own agency
+    carries out for another funder: the EU layer's contracts that name
+    Expertise France as implementer. The money stays the funder's, counted
+    in its own layer and profile, and is never added to the lender's."""
+    import collections
+    from shared import EUR_USD
+    path, pattern, label = spec
+    pat = re.compile(pattern, re.I)
+    recs = []
+    for f in json.loads((DATA / path).read_text())["features"]:
+        p = f["properties"]
+        if not pat.search(str(p.get("implementers") or "")):
+            continue
+        isos = p.get("countries") or ([p["country"]] if p.get("country") else [])
+        recs.append({"id": p.get("iati_id"), "name": (p.get("name") or "").strip(), "parent": (p.get("parent_name") or "").strip(),
+                     "isos": isos, "where": ", ".join(NAME.get(i, i) for i in isos) if isos
+                     else DAC_REGIONS.get(str(p.get("region")), "regional"),
+                     "lender": p.get("lender"), "kind": p.get("kind"), "instrument": p.get("instrument"),
+                     "status": p.get("dash_status"), "sector": _dac_bucket(p.get("sector_codes")),
+                     "year": int(p["start_year"]) if p.get("start_year") else None,
+                     "end_year": int(p["end_year"]) if p.get("end_year") else None,
+                     "eur": p.get("commitment") or 0, "eur_published": p.get("commitment_published") or p.get("commitment") or 0,
+                     "disbursed": p.get("disbursed") or 0, "note": p.get("counted_note"), "url": p.get("project_url") or ""})
+    recs.sort(key=lambda r: -r["eur"])
+    years = [r["year"] for r in recs if r["year"]]
+    block = {"implementer": label, "source": f"the map's EU finance layer, records naming {label} as implementer",
+             "n": len(recs), "eur": round(sum(r["eur"] for r in recs) / 1e6, 1),
+             "eur_published": round(sum(r["eur_published"] for r in recs) / 1e6, 1),
+             "usd": round(sum(r["eur"] for r in recs) * EUR_USD / 1e6, 1),
+             "disbursed_eur": round(sum(r["disbursed"] for r in recs) / 1e6, 1),
+             "from": min(years) if years else None, "to": max(years) if years else None,
+             "funders": dict(collections.Counter(r["lender"] for r in recs)),
+             "status": dict(collections.Counter(r["status"] for r in recs)),
+             "regional": sum(1 for r in recs if not r["isos"]),
+             "countries": sorted({i for r in recs for i in r["isos"]}), "records": recs}
+    print(f"   {label} as implementer: {block['n']} records in {path}, EUR {block['eur']:,.1f} m counted "
+          f"(EUR {block['eur_published']:,.1f} m as published), funders {block['funders']}")
+    return block
+
+
 def fetch_profile(slug):
     spec = PROFILES[slug]
     label, donors = spec["label"], spec["donors"]
@@ -1394,6 +1442,8 @@ def fetch_profile(slug):
             "gem": gem_owned(spec["gem"]), "pipelines": _pipes_owned(spec["gem"]), "cables": _cables_owned(spec["cables"])}
     if spec.get("layer"):
         pack["layer"] = afd_layer_block(spec["layer"])
+    if spec.get("implementer"):
+        pack["implemented"] = implementer_block(spec["implementer"])
     if spec.get("funds"):
         pack["ids_funds"] = ids_pack(spec["funds"], "the Gulf-based development funds", since=spec["since"], kind="DPPG")
         print(f"   IDS funds: {len(pack['ids_funds']['countries'])} debtors, stock {pack['ids_funds']['continent'].get(str(ids['data_to']), 0) / 1e9:,.2f} bn")

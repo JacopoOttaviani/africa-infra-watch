@@ -1002,6 +1002,11 @@ def build_eu(pack):
     return tokens, payload
 
 
+def _sec(s):
+    """A sector bucket as a label: ICT in capitals, the rest capitalised."""
+    return "ICT" if s == "ict" else (s or "other").capitalize()
+
+
 def _afd(layer):
     """The France profile's AFD part, from the map's own AFD records: tokens,
     the table of the largest financings, the charts and the map's crosses."""
@@ -1016,7 +1021,7 @@ def _afd(layer):
                      td(f"{r['eur'] / 1e6:,.1f}", "num"),
                      td(esc(r["name"].strip()) + f'<br><span class="dim">{esc(r["kind"] or "")}'
                         + (" · AFD's own point" if r["precision"] == "given" else " · drawn at the country's centre") + "</span>"),
-                     td(esc(r["sector"].capitalize())), td(st(r["status"])),
+                     td(esc(_sec(r["sector"]))), td(st(r["status"])),
                      td(f'<a href="https://d-portal.org/ctrack.html?aid={esc(r["id"])}" target="_blank" rel="noopener noreferrer">IATI</a>')])
     t_afd = table(f"The {len(rows)} largest AFD financings in the map's finance layer, by the year of their first commitment, in EUR million "
                   f"as AFD publishes them; the dollar figures elsewhere on this page convert at {EUR_NOTE}. One row is one financing, a loan or a grant; "
@@ -1043,7 +1048,7 @@ def _afd(layer):
     }
     charts = {
         "c-afd-year": {"type": "columns", "rows": [{"x": y, "value": v["usd"] * 1e6, "text": f"{v['usd']:,.0f}"} for y, v in layer["years"].items()]},
-        "c-afd-sect": {"type": "bars", "rows": [{"label": x["sector"].capitalize(), "value": x["usd"] * 1e6, "text": f"{x['usd']:,.0f} ({x['n']})"} for x in layer["sectors"][:8]]},
+        "c-afd-sect": {"type": "bars", "rows": [{"label": _sec(x["sector"]), "value": x["usd"] * 1e6, "text": f"{x['usd']:,.0f} ({x['n']})"} for x in layer["sectors"][:8]]},
         "c-afd-ctry": {"type": "bars", "rows": [{"label": v["name"], "value": v["usd"] * 1e6, "text": f"{v['usd']:,.0f} ({v['n']})"} for _, v in lc[:12]]},
     }
     crosses = [{**_pt(r), "cls": r["status"],
@@ -1052,6 +1057,32 @@ def _afd(layer):
                        f"<br>{'the point AFD gives' if r['precision'] == 'given' else 'AFD places it at its office; drawn at the country’s centre'}"}
                for r in layer["points"] if r["lon"] is not None]
     return tokens, charts, {"id": "g-afd", "kind": "cross", "items": crosses}
+
+
+def _implemented(block):
+    """The France profile's table of the EU layer's contracts that Expertise
+    France carries out: the Commission's money, shown, never summed with France's."""
+    # the Commission's files spell the apostrophe as an inverted question mark (l¿entrepreneuriat)
+    clean = lambda s: (s or "").replace("¿", "’").strip()
+    pct = lambda a, b: f"{100 * a / b:.0f}" if b else "0"
+    rows = []
+    for r in block["records"]:
+        money = f"{r['eur'] / 1e6:,.1f}" + (f'<br><span class="dim">{r["eur_published"] / 1e6:,.1f} as published</span>'
+                                            if abs(r["eur_published"] - r["eur"]) > 0.5 else "")
+        rows.append([td(r["year"] or "–", "num"), td(esc(r["where"]), "name"), td(money, "num"),
+                     td(esc(clean(r["name"])) + (f'<br><span class="dim">{esc(clean(r["parent"]))}</span>' if r["parent"] else "")),
+                     td(esc(_sec(r["sector"]))), td(st(r["status"])),
+                     td(f'<a href="https://d-portal.org/ctrack.html?aid={esc(r["id"])}" target="_blank" rel="noopener noreferrer">IATI</a>')])
+    table_html = table(f"European Commission contracts for infrastructure in Africa that name {block['implementer']} as implementer, from the map's "
+                       "EU finance layer, by start year, in EUR million: the infrastructure share the layer counts, with the contract's whole "
+                       "amount beneath where it differs. The Commission's money, not France's.",
+                       ["#Start", "Where", "#EUR m", "Contract · the Commission's programme", "Sector", "Status", "Link"], rows)
+    return {"__EF_N__": f"{block['n']:,}", "__EF_EUR_M__": f"{block['eur']:,.0f}", "__EF_EUR_PUB_M__": f"{block['eur_published']:,.0f}",
+            "__EF_DISB_PCT__": pct(block["disbursed_eur"], block["eur"]),
+            "__EF_COUNTRIES__": str(len(block["countries"])), "__EF_REGIONAL__": str(block["regional"]),
+            "__EF_FROM__": str(block["from"] or "–"), "__EF_TO__": str(block["to"] or "–"),
+            "__EF_RECENT__": str(sum(1 for r in block["records"] if (r["year"] or 0) >= 2023)),
+            "__TABLE_EF__": table_html}
 
 
 def build_france(pack):
@@ -1063,6 +1094,8 @@ def build_france(pack):
         tokens.update(t)
         payload["charts"].update(charts)
         payload["map"]["groups"].append(group)
+    if pack.get("implemented"):
+        tokens.update(_implemented(pack["implemented"]))
     return tokens, payload
 
 

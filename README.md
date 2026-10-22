@@ -486,7 +486,11 @@ the EU layer, with the loan and grant split (`kind`, `kind_usd`, from the IATI
 finance-type), commitments by the year of the first commitment transaction
 (`commitment_year`), the two placement tiers and what the fetch left out; the
 page shows it as its own section, map crosses and three charts, and never
-adds it to the CRS dollars. The OECD's
+adds it to the CRS dollars. The spec's `"implementer"` adds
+`implementer_block`: Expertise France, which publishes no records of its
+own, is named as implementer on European Commission contracts in the map's
+EU layer, and the pack lists those contracts (`implemented`) for a table on
+/france/; the money stays the Commission's and is never added to France's. The OECD's
 public endpoint answers bursts with HTTP 429; `_csv_rows` waits and retries.
 With twelve profiles the row on the map and the dashboard shows the badges
 only (the button title carries the name); the profiles show the names and wrap.
