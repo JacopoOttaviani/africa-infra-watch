@@ -1286,7 +1286,7 @@ def wrap_document(fragment, *, title, description, path="", host="pages", extra_
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{q(REGION.kicker)}: {t}{"" if title == SITE_NAME else " · " + q(SITE_NAME)}</title>
+<title>{q(SITE_NAME)}{": " + q(REGION.kicker) if title == SITE_NAME else " · " + t}</title>
 <meta name="description" content="{d}">
 <meta name="keywords" content="{q(", ".join(KEYWORDS))}">
 <meta name="author" content="{q(AUTHOR_NAME)}">

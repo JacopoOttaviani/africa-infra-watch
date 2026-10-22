@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geopolitics of Africa: France in Africa&#x27;s infrastructure · AfricaWatch</title>
+<title>AfricaWatch · France in Africa&#x27;s infrastructure</title>
 <meta name="description" content="What the open data holds on French money in Africa: France&#x27;s aid activities country by country from the OECD&#x27;s Creditor Reporting System, net ODA by recipient, French direct-investment stock by African country, sovereign debt owed to France (World Bank International Debt Statistics), and the power plants, pipelines and cables with TotalEnergies, EDF, Engie or Orange among their owners.">
 <meta name="keywords" content="Africa infrastructure, infrastructure projects Africa, Africa power plants map, African Development Bank projects, AfDB finance, World Bank projects Africa, construction Africa map, energy Africa, Global Energy Monitor, OpenStreetMap construction, oil and gas pipelines Africa, submarine cables Africa, TeleGeography, Chinese investment Africa, China Africa infrastructure, AidData, Chinese loans Africa, Belt and Road Africa, EU investment Africa, Global Gateway Africa, European Investment Bank Africa, European Commission Africa infrastructure, Piano Mattei, Mattei Plan Africa, Italy Africa investment, Italian cooperation Africa, open data Africa, infrastructure investment Africa, interactive map">
 <meta name="author" content="Jacopo Ottaviani">
@@ -17,8 +17,8 @@
 <meta property="og:url" content="https://jacopoottaviani.com/africa-infra-watch/france/index.html">
 <meta property="og:title" content="France in Africa&#x27;s infrastructure">
 <meta property="og:description" content="What the open data holds on French money in Africa: France&#x27;s aid activities country by country from the OECD&#x27;s Creditor Reporting System, net ODA by recipient, French direct-investment stock by African country, sovereign debt owed to France (World Bank International Debt Statistics), and the power plants, pipelines and cables with TotalEnergies, EDF, Engie or Orange among their owners.">
-<meta property="og:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=99cae8766a">
-<meta property="og:image:secure_url" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=99cae8766a">
+<meta property="og:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=09d974f934">
+<meta property="og:image:secure_url" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=09d974f934">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="France in Africa&#x27;s infrastructure">
 <meta name="twitter:description" content="What the open data holds on French money in Africa: France&#x27;s aid activities country by country from the OECD&#x27;s Creditor Reporting System, net ODA by recipient, French direct-investment stock by African country, sovereign debt owed to France (World Bank International Debt Statistics), and the power plants, pipelines and cables with TotalEnergies, EDF, Engie or Orange among their owners.">
-<meta name="twitter:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=99cae8766a">
+<meta name="twitter:image" content="https://jacopoottaviani.com/africa-infra-watch/social.png?v=09d974f934">
 <meta name="twitter:image:alt" content="France in Africa&#x27;s infrastructure: Africa with the atlas&#x27;s records, power units, lenders&#x27; projects and construction works, drawn in their status colours, and the site&#x27;s title.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,6 +140,14 @@
   .sn-a.sn-contact:hover,.sn-a.sn-contact:focus-visible{background:#0B74DB;color:#fff}
   .sn-a.sn-contact:hover::before,.sn-a.sn-contact:focus-visible::before{animation:lishine .75s ease-out forwards}
   .sn-a.sn-contact:hover svg,.sn-a.sn-contact:focus-visible svg{animation:liflip .6s cubic-bezier(.34,1.56,.64,1)}
+  /* the map's coffee cup after it: the coffee button's yellow, icon only, steam always on; hover
+     runs that button's wiggle and steam (cwiggle, csteam, defined in each template) */
+  .sn-a.sn-coffee{margin-left:3px;padding:0 6px;background:#FFDD00;color:#1F1A00}
+  .sn-a.sn-coffee svg{width:16px;height:16px;overflow:visible}
+  .sn-a.sn-coffee .cup{transform-box:fill-box;transform-origin:50% 100%}
+  .sn-a.sn-coffee:hover,.sn-a.sn-coffee:focus-visible{background:#FFE733;color:#1F1A00}
+  .sn-a.sn-coffee:hover .cup,.sn-a.sn-coffee:focus-visible .cup{animation:cwiggle .55s ease}
+  .sn-a.sn-coffee:hover .steam,.sn-a.sn-coffee:focus-visible .steam{animation:csteam 1.1s ease-in-out infinite}
   .sn-more,.sn-ico,.lm-site{display:none}
   .sn-ms{display:none;align-items:center;gap:6px}
   /* the reading pages: their header is capped at the column's 1140 px, too narrow for the
@@ -192,7 +200,7 @@
   @media (max-width:600px){
     .lm-panel{position:fixed;left:12px;right:12px;top:56px;width:auto}
   }
-  @media (prefers-reduced-motion:reduce){.sn-a,.sn-dd .lm-car{transition:none}.sn-a.sn-contact::before,.sn-a.sn-contact svg{animation:none!important}}
+  @media (prefers-reduced-motion:reduce){.sn-a,.sn-dd .lm-car{transition:none}.sn-a.sn-contact::before,.sn-a.sn-contact svg,.sn-a.sn-coffee .cup,.sn-a.sn-coffee .steam{animation:none!important}}
 
   /* ---------- the footer (shared.site_footer) ----------
      every page in four columns: the site, Explore, the theme deep dives, the
@@ -319,6 +327,8 @@
   .sw.bar.cable{height:2px;background:var(--st-approved);border:0}
   .sw.hex{clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);border-radius:0;opacity:1;background:var(--st-construction)}
   .sw.star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);border-radius:0;opacity:1;background:var(--st-construction);width:13px;height:13px}
+  .sw.down{clip-path:polygon(0 4%,100% 4%,50% 100%);border-radius:0;opacity:.85;background:var(--ink-2);width:12px;height:12px}
+  .asset.down{fill:var(--ink-2);fill-opacity:.82}
   .sw.cross{clip-path:polygon(31% 0,69% 0,69% 31%,100% 31%,100% 69%,69% 69%,69% 100%,31% 100%,31% 69%,0 69%,0 31%,31% 31%);border-radius:0;opacity:1;background:var(--st-construction);width:12px;height:12px}
   .corp{fill:var(--ink-3);stroke:var(--surface);stroke-width:1}
   .lbl{font:500 10.5px var(--display);fill:var(--ink-2);pointer-events:none;paint-order:stroke;stroke:var(--land);stroke-width:3px;stroke-linejoin:round}
@@ -685,6 +695,7 @@ if ($("#map") && DATA.map) {
       else if (grp.kind === "triangle") e = el("path", {d: `M${it.x} ${it.y - 8} L${it.x + 7} ${it.y + 5} L${it.x - 7} ${it.y + 5} Z`, class: "asset " + cls});
       else if (grp.kind === "hex") { const r = 7, pts = [0, 1, 2, 3, 4, 5].map(k => { const a = Math.PI / 3 * k - Math.PI / 6; return (it.x + r * Math.cos(a)).toFixed(1) + " " + (it.y + r * Math.sin(a)).toFixed(1); }); e = el("path", {d: "M" + pts.join(" L") + " Z", class: "asset " + cls}); }
       else if (grp.kind === "line") e = el("path", {d: it.d, class: (grp.cls || "pipe") + (it.cls ? " " + it.cls : "")});
+      else if (grp.kind === "down") { const R = it.r || 7, x = it.x, y = it.y; e = el("path", {d: `M${(x - R * 1.08).toFixed(1)} ${(y - R * 0.75).toFixed(1)}H${(x + R * 1.08).toFixed(1)}L${x} ${(y + R * 1.05).toFixed(1)}Z`, class: "asset down " + cls}); }
       else if (grp.kind === "cross") { const R = 7, a = 2.7, x = it.x, y = it.y; e = el("path", {d: `M${x - a} ${y - R}H${x + a}V${y - a}H${x + R}V${y + a}H${x + a}V${y + R}H${x - a}V${y + a}H${x - R}V${y - a}H${x - a}Z`, class: "asset " + cls}); }
       else if (grp.kind === "star") { const R = 7.5, r = 3.2, pts = []; for (let k = 0; k < 10; k++) { const a = Math.PI / 5 * k - Math.PI / 2, rr = k % 2 ? r : R; pts.push((it.x + rr * Math.cos(a)).toFixed(1) + " " + (it.y + rr * Math.sin(a)).toFixed(1)); } e = el("path", {d: "M" + pts.join(" L") + " Z", class: "asset " + cls}); }
       else e = el("rect", {x: it.x - 5 + (grp.spread ? (i % 3) * 9 - 9 : 0), y: it.y + (grp.dy || 0) - 5, width: 10, height: 10, class: cls || "corp"});
