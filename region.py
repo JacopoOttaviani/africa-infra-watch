@@ -194,6 +194,12 @@ AFRICA = Region(
     # layer: one IATI file per country (afd-sn …); its multi-country file
     # (afd-multipays) mixes African and other recipients and is left out
     afd_files=[c.lower() for c in AFRICA_ISO],
+    # Germany's development ministry (BMZ): one IATI file per partner
+    # country (bmz-ke …), every project it pays for, with the agency that
+    # carries it out (GIZ, KfW, or an NGO, church or UN agency) named as
+    # the extending organisation. Its regional files (189, 289, 298) place
+    # nothing and are left out; there is no file for GQ, KM, MU or SC.
+    bmz_files=[c.lower() for c in AFRICA_ISO],
     eu_publishers={
         "ec-intpa": {"pub": "INTPA", "lender": "European Commission",
                      "files": [c.lower() for c in AFRICA_ISO] + ["289", "298", "1027", "1028", "1029", "1030"]},
@@ -310,17 +316,26 @@ def pick():
 REGION = pick()
 
 
+# The BMZ file's lender codes, by the agency that carries the project out:
+# GIZ (technical cooperation), KfW (financial cooperation), and BMZ for
+# every other channel (German NGOs, churches, foundations, UN agencies)
+BMZ_LENDERS = ("GIZ", "KfW", "BMZ")
+
+
 def region_payload(region=REGION):
     """What the two templates read as DATA.region: the words, the frame and
     the lenders of this edition. Every field has the Africa value as its
     default in the templates, so an older payload still draws."""
     bank = region.bank
     afd = bool(getattr(region, "afd_files", None))
-    lenders = ([bank["code"], "WB"] + (["AFD"] if afd else []) + ["EC", "EIB", "CN"]
-               + (["IT"] if "mattei" in region.layers else []))
+    bmz = bool(getattr(region, "bmz_files", None))
+    lenders = ([bank["code"], "WB"] + (["AFD"] if afd else []) + (list(BMZ_LENDERS) if bmz else [])
+               + ["EC", "EIB", "CN"] + (["IT"] if "mattei" in region.layers else []))
     family = [["Multilateral banks", [bank["code"], "WB"]], ["European Union", ["EC", "EIB"]], ["China", ["CN"]]]
     if afd:
         family.append(["France", ["AFD"]])
+    if bmz:
+        family.append(["Germany", list(BMZ_LENDERS)])
     if "mattei" in region.layers:
         family.append(["Italy", ["IT"]])
     return {

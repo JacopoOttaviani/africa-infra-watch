@@ -22,7 +22,7 @@ import shutil
 import sys
 import urllib.parse
 
-from region import REGION, ROOT_DOCS, region_payload  # noqa: E402
+from region import BMZ_LENDERS, REGION, ROOT_DOCS, region_payload  # noqa: E402
 
 ROOT = pathlib.Path(__file__).parent
 # this edition's data and pages: data/ and docs/ for Africa, data/sea/ and
@@ -90,7 +90,7 @@ SITE_NAME = "AfricaWatch" if REGION.key == "africa" else "InfraRadar"
 # The edition's regional development bank, AfDB or ADB: short name, full name.
 BANK = REGION.bank["code"]
 BANK_NAME = REGION.bank["name"]
-NUM_WORD = {7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven"}
+NUM_WORD = {7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}
 # "noindex" while an edition is built but not yet published (region.py)
 ROBOTS = "noindex,nofollow" if REGION.noindex else "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
 
@@ -144,6 +144,9 @@ SOURCE_INFO = {
     # Licence Ouverte (dataset "Données de l'aide au développement de l'AFD")
     "finance_afd": {"name": "Agence française de développement", "lic": "Licence Ouverte / Open Licence",
                     "url": "https://d-portal.iatistandard.org/ctrack.html?publisher=FR-3#view=main"},
+    # BMZ's country files carry "cc-by" on the IATI Registry, no version stated
+    "finance_bmz": {"name": "BMZ (German development ministry)", "lic": "CC BY (per the IATI Registry)",
+                    "url": "https://d-portal.iatistandard.org/ctrack.html?publisher=DE-1#view=main"},
     "ground": {"name": "OpenStreetMap", "lic": "ODbL 1.0",
                "url": "https://www.openstreetmap.org/copyright"},
     "pipelines": {"name": "Global Energy Monitor", "lic": "CC BY 4.0",
@@ -168,8 +171,9 @@ SOURCE_INFO = {
 }
 # The layers each page draws. Both pages show the same eight layers over the
 # same records, and both split the finance layer between its lenders, so
-# both carry the World Bank source card, and in Africa AFD's.
-FINANCE_KEYS = ("finance", "finance_wb") + (("finance_afd",) if getattr(REGION, "afd_files", None) else ())
+# both carry the World Bank source card, and in Africa AFD's and BMZ's.
+FINANCE_KEYS = (("finance", "finance_wb") + (("finance_afd",) if getattr(REGION, "afd_files", None) else ())
+                + (("finance_bmz",) if getattr(REGION, "bmz_files", None) else ()))
 MAP_LAYERS = tuple(k for layer in REGION.layers
                    for k in (FINANCE_KEYS if layer == "finance" else (layer,)))
 DASHBOARD_LAYERS = MAP_LAYERS
@@ -691,7 +695,7 @@ def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
     p, c, w = meta.get("pipelines", {}), meta.get("cables", {}), meta.get("finance_wb", {})
     ch, eu, pm = meta.get("china", {}), meta.get("eu", {}), meta.get("mattei", {})
-    fa = meta.get("finance_afd", {})
+    fa, fz = meta.get("finance_afd", {}), meta.get("finance_bmz", {})
     rows = [
         {"k": "assets", **SOURCE_INFO["assets"],
          "detail": f"Global Integrated Power Tracker, release {a.get('release', 'unknown')}",
@@ -708,6 +712,10 @@ def sources(meta, keys=MAP_LAYERS):
          "detail": f"IATI 2.03 activity files, {fa.get('datasets', '?')} {REGION.adj} country datasets "
                    "(the financings under each project)",
          "fresh": fa.get("fresh") or fmt_date(fa.get("fetched"))},
+        {"k": "finance_bmz", **SOURCE_INFO["finance_bmz"],
+         "detail": f"IATI 2.03 activity files, {fz.get('datasets', '?')} {REGION.adj} country datasets "
+                   "(every project BMZ pays for, with the agency that carries it out: GIZ, KfW or another)",
+         "fresh": fz.get("fresh") or fmt_date(fz.get("fetched"))},
         {"k": "ground", **SOURCE_INFO["ground"],
          "detail": "Overpass API, significant road/rail/air classes",
          "fresh": g.get("fresh") or fmt_date(g.get("fetched"))},
@@ -758,7 +766,10 @@ def payload_meta(meta, keys=MAP_LAYERS):
                              "wb_budget_support": (meta.get("finance_wb") or {}).get("budget_support"),
                              **({f"afd_{k}": (meta.get("finance_afd") or {}).get(k)
                                  for k in ("budget_support", "office_points", "at_office", "place_given")}
-                                if "finance_afd" in keys else {})},
+                                if "finance_afd" in keys else {}),
+                             **({f"bmz_{k}": (meta.get("finance_bmz") or {}).get(k)
+                                 for k in ("budget_support", "at_capital", "n_giz", "n_kfw", "n_bmz")}
+                                if "finance_bmz" in keys else {})},
             "cables_meta": {k: (meta.get("cables") or {}).get(k)
                             for k in ("landing_points", "landing_sites", "length_estimated")},
             "pipes_meta": {k: (meta.get("pipelines") or {}).get(k)
@@ -899,6 +910,7 @@ NO_DOWNLOAD = {"cables"}
 
 LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": f"iati_{REGION.bank['publisher']}_finance.geojson",
               "finance_wb": "iati_worldbank_finance.geojson", "finance_afd": "iati_afd_finance.geojson",
+              "finance_bmz": "iati_bmz_finance.geojson",
               "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
               "cables": "telegeography_cables.geojson", "china": "aiddata_china_finance.geojson",
               "eu": "iati_eu_finance.geojson", "mattei": "piano_mattei.geojson"}
@@ -931,9 +943,12 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
         usd_wb = sum((r[fc.index("usd_m")] or 0) for r in f if r[fc.index("ln")] == "WB")
         n_afd = sum(1 for r in f if r[fc.index("ln")] == "AFD")
         usd_afd = sum((r[fc.index("usd_m")] or 0) for r in f if r[fc.index("ln")] == "AFD")
+        n_bmz = sum(1 for r in f if r[fc.index("ln")] in BMZ_LENDERS)
+        usd_bmz = sum((r[fc.index("usd_m")] or 0) for r in f if r[fc.index("ln")] in BMZ_LENDERS)
     else:
         n_afdb, n_wb, usd_wb = len(f), (meta.get("finance_wb") or {}).get("activities") or 0, 0
         n_afd, usd_afd = (meta.get("finance_afd") or {}).get("activities") or 0, 0
+        n_bmz, usd_bmz = (meta.get("finance_bmz") or {}).get("activities") or 0, 0
 
     def count(layer, key):
         if layer is None:
@@ -955,7 +970,8 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
         return sum((r[cols.index(col)] or 0) for r in rows) if col in cols else 0
 
     return {"assets": len(a), "finance": n_afdb, "finance_wb": n_wb, "finance_afd": n_afd,
-            "usd_bn_afd": usd_afd / 1000, "finance_total": len(f),
+            "usd_bn_afd": usd_afd / 1000, "finance_bmz": n_bmz, "usd_bn_bmz": usd_bmz / 1000,
+            "finance_total": len(f),
             "ground": len(g),
             "pipelines": count(pipelines, "pipelines"), "cables": count(cables, "cables"),
             "pipe_km": total(pipelines, "km"),
@@ -987,7 +1003,12 @@ def facts_sentence(facts):
         s += (f", {facts['finance_wb']:,} by the World Bank" if facts.get("finance_afd")
               else f" and {facts['finance_wb']:,} by the World Bank")
     if facts.get("finance_afd"):
-        s += f" and {facts['finance_afd']:,} financings by the Agence française de développement (AFD)"
+        s += (f", {facts['finance_afd']:,} financings by the Agence française de développement (AFD)"
+              if facts.get("finance_bmz") else
+              f" and {facts['finance_afd']:,} financings by the Agence française de développement (AFD)")
+    if facts.get("finance_bmz"):
+        s += (f" and {facts['finance_bmz']:,} projects paid for by Germany's development ministry (BMZ) "
+              "and carried out by GIZ, KfW and others")
     s += f", {facts['ground']:,} construction works traced in OpenStreetMap"
     if facts.get("pipelines"):
         s += f", {facts['pipelines']:,} oil and gas pipeline segments from Global Energy Monitor"
@@ -1013,11 +1034,14 @@ def facts_totals(facts):
         parts.append(f"about {facts['gw']:,.0f} GW of generating capacity across all statuses")
     if facts["usd_bn"]:
         afd = facts.get("usd_bn_afd") or 0
+        bmz = facts.get("usd_bn_bmz") or 0
         if facts.get("usd_bn_wb"):
-            parts.append(f"USD {facts['usd_bn'] - facts['usd_bn_wb'] - afd:,.1f} billion of {BANK} commitments, "
+            parts.append(f"USD {facts['usd_bn'] - facts['usd_bn_wb'] - afd - bmz:,.1f} billion of {BANK} commitments, "
                          f"{bank_rate}, " + ("" if afd else "and ")
                          + f"USD {facts['usd_bn_wb']:,.1f} billion of World Bank commitments"
-                         + (f" and USD {afd:,.1f} billion of AFD commitments, converted at {EUR_NOTE}" if afd else "")
+                         + ((f", USD {afd:,.1f} billion of AFD commitments and USD {bmz:,.1f} billion of BMZ "
+                             f"commitments, both converted at {EUR_NOTE}") if afd and bmz else
+                            f" and USD {afd:,.1f} billion of AFD commitments, converted at {EUR_NOTE}" if afd else "")
                          + ", each the infrastructure share of the lender's own commitment, "
                          "budget support and cancelled projects left out")
         else:
@@ -1066,6 +1090,11 @@ def structured_data(facts, *, path, title, description, kind):
                                "from its IATI 2.03 activity files: title, recipient country, status, DAC "
                                "sector, commitment and disbursement in EUR, and AFD's point where it is not "
                                "the agency's office (otherwise the country's centre).",
+                "finance_bmz": f"Infrastructure projects in {REGION.name} paid for by Germany's Federal Ministry for "
+                               "Economic Cooperation and Development (BMZ), from its IATI 2.03 activity files: "
+                               "title, recipient country, the agency that carries the project out (GIZ, KfW or "
+                               "another), status, DAC sector, commitment and disbursement in EUR, placed at the "
+                               "country's centre (BMZ gives only the capital).",
                 "ground": "Roads (motorway to secondary), railways and airports under "
                           f"construction or proposed in {REGION.name}, traced by OpenStreetMap mappers, "
                           "as line geometries with status, operator and opening date.",
@@ -1350,12 +1379,17 @@ def write_site_index(facts):
     mattei_not_added = ", and the Piano Mattei\n  figures are not added to any of them" if mattei else ""
     # AFD, France's development agency, the finance layer's third lender (Africa only)
     afd = bool(facts.get("finance_afd"))
-    afd_glyph = ", crosses AFD financings" if afd else ""
+    bmz = bool(facts.get("finance_bmz"))
+    afd_glyph = (", crosses AFD financings" if afd else "") + (", inverted triangles BMZ projects" if bmz else "")
     afd_money = (" AFD, France's development agency, publishes in euros too, converted at the same\n"
                  "  rate; one AFD record is one financing (a loan or a grant) under a project, and its\n"
                  "  policy loans, which it files as project aid, are left out as budget support by their\n"
                  "  own words (\"financement budgétaire\", \"prêt de politique publique\").") if afd else ""
-    afd_limit = ", France's development agency AFD" if afd else ""
+    afd_money += ("\n  Germany's development ministry BMZ publishes in euros too, converted at the same rate;\n"
+                  "  one BMZ record is one project it pays for, under the agency that carries it out (GIZ,\n"
+                  "  KfW, or an NGO, church or UN agency), and every one is placed at its country's centre,\n"
+                  "  since BMZ gives only the capital, where the agreement is made.") if bmz else ""
+    afd_limit = (", France's development agency AFD" if afd else "") + (", Germany's development ministry BMZ" if bmz else "")
     mattei_bullet = ((f"- The Piano Mattei layer is the Italian Government's own list of the plan's projects, all of\n"
                       f"  them, not an infrastructure subset: {facts.get('mattei_edu') or 'many'} of the {facts['mattei']:,} carry the\n"
                       "  education, training and culture pillar. Narrow by sector to keep the ones that build\n"
@@ -1403,7 +1437,7 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the {NUM_WORD[len(REGION.layers)]} layers (finance holds {'three' if afd else 'two'} lenders, EU finance the Commission and the EIB{mattei_plan}) with filters
+- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the {NUM_WORD[len(REGION.layers)]} layers (finance holds {'four' if bmz else 'three' if afd else 'two'} lenders, EU finance the Commission and the EIB{mattei_plan}) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.

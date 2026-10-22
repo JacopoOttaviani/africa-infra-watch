@@ -934,6 +934,156 @@ def aics_block():
     return block
 
 
+# Germany's Federal Ministry for Economic Cooperation and Development (BMZ)
+# publishes every project it pays for to IATI, one file per partner country
+# (bmz-ke …) and per DAC region (189 North of Sahara, 289 South of Sahara,
+# 298 Africa regional). As read on 2026-10-22 (files generated 2026-09-30):
+#   - one activity is one project (hierarchy 1), in EUR;
+#   - the agency that carries it out is the extending organisation (role 3):
+#     GIZ (XM-DAC-5-52) for technical cooperation, KfW (XM-DAC-5-2) for
+#     financial cooperation, otherwise a German NGO, church, foundation,
+#     Engagement Global or a UN agency;
+#   - commitments are transaction type 2; KfW pays out as disbursements (3),
+#     GIZ and the others as expenditure (4), never both on one project;
+#   - a country file's activity has one location, the capital, described as
+#     the place of the agreement with the partner government; a regional
+#     file's activity has none. GIZ's own registry file holds only the work
+#     other clients commission from it, with no locations.
+BMZ_CHANNELS = [("GIZ", "GIZ, technical cooperation"), ("KfW", "KfW Development Bank, financial cooperation"),
+                ("BMZ", "Other channels: German NGOs, churches, foundations, Engagement Global, UN agencies")]
+BMZ_CHANNEL_REF = {"XM-DAC-5-52": "GIZ", "XM-DAC-5-2": "KfW"}
+
+
+def bmz_block():
+    """BMZ's own record of its projects in Africa, every sector, from its
+    IATI files via the registry: counts and euros by channel (GIZ, KfW, the
+    rest), country, sector group and commitment year, what is running now,
+    and the largest running projects. The map's development-finance layer
+    holds the infrastructure subset; this is the whole presence."""
+    import collections
+    import xml.etree.ElementTree as ET
+    from fetch_sources import BMZ_PROJECT_PAGE, IATI_INFRA_DAC, REGISTRY
+    lang = "{http://www.w3.org/XML/1998/namespace}lang"
+
+    def narr(el, path):
+        ns = el.findall(f"{path}/narrative")
+        en = [n.text for n in ns if n.get(lang) == "en" and n.text]
+        return " ".join((en or [n.text for n in ns if n.text] or [""])[0].split())
+
+    def start(a):
+        for t in ("2", "1"):
+            d = a.find(f"activity-date[@type='{t}']")
+            if d is not None and (d.get("iso-date") or "")[:4].isdigit():
+                return int(d.get("iso-date")[:4])
+        return None
+
+    meta = json.loads(get(f"{REGISTRY}?q=organization:bmz&rows=300", timeout=90))
+    wanted = set(AFRICA.values()) | set(AICS_REGIONS)
+    pkgs = [pk for pk in meta["result"]["results"] if pk["name"].split("-", 1)[-1].upper() in wanted]
+    urls = [r["url"] for pk in pkgs for r in pk["resources"]]
+    acts, seen, generated = [], set(), set()
+    by_year = collections.defaultdict(lambda: collections.defaultdict(float))
+    for u in urls:
+        try:
+            root = ET.fromstring(get(u, timeout=300))
+        except Exception as e:                                # noqa: BLE001
+            print(f"  ! skipped {u.rsplit('/', 1)[-1]}: {e}")
+            continue
+        generated.add((root.get("generated-datetime") or "")[:10])
+        for a in root.iter("iati-activity"):
+            iid = (a.findtext("iati-identifier") or "").strip()
+            rc = [x.get("code") for x in a.findall("recipient-country") if x.get("code") in NAME]
+            rr = [x.get("code") for x in a.findall("recipient-region") if x.get("code") in AICS_REGIONS]
+            if not (rc or rr) or iid in seen:
+                continue
+            seen.add(iid)
+            ext = next((o.get("ref") for o in a.findall("participating-org") if o.get("role") == "3"), None)
+            ch = BMZ_CHANNEL_REF.get(ext, "BMZ")
+            commit = paid = 0.0
+            for t in a.findall("transaction"):
+                ty, v = t.find("transaction-type"), t.find("value")
+                if ty is None or v is None or ty.get("code") not in ("2", "3", "4"):
+                    continue
+                eur = float(v.text or 0)
+                if ty.get("code") == "2":
+                    commit += eur
+                    td = t.find("transaction-date")
+                    y = (td.get("iso-date") or "")[:4] if td is not None else ""
+                    if y.isdigit():
+                        by_year[y][ch] += eur
+                else:
+                    paid += eur
+            secs = [(s.get("code") or "", float(s.get("percentage") or 100)) for s in a.findall("sector")
+                    if (s.get("vocabulary") or "1") == "1"]
+            code = max(secs, key=lambda s: s[1])[0] if secs else ""
+            st = a.find("activity-status")
+            ft = a.find("default-finance-type")
+            acts.append({
+                "id": iid, "title": narr(a, "title"), "iso": rc[0] if rc else None, "region": None if rc else rr[0],
+                "channel": ch, "status": st.get("code") if st is not None else None, "start": start(a),
+                "code": code, "group": crs_group(code),
+                "infra": any(c.startswith(IATI_INFRA_DAC) for c, _ in secs),
+                "kind": FINANCE_KIND.get(ft.get("code")) if ft is not None else None,
+                "commit": round(commit, 2), "paid": round(paid, 2),
+                "url": next((d.get("url") for d in a.findall("document-link") if BMZ_PROJECT_PAGE.search(d.get("url") or "")), None),
+            })
+
+    def tally(rows, key):
+        out = collections.defaultdict(lambda: {"n": 0, "eur": 0.0, "paid": 0.0, "active": 0,
+                                               **{c: 0 for c, _ in BMZ_CHANNELS}})
+        for a in rows:
+            d = out[key(a)]
+            d["n"] += 1
+            d["eur"] += a["commit"]
+            d["paid"] += a["paid"]
+            d["active"] += a["status"] == "2"
+            d[a["channel"]] += 1
+        return {k: {**v, "eur": round(v["eur"], 2), "paid": round(v["paid"], 2)} for k, v in out.items()}
+
+    running = [a for a in acts if a["status"] == "2"]
+    block = {
+        "source": "Federal Ministry for Economic Cooperation and Development (BMZ), IATI activity files",
+        "registry": f"{REGISTRY}?q=organization:bmz&rows=300",
+        "dportal": "https://d-portal.iatistandard.org/ctrack.html?publisher=DE-1#view=main",
+        "licence": "CC BY (per the IATI Registry)", "files": len(urls), "generated": max(generated - {""}, default=None),
+        "fetched": today(),
+        "n": len(acts), "eur_commit": round(sum(a["commit"] for a in acts), 2), "eur_paid": round(sum(a["paid"] for a in acts), 2),
+        "status": dict(collections.Counter(a["status"] for a in acts)),
+        "channels": tally(acts, lambda a: a["channel"]),
+        "channel_labels": dict(BMZ_CHANNELS),
+        "years": {y: {c: round(v.get(c, 0.0), 2) for c, _ in BMZ_CHANNELS} for y, v in sorted(by_year.items())},
+        "countries": {k: dict(v, name=NAME[k]) for k, v in tally(acts, lambda a: a["iso"]).items() if k},
+        "regional": {k: dict(v, name=AICS_REGIONS[k]) for k, v in tally(acts, lambda a: a["region"]).items() if k},
+        "groups": tally(acts, lambda a: a["group"]),
+        "group_labels": {k: lab for k, lab, _ in CRS_GROUPS},
+        "infra": {"n": sum(1 for a in acts if a["infra"]), "eur": round(sum(a["commit"] for a in acts if a["infra"]), 2)},
+        "kinds": dict(collections.Counter(a["kind"] for a in acts)),
+        "running_largest": sorted(running, key=lambda a: -a["commit"])[:20],
+    }
+    ch = block["channels"]
+    print(f"   BMZ: {len(acts):,} African projects in {len(urls)} files, EUR {block['eur_commit'] / 1e9:,.1f} bn committed, "
+          f"{len(running):,} running; " + ", ".join(f"{c} {ch.get(c, {}).get('n', 0):,}" for c, _ in BMZ_CHANNELS))
+    return block
+
+
+def bmz_layer_block():
+    """The Germany profile's block from the map's BMZ records, the
+    infrastructure subset: layer_block's aggregates, with the record's
+    lender (GIZ, KfW, BMZ) as the publisher split."""
+    from shared import EUR_USD
+    path = "iati_bmz_finance.geojson"
+    if not (DATA / path).exists():
+        print(f"   ! {path} missing, run fetch_sources.py bmz; no BMZ layer block")
+        return None
+    block = layer_block(path, "BMZ infrastructure projects from IATI", "commitment", EUR_USD, year_key="commitment_year")
+    meta = load_meta().get("finance_bmz") or {}
+    block["datasets"], block["fetched"] = meta.get("datasets"), meta.get("fetched")
+    block["left_out"] = {k: meta.get(k) for k in ("budget_support", "at_capital")}
+    print(f"   BMZ layer: {block['n']:,} projects, EUR {block['eur'] / 1000:,.2f} bn committed, "
+          f"{[(x['publisher'], x['n']) for x in block['publishers']]}, {len(block['countries'])} countries")
+    return block
+
+
 def fetch_italy():
     print("italy   … OECD CRS microdata (donor ITA, one year at a time), DAC2a net ODA, FDI positions; "
           "World Bank IDS counterpart 006; AICS IATI files (OpenAid); Piano Mattei, GEM, pipelines and cables from the site's own layers")
@@ -1271,7 +1421,7 @@ GERMAN_OWNER = re.compile(r"\b(Siemens|RWE|EnBW|Uniper|E\.ON|Wintershall|juwi|Ju
 
 def fetch_germany():
     print("germany … OECD CRS microdata (donor DEU, one year at a time, ~27 MB a year), DAC2a net ODA, FDI positions; "
-          "World Bank IDS counterpart 005; GEM, pipelines and cables from the site's own layers")
+          "World Bank IDS counterpart 005; BMZ's IATI files; GEM, pipelines and cables and the BMZ finance records from the site's own layers")
     y0, y1 = 2018, 2024
     acts = crs_activities("DEU", y0, y1, per_year=True)
     crs = crs_block(acts, y0, y1, "Germany")
@@ -1285,7 +1435,8 @@ def fetch_germany():
     print(f"   GEM {len(gem)} power units, {len(pipes)} pipeline segments, {len(cables)} cables with a German owner")
     pack = {"slug": "germany", "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
             "ids_bilateral": ids_pack("005", "Germany", since=2000, kind="BLAT"),
-            "gem": gem, "pipelines": pipes, "cables": cables}
+            "gem": gem, "pipelines": pipes, "cables": cables,
+            "bmz": bmz_block(), "layer": bmz_layer_block()}
     update_meta("germany_profile", fetched=today(), crs_from=y0, crs_to=y1, crs_activities=len(acts),
                 ids_updated=ids["updated"], data_to=ids["data_to"], gem=len(gem), pipelines=len(pipes), cables=len(cables))
     return pack

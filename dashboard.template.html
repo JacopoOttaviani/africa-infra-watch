@@ -416,7 +416,7 @@
   .src .sk{font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
   .src .sn{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:-.008em}
   .src .sf{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
-  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.finance_wb,.sk.finance_afd,.sk.cables,.sk.eu{color:var(--st-approved)} .sk.ground,.sk.mattei{color:var(--st-construction)}
+  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.finance_wb,.sk.finance_afd,.sk.finance_bmz,.sk.cables,.sk.eu{color:var(--st-approved)} .sk.ground,.sk.mattei{color:var(--st-construction)}
   /* the site's footer (shared.site_footer), then when the page was built */
   footer.foot{margin-top:28px;padding-top:26px;border-top:1px solid var(--rule)}
   footer.foot .sf-meta{margin:26px 0 0;padding-top:12px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
@@ -834,8 +834,8 @@ const R = Object.assign({key:"africa", name:"Africa", adj:"African", kicker:"Geo
   regional:"Africa, regional", landings:"African landings", wide:"Africa-wide", land:"the continent",
   eu_point_note:"the Commission's point for Africa, in Chad", eu_point_where:"in Chad",
   layers:["assets","finance","ground","pipelines","cables","china","eu","mattei"],
-  lenders:["AfDB","WB","AFD","EC","EIB","CN","IT"],
-  family:[["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["France",["AFD"]], ["Italy",["IT"]]],
+  lenders:["AfDB","WB","AFD","GIZ","KfW","BMZ","EC","EIB","CN","IT"],
+  family:[["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["France",["AFD"]], ["Germany",["GIZ","KfW","BMZ"]], ["Italy",["IT"]]],
   bank:{code:"AfDB", name:"African Development Bank", group:"African Development Bank Group", currency:"XDR",
         file:"iati_afdb_finance.geojson", logo:"african-development-bank", home:"https://www.afdb.org/"},
   center:[17, 2], zoom_win:[-30, -45, 70, 45], bounds:{x0:-19, y0:-36, x1:53, y1:39}, home_exclude:["CV","MU","SC"]},
@@ -843,7 +843,7 @@ const R = Object.assign({key:"africa", name:"Africa", adj:"African", kicker:"Geo
 const BANK = R.bank.code, LAND = R.land;
 const HAS = k => R.layers.includes(k);
 const an = w => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
-const NUM_WORD = {7:"seven", 8:"eight", 9:"nine", 10:"ten", 11:"eleven"};
+const NUM_WORD = {7:"seven", 8:"eight", 9:"nine", 10:"ten", 11:"eleven", 12:"twelve"};
 /* one public dataset per source card, and the EU card is two (Commission and EIB) */
 const N_DATASETS = NUM_WORD[DATA.meta.sources.length + 1] || String(DATA.meta.sources.length + 1);
 const N_LAYERS = NUM_WORD[R.layers.length] || String(R.layers.length);
@@ -854,23 +854,27 @@ const STATUS_ORDER = ["announced","approved","under_construction","operating","s
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
 const LAYER_ORDER  = R.layers;
 const HOME_HOST    = "__HOME_URL__".replace(/^https?:\/\//,"").replace(/\/$/,"");
-const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",finance_afd:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World Bank` + (R.lenders.includes("AFD") ? " · AFD" : ""),finance_wb:"World Bank",finance_afd:"AFD",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
+const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",finance_afd:"Development finance",finance_bmz:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World Bank` + (R.lenders.includes("AFD") ? " · AFD" : "") + (R.lenders.includes("GIZ") ? " · BMZ" : ""),finance_wb:"World Bank",finance_afd:"AFD",finance_bmz:"BMZ",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
 /* The rail lists the data in two groups. "Layers" is what is built: power
    units, works on the ground, pipelines, cables. "Lenders" is who is paying:
-   the finance layer's two banks (squares and diamonds), the EU layer's two
+   the finance layer's two banks (squares and diamonds), in Africa AFD
+   (crosses) and BMZ (inverted triangles: GIZ, KfW and other channels), the EU layer's two
    institutions (five- and four-pointed stars) and Chinese official lenders (triangles). The three
    finance layers stay layers in the payload and the drawing; their on/off
    flags are derived from the lenders (syncLayers), so everything that reads
    the layer flags keeps working. */
 const RAIL_LAYERS  = ["assets","ground","pipelines","cables"];
 const LENDER_ORDER = R.lenders;
-const LENDER_NAME  = {AfDB:"African Development Bank", ADB:"Asian Development Bank", WB:"World Bank", AFD:"Agence française de développement", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
-const LENDER_SUB   = {AfDB:"IATI activity files", ADB:"IATI activity files", WB:"IATI activity files", AFD:"IATI activity files", EC:R.key==="africa" ? "DG INTPA · DG NEAR · IATI" : "DG INTPA · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal"};
-const LENDER_LAYER = {AfDB:"finance", ADB:"finance", WB:"finance", AFD:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
-const LENDER_GLYPH = {AfDB:"finance", ADB:"finance", WB:"finance_wb", AFD:"finance_afd", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
+const LENDER_NAME  = {AfDB:"African Development Bank", ADB:"Asian Development Bank", WB:"World Bank", AFD:"Agence française de développement", GIZ:"GIZ, for Germany's BMZ", KfW:"KfW Development Bank, for BMZ", BMZ:"BMZ, through NGOs and others", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
+const LENDER_SUB   = {AfDB:"IATI activity files", ADB:"IATI activity files", WB:"IATI activity files", AFD:"IATI activity files", GIZ:"BMZ IATI files", KfW:"BMZ IATI files", BMZ:"BMZ IATI files", EC:R.key==="africa" ? "DG INTPA · DG NEAR · IATI" : "DG INTPA · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal"};
+const LENDER_LAYER = {AfDB:"finance", ADB:"finance", WB:"finance", AFD:"finance", GIZ:"finance", KfW:"finance", BMZ:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
+const LENDER_GLYPH = {AfDB:"finance", ADB:"finance", WB:"finance_wb", AFD:"finance_afd", GIZ:"finance_bmz", KfW:"finance_bmz", BMZ:"finance_bmz", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
 const LENDER_FAMILY = R.family;
 const HAS_AFD = R.lenders.includes("AFD");
+/* the BMZ file's three codes: GIZ, KfW and BMZ for every other channel; one glyph for all three */
+const DE_LN = new Set(["GIZ","KfW","BMZ"]);
+const HAS_BMZ = R.lenders.includes("GIZ");
 const allLendersOn = () => Object.fromEntries(LENDER_ORDER.map(k=>[k,true]));
 /* a record of a two-lender layer names its own lender: AfDB or World Bank, Commission or EIB */
 const sourceOf     = r => r.layer==="finance" || r.layer==="eu" ? (LENDER_NAME[r.lender] || LAYER_SUB[r.layer]) : LAYER_SUB[r.layer];
@@ -890,7 +894,7 @@ const LINE_LAYERS  = ["cables","pipelines","ground"];   /* drawing order: thin w
 const UNCLUSTERED  = new Set(["pipelines","cables"]);
 const clustered    = r => !UNCLUSTERED.has(r.layer);
 const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",health:"Health",education:"Education",government:"Government buildings",social:"Social infrastructure",agriculture:"Agriculture",road:"Road",rail:"Rail",air:"Airport",other:"Other / multi-sector"};
-const SHORT        = {assets:"GEM", finance:BANK, finance_wb:"World Bank", finance_afd:"AFD", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", eu_eib:"EIB", mattei:"Piano Mattei"};
+const SHORT        = {assets:"GEM", finance:BANK, finance_wb:"World Bank", finance_afd:"AFD", finance_bmz:"BMZ", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", eu_eib:"EIB", mattei:"Piano Mattei"};
 const sectorLabel  = s => SECTOR_LABEL[s] || (s ? s[0].toUpperCase()+s.slice(1) : "Other");
 
 const S = {
@@ -1259,6 +1263,10 @@ function draw(){
         ctx.moveTo(x-a, y-d); ctx.lineTo(x+a, y-d); ctx.lineTo(x+a, y-a); ctx.lineTo(x+d, y-a); ctx.lineTo(x+d, y+a); ctx.lineTo(x+a, y+a);
         ctx.lineTo(x+a, y+d); ctx.lineTo(x-a, y+d); ctx.lineTo(x-a, y+a); ctx.lineTo(x-d, y+a); ctx.lineTo(x-d, y-a); ctx.lineTo(x-a, y-a); ctx.closePath();
       }
+      else if(DE_LN.has(r.lender)){   /* BMZ: an inverted triangle */
+        const d = s*0.62;
+        ctx.moveTo(x, y+d*1.05); ctx.lineTo(x+d*1.08, y-d*0.75); ctx.lineTo(x-d*1.08, y-d*0.75); ctx.closePath();
+      }
       else ctx.rect(x-s/2, y-s/2, s, s);
     } else if(r.layer==="china"){
       const d = 2.3 + Math.min(2.8, Math.sqrt((r.size||0))/12);
@@ -1375,11 +1383,14 @@ const STAR4 = {fill:"M8 1.4 10.05 5.95 14.6 8 10.05 10.05 8 14.6 5.95 10.05 1.4 
 const CROSS = {fill:"M5.6 1.8H10.4V5.6H14.2V10.4H10.4V14.2H5.6V10.4H1.8V5.6H5.6Z",
                line:"M5.9 2.6H10.1V5.9H13.4V10.1H10.1V13.4H5.9V10.1H2.6V5.9H5.9Z",
                big:"M5.3 1H10.7V5.3H15V10.7H10.7V15H5.3V10.7H1V5.3H5.3Z"};
+/* BMZ's inverted triangle (GIZ, KfW and other channels): the glyph, its stalled outline, and the larger cluster-view marker */
+const DOWN = {fill:"M1.7 2.4H14.3L8 13.8Z", line:"M2.8 3.2H13.2L8 12.6Z", big:"M1.4 2.2H14.6L8 14.2Z"};
 const glyph = {
   assets:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${col}"/></svg>`,
   finance: col => `<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" fill="${col}"/></svg>`,
   finance_wb: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.6 14.4 8 8 14.4 1.6 8Z" fill="${col}"/></svg>`,
   finance_afd: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="${CROSS.fill}" fill="${col}"/></svg>`,
+  finance_bmz: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="${DOWN.fill}" fill="${col}"/></svg>`,
   ground:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   pipelines: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12 14 4" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none" opacity=".3"/><path d="M2 12 14 4" stroke="${col}" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>`,
   cables:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 12 13.5 4" stroke="${col}" stroke-width="1.7" stroke-linecap="round" fill="none"/><circle cx="2.8" cy="11.8" r="2.3" fill="${col}"/><circle cx="13.2" cy="4.2" r="2.3" fill="${col}"/></svg>`,
@@ -1390,6 +1401,7 @@ const glyph = {
 };
 /* a record's own glyph: the finance layer's lenders differ by shape */
 const glyphOf = r => (r.layer==="finance" && r.lender==="WB" ? glyph.finance_wb : r.layer==="finance" && r.lender==="AFD" ? glyph.finance_afd
+  : r.layer==="finance" && DE_LN.has(r.lender) ? glyph.finance_bmz
   : r.layer==="eu" && r.lender==="EIB" ? glyph.eu_eib : glyph[r.layer]);
 
 function renderSources(){
@@ -1402,11 +1414,11 @@ function renderSources(){
   el("builtnote").textContent = `Built ${DATA.meta.built} · every figure computed from the source files`;
   el("prov").innerHTML = DATA.meta.sources.map(s =>
     `<strong>${esc(s.name)}</strong> (${LAYER_LABEL[s.k]||s.k}): ${esc(s.detail)} (${esc(s.lic)}).`).join(" ")
-    + ` ${R.bank.currency==="XDR" ? `AfDB commitments converted at ${esc(DATA.meta.sdr_note)}; World Bank commitments in US dollars as published` : `${BANK} and World Bank commitments in US dollars as published`}; ${HAS_AFD ? "AFD, " : ""}European Commission and EIB commitments converted at ${esc(DATA.meta.eur_note)}${HAS("mattei") ? "; Piano Mattei amounts as the Italian Government's portal states them, converted at the same rate and never added to the lenders' figures" : ""}.`;
+    + ` ${R.bank.currency==="XDR" ? `AfDB commitments converted at ${esc(DATA.meta.sdr_note)}; World Bank commitments in US dollars as published` : `${BANK} and World Bank commitments in US dollars as published`}; ${HAS_AFD ? "AFD, " : ""}${HAS_BMZ ? "BMZ, " : ""}European Commission and EIB commitments converted at ${esc(DATA.meta.eur_note)}${HAS("mattei") ? "; Piano Mattei amounts as the Italian Government's portal states them, converted at the same rate and never added to the lenders' figures" : ""}.`;
   const un = DATA.meta.unrouted_pipelines;
   el("unrouted").textContent = un ? `GEM lists ${fmt(un)} more ${R.adj} segments without a usable route; they are not drawn or counted.` : "";
   /* shares the limits state, computed rather than typed */
-  const fa = FINANCE.filter(f=>f.ln!=="WB" && f.ln!=="AFD"), pc = (a,b) => b ? Math.round(100*a/b) + "%" : "some";
+  const fa = FINANCE.filter(f=>f.ln!=="WB" && f.ln!=="AFD" && !DE_LN.has(f.ln)), pc = (a,b) => b ? Math.round(100*a/b) + "%" : "some";
   if(el("afapprox")) el("afapprox").textContent = pc(fa.filter(f=>f.prec>0).length, fa.length);
   el("cnctry").textContent = pc(CHINA.filter(c=>c.prec===3).length, CHINA.length);
   el("cnnew").textContent = `the ${fmt(CN_NEW)}`;
@@ -1422,7 +1434,7 @@ function renderLede(){
   el("lede").innerHTML =
     `What is being built across ${R.name}, and who is paying for it. ${cap(N_DATASETS)} public datasets on one map: power
      plants, pipelines, cables and road, rail and airport works, plus the projects of the ${BANK}, the World
-     Bank, ${HAS_AFD ? "France's AFD, " : ""}China${HAS("mattei") ? ", the EU and Italy's Piano Mattei" : " and the EU"}. Charts and a table follow; every figure
+     Bank, ${HAS_AFD ? "France's AFD, " : ""}${HAS_BMZ ? "Germany's BMZ, " : ""}China${HAS("mattei") ? ", the EU and Italy's Piano Mattei" : " and the EU"}. Charts and a table follow; every figure
      carries its source.`;
 }
 
@@ -1460,12 +1472,15 @@ function renderKpis(){
   const usd = F.reduce((a,r)=>a+(r.size||0),0);
   const usdW = F.filter(r=>r.lender==="WB").reduce((a,r)=>a+(r.size||0),0);
   const usdF = F.filter(r=>r.lender==="AFD").reduce((a,r)=>a+(r.size||0),0);
+  const usdD = F.filter(r=>DE_LN.has(r.lender)).reduce((a,r)=>a+(r.size||0),0);
   const pkm = P.reduce((a,r)=>a+(r.size||0),0);
   const landings = C.reduce((a,r)=>a+((r.ref.lps||[]).length),0);
   const filtered = VIS.length !== ALL.length;
   const K = [
     ["Power pipeline", fmt(aPipe.length), `${fmt1(mw/1000)} GW · Global Energy Monitor`],
-    HAS_AFD
+    HAS_BMZ
+      ? [`${BANK} / World Bank / AFD / BMZ`, "$" + fmt1((usd-usdW-usdF-usdD)/1000) + "bn<br>$" + fmt1(usdW/1000) + "bn<br>$" + fmt1(usdF/1000) + "bn<br>$" + fmt1(usdD/1000) + "bn", `${fmt(F.length)} projects · each lender's infrastructure commitment, counted apart`]
+      : HAS_AFD
       ? [`${BANK} / World Bank / AFD`, "$" + fmt1((usd-usdW-usdF)/1000) + "bn<br>$" + fmt1(usdW/1000) + "bn<br>$" + fmt1(usdF/1000) + "bn", `${fmt(F.length)} projects · each lender's infrastructure commitment, counted apart`]
       : [`${BANK} / World Bank`, "$" + fmt1((usd-usdW)/1000) + "bn<br>$" + fmt1(usdW/1000) + "bn", `${fmt(F.length)} projects · each bank's infrastructure commitment, counted apart`],
     ["Works on the ground", fmt(G.length), "road, rail, air · OpenStreetMap"],
@@ -1574,6 +1589,7 @@ function renderLegend(){
       <div class="lg">${glyph.finance(ink)}<span><b>${BANK} project</b> · sized by $</span></div>
       <div class="lg">${glyph.finance_wb(ink)}<span><b>World Bank project</b> · same layer, other lender</span></div>
       ${HAS_AFD ? `<div class="lg">${glyph.finance_afd(ink)}<span><b>AFD financing</b> · same layer, France's agency</span></div>` : ""}
+      ${HAS_BMZ ? `<div class="lg">${glyph.finance_bmz(ink)}<span><b>German project (BMZ)</b> · by GIZ, KfW or others</span></div>` : ""}
       <div class="lg">${glyph.ground(ink)}<span><b>Works</b> · traced way</span></div>
       <div class="lg">${glyph.pipelines(ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
       <div class="lg">${glyph.cables(ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
@@ -1665,20 +1681,25 @@ function renderSel(){
     if(f.yr) rows.push(["Start year", f.yr]);
     if(f.url) links.push([f.url, "GEM record"]);
   } else if(r.layer==="finance"){
-    const wb = r.lender==="WB", afd = r.lender==="AFD";
-    rows.push(["Lender", LENDER_NAME[r.lender]||r.lender]);
+    const wb = r.lender==="WB", afd = r.lender==="AFD", de = DE_LN.has(r.lender);
+    rows.push(de ? ["Paid for by", "BMZ <i>· Germany's development ministry</i>"] : ["Lender", LENDER_NAME[r.lender]||r.lender]);
+    if(de) rows.push(["Carried out by", r.lender==="GIZ" ? "GIZ <i>· technical cooperation</i>" : r.lender==="KfW" ? "KfW Development Bank <i>· financial cooperation</i>" : "a German NGO, church, foundation or UN agency"]);
     rows.push(["Sector", esc(r.kind)]);
     if(r.size!=null || f.pub_m!=null) rows.push(["Commitment", money(r.size, f.pub_m, f.cnote, "$", "USD")]);
     if(r.place) rows.push(["Reported place", esc(r.place)]);
-    rows.push(["Geo precision", afd
+    rows.push(["Geo precision", de
+      ? "country only <i>· BMZ places every project at the capital, where the agreement is made, so it is drawn at the country's centre</i>"
+      : afd
       ? (r.prec===1 ? "a point AFD gives <i>· unnamed, with no exactness published</i>"
                     : "country only <i>· AFD's point is its agency office, so the financing is drawn at the country's centre</i>")
       : r.prec===0 ? "exact site"
       : r.prec===1 ? "named place or district <i>· the Bank marks it approximate</i>"
       : "approximate <i>· country or region centroid</i>"]);
-    if(f.purl) links.push([f.purl, `${wb ? "World Bank" : BANK} project page`]);
+    if(f.purl) links.push([f.purl, `${wb ? "World Bank" : de ? r.lender : BANK} project page`]);
     if(f.iid) links.push(["https://d-portal.org/ctrack.html?aid=" + encodeURIComponent(f.iid), "IATI activity"]);
-    note = afd
+    note = de
+      ? `BMZ commitment from IATI type-2 transactions, in euros, converted at ${esc(DATA.meta.eur_note)}. One record is one project BMZ pays for, under the agency that carries it out; the figure is BMZ's as published, and co-financiers are not counted.`
+      : afd
       ? `AFD commitment from IATI type-2 transactions, in euros, converted at ${esc(DATA.meta.eur_note)}. One record is one financing, a loan or a grant, under an AFD project; AFD money only, co-financiers are not counted.`
       : wb
       ? `World Bank commitment from IATI type-2 transactions, in US dollars as published. World Bank money only; co-financiers, including ${BANK}, are not counted.`
@@ -2349,6 +2370,11 @@ function iconFor(r){
     html = r.status==="stalled"
       ? `<svg class="cross" viewBox="0 0 16 16" aria-hidden="true"><path d="${CROSS.line}" fill="none" stroke="${v}" stroke-width="1.5" stroke-linejoin="round"/></svg>`
       : `<svg class="cross" viewBox="0 0 16 16" aria-hidden="true"><path d="${CROSS.big}" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
+  } else if(r.layer==="finance" && DE_LN.has(r.lender)){
+    const v = `var(${STATUS_VAR(r.status)})`;
+    html = r.status==="stalled"
+      ? `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="${DOWN.line}" fill="none" stroke="${v}" stroke-width="1.7" stroke-linejoin="round"/></svg>`
+      : `<svg class="tri" viewBox="0 0 16 16" aria-hidden="true"><path d="${DOWN.big}" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
   } else if(r.layer==="eu" && r.lender==="EIB"){
     const v = `var(${STATUS_VAR(r.status)})`;
     html = r.status==="stalled"
@@ -2459,9 +2485,10 @@ function clusterClick(m){
   const kFit = Math.min((W-140)/(Math.max(dw,1e-6)*base), (H-140)/(Math.max(dh,1e-6)*base));
   animateTo((b.getWest()+b.getEast())/2, (b.getSouth()+b.getNorth())/2, Math.min(KMAX, Math.max(kFit, view.k*2)));
 }
-const SRC_ORDER = ["assets","finance","finance_wb","finance_afd","ground","pipelines","cables","china","eu","eu_eib","mattei"]
-  .filter(k => HAS(k) || k==="finance_wb" || k==="eu_eib" || (k==="finance_afd" && HAS_AFD));
+const SRC_ORDER = ["assets","finance","finance_wb","finance_afd","finance_bmz","ground","pipelines","cables","china","eu","eu_eib","mattei"]
+  .filter(k => HAS(k) || k==="finance_wb" || k==="eu_eib" || (k==="finance_afd" && HAS_AFD) || (k==="finance_bmz" && HAS_BMZ));
 const srcKey = r => r.layer==="finance" && r.lender==="WB" ? "finance_wb" : r.layer==="finance" && r.lender==="AFD" ? "finance_afd"
+  : r.layer==="finance" && DE_LN.has(r.lender) ? "finance_bmz"
   : r.layer==="eu" && r.lender==="EIB" ? "eu_eib" : r.layer;
 /* with the EIB counted apart, the rest of the EU layer is the Commission */
 const SRC_SHORT = {...SHORT, eu:"Commission"};

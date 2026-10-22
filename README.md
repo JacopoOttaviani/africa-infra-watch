@@ -27,7 +27,7 @@ The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
 rivers, lakes and cities around Africa), with
 the eight data layers drawn as circles (power units, sized by MW), squares,
-diamonds and crosses (AfDB, World Bank and AFD projects, sized by commitment), triangles
+diamonds, crosses and inverted triangles (AfDB, World Bank, AFD and BMZ projects, sized by commitment), triangles
 (Chinese-financed projects from AidData, 2000–2023, sized by commitment, with
 the works' OpenStreetMap footprint outlined from country zoom in), five- and
 four-pointed stars (EU-financed records: European Commission contracts and EIB
@@ -82,9 +82,10 @@ bloc (twelve so far: Russia, Turkey, Italy, China, the EU, the United States, Ge
 
 Eleven public datasets in eight layers, deliberately kept apart because they share no
 project identifier. Summing across them double-counts. Both pages show the same
-eight layers over the same records; the finance layer holds three lenders on each,
-drawn as squares (AfDB), diamonds (World Bank) and crosses (AFD, Africa edition
-only), the EU finance layer holds
+eight layers over the same records; the finance layer holds four lenders on each,
+drawn as squares (AfDB), diamonds (World Bank), crosses (AFD) and inverted
+triangles (Germany's BMZ, split by GIZ, KfW and other channels; AFD and BMZ in
+the Africa edition only), the EU finance layer holds
 the European Commission and the European Investment Bank, both drawn as stars,
 and the Piano Mattei layer is the Italian Government's own project list, drawn
 as hexagons.
@@ -95,6 +96,7 @@ as hexagons.
 | Finance | African Development Bank, IATI 2.03 activity files | 1,683 projects | who is paying, and how much |
 | Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 890 projects | the same, for the other big multilateral lender |
 | Finance | Agence française de développement (AFD), IATI 2.03 activity files (44 African country files) | 394 financings | the same, loan by loan and grant by grant, for France's development agency |
+| Finance | Germany's Federal Ministry for Economic Cooperation and Development (BMZ), IATI 2.03 activity files (50 African country files) | 1,615 projects | the same, project by project, for Germany's development ministry, under the agency that carries each out: GIZ, KfW or another |
 | Ground truth | OpenStreetMap via Overpass | 3,700 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 323 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
@@ -112,7 +114,10 @@ added on 2026-10-02 (`fetch_sources.py eu`); the Piano Mattei layer on 2026-10-0
 Mattei (Italy)" (`ln=IT`). The EU layer was; its records join the lender filter
 as "European Union institutions" (`ln=EU`). AFD joined the finance layer as its
 third lender on 2026-10-21 (`fetch_sources.py afd`, `ln=AFD`, its own "France"
-family in the rail), drawn as crosses.
+family in the rail), drawn as crosses. Germany's BMZ joined it as the fourth on
+2026-10-22 (`fetch_sources.py bmz`), one file read into three lender codes,
+`ln=GIZ`, `ln=KfW` and `ln=BMZ`, under a "Germany" family, all drawn as
+inverted triangles.
 
 **AFD in the finance layer** (Africa edition only; `afd_files` in `region.py`)
 is the Agence française de développement's IATI 2.03 files, one per African
@@ -143,6 +148,30 @@ builders rank with the named places (precision 1) and the card calls "a point
 AFD gives". The Liberia file also holds two Sri Lankan financings, which the
 placement window drops. AFD's files hold signed financings only, under
 implementation or completed, so it has no announced, approved or stalled records.
+
+**BMZ in the finance layer** (Africa edition only; `bmz_files` in `region.py`,
+`BMZ_LENDERS` beside it) is the IATI 2.03 files of Germany's Federal Ministry
+for Economic Cooperation and Development, one per African partner country
+(`bmz-ke` …) on the IATI Registry, licence `cc-by` there; there is no file for
+Comoros, Equatorial Guinea, Mauritius or Seychelles, and the regional files
+(189, 289, 298) place nothing and are left out of the map. **One BMZ record is
+a project** the ministry pays for (hierarchy 1). Its lender code is the agency
+that carries it out, the extending organisation (role 3): `GIZ`
+(XM-DAC-5-52, technical cooperation), `KfW` (XM-DAC-5-2, financial
+cooperation), and `BMZ` for every other channel (German NGOs and church
+agencies, Engagement Global, foundations, UN agencies). Titles are German with
+an English one beside most; the English is used. KfW pays out as
+disbursements (transaction type 3), GIZ and the others as expenditure (type
+4); no project carries both, so both count as paid out. Budget support is the
+usual aid-type A01/A02 rule (six KfW projects on 2026-10-22). **Location:**
+every project has one point, the capital, described as the "location of
+central agreement and coordination with partner government": `_bmz_points()`
+moves all of them to the country's centre and flags them `office_point`, so a
+BMZ marker says where Germany works, not where it builds. GIZ's own registry
+file (`giz-act`) holds only GIZ's work for other clients, 66 projects
+worldwide with no locations, and is not read. Card links go to GIZ's
+project-data page or KfW's project database where BMZ's document links give
+one.
 
 **Counting rules for money** (since the fact-check of 14 Oct 2026, see
 `factcheck/2026-10-14-homepage/`). The fetchers write the amount the totals add
@@ -490,7 +519,16 @@ adds it to the CRS dollars. The spec's `"implementer"` adds
 `implementer_block`: Expertise France, which publishes no records of its
 own, is named as implementer on European Commission contracts in the map's
 EU layer, and the pack lists those contracts (`implemented`) for a table on
-/france/; the money stays the Commission's and is never added to France's. The OECD's
+/france/; the money stays the Commission's and is never added to France's.
+`fetch_germany()` adds two BMZ blocks (2026-10-22): `bmz_block()`, the
+ministry's whole African portfolio, every sector, read from its IATI country
+and regional files (counts and euros by channel GIZ / KfW / others, country,
+CRS sector group and commitment year, what is running now, the largest
+running projects), and `bmz_layer_block()`, the map's BMZ records
+(`iati_bmz_finance.geojson`) through `layer_block`. /germany/ shows them as
+its own section, one inverted triangle per country on the profile map
+(`kind: "down"` in `donor.template.html`) and five charts, never added to the
+CRS dollars. The OECD's
 public endpoint answers bursts with HTTP 429; `_csv_rows` waits and retries.
 With twelve profiles the row on the map and the dashboard shows the badges
 only (the button title carries the name); the profiles show the names and wrap.

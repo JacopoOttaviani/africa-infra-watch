@@ -29,6 +29,7 @@ LAYERS = {
     f"iati_{REGION.bank['publisher']}_finance": ("finance", 300),
     "iati_worldbank_finance": ("finance_wb", 500),
     "iati_afd_finance": ("finance_afd", 250),
+    "iati_bmz_finance": ("finance_bmz", 1000),
     "osm_construction": ("ground", 500),
     "gem_oil_gas_pipelines": ("pipelines", 150),
     "telegeography_cables": ("cables", 40),
@@ -37,7 +38,8 @@ LAYERS = {
     "piano_mattei": ("mattei", 50),
 }
 LAYERS = {k: v for k, v in LAYERS.items() if v[0] in REGION.layers or v[0] == "finance_wb"
-          or (v[0] == "finance_afd" and getattr(REGION, "afd_files", None))}
+          or (v[0] == "finance_afd" and getattr(REGION, "afd_files", None))
+          or (v[0] == "finance_bmz" and getattr(REGION, "bmz_files", None))}
 FLOOR_SCALE = 1.0 if REGION.key == "africa" else 0.25
 MAX_DROP = 0.20          # refuse if a layer lost more than a fifth of its records
 WINDOW = REGION.data_window   # lon0, lat0, lon1, lat1

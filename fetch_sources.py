@@ -39,7 +39,7 @@ import zipfile
 from fetch_basemap import dp
 from shared import EUR_USD, fmt_date, today, update_meta
 
-from region import AFRICA_ISO, AFRICA_NAMES, REGION, ROOT_DATA  # noqa: E402,F401  (AFRICA_* re-exported for fetch_minerals)
+from region import AFRICA_ISO, AFRICA_NAMES, BMZ_LENDERS, REGION, ROOT_DATA  # noqa: E402,F401  (AFRICA_* re-exported for fetch_minerals)
 
 # this edition's data directory (data/, or data/sea/ for Southeast Asia)
 DATA = REGION.data_dir
@@ -247,12 +247,34 @@ IATI_AMOUNT_FIX = {
 #              Guinea-Bissau); _afd_points() below moves those to the
 #              country's centre. The Liberia file also holds two Sri Lankan
 #              financings (recipient LK, at Colombo), which place_iati drops.
+#   BMZ        50 African country files (bmz-ke …) from Germany's development
+#              ministry, EUR amounts, one record per project it pays for
+#              (hierarchy 1 only). The agency that carries the project out
+#              is the extending organisation (role 3): GIZ (XM-DAC-5-52),
+#              KfW (XM-DAC-5-2), or an NGO, church or UN agency; that is
+#              the record's lender code (BMZ_LENDERS). Every project has
+#              one location, the partner country's capital, described as
+#              the "location of central agreement and coordination with
+#              partner government", never a site: _bmz_points() moves them
+#              all to the country's centre. GIZ files its spending as
+#              expenditure (transaction type 4), KfW as disbursement (3);
+#              no project carries both, so both count as paid out. Titles
+#              are German, with an English one beside most.
 IATI_PUBLISHERS = {
     REGION.bank["publisher"]: {"lender": REGION.bank["code"], "meta": "finance", "files": REGION.bank["files"]},
     "worldbank": {"lender": "World Bank", "meta": "finance_wb", "files": REGION.wb_files},
 }
 if getattr(REGION, "afd_files", None):
     IATI_PUBLISHERS["afd"] = {"lender": "AFD", "meta": "finance_afd", "files": REGION.afd_files}
+if getattr(REGION, "bmz_files", None):
+    IATI_PUBLISHERS["bmz"] = {"lender": "BMZ", "meta": "finance_bmz", "files": REGION.bmz_files}
+
+# BMZ's extending organisations that get a lender code of their own; any
+# other channel stays "BMZ"
+BMZ_CHANNEL = {"XM-DAC-5-52": "GIZ", "XM-DAC-5-2": "KfW"}
+# the project pages GIZ's and KfW's records link to, among BMZ's document links
+BMZ_PROJECT_PAGE = re.compile(r"projectdata\.giz\.de/|/ipfz/Projektdatenbank/")
+XML_LANG = "{http://www.w3.org/XML/1998/namespace}lang"
 
 # AFD files its policy loans as project aid (aid-type C01), so the A01/A02
 # rule misses them; its own title or description says which they are. On 21
@@ -301,6 +323,27 @@ def _afd_points(feats, offices):
     print(f"  AFD: {len(offices)} agency office point(s); {moved:,} location(s) there moved to the "
           f"country's centre, {given:,} kept where AFD puts them")
     return out, moved, given
+
+
+def _bmz_points(feats):
+    """BMZ places every project at the partner country's capital, the place
+    of the agreement with the government, whatever the project builds and
+    wherever. All of them go to the country's centre, marked so; one whose
+    country is not on the basemap stays where it is, for place_iati to drop."""
+    out, moved = [], 0
+    for f in feats:
+        p = f["properties"]
+        iso = p.get("country")
+        clon, clat = (ISLAND_POINT.get(iso) or _country_centre(iso)) if iso else (None, None)
+        if clon is not None:
+            f = {"type": "Feature",
+                 "geometry": {"type": "Point", "coordinates": [round(clon, 5), round(clat, 5)]},
+                 "properties": dict(p, location_name=None, geo_precision="2", location_class="1",
+                                    office_point=True)}
+            moved += 1
+        out.append(f)
+    print(f"  BMZ: {moved:,} of {len(feats):,} location(s), all at a capital, moved to the country's centre")
+    return out, moved
 
 
 # Cabo Verde to Mauritius, Tunis to the Cape. Wider than the continent so a
@@ -443,6 +486,12 @@ def fetch_iati(publisher=None, infra_only=True):
             st = act.find("activity-status")
             code = st.get("code") if st is not None else None
             title = act.find("title/narrative")
+            lender = conf["lender"]
+            if publisher == "bmz":
+                # the English title where BMZ gives one, else the German
+                title = next((n for n in act.iterfind("title/narrative") if n.get(XML_LANG) == "en"), title)
+                ext = next((po.get("ref") for po in act.iter("participating-org") if po.get("role") == "3"), None)
+                lender = BMZ_CHANNEL.get(ext, "BMZ")
             ident = act.find("iati-identifier")
             country = act.find("recipient-country")
             region = act.find("recipient-region")
@@ -481,7 +530,7 @@ def fetch_iati(publisher=None, infra_only=True):
                     td = tx.find("transaction-date")
                     if td is not None and (td.get("iso-date") or "")[:4].isdigit():
                         commit_years.append(int(td.get("iso-date")[:4]))
-                elif tt.get("code") == "3":
+                elif tt.get("code") == "3" or (publisher == "bmz" and tt.get("code") == "4"):
                     disbursed += amt
                 currency = v.get("currency") or currency
             # What the totals add up: the infrastructure share of the
@@ -520,6 +569,10 @@ def fetch_iati(publisher=None, infra_only=True):
                 m = re.match(r"XM-DAC-46004-(\d{5}-\d{3})", iid)
                 if m:
                     project_url = f"https://www.adb.org/projects/{m.group(1)}/main"
+            elif publisher == "bmz":
+                # GIZ's project-data page or KfW's project database entry
+                project_url = next((d.get("url") for d in act.iter("document-link")
+                                    if BMZ_PROJECT_PAGE.search(d.get("url") or "")), None)
             iso_here = country.get("code") if country is not None else None
             # loan or grant: the activity's default finance type, else its first transaction's
             ft = act.find("default-finance-type")
@@ -548,7 +601,7 @@ def fetch_iati(publisher=None, infra_only=True):
                     "geometry": {"type": "Point", "coordinates": [lon, lat]},
                     "properties": {
                         "source": publisher.upper(),
-                        "lender": conf["lender"],
+                        "lender": lender,
                         "layer": "finance",
                         "name": title.text if title is not None else None,
                         "location_name": nm.text if nm is not None else None,
@@ -596,6 +649,13 @@ def fetch_iati(publisher=None, infra_only=True):
     if publisher == "afd":
         feats, moved, given = _afd_points(feats, offices)
         extra = {"office_points": len(offices), "at_office": moved, "place_given": given}
+    if publisher == "bmz":
+        feats, moved = _bmz_points(feats)
+        acts = {}
+        for f in feats:
+            acts.setdefault(f["properties"]["iati_id"], f["properties"]["lender"])
+        by = collections.Counter(acts.values())
+        extra = {"at_capital": moved, **{f"n_{k.lower()}": by.get(k, 0) for k in BMZ_LENDERS}}
     feats = place_iati(feats)
     out = write_layer(f"iati_{publisher}_finance", feats)
     update_meta(conf["meta"], fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
@@ -2465,6 +2525,7 @@ LAYERS = {
     "iati": fetch_iati,                 # the region's development bank: AfDB, or ADB
     "wb": lambda: fetch_iati("worldbank"),
     "afd": lambda: fetch_iati("afd"),
+    "bmz": lambda: fetch_iati("bmz"),
     "osm": fetch_osm,
     "pipes": fetch_pipelines,
     "cables": fetch_cables,
@@ -2472,9 +2533,9 @@ LAYERS = {
     "eu": fetch_eu,
     "mattei": fetch_mattei,
 }
-# the layers this edition has (no Piano Mattei or AFD outside Africa)
+# the layers this edition has (no Piano Mattei, AFD or BMZ outside Africa)
 LAYERS = {k: f for k, f in LAYERS.items() if k != "mattei" or "mattei" in REGION.layers}
-LAYERS = {k: f for k, f in LAYERS.items() if k != "afd" or "afd" in IATI_PUBLISHERS}
+LAYERS = {k: f for k, f in LAYERS.items() if k not in ("afd", "bmz") or k in IATI_PUBLISHERS}
 
 if __name__ == "__main__":
     want = [a.lower() for a in sys.argv[1:]] or list(LAYERS)

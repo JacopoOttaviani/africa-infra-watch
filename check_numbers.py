@@ -103,7 +103,7 @@ def main():
         k = key_of[stem]
         check(f"{stem}: features == meta.{k}.records", len(fs), meta[k]["records"])
     for stem, k in (("iati_afdb_finance", "finance"), ("iati_worldbank_finance", "finance_wb"),
-                    ("iati_afd_finance", "finance_afd")):
+                    ("iati_afd_finance", "finance_afd"), ("iati_bmz_finance", "finance_bmz")):
         check(f"{stem}: distinct iati_id == meta.{k}.activities",
               len({f["properties"].get("iati_id") for f in feats[stem]}), meta[k]["activities"])
     check("china: precise + approximate + country_level == records (unlocated are left out)",
@@ -170,6 +170,19 @@ def main():
         check("france pack layer: office + own points == n",
               (fl["left_out"].get("at_office") or 0) + (fl["left_out"].get("place_given") or 0), fl["n"])
         check("france pack layer.fetched == meta.finance_afd.fetched", fl.get("fetched"), meta["finance_afd"]["fetched"])
+    if packs["germany"].get("layer"):
+        gl = packs["germany"]["layer"]
+        check("germany pack layer.n == BMZ layer", gl.get("n"), meta["finance_bmz"]["records"])
+        check("germany pack layer: GIZ, KfW, BMZ == meta n_giz, n_kfw, n_bmz",
+              {x["publisher"]: x["n"] for x in gl["publishers"]},
+              {k: meta["finance_bmz"][f"n_{k.lower()}"] for k in ("GIZ", "KfW", "BMZ") if meta["finance_bmz"][f"n_{k.lower()}"]})
+        check("germany pack layer.fetched == meta.finance_bmz.fetched", gl.get("fetched"), meta["finance_bmz"]["fetched"])
+    if packs["germany"].get("bmz"):
+        bz = packs["germany"]["bmz"]
+        check("germany pack bmz: channels sum to n", sum(v["n"] for v in bz["channels"].values()), bz["n"])
+        check("germany pack bmz: countries + regional == n",
+              sum(v["n"] for v in bz["countries"].values()) + sum(v["n"] for v in bz["regional"].values()), bz["n"])
+        check("germany pack bmz: running == status 2", sum(v["active"] for v in bz["channels"].values()), bz["status"].get("2", 0))
     if packs["france"].get("implemented"):
         im = packs["france"]["implemented"]
         named = [f["properties"] for f in feats["iati_eu_finance"]
@@ -203,6 +216,12 @@ def main():
     check("map: AFD rows == meta.finance_afd.activities", ln["AFD"], meta["finance_afd"]["activities"])
     check("afd: at an office + where AFD puts them == records",
           meta["finance_afd"]["at_office"] + meta["finance_afd"]["place_given"], meta["finance_afd"]["records"])
+    bmz_rows = sum(ln[k] for k in ("GIZ", "KfW", "BMZ"))
+    check("map: GIZ + KfW + BMZ rows == meta.finance_bmz.activities", bmz_rows, meta["finance_bmz"]["activities"])
+    check("map: GIZ, KfW, BMZ rows == meta.finance_bmz n_giz, n_kfw, n_bmz", (ln["GIZ"], ln["KfW"], ln["BMZ"]),
+          (meta["finance_bmz"]["n_giz"], meta["finance_bmz"]["n_kfw"], meta["finance_bmz"]["n_bmz"]))
+    check("bmz: every location at a capital, moved to the country's centre",
+          meta["finance_bmz"]["at_capital"], meta["finance_bmz"]["records"])
     for k in ("assets", "pipelines", "cables", "china", "eu", "mattei"):
         check(f"map: {k} rows == meta.{k}.records", len(rows(mp[k])[0]), meta[k]["records"])
     check("map: source cards == shared.sources(meta)", mp["meta"]["sources"], shared.sources(meta))
@@ -212,7 +231,7 @@ def main():
         check(f"map: {part} == meta", mp["meta"][part], {k: src.get(k) for k in mp["meta"][part]})
 
     counts = {"assets": len(rows(mp["assets"])[0]), "finance": ln["AfDB"], "finance_wb": ln["WB"], "finance_afd": ln["AFD"],
-              "ground": len(rows(mp["ground"])[0])}
+              "finance_bmz": bmz_rows, "ground": len(rows(mp["ground"])[0])}
     for k in ("pipelines", "cables", "china", "eu", "mattei"):
         counts[k] = len(rows(mp[k])[0])
 
@@ -230,7 +249,7 @@ def main():
             dash = p
         lnx = collections.Counter(col(p["finance"], "ln"))
         got = {"assets": len(rows(p["assets"])[0]), "finance": lnx["AfDB"], "finance_wb": lnx["WB"], "finance_afd": lnx["AFD"],
-               "ground": len(rows(p["ground"])[0])}
+               "finance_bmz": lnx["GIZ"] + lnx["KfW"] + lnx["BMZ"], "ground": len(rows(p["ground"])[0])}
         for k in ("pipelines", "cables", "china", "eu", "mattei"):
             got[k] = len(rows(p[k])[0]) if k in p else None
         check(f"{label}: layer counts == map payload", got, counts)
@@ -252,6 +271,7 @@ def main():
         (r"(\d[\d,]*) projects financed by the African Development Bank", counts["finance"]),
         (r"(\d[\d,]*) by the World Bank", counts["finance_wb"]),
         (r"(\d[\d,]*) financings by the Agence", counts["finance_afd"]),
+        (r"(\d[\d,]*) projects paid for by Germany's development ministry", counts["finance_bmz"]),
         (r"(\d[\d,]*) construction works traced", counts["ground"]),
         (r"(\d[\d,]*) oil and gas pipeline segments", counts["pipelines"]),
         (r"(\d[\d,]*) submarine cables landing", counts["cables"]),
@@ -263,6 +283,7 @@ def main():
          round(sum((u or 0) for u, l in zip(usd, lns) if l == "AfDB") / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of World Bank", round(sum((u or 0) for u, l in zip(usd, lns) if l == "WB") / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of AFD", round(sum((u or 0) for u, l in zip(usd, lns) if l == "AFD") / 1000, 1)),
+        (r"USD (\d[\d,.]*) billion of BMZ", round(sum((u or 0) for u, l in zip(usd, lns) if l in ("GIZ", "KfW", "BMZ")) / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of Chinese official", round(total("china", "usd_m") / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of European Union", round(total("eu", "usd_m") / 1000, 1)),
         (r"EUR (\d[\d,.]*) billion of stated Piano Mattei", round(total("mattei", "eur_m") / 1000, 2)),

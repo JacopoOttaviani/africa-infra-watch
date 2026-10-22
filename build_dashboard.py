@@ -23,7 +23,7 @@ import re
 import sys
 
 from fetch_basemap import WIN, dp, ring_area, rnd, touches
-from region import REGION
+from region import BMZ_LENDERS, REGION
 from shared import (  # noqa: F401  (SDR_* re-exported for build_map.py)
     BANK, DASHBOARD_LAYERS, DATA, DOCS, EUR_USD, LOCAL_NOTE, LOCAL_USD, SDR_NOTE, SDR_USD, brand_assets, inline_vendor, load_meta,
     SITE_NAME, china_span, payload_meta, site_facts, wrap_document,
@@ -96,6 +96,10 @@ def build_context():
 FINANCE_FILES = [(f"iati_{REGION.bank['publisher']}_finance.geojson", BANK), ("iati_worldbank_finance.geojson", "WB")]
 if getattr(REGION, "afd_files", None):
     FINANCE_FILES.append(("iati_afd_finance.geojson", "AFD"))
+# BMZ's file holds three lender codes, one per agency that carries a project
+# out (GIZ, KfW, BMZ for the rest), read from each record's own lender field
+if getattr(REGION, "bmz_files", None):
+    FINANCE_FILES.append(("iati_bmz_finance.geojson", "BMZ"))
 TO_USD = {"XDR": SDR_USD, "USD": 1.0, "EUR": EUR_USD, **LOCAL_USD}
 
 # DAC 5-digit purpose codes → the dashboard's sector vocabulary.
@@ -276,12 +280,13 @@ def build_finance():
     region centroid. The best location a lender publishes becomes the marker.
     """
     best = {}
-    for fname, ln in FINANCE_FILES:
+    for fname, file_ln in FINANCE_FILES:
         if not (DATA / fname).exists():
-            print(f"   ! {fname} missing, lender {ln} skipped")
+            print(f"   ! {fname} missing, lender {file_ln} skipped")
             continue
         for f in load(fname):
             p = f["properties"]
+            ln = p.get("lender") if file_ln == "BMZ" else file_ln
             pid = p.get("iati_id")
             if not pid:
                 continue
@@ -671,9 +676,10 @@ def main():
     print("finance …")
     finance = build_finance()
     fc = finance["cols"]
-    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB", "AFD")}
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB", "AFD", *BMZ_LENDERS)}
     print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank"
-          + (f", {by_ln['AFD']:,} AFD" if by_ln["AFD"] else "") + ")")
+          + (f", {by_ln['AFD']:,} AFD" if by_ln["AFD"] else "")
+          + ("".join(f", {by_ln[k]:,} {k}" for k in BMZ_LENDERS if by_ln[k])) + ")")
 
     print("ground  …")
     ground = build_ground(idx)
@@ -770,7 +776,9 @@ def main():
         facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei),
         description=f"Dashboard of announced, approved and ongoing infrastructure in {REGION.name}: "
                     f"power plants and oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']}, "
-                    + ("World Bank and French development agency (AFD) finance, "
+                    + ("World Bank, French development agency (AFD) and German development ministry (BMZ) finance, "
+                       if any(ln == "BMZ" for _, ln in FINANCE_FILES) else
+                       "World Bank and French development agency (AFD) finance, "
                        if any(ln == "AFD" for _, ln in FINANCE_FILES) else "and World Bank finance, ") +
                     "Chinese-financed projects "
                     f"{china_span()[0]}–{china_span()[1]} (AidData), European Union finance (European Commission and EIB), "

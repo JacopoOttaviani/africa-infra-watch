@@ -250,7 +250,9 @@ def draw(assets, finance, ground, china, eu, mattei, countries, is10m):
     for glyph, num, src in (
         ("circle", f"{n_a:,} power units", "Global Energy Monitor"),
         # two layers, two counts: the bank projects and the EU's own records are never added
-        ("rect", f"{n_f:,} {BANK}, World Bank and AFD projects · {n_e:,} EU records"
+        ("rect", f"{n_f:,} {BANK}, World Bank, AFD and BMZ projects · {n_e:,} EU records"
+         if any(r[finance["cols"].index("ln")] in ("GIZ", "KfW", "BMZ") for r in finance["rows"])
+         else f"{n_f:,} {BANK}, World Bank and AFD projects · {n_e:,} EU records"
          if any(r[finance["cols"].index("ln")] == "AFD" for r in finance["rows"])
          else f"{n_f:,} {BANK} and World Bank projects · {n_e:,} EU records", "via IATI"),
         ("tri", f"{n_c:,} Chinese-financed projects", f"AidData, {china_span()[0]}–{china_span()[1]}"),

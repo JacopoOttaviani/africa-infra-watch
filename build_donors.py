@@ -906,10 +906,136 @@ def build_usa(pack):
         "power units and pipeline segments (the oil majors, General Electric, Symbion, AES), TeleGeography's cables (Google, Meta, AT&T).")
 
 
+def _bmz(bmz, layer):
+    """The Germany profile's BMZ part: the ministry's whole African portfolio
+    from its IATI files (every sector, by channel, country, sector group and
+    year), and the infrastructure subset the main map draws. Tokens, three
+    tables, the charts and one triangle per country. Euros throughout; never
+    added to the CRS dollars."""
+    from shared import EUR_NOTE, EUR_USD
+    pct = lambda a, b: f"{100 * a / b:.0f}" if b else "0"
+    bn = lambda eur: f"{eur / 1e9:,.1f}"
+    ch = bmz["channels"]
+    chan = lambda c, k: (ch.get(c) or {}).get(k, 0)
+    cts = sorted(bmz["countries"].items(), key=lambda kv: -kv[1]["eur"])
+    by_active = sorted(bmz["countries"].items(), key=lambda kv: -kv[1]["active"])
+    groups = sorted(((k, v) for k, v in bmz["groups"].items() if k != "other"), key=lambda kv: -kv[1]["eur"])
+    glabel = bmz["group_labels"]
+    # a group's label inside a sentence: "government, civil society and peace"
+    gprose = lambda k: " and ".join(glabel.get(k, k).lower().rsplit(", ", 1))
+    years = [int(y) for y, v in bmz["years"].items() if sum(v.values()) > 0]
+    regional = bmz.get("regional") or {}
+    running = bmz["status"].get("2", 0)
+
+    rows = []
+    for iso, v in cts:
+        rows.append([td(esc(v["name"]), "name"), td(f"{v['n']:,}", "num"), td(f"{v['active']:,}", "num"),
+                     td(f"{v['GIZ']:,}", "num"), td(f"{v['KfW']:,}", "num"), td(f"{v['BMZ']:,}", "num"),
+                     td(f"{v['eur'] / 1e6:,.0f}", "num"), td(pct(v["paid"], v["eur"]) + "%", "num")])
+    t_ctry = table(f"BMZ projects by African partner country, every sector, from the ministry's {bmz['files']} IATI files (generated "
+                   f"{fmt_date(bmz['generated'])}): all projects on record, those running now (IATI status 2), who carries them out, and "
+                   "EUR million committed with the share paid out. Regional programmes, which name no country, are counted below the table, not in it.",
+                   ["Country", "#Projects", "#Running", "#GIZ", "#KfW", "#Others", "#EUR m", "#Paid out"], rows)
+    rows = []
+    for a in bmz["running_largest"]:
+        where = NAMES.get(a["iso"], a["iso"]) if a["iso"] else (regional.get(a["region"]) or {}).get("name", "regional")
+        link = (f'<a href="{esc(a["url"])}" target="_blank" rel="noopener noreferrer">{"GIZ" if "giz" in a["url"] else "KfW"}</a>'
+                if a["url"] else f'<a href="https://d-portal.org/ctrack.html?aid={esc(a["id"])}" target="_blank" rel="noopener noreferrer">IATI</a>')
+        rows.append([td(a["start"] or "–", "num"), td(esc(where), "name"), td(f"{a['commit'] / 1e6:,.1f}", "num"),
+                     td(esc(a["title"]) + f'<br><span class="dim">{esc(bmz["channel_labels"][a["channel"]].split(",")[0].split(":")[0])}'
+                        + (f" · {esc(a['kind'])}" if a["kind"] else "") + "</span>"),
+                     td(esc(glabel.get(a["group"], a["group"]))), td(link)])
+    t_run = table(f"The {len(rows)} largest BMZ projects in Africa running now (IATI status 2), every sector, by start year, in EUR million "
+                  "committed as BMZ publishes them. The link is GIZ's or KfW's own project page where BMZ gives one, else the IATI record.",
+                  ["#Start", "Where", "#EUR m", "Project · carried out by", "Sector", "Link"], rows)
+    tokens = {
+        "__BMZ_N__": f"{bmz['n']:,}", "__BMZ_EUR_BN__": bn(bmz["eur_commit"]), "__BMZ_PAID_PCT__": pct(bmz["eur_paid"], bmz["eur_commit"]),
+        "__BMZ_FROM__": str(min(years)) if years else "–", "__BMZ_TO__": str(max(years)) if years else "–",
+        "__BMZ_RUNNING__": f"{running:,}", "__BMZ_COUNTRIES__": str(len(bmz["countries"])),
+        "__BMZ_RUNNING_COUNTRIES__": str(sum(1 for v in bmz["countries"].values() if v["active"])),
+        "__BMZ_REGIONAL_N__": f"{sum(v['n'] for v in regional.values()):,}",
+        "__BMZ_REGIONAL_EUR_BN__": bn(sum(v["eur"] for v in regional.values())),
+        "__BMZ_FILES__": str(bmz["files"]), "__BMZ_FETCHED__": fmt_date(bmz["fetched"]), "__BMZ_GENERATED__": fmt_date(bmz["generated"]),
+        "__BMZ_INFRA_N__": f"{bmz['infra']['n']:,}", "__BMZ_LOANS_N__": f"{bmz['kinds'].get('loan', 0):,}",
+        "__BMZ_TOP_COUNTRY__": cts[0][1]["name"] if cts else "–", "__BMZ_TOP_COUNTRY_BN__": bn(cts[0][1]["eur"]) if cts else "–",
+        "__BMZ_TOP_COUNTRY_N__": f"{cts[0][1]['n']:,}" if cts else "–",
+        "__BMZ_TOP2_COUNTRY__": cts[1][1]["name"] if len(cts) > 1 else "–", "__BMZ_TOP3_COUNTRY__": cts[2][1]["name"] if len(cts) > 2 else "–",
+        "__BMZ_TOP_ACTIVE_COUNTRY__": by_active[0][1]["name"] if by_active else "–",
+        "__BMZ_TOP_ACTIVE_N__": f"{by_active[0][1]['active']:,}" if by_active else "–",
+        "__BMZ_TOP_GROUP__": gprose(groups[0][0]) if groups else "–",
+        "__BMZ_TOP_GROUP_BN__": bn(groups[0][1]["eur"]) if groups else "–",
+        "__BMZ_TOP2_GROUP__": gprose(groups[1][0]) if len(groups) > 1 else "–",
+        "__BMZ_TOP2_GROUP_BN__": bn(groups[1][1]["eur"]) if len(groups) > 1 else "–",
+        "__TABLE_BMZ_CTRY__": t_ctry, "__TABLE_BMZ_RUN__": t_run,
+    }
+    for c, key in (("GIZ", "GIZ"), ("KfW", "KFW"), ("BMZ", "OTHER")):
+        tokens.update({f"__BMZ_{key}_N__": f"{chan(c, 'n'):,}", f"__BMZ_{key}_EUR_BN__": bn(chan(c, "eur")),
+                       f"__BMZ_{key}_RUNNING__": f"{chan(c, 'active'):,}", f"__BMZ_{key}_PAID_PCT__": pct(chan(c, "paid"), chan(c, "eur"))})
+
+    charts = {
+        "c-bmz-year": {"type": "columns", "rows": [{"x": y, "value": sum(v.values()), "text": f"{sum(v.values()) / 1e6:,.0f}"}
+                                                    for y, v in bmz["years"].items() if int(y) >= 2005]},
+        "c-bmz-chan": {"type": "bars", "rows": [{"label": c if c != "BMZ" else "Others", "value": chan(c, "eur"),
+                                                 "text": f"{chan(c, 'eur') / 1e6:,.0f} ({chan(c, 'n'):,})"} for c in ("KfW", "GIZ", "BMZ")]},
+        "c-bmz-group": {"type": "bars", "rows": [{"label": glabel.get(k, k), "value": v["eur"], "text": f"{v['eur'] / 1e6:,.0f} ({v['n']:,})"}
+                                                  for k, v in groups[:10]]},
+        "c-bmz-ctry": {"type": "bars", "rows": [{"label": v["name"], "value": v["eur"], "text": f"{v['eur'] / 1e6:,.0f} ({v['n']:,})"}
+                                                 for _, v in cts[:12]]},
+    }
+    from fetch_donors import centre
+    top = cts[0][1]["eur"] if cts else 1
+    tris = []
+    for iso, v in cts:
+        lon, lat = centre(iso)
+        if lon is None:
+            continue
+        x, y = px(lon, lat)
+        tris.append({"x": x, "y": y, "r": round(3 + 9 * (v["eur"] / top) ** 0.5, 1), "cls": "bmz",
+                     "tip": f"<b>{esc(v['name'])}</b>{v['n']:,} BMZ projects on record, {v['active']:,} running now<br>"
+                            f"GIZ {v['GIZ']:,} · KfW {v['KfW']:,} · others {v['BMZ']:,}<br>EUR {v['eur'] / 1e6:,.0f} m committed, "
+                            f"{pct(v['paid'], v['eur'])}% paid out<br>Drawn at the country's interior point: BMZ gives only the capital"})
+
+    if layer:
+        pubs = {x["publisher"]: x for x in layer["publishers"]}
+        sect = [x for x in layer["sectors"] if x["sector"] != "other"]
+        lo = layer.get("left_out") or {}
+        rows = []
+        for r in layer["largest"]:
+            rows.append([td(r["year"] or "–", "num"), td(esc(NAMES.get(r["iso"], r["iso"] or "–")), "name"),
+                         td(f"{r['eur'] / 1e6:,.1f}", "num"),
+                         td(esc(r["name"].strip()) + f'<br><span class="dim">{esc(r["lender"])}' + (f" · {esc(r['kind'])}" if r["kind"] else "") + "</span>"),
+                         td(esc(_sec(r["sector"]))), td(st(r["status"])),
+                         td(f'<a href="{esc(r["url"])}" target="_blank" rel="noopener noreferrer">{esc(r["lender"])}</a>' if r["url"]
+                            else f'<a href="https://d-portal.org/ctrack.html?aid={esc(r["id"])}" target="_blank" rel="noopener noreferrer">IATI</a>')])
+        t_layer = table(f"The {len(rows)} largest BMZ infrastructure projects in the map's development-finance layer, by the year of their first "
+                        f"commitment, in EUR million: the infrastructure share the map counts. The dollar figures on the map convert at {EUR_NOTE}.",
+                        ["#Year", "Country", "#EUR m", "Project · carried out by", "Sector", "Status", "Link"], rows)
+        tokens.update({
+            "__BMZL_N__": f"{layer['n']:,}", "__BMZL_EUR_BN__": f"{layer['eur'] / 1000:,.1f}", "__BMZL_USD_BN__": f"{layer['usd'] / 1000:,.1f}",
+            "__BMZL_COUNTRIES__": str(len(layer["countries"])), "__BMZL_DISB_PCT__": pct(layer["disbursed_usd"], layer["usd"]),
+            "__BMZL_BUDGET__": str(lo.get("budget_support") or 0),
+            "__BMZL_BUILDING_N__": f"{layer['status'].get('under_construction', 0):,}",
+            "__BMZL_TOP_SECTOR__": sect[0]["sector"] if sect else "–", "__BMZL_TOP_SECTOR_BN__": f"{sect[0]['usd'] / 1000:,.1f}" if sect else "–",
+            "__TABLE_BMZL__": t_layer,
+        })
+        for c, key in (("GIZ", "GIZ"), ("KfW", "KFW"), ("BMZ", "OTHER")):
+            x = pubs.get(c) or {"n": 0, "usd": 0}
+            tokens.update({f"__BMZL_{key}_N__": f"{x['n']:,}", f"__BMZL_{key}_USD_BN__": f"{x['usd'] / 1000:,.1f}"})
+        charts["c-bmzl-sect"] = {"type": "bars", "rows": [{"label": _sec(x["sector"]), "value": x["usd"] * 1e6, "text": f"{x['usd']:,.0f} ({x['n']})"}
+                                                          for x in layer["sectors"][:8]]}
+    return tokens, charts, {"id": "g-bmz", "kind": "down", "items": tris}
+
+
 def build_germany(pack):
-    return build_oecd_profile(pack, "Germany", "German",
+    tokens, payload = build_oecd_profile(pack, "Germany", "German",
         "Energy and connectivity assets with a German owner, as the map's own layers carry them: Global Energy Monitor's power "
         "units (juwi, ib vogt, BayWa r.e., Siemens) and TeleGeography's cables.")
+    if pack.get("bmz"):
+        t, charts, group = _bmz(pack["bmz"], pack.get("layer"))
+        tokens.update(t)
+        payload["charts"].update(charts)
+        payload["map"]["groups"].append(group)
+    return tokens, payload
 
 
 # ------------------------------------------------------ European Union

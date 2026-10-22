@@ -27,7 +27,7 @@ import re
 import shutil
 import sys
 
-from region import REGION  # noqa: E402
+from region import BMZ_LENDERS, REGION  # noqa: E402
 
 ROOT = pathlib.Path(__file__).parent
 DATA = REGION.data_dir
@@ -105,6 +105,10 @@ def build_assets():
 FINANCE_FILES = [(f"iati_{REGION.bank['publisher']}_finance.geojson", BANK), ("iati_worldbank_finance.geojson", "WB")]
 if getattr(REGION, "afd_files", None):
     FINANCE_FILES.append(("iati_afd_finance.geojson", "AFD"))
+# BMZ's file holds three lender codes, one per agency that carries a project
+# out (GIZ, KfW, BMZ for the rest), read from each record's own lender field
+if getattr(REGION, "bmz_files", None):
+    FINANCE_FILES.append(("iati_bmz_finance.geojson", "BMZ"))
 TO_USD = {"XDR": SDR_USD, "USD": 1.0, "EUR": EUR_USD, **LOCAL_USD}
 # raw layers drawn on the map but not offered as downloads in docs/data
 NOT_REDISTRIBUTED = {"telegeography_cables.geojson"}
@@ -120,12 +124,13 @@ def build_finance():
     a town rather than the country; an AFD point that is not its agency
     office, unnamed); 2 = a country or region centroid."""
     best = {}
-    for fname, ln in FINANCE_FILES:
+    for fname, file_ln in FINANCE_FILES:
         if not (DATA / fname).exists():
-            print(f"   ! {fname} missing, lender {ln} skipped")
+            print(f"   ! {fname} missing, lender {file_ln} skipped")
             continue
         for f in load(fname):
             p = f["properties"]
+            ln = p.get("lender") if file_ln == "BMZ" else file_ln
             pid = p.get("iati_id")
             if not pid:
                 continue
@@ -255,9 +260,10 @@ def main():
     finance = build_finance()
     fc = finance["cols"]
     multi = sum(1 for x in finance["rows"] if x[fc.index("locs")])
-    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB", "AFD")}
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB", "AFD", *BMZ_LENDERS)}
     print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank"
-          + (f", {by_ln['AFD']:,} AFD" if by_ln["AFD"] else "") + f"; {multi:,} with several precise sites)")
+          + (f", {by_ln['AFD']:,} AFD" if by_ln["AFD"] else "")
+          + ("".join(f", {by_ln[k]:,} {k}" for k in BMZ_LENDERS if by_ln[k])) + f"; {multi:,} with several precise sites)")
     print("ground  …")
     ground = build_ground(idx)
     located = sum(1 for g in ground["rows"] if g[1])
@@ -366,7 +372,9 @@ async function loadPayload(){{
         pages, title=SITE_NAME, path="", kind="map", facts=facts,
         description=f"Interactive open-data map of infrastructure across {REGION.name}: power plants and "
                     f"oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']}, "
-                    + ("World Bank and French development agency (AFD) projects, "
+                    + ("World Bank, French development agency (AFD) and German development ministry (BMZ) projects, "
+                       if any(ln == "BMZ" for _, ln in FINANCE_FILES) else
+                       "World Bank and French development agency (AFD) projects, "
                        if any(ln == "AFD" for _, ln in FINANCE_FILES) else "and World Bank projects, ") +
                     f"Chinese-financed infrastructure {china_span()[0]}–{china_span()[1]} (AidData), "
                     "European Union finance (European Commission and EIB), "

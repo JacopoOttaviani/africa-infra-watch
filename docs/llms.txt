@@ -1,8 +1,8 @@
 # AfricaWatch
 
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
-> Africa, for investors, researchers and journalists. Compiled from eleven public datasets:
-> 4,295 power units tracked by Global Energy Monitor, 1,683 projects financed by the African Development Bank, 890 by the World Bank and 394 financings by the Agence française de développement (AFD), 3,700 construction works traced in OpenStreetMap, 323 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,487 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2023, from AidData, and 2,008 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Together they describe about 1,094 GW of generating capacity across all statuses; USD 75.1 billion of AfDB commitments, converted at 1 SDR = 1.35 USD (IMF, 9 Oct 2026), USD 98.3 billion of World Bank commitments and USD 11.8 billion of AFD commitments, converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026), each the infrastructure share of the lender's own commitment, budget support and cancelled projects left out; USD 222.2 billion of Chinese official commitments to infrastructure over 2000–2023, in constant 2023 dollars as AidData publishes them; USD 30.1 billion of European Union commitments, Commission contracts and EIB loans, converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026); EUR 4.39 billion of stated Piano Mattei project amounts, the figures the Italian Government's portal prints, which may include other funders' shares.
+> Africa, for investors, researchers and journalists. Compiled from twelve public datasets:
+> 4,295 power units tracked by Global Energy Monitor, 1,683 projects financed by the African Development Bank, 890 by the World Bank, 394 financings by the Agence française de développement (AFD) and 1,615 projects paid for by Germany's development ministry (BMZ) and carried out by GIZ, KfW and others, 3,700 construction works traced in OpenStreetMap, 323 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,487 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2023, from AidData, and 2,008 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Together they describe about 1,094 GW of generating capacity across all statuses; USD 75.1 billion of AfDB commitments, converted at 1 SDR = 1.35 USD (IMF, 9 Oct 2026), USD 98.3 billion of World Bank commitments, USD 11.8 billion of AFD commitments and USD 16.5 billion of BMZ commitments, both converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026), each the infrastructure share of the lender's own commitment, budget support and cancelled projects left out; USD 222.2 billion of Chinese official commitments to infrastructure over 2000–2023, in constant 2023 dollars as AidData publishes them; USD 30.1 billion of European Union commitments, Commission contracts and EIB loans, converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026); EUR 4.39 billion of stated Piano Mattei project amounts, the figures the Italian Government's portal prints, which may include other funders' shares.
 > Snapshot built 22 Oct 2026; data is refreshed by hand about twice a year.
 
 Made by Jacopo Ottaviani (https://www.linkedin.com/in/jacopo-ottaviani/). Free to use; cite the underlying sources by name.
@@ -10,7 +10,7 @@ Site: https://jacopoottaviani.com/africa-infra-watch/
 
 ## Pages
 
-- [AfricaWatch, map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the eight layers (finance holds three lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
+- [AfricaWatch, map](https://jacopoottaviani.com/africa-infra-watch/): full-screen map of the eight layers (finance holds four lenders, EU finance the Commission and the EIB, Piano Mattei Italy's plan) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
@@ -42,6 +42,7 @@ https://jacopoottaviani.com/africa-infra-watch/data/meta.json. The raw layers as
 - [African Development Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-46002#view=main): IATI 2.03 activity files, 57 datasets (country, multinational and non-sovereign files). 1,683 records, data as of 14 Oct 2026, licence CC BY (per the IATI Registry). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afdb_finance.geojson
 - [World Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=44000#view=main): IATI 2.03 activity files, 52 African country and regional datasets. 890 records, data as of 14 Oct 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_worldbank_finance.geojson
 - [Agence française de développement](https://d-portal.iatistandard.org/ctrack.html?publisher=FR-3#view=main): IATI 2.03 activity files, 44 African country datasets (the financings under each project). 394 records, data as of 22 Oct 2026, licence Licence Ouverte / Open Licence. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_afd_finance.geojson
+- [BMZ (German development ministry)](https://d-portal.iatistandard.org/ctrack.html?publisher=DE-1#view=main): IATI 2.03 activity files, 50 African country datasets (every project BMZ pays for, with the agency that carries it out: GIZ, KfW or another). 1,615 records, data as of 22 Oct 2026, licence CC BY (per the IATI Registry). GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/iati_bmz_finance.geojson
 - [OpenStreetMap](https://www.openstreetmap.org/copyright): Overpass API, significant road/rail/air classes. 3,700 records, data as of 14 Oct 2026, licence ODbL 1.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/osm_construction.geojson
 - [Global Energy Monitor](https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/): Global Gas and Global Oil Infrastructure Trackers, map files GGIT 2025-11 · GOIT 2026-07. 323 records, data as of 19 Mar 2026, licence CC BY 4.0. GeoJSON: https://jacopoottaviani.com/africa-infra-watch/data/gem_oil_gas_pipelines.geojson
 - [TeleGeography](https://www.submarinecablemap.com/): Submarine Cable Map, cables with an African landing point. 81 records, data as of 14 Oct 2026, licence © TeleGeography (map CC BY-SA 4.0). Not offered as a download (the publisher's terms): see https://www.submarinecablemap.com/
@@ -74,7 +75,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   stage, "identified" and "formulated" are announced, "approved" is approved, "ongoing" is
   under construction, "completed" is operating; the portal has no cancelled stage.
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
-  squares are AfDB projects and diamonds World Bank projects, crosses AFD financings, all sized by commitment, thin lines are construction ways as
+  squares are AfDB projects and diamonds World Bank projects, crosses AFD financings, inverted triangles BMZ projects, all sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
   with their African landing points, triangles are Chinese-financed projects sized by
   commitment, with the project's OpenStreetMap footprint drawn as a thin outline where
@@ -98,6 +99,10 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   rate; one AFD record is one financing (a loan or a grant) under a project, and its
   policy loans, which it files as project aid, are left out as budget support by their
   own words ("financement budgétaire", "prêt de politique publique").
+  Germany's development ministry BMZ publishes in euros too, converted at the same rate;
+  one BMZ record is one project it pays for, under the agency that carries it out (GIZ,
+  KfW, or an NGO, church or UN agency), and every one is placed at its country's centre,
+  since BMZ gives only the capital, where the agreement is made.
   Piano Mattei amounts are the figure the portal prints for each project, in euros as
   stated, converted at the same rate; the portal does not say whether a figure is Italy's
   share or the whole project's value, so they are shown on their own and never added to
@@ -105,7 +110,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 
 ## Limits
 
-- Money is two multilateral lenders, AfDB and the World Bank, France's development agency AFD, the European Union's
+- Money is two multilateral lenders, AfDB and the World Bank, France's development agency AFD, Germany's development ministry BMZ, the European Union's
   institutions (the Commission and the EIB, each publishing its own share to IATI), plus
   Chinese official finance as AidData reconstructs it from public sources. Private,
   domestic-budget, other EU member states' bilateral and other-lender finance is not here. Read

@@ -159,6 +159,8 @@
   .sw.bar.cable{height:2px;background:var(--st-approved);border:0}
   .sw.hex{clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);border-radius:0;opacity:1;background:var(--st-construction)}
   .sw.star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);border-radius:0;opacity:1;background:var(--st-construction);width:13px;height:13px}
+  .sw.down{clip-path:polygon(0 4%,100% 4%,50% 100%);border-radius:0;opacity:.85;background:var(--ink-2);width:12px;height:12px}
+  .asset.down{fill:var(--ink-2);fill-opacity:.82}
   .sw.cross{clip-path:polygon(31% 0,69% 0,69% 31%,100% 31%,100% 69%,69% 69%,69% 100%,31% 100%,31% 69%,0 69%,0 31%,31% 31%);border-radius:0;opacity:1;background:var(--st-construction);width:12px;height:12px}
   .corp{fill:var(--ink-3);stroke:var(--surface);stroke-width:1}
   .lbl{font:500 10.5px var(--display);fill:var(--ink-2);pointer-events:none;paint-order:stroke;stroke:var(--land);stroke-width:3px;stroke-linejoin:round}
@@ -327,6 +329,7 @@ if ($("#map") && DATA.map) {
       else if (grp.kind === "triangle") e = el("path", {d: `M${it.x} ${it.y - 8} L${it.x + 7} ${it.y + 5} L${it.x - 7} ${it.y + 5} Z`, class: "asset " + cls});
       else if (grp.kind === "hex") { const r = 7, pts = [0, 1, 2, 3, 4, 5].map(k => { const a = Math.PI / 3 * k - Math.PI / 6; return (it.x + r * Math.cos(a)).toFixed(1) + " " + (it.y + r * Math.sin(a)).toFixed(1); }); e = el("path", {d: "M" + pts.join(" L") + " Z", class: "asset " + cls}); }
       else if (grp.kind === "line") e = el("path", {d: it.d, class: (grp.cls || "pipe") + (it.cls ? " " + it.cls : "")});
+      else if (grp.kind === "down") { const R = it.r || 7, x = it.x, y = it.y; e = el("path", {d: `M${(x - R * 1.08).toFixed(1)} ${(y - R * 0.75).toFixed(1)}H${(x + R * 1.08).toFixed(1)}L${x} ${(y + R * 1.05).toFixed(1)}Z`, class: "asset down " + cls}); }
       else if (grp.kind === "cross") { const R = 7, a = 2.7, x = it.x, y = it.y; e = el("path", {d: `M${x - a} ${y - R}H${x + a}V${y - a}H${x + R}V${y + a}H${x + a}V${y + R}H${x - a}V${y + a}H${x - R}V${y - a}H${x - a}Z`, class: "asset " + cls}); }
       else if (grp.kind === "star") { const R = 7.5, r = 3.2, pts = []; for (let k = 0; k < 10; k++) { const a = Math.PI / 5 * k - Math.PI / 2, rr = k % 2 ? r : R; pts.push((it.x + rr * Math.cos(a)).toFixed(1) + " " + (it.y + rr * Math.sin(a)).toFixed(1)); } e = el("path", {d: "M" + pts.join(" L") + " Z", class: "asset " + cls}); }
       else e = el("rect", {x: it.x - 5 + (grp.spread ? (i % 3) * 9 - 9 : 0), y: it.y + (grp.dy || 0) - 5, width: 10, height: 10, class: cls || "corp"});
