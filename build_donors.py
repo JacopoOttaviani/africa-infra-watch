@@ -1002,10 +1002,68 @@ def build_eu(pack):
     return tokens, payload
 
 
+def _afd(layer):
+    """The France profile's AFD part, from the map's own AFD records: tokens,
+    the table of the largest financings, the charts and the map's crosses."""
+    from shared import EUR_NOTE
+    pct = lambda a, b: f"{100 * a / b:.0f}" if b else "0"
+    lc = sorted(layer["countries"].items(), key=lambda kv: -kv[1]["usd"])
+    sect = [x for x in layer["sectors"] if x["sector"] != "other"]
+    lo = layer.get("left_out") or {}
+    rows = []
+    for r in layer["largest"]:
+        rows.append([td(r["year"] or "–", "num"), td(esc(NAMES.get(r["iso"], r["iso"] or "–")), "name"),
+                     td(f"{r['eur'] / 1e6:,.1f}", "num"),
+                     td(esc(r["name"].strip()) + f'<br><span class="dim">{esc(r["kind"] or "")}'
+                        + (" · AFD's own point" if r["precision"] == "given" else " · drawn at the country's centre") + "</span>"),
+                     td(esc(r["sector"].capitalize())), td(st(r["status"])),
+                     td(f'<a href="https://d-portal.org/ctrack.html?aid={esc(r["id"])}" target="_blank" rel="noopener noreferrer">IATI</a>')])
+    t_afd = table(f"The {len(rows)} largest AFD financings in the map's finance layer, by the year of their first commitment, in EUR million "
+                  f"as AFD publishes them; the dollar figures elsewhere on this page convert at {EUR_NOTE}. One row is one financing, a loan or a grant; "
+                  "a project with both is two rows.",
+                  ["#Year", "Country", "#EUR m", "Financing · loan or grant · where it is drawn", "Sector", "Status", "Link"], rows)
+    tokens = {
+        "__AFD_N__": f"{layer['n']:,}", "__AFD_EUR_BN__": f"{layer['eur'] / 1000:,.1f}", "__AFD_USD_BN__": f"{layer['usd'] / 1000:,.1f}",
+        "__AFD_FROM__": str(layer["from"]), "__AFD_TO__": str(layer["to"]), "__AFD_COUNTRIES__": str(len(layer["countries"])),
+        "__AFD_LOANS_N__": f"{layer['kind'].get('loan', 0):,}", "__AFD_GRANTS_N__": f"{layer['kind'].get('grant', 0):,}",
+        "__AFD_LOANS_USD_BN__": f"{layer['kind_usd'].get('loan', 0) / 1000:,.1f}",
+        "__AFD_LOANS_PCT__": pct(layer["kind_usd"].get("loan", 0), layer["usd"]),
+        "__AFD_GRANTS_USD_BN__": f"{layer['kind_usd'].get('grant', 0) / 1000:,.1f}",
+        "__AFD_DISB_PCT__": pct(layer["disbursed_usd"], layer["usd"]),
+        "__AFD_BUILDING_N__": f"{layer['status'].get('under_construction', 0):,}",
+        "__AFD_DONE_N__": f"{layer['status'].get('operating', 0):,}",
+        "__AFD_TOP_COUNTRY__": lc[0][1]["name"] if lc else "–", "__AFD_TOP_COUNTRY_USD__": f"{lc[0][1]['usd']:,.0f}" if lc else "–",
+        "__AFD_TOP_COUNTRY_N__": f"{lc[0][1]['n']:,}" if lc else "–",
+        "__AFD_TOP_SECTOR__": sect[0]["sector"] if sect else "–", "__AFD_TOP_SECTOR_BN__": f"{sect[0]['usd'] / 1000:,.2f}" if sect else "–",
+        "__AFD_TOP2_SECTOR__": sect[1]["sector"] if len(sect) > 1 else "–", "__AFD_TOP2_SECTOR_BN__": f"{sect[1]['usd'] / 1000:,.2f}" if len(sect) > 1 else "–",
+        "__AFD_AT_OFFICE__": f"{lo.get('at_office') or 0:,}", "__AFD_GIVEN__": f"{lo.get('place_given') or 0:,}",
+        "__AFD_OFFICES__": str(lo.get("office_points") or 0), "__AFD_BUDGET__": str(lo.get("budget_support") or 0),
+        "__AFD_FILES__": str(layer.get("datasets") or "–"), "__AFD_FETCHED__": fmt_date(layer["fetched"]) if layer.get("fetched") else "–",
+        "__TABLE_AFD__": t_afd,
+    }
+    charts = {
+        "c-afd-year": {"type": "columns", "rows": [{"x": y, "value": v["usd"] * 1e6, "text": f"{v['usd']:,.0f}"} for y, v in layer["years"].items()]},
+        "c-afd-sect": {"type": "bars", "rows": [{"label": x["sector"].capitalize(), "value": x["usd"] * 1e6, "text": f"{x['usd']:,.0f} ({x['n']})"} for x in layer["sectors"][:8]]},
+        "c-afd-ctry": {"type": "bars", "rows": [{"label": v["name"], "value": v["usd"] * 1e6, "text": f"{v['usd']:,.0f} ({v['n']})"} for _, v in lc[:12]]},
+    }
+    crosses = [{**_pt(r), "cls": r["status"],
+                "tip": f"<b>{esc(r['name'].strip())}</b>{esc(r['country'])} · {r['year'] or ''} · USD {r['usd_m']:,.1f} m, {esc(r['kind'] or '')}"
+                       f"<br>{esc(STATUS.get(r['status'], r['status'] or ''))} · AFD, IATI"
+                       f"<br>{'the point AFD gives' if r['precision'] == 'given' else 'AFD places it at its office; drawn at the country’s centre'}"}
+               for r in layer["points"] if r["lon"] is not None]
+    return tokens, charts, {"id": "g-afd", "kind": "cross", "items": crosses}
+
+
 def build_france(pack):
-    return build_oecd_profile(pack, "France", "French",
+    tokens, payload = build_oecd_profile(pack, "France", "French",
         "Energy and connectivity assets with a French owner, as the map's own layers carry them: Global Energy Monitor's power units and "
         "pipeline segments (TotalEnergies, EDF, Engie, Qair, Voltalia, Perenco, Meridiam), TeleGeography's cables (Orange).")
+    if pack.get("layer"):
+        t, charts, group = _afd(pack["layer"])
+        tokens.update(t)
+        payload["charts"].update(charts)
+        payload["map"]["groups"].append(group)
+    return tokens, payload
 
 
 def build_spain(pack):

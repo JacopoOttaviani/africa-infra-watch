@@ -43,7 +43,7 @@ from build_dashboard import (  # noqa: E402
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
-    BANK, DOCS, LOCAL_NOTE, LOCAL_USD, SITE_NAME, SITE_WORDMARK, brand_assets, china_span, inline_vendor, load_meta, payload_meta,
+    BANK, DOCS, EUR_USD, LOCAL_NOTE, LOCAL_USD, SITE_NAME, SITE_WORDMARK, brand_assets, china_span, inline_vendor, load_meta, payload_meta,
     site_facts,
     wrap_document, write_site_index,
 )
@@ -99,11 +99,13 @@ def build_assets():
             "rows": rows}
 
 
-# The finance layer's two lenders: file, short lender code as the payload
+# The finance layer's lenders: file, short lender code as the payload
 # carries it, and how their amounts reach US dollars. AfDB reports in XDR
-# (IMF SDR); ADB and the World Bank in USD.
+# (IMF SDR); ADB and the World Bank in USD; AFD (Africa only) in EUR.
 FINANCE_FILES = [(f"iati_{REGION.bank['publisher']}_finance.geojson", BANK), ("iati_worldbank_finance.geojson", "WB")]
-TO_USD = {"XDR": SDR_USD, "USD": 1.0, **LOCAL_USD}
+if getattr(REGION, "afd_files", None):
+    FINANCE_FILES.append(("iati_afd_finance.geojson", "AFD"))
+TO_USD = {"XDR": SDR_USD, "USD": 1.0, "EUR": EUR_USD, **LOCAL_USD}
 # raw layers drawn on the map but not offered as downloads in docs/data
 NOT_REDISTRIBUTED = {"telegeography_cables.geojson"}
 
@@ -115,7 +117,8 @@ def build_finance():
     Precision rank per location: 0 = exact site (IATI exactness 1, AfDB);
     1 = a named place or site (World Bank location-class 2 or 4, which the
     Bank still marks exactness 2; an ADB location named after a province or
-    a town rather than the country); 2 = a country or region centroid."""
+    a town rather than the country; an AFD point that is not its agency
+    office, unnamed); 2 = a country or region centroid."""
     best = {}
     for fname, ln in FINANCE_FILES:
         if not (DATA / fname).exists():
@@ -129,7 +132,7 @@ def build_finance():
             lon, lat = f["geometry"]["coordinates"]
             if p.get("geo_precision") == "1":
                 rank = 0
-            elif p.get("location_class") in ("2", "4") or p.get("location_named"):
+            elif p.get("location_class") in ("2", "4") or p.get("location_named") or p.get("place_given"):
                 rank = 1
             else:
                 rank = 2
@@ -252,9 +255,9 @@ def main():
     finance = build_finance()
     fc = finance["cols"]
     multi = sum(1 for x in finance["rows"] if x[fc.index("locs")])
-    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB")}
-    print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank; "
-          f"{multi:,} with several precise sites)")
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB", "AFD")}
+    print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank"
+          + (f", {by_ln['AFD']:,} AFD" if by_ln["AFD"] else "") + f"; {multi:,} with several precise sites)")
     print("ground  …")
     ground = build_ground(idx)
     located = sum(1 for g in ground["rows"] if g[1])
@@ -362,8 +365,10 @@ async function loadPayload(){{
     (DOCS / "index.html").write_text(wrap_document(
         pages, title=SITE_NAME, path="", kind="map", facts=facts,
         description=f"Interactive open-data map of infrastructure across {REGION.name}: power plants and "
-                    f"oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']} "
-                    f"and World Bank projects, Chinese-financed infrastructure {china_span()[0]}–{china_span()[1]} (AidData), "
+                    f"oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']}, "
+                    + ("World Bank and French development agency (AFD) projects, "
+                       if any(ln == "AFD" for _, ln in FINANCE_FILES) else "and World Bank projects, ") +
+                    f"Chinese-financed infrastructure {china_span()[0]}–{china_span()[1]} (AidData), "
                     "European Union finance (European Commission and EIB), "
                     + ("Italy's Piano Mattei projects, " if mattei is not None else "") +
                     "construction works traced in OpenStreetMap and submarine cables "

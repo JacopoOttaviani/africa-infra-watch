@@ -19,6 +19,7 @@ Usage:
     python3 fetch_sources.py mattei          # Italy's Piano Mattei, from the Government's project portal
 """
 
+import collections
 import concurrent.futures
 import csv
 import html as html_mod
@@ -237,10 +238,69 @@ IATI_AMOUNT_FIX = {
 #              <pos>0 0</pos> (Null Island, in the Gulf of Guinea), and a
 #              few dozen are geocoded to the wrong continent; place_iati()
 #              below deals with both.
+#   AFD        44 African country files (afd-sn …) on data.gouv.fr, EUR
+#              amounts, two levels in each: the project (hierarchy 1, no
+#              money, no location) and its financings (hierarchy 2, the
+#              commitments and one unnamed point each, no exactness, no
+#              location-class), so a record is a financing. Most points
+#              are AFD's agency office (Dakar for Senegal, Gambia and
+#              Guinea-Bissau); _afd_points() below moves those to the
+#              country's centre. The Liberia file also holds two Sri Lankan
+#              financings (recipient LK, at Colombo), which place_iati drops.
 IATI_PUBLISHERS = {
     REGION.bank["publisher"]: {"lender": REGION.bank["code"], "meta": "finance", "files": REGION.bank["files"]},
     "worldbank": {"lender": "World Bank", "meta": "finance_wb", "files": REGION.wb_files},
 }
+if getattr(REGION, "afd_files", None):
+    IATI_PUBLISHERS["afd"] = {"lender": "AFD", "meta": "finance_afd", "files": REGION.afd_files}
+
+# AFD files its policy loans as project aid (aid-type C01), so the A01/A02
+# rule misses them; its own title or description says which they are. On 21
+# Oct 2026 these words picked out four African projects and nothing else:
+# South Africa's just-transition budget financing, Egypt's electricity policy
+# loan, Morocco's water policy financing, Mauritius's water policy loan.
+AFD_BUDGET_WORDS = re.compile(r"financement budg[ée]taire|pr[êe]t (souverain )?de politique publique"
+                              r"|appui budg[ée]taire", re.I)
+
+
+def _pos_key(text):
+    """An IATI <pos> ("lat lon") as a comparable (lat, lon), to 5 decimals."""
+    try:
+        lat, lon = (round(float(x), 5) for x in text.split()[:2])
+    except ValueError:
+        return None
+    return lat, lon
+
+
+def _afd_points(feats, offices):
+    """AFD gives each financing one unnamed point and says nothing of how
+    exact it is. In every country file one point carries most of the
+    financings, whatever their sector or town: the agency's office, often
+    the office of a neighbouring country (Dakar serves Senegal, Gambia and
+    Guinea-Bissau; Nairobi Kenya and Somalia; Addis Ababa Ethiopia and Sudan). A financing
+    at an office point is moved to its country's centre and marked so; any
+    other point is where AFD puts the financing, kept and flagged as an
+    unnamed place. A financing whose country is not on the basemap stays
+    where it is, for place_iati to drop."""
+    out, moved, given = [], 0, 0
+    for f in feats:
+        p = f["properties"]
+        lon, lat = f["geometry"]["coordinates"]
+        if (round(lat, 5), round(lon, 5)) in offices:
+            iso = p.get("country")
+            clon, clat = (ISLAND_POINT.get(iso) or _country_centre(iso)) if iso else (None, None)
+            if clon is not None:
+                f = {"type": "Feature",
+                     "geometry": {"type": "Point", "coordinates": [round(clon, 5), round(clat, 5)]},
+                     "properties": dict(p, geo_precision="2", location_class="1", office_point=True)}
+                moved += 1
+        else:
+            p["place_given"] = True
+            given += 1
+        out.append(f)
+    print(f"  AFD: {len(offices)} agency office point(s); {moved:,} location(s) there moved to the "
+          f"country's centre, {given:,} kept where AFD puts them")
+    return out, moved, given
 
 
 # Cabo Verde to Mauritius, Tunis to the Cape. Wider than the continent so a
@@ -315,6 +375,7 @@ def fetch_iati(publisher=None, infra_only=True):
     print(f"IATI {publisher}: {len(urls)} datasets")
 
     feats, n_budget, n_counterpart, n_fixed = [], 0, 0, 0
+    offices = set()
     for i, u in enumerate(urls, 1):
         try:
             xml = get(u, timeout=300)
@@ -326,8 +387,17 @@ def fetch_iati(publisher=None, infra_only=True):
         except ET.ParseError as e:
             print(f"  ! unparseable {u.rsplit('/', 1)[-1]}: {e}")
             continue
+        if publisher == "afd":
+            # the file's most-used point, over every sector: AFD's office
+            used = collections.Counter(k for k in (_pos_key(pos.text or "") for pos in root.iter("pos")) if k)
+            if used:
+                offices.add(used.most_common(1)[0][0])
 
         for act in root.iter("iati-activity"):
+            # AFD's project level carries no money and no location; its
+            # financings (hierarchy 2) are the records
+            if publisher == "afd" and act.get("hierarchy") == "1":
+                continue
             # DAC purpose codes only (vocabulary 1, or unstated). The World
             # Bank also publishes its own theme and sector codes as
             # vocabularies 98 and 99; those are kept out of the filter.
@@ -344,6 +414,11 @@ def fetch_iati(publisher=None, infra_only=True):
             aid |= {d.get("code") for tx in act.iter("transaction") for d in tx.iter("aid-type")
                     if d.get("vocabulary") in (None, "1")}
             if infra_only and aid & {"A01", "A02"}:
+                n_budget += 1
+                continue
+            if infra_only and publisher == "afd" and AFD_BUDGET_WORDS.search(" ".join(
+                    (n.text or "") for n in act.iterfind("title/narrative"))
+                    + " " + " ".join((n.text or "") for n in act.iterfind("description/narrative"))):
                 n_budget += 1
                 continue
             # The share of the activity that is infrastructure, by the
@@ -387,6 +462,7 @@ def fetch_iati(publisher=None, infra_only=True):
             # total_commitments_nongov leaves it out.
             currency = act.get("default-currency")
             commitment = disbursed = counterpart = 0.0
+            commit_years = []      # of the lender's own commitment transactions
             for tx in act.iter("transaction"):
                 tt = tx.find("transaction-type")
                 v = tx.find("value")
@@ -402,6 +478,9 @@ def fetch_iati(publisher=None, infra_only=True):
                         counterpart += amt
                         continue
                     commitment += amt
+                    td = tx.find("transaction-date")
+                    if td is not None and (td.get("iso-date") or "")[:4].isdigit():
+                        commit_years.append(int(td.get("iso-date")[:4]))
                 elif tt.get("code") == "3":
                     disbursed += amt
                 currency = v.get("currency") or currency
@@ -442,6 +521,11 @@ def fetch_iati(publisher=None, infra_only=True):
                 if m:
                     project_url = f"https://www.adb.org/projects/{m.group(1)}/main"
             iso_here = country.get("code") if country is not None else None
+            # loan or grant: the activity's default finance type, else its first transaction's
+            ft = act.find("default-finance-type")
+            if ft is None:
+                ft = act.find("transaction/finance-type")
+            finance_type = ft.get("code") if ft is not None else None
 
             for loc in act.iter("location"):
                 pos = loc.find("point/pos")
@@ -495,19 +579,28 @@ def fetch_iati(publisher=None, infra_only=True):
                         "currency": currency,
                         "iati_id": iid,
                         "project_url": project_url,
+                        # the year of the first commitment transaction, and the
+                        # IATI finance-type code (110 grant, 421 loan …)
+                        "commitment_year": min(commit_years) if commit_years else None,
+                        "finance_type": finance_type,
                     },
                 })
         if i % 15 == 0:
             print(f"  … {i}/{len(urls)} files, {len(feats):,} located so far")
 
-    print(f"  left out {n_budget:,} budget-support activities (aid-type A01/A02); "
+    print(f"  left out {n_budget:,} budget-support activities (aid-type A01/A02"
+          + (", or AFD's own words" if publisher == "afd" else "") + "); "
           f"{n_counterpart:,} carry a government counterpart commitment, not counted"
           + (f"; {n_fixed} amount(s) corrected from IATI_AMOUNT_FIX" if n_fixed else ""))
+    extra = {}
+    if publisher == "afd":
+        feats, moved, given = _afd_points(feats, offices)
+        extra = {"office_points": len(offices), "at_office": moved, "place_given": given}
     feats = place_iati(feats)
     out = write_layer(f"iati_{publisher}_finance", feats)
     update_meta(conf["meta"], fetched=today(), fresh=None, datasets=len(urls), records=len(feats),
                 activities=len({f["properties"]["iati_id"] for f in feats}), budget_support=n_budget,
-                amount_fixes=n_fixed)
+                amount_fixes=n_fixed, **extra)
     return out
 
 
@@ -2371,6 +2464,7 @@ LAYERS = {
     "gem": fetch_gem,
     "iati": fetch_iati,                 # the region's development bank: AfDB, or ADB
     "wb": lambda: fetch_iati("worldbank"),
+    "afd": lambda: fetch_iati("afd"),
     "osm": fetch_osm,
     "pipes": fetch_pipelines,
     "cables": fetch_cables,
@@ -2378,8 +2472,9 @@ LAYERS = {
     "eu": fetch_eu,
     "mattei": fetch_mattei,
 }
-# the layers this edition has (no Piano Mattei outside Africa)
+# the layers this edition has (no Piano Mattei or AFD outside Africa)
 LAYERS = {k: f for k, f in LAYERS.items() if k != "mattei" or "mattei" in REGION.layers}
+LAYERS = {k: f for k, f in LAYERS.items() if k != "afd" or "afd" in IATI_PUBLISHERS}
 
 if __name__ == "__main__":
     want = [a.lower() for a in sys.argv[1:]] or list(LAYERS)

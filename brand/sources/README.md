@@ -24,12 +24,13 @@ themes. Nothing else was redrawn.
 | `european-union.svg` | European Union (EU finance: Commission and EIB) | Drawn here from the emblem's published geometry: twelve five-pointed stars on a circle of one third of the height, inside the field's outline, the one-colour form the Commission's graphical guide prescribes; stars enlarged from 1/18 to 1/12 of the height to survive at tile size | The emblem may be used by anyone to refer to the EU, provided no endorsement is implied (Council of Europe and European Commission conditions). Commission data CC BY 4.0; EIB data attribution |
 | `piano-mattei.svg` | Italian Government, Presidency of the Council of Ministers (Piano Mattei per l'Africa) | `governo.it/it/piano-mattei/progetti/logos/piano-mattei.png`, the project portal's own wordmark (white on transparent); wrapped like the Natural Earth mark, so the tricolour bar is mono | © Presidenza del Consiglio dei Ministri; portal content CC BY 3.0 IT. Shown to credit the data; no endorsement implied |
 | `aiddata.svg` | AidData at William & Mary (Chinese finance) | `aiddata.org`, site header (`AidData_Logo--flat.svg` on its Webflow CDN); the mark's nine colours and the navy wordmark set to `currentColor` | © AidData, trademark. Data ODC-By 1.0, footprints ODbL |
+| `afd.svg` | Agence française de développement (AFD financings in the finance layer) | `afd.fr`, the "AFD Groupe" logo of the site's own page (`#logoAFD`, a 2230 × 1299 PNG inside an SVG data URI), taken on 22 Oct 2026 while afd.fr showed its maintenance page; cropped to the mark, its alpha channel scaled to 700 px wide and wrapped like the Natural Earth mark, so the ring's blue-to-red gradient is mono, in tones | © Agence française de développement, trademark. Data Licence Ouverte / Open Licence. Shown to credit the data; no endorsement implied |
 
-The Natural Earth and Code for Africa marks exist only as PNGs, so their SVGs
+The Natural Earth, Code for Africa and AFD marks exist here only as PNGs, so their SVGs
 wrap them: the raster's alpha channel (white on transparent, base64 inside the file) is
 an SVG `<mask>` over a `currentColor` rectangle. Replace them with vectors when
 available.
 
-Fetched 18 Sep 2026 (TeleGeography added the same day, AidData on 19 Sep 2026, the EU emblem drawn on 2 Oct 2026, the Piano Mattei wordmark on 7 Oct 2026). The logos are used solely to credit the data sources and
+Fetched 18 Sep 2026 (TeleGeography added the same day, AidData on 19 Sep 2026, the EU emblem drawn on 2 Oct 2026, the Piano Mattei wordmark on 7 Oct 2026, the AFD mark on 22 Oct 2026). The logos are used solely to credit the data sources and
 imply no endorsement; if an owner objects, delete the file and the tile
 disappears at the next build.

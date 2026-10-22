@@ -89,11 +89,14 @@ def build_context():
     return out
 
 
-# The finance layer's two lenders: file, short lender code as the payload
+# The finance layer's lenders: file, short lender code as the payload
 # carries it, and how their amounts reach US dollars. AfDB reports in XDR
-# (IMF SDR); ADB and the World Bank in USD. Kept in step with build_map.py.
+# (IMF SDR); ADB and the World Bank in USD; AFD (Africa only) in EUR. Kept in
+# step with build_map.py.
 FINANCE_FILES = [(f"iati_{REGION.bank['publisher']}_finance.geojson", BANK), ("iati_worldbank_finance.geojson", "WB")]
-TO_USD = {"XDR": SDR_USD, "USD": 1.0, **LOCAL_USD}
+if getattr(REGION, "afd_files", None):
+    FINANCE_FILES.append(("iati_afd_finance.geojson", "AFD"))
+TO_USD = {"XDR": SDR_USD, "USD": 1.0, "EUR": EUR_USD, **LOCAL_USD}
 
 # DAC 5-digit purpose codes → the dashboard's sector vocabulary.
 DAC_SECTOR = [
@@ -263,14 +266,14 @@ def build_assets():
 
 
 def build_finance():
-    """AfDB and World Bank activities, one record per activity per lender.
+    """AfDB, World Bank and AFD activities, one record per activity per lender.
 
-    The map carries the same two lenders (build_map.build_finance); this keeps
+    The map carries the same lenders (build_map.build_finance); this keeps
     the leaner column set the dashboard actually reads. Precision rank per
     location: 0 = exact site (IATI exactness 1, AfDB), 1 = a named place or
     site (World Bank location-class 2 or 4, which the Bank still marks
-    exactness 2), 2 = a country or region centroid. The best location a lender
-    publishes becomes the marker.
+    exactness 2; an AFD point that is not its office), 2 = a country or
+    region centroid. The best location a lender publishes becomes the marker.
     """
     best = {}
     for fname, ln in FINANCE_FILES:
@@ -284,7 +287,7 @@ def build_finance():
                 continue
             if p.get("geo_precision") == "1":
                 rank = 0
-            elif p.get("location_class") in ("2", "4"):
+            elif p.get("location_class") in ("2", "4") or p.get("place_given"):
                 rank = 1
             else:
                 rank = 2
@@ -668,8 +671,9 @@ def main():
     print("finance …")
     finance = build_finance()
     fc = finance["cols"]
-    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB")}
-    print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank)")
+    by_ln = {ln: sum(1 for x in finance["rows"] if x[fc.index("ln")] == ln) for ln in (BANK, "WB", "AFD")}
+    print(f"   {len(finance['rows']):,} projects ({by_ln[BANK]:,} {BANK}, {by_ln['WB']:,} World Bank"
+          + (f", {by_ln['AFD']:,} AFD" if by_ln["AFD"] else "") + ")")
 
     print("ground  …")
     ground = build_ground(idx)
@@ -765,8 +769,10 @@ def main():
         page, title=SITE_NAME, path="dashboard.html", kind="dashboard",
         facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei),
         description=f"Dashboard of announced, approved and ongoing infrastructure in {REGION.name}: "
-                    f"power plants and oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']} "
-                    "and World Bank finance, Chinese-financed projects "
+                    f"power plants and oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']}, "
+                    + ("World Bank and French development agency (AFD) finance, "
+                       if any(ln == "AFD" for _, ln in FINANCE_FILES) else "and World Bank finance, ") +
+                    "Chinese-financed projects "
                     f"{china_span()[0]}–{china_span()[1]} (AidData), European Union finance (European Commission and EIB), "
                     + ("Italy's Piano Mattei projects, " if mattei is not None else "") +
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "

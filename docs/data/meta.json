@@ -247,5 +247,17 @@
     "gem": 65,
     "pipelines": 2,
     "cables": 0
+  },
+  "finance_afd": {
+    "fetched": "2026-10-22",
+    "fresh": null,
+    "datasets": 44,
+    "records": 394,
+    "activities": 394,
+    "budget_support": 10,
+    "amount_fixes": 0,
+    "office_points": 37,
+    "at_office": 291,
+    "place_given": 103
   }
 }

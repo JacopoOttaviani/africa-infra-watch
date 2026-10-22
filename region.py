@@ -190,6 +190,10 @@ AFRICA = Region(
           "registry": "https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-46002#view=main", "lic": "CC BY (per the IATI Registry)",
           "files": None, "currency": "XDR", "logo": "african-development-bank"},
     wb_files=[c.lower() for c in AFRICA_ISO] + ["289", "298"],
+    # the Agence française de développement, a third lender in the finance
+    # layer: one IATI file per country (afd-sn …); its multi-country file
+    # (afd-multipays) mixes African and other recipients and is left out
+    afd_files=[c.lower() for c in AFRICA_ISO],
     eu_publishers={
         "ec-intpa": {"pub": "INTPA", "lender": "European Commission",
                      "files": [c.lower() for c in AFRICA_ISO] + ["289", "298", "1027", "1028", "1029", "1030"]},
@@ -311,8 +315,12 @@ def region_payload(region=REGION):
     the lenders of this edition. Every field has the Africa value as its
     default in the templates, so an older payload still draws."""
     bank = region.bank
-    lenders = [bank["code"], "WB", "EC", "EIB", "CN"] + (["IT"] if "mattei" in region.layers else [])
+    afd = bool(getattr(region, "afd_files", None))
+    lenders = ([bank["code"], "WB"] + (["AFD"] if afd else []) + ["EC", "EIB", "CN"]
+               + (["IT"] if "mattei" in region.layers else []))
     family = [["Multilateral banks", [bank["code"], "WB"]], ["European Union", ["EC", "EIB"]], ["China", ["CN"]]]
+    if afd:
+        family.append(["France", ["AFD"]])
     if "mattei" in region.layers:
         family.append(["Italy", ["IT"]])
     return {

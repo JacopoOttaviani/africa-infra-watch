@@ -1124,6 +1124,11 @@ DAC_SECTOR = [("210", "transport"), ("220", "ict"), ("23", "energy"), ("140", "w
               ("322", "industry"), ("323", "industry"), ("331", "trade"), ("410", "environment")]
 
 
+# IATI finance-type codes -> loan or grant, for the finance layer's records
+FINANCE_KIND = {"110": "grant", "111": "grant", "210": "grant", "211": "grant",
+                "410": "loan", "411": "loan", "412": "loan", "413": "loan", "414": "loan", "421": "loan"}
+
+
 def _dac_bucket(codes):
     for c in codes or []:
         for pre, bucket in DAC_SECTOR:
@@ -1135,7 +1140,12 @@ def _dac_bucket(codes):
 def layer_block(path, lender_label, money_key, currency_rate, year_key="start_year"):
     """A profile's block from one of the map's own finance layers: records by
     year, country, sector bucket, publisher and status, the largest records,
-    the placement tiers. Money in USD million at the stated rate."""
+    the placement tiers. Money in USD million at the stated rate.
+
+    Reads the EU layer and the finance layer's IATI files alike: the latter
+    carry their DAC codes as dac_sectors and the sector "infrastructure", a
+    finance-type code instead of a kind, and AFD's own points as place_given
+    (precision "given") beside its office points moved to the country (2)."""
     import collections
     from shared import EUR_NOTE
     recs = []
@@ -1143,14 +1153,18 @@ def layer_block(path, lender_label, money_key, currency_rate, year_key="start_ye
         p = f["properties"]
         lon, lat = f["geometry"]["coordinates"][:2]
         eur = p.get(money_key) or 0
+        codes = p.get("sector_codes") or p.get("dac_sectors") or []
         recs.append({"id": p.get("iati_id") or p.get("id"), "name": p["name"], "iso": p.get("country"),
                      "countries": p.get("countries") or ([p["country"]] if p.get("country") else []),
-                     "lon": lon, "lat": lat, "publisher": p.get("publisher"), "lender": p.get("lender"), "kind": p.get("kind"),
-                     "status": p.get("dash_status"), "sector": p.get("sector") or _dac_bucket(p.get("sector_codes")),
-                     "sector_label": p.get("sector_label"), "codes": p.get("sector_codes") or [],
+                     "lon": lon, "lat": lat, "publisher": p.get("publisher"), "lender": p.get("lender"),
+                     "kind": p.get("kind") or FINANCE_KIND.get(p.get("finance_type")),
+                     "status": p.get("dash_status"),
+                     "sector": p.get("sector") if p.get("sector") not in (None, "infrastructure") else _dac_bucket(codes),
+                     "sector_label": p.get("sector_label"), "codes": codes,
                      "eur": eur, "usd_m": round(eur * currency_rate / 1e6, 3), "disbursed": p.get("disbursed"),
                      "year": int(p[year_key]) if p.get(year_key) else None, "end_year": p.get("end_year"),
-                     "precision": p.get("geo_precision"), "place": p.get("location_name"),
+                     "precision": p.get("geo_precision") or ("given" if p.get("place_given") else None),
+                     "place": p.get("location_name"),
                      "implementers": p.get("implementers"), "instrument": p.get("instrument"),
                      "aid_type": p.get("aid_type_name"), "url": p.get("project_url") or ""})
     by_year = collections.defaultdict(lambda: {"n": 0, "usd": 0.0})
@@ -1182,6 +1196,8 @@ def layer_block(path, lender_label, money_key, currency_rate, year_key="start_ye
         "from": min(by_year) if by_year else None, "to": max(by_year) if by_year else None,
         "status": dict(collections.Counter(r["status"] for r in recs)),
         "kind": dict(collections.Counter(r["kind"] for r in recs)),
+        "kind_usd": {k: round(sum(r["usd_m"] for r in recs if r["kind"] == k), 1) for k in {r["kind"] for r in recs}},
+        "disbursed_usd": round(sum((r["disbursed"] or 0) * currency_rate / 1e6 for r in recs), 1),
         "precision": dict(collections.Counter(str(r["precision"]) for r in recs)),
         "years": {str(y): {"n": v["n"], "usd": round(v["usd"], 1)} for y, v in sorted(by_year.items())},
         "countries": {iso: {"name": NAME.get(iso, iso), "n": v["n"], "usd": round(v["usd"], 1)} for iso, v in by_c.items() if iso in NAME},
@@ -1320,7 +1336,10 @@ GULF_CABLE_OWNER = re.compile(r"\b(du|e&|Etisalat|Mobily|STC|Saudi Telecom|cente
 
 PROFILES = {
     "france": {"label": "France", "adj": "French", "donors": ["FRA"], "per_year": True, "cp": "004", "since": 2000,
-               "gem": FRENCH_OWNER, "cables": FRENCH_OWNER},
+               "gem": FRENCH_OWNER, "cables": FRENCH_OWNER,
+               # the map's own AFD records (the finance layer's crosses), read as /eu/ reads the EU layer
+               "layer": ("iati_afd_finance.geojson", "Agence française de développement financings from its IATI files",
+                         "commitment_year")},
     "spain": {"label": "Spain", "adj": "Spanish", "donors": ["ESP"], "per_year": True, "cp": "050", "since": 2000,
               "gem": SPANISH_OWNER, "cables": SPANISH_OWNER},
     "japan": {"label": "Japan", "adj": "Japanese", "donors": ["JPN"], "per_year": True, "cp": "701", "since": 2000,
@@ -1333,6 +1352,25 @@ PROFILES = {
              "fdi_donors": [],   # none of the four reports to the OECD's FDI collection
              "funds": ("921", "951", "976", "953", "980")},   # the Gulf-based funds: Arab Fund, OPEC Fund, Islamic Development Bank, BADEA, Arab technical-assistance fund
 }
+
+
+def afd_layer_block(spec):
+    """The France profile's block from the map's AFD records: layer_block's
+    aggregates plus what is AFD's own, the loan and grant split and the two
+    placement tiers (the agency's office, moved to the country's centre, and
+    AFD's own point)."""
+    from shared import EUR_USD
+    path, label, year_key = spec
+    if not (DATA / path).exists():
+        print(f"   ! {path} missing, run fetch_sources.py afd; no AFD block")
+        return None
+    block = layer_block(path, label, "commitment", EUR_USD, year_key=year_key)
+    meta = load_meta().get("finance_afd") or {}
+    block["datasets"], block["fetched"] = meta.get("datasets"), meta.get("fetched")
+    block["left_out"] = {k: meta.get(k) for k in ("budget_support", "office_points", "at_office", "place_given")}
+    print(f"   AFD layer: {block['n']:,} financings, EUR {block['eur'] / 1000:,.2f} bn committed "
+          f"({block['kind'].get('loan', 0)} loans, {block['kind'].get('grant', 0)} grants), {len(block['countries'])} countries")
+    return block
 
 
 def fetch_profile(slug):
@@ -1354,6 +1392,8 @@ def fetch_profile(slug):
     pack = {"slug": slug, "fetched": today(), "crs": crs, "oda": oda, "fdi": fdi, "ids": ids,
             "ids_bilateral": ids_pack(spec["cp"], label, since=spec["since"], kind="BLAT"),
             "gem": gem_owned(spec["gem"]), "pipelines": _pipes_owned(spec["gem"]), "cables": _cables_owned(spec["cables"])}
+    if spec.get("layer"):
+        pack["layer"] = afd_layer_block(spec["layer"])
     if spec.get("funds"):
         pack["ids_funds"] = ids_pack(spec["funds"], "the Gulf-based development funds", since=spec["since"], kind="DPPG")
         print(f"   IDS funds: {len(pack['ids_funds']['countries'])} debtors, stock {pack['ids_funds']['continent'].get(str(ids['data_to']), 0) / 1e9:,.2f} bn")

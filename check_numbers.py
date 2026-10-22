@@ -102,7 +102,8 @@ def main():
     for stem, fs in feats.items():
         k = key_of[stem]
         check(f"{stem}: features == meta.{k}.records", len(fs), meta[k]["records"])
-    for stem, k in (("iati_afdb_finance", "finance"), ("iati_worldbank_finance", "finance_wb")):
+    for stem, k in (("iati_afdb_finance", "finance"), ("iati_worldbank_finance", "finance_wb"),
+                    ("iati_afd_finance", "finance_afd")):
         check(f"{stem}: distinct iati_id == meta.{k}.activities",
               len({f["properties"].get("iati_id") for f in feats[stem]}), meta[k]["activities"])
     check("china: precise + approximate + country_level == records (unlocated are left out)",
@@ -162,6 +163,13 @@ def main():
     check("eu_profile.layer_records == eu layer", meta["eu_profile"]["layer_records"], eu["records"])
     check("china pack aid.n == china layer", packs["china"]["aid"].get("n"), ch["records"])
     check("eu pack layer.n == eu layer", packs["eu"]["layer"].get("n"), eu["records"])
+    if packs["france"].get("layer"):
+        fl = packs["france"]["layer"]
+        check("france pack layer.n == AFD layer", fl.get("n"), meta["finance_afd"]["records"])
+        check("france pack layer: loans + grants == n", sum(fl["kind"].values()), fl["n"])
+        check("france pack layer: office + own points == n",
+              (fl["left_out"].get("at_office") or 0) + (fl["left_out"].get("place_given") or 0), fl["n"])
+        check("france pack layer.fetched == meta.finance_afd.fetched", fl.get("fetched"), meta["finance_afd"]["fetched"])
 
     cmp_path = DOCS / "data" / "compare.json"
     if cmp_path.exists():
@@ -185,6 +193,9 @@ def main():
     ln = collections.Counter(col(mp["finance"], "ln"))
     check("map: AfDB rows == meta.finance.activities", ln["AfDB"], meta["finance"]["activities"])
     check("map: World Bank rows == meta.finance_wb.activities", ln["WB"], meta["finance_wb"]["activities"])
+    check("map: AFD rows == meta.finance_afd.activities", ln["AFD"], meta["finance_afd"]["activities"])
+    check("afd: at an office + where AFD puts them == records",
+          meta["finance_afd"]["at_office"] + meta["finance_afd"]["place_given"], meta["finance_afd"]["records"])
     for k in ("assets", "pipelines", "cables", "china", "eu", "mattei"):
         check(f"map: {k} rows == meta.{k}.records", len(rows(mp[k])[0]), meta[k]["records"])
     check("map: source cards == shared.sources(meta)", mp["meta"]["sources"], shared.sources(meta))
@@ -193,7 +204,7 @@ def main():
     for part, src in (("eu_meta", eu), ("mattei_meta", pm), ("china_left_out", ch)):
         check(f"map: {part} == meta", mp["meta"][part], {k: src.get(k) for k in mp["meta"][part]})
 
-    counts = {"assets": len(rows(mp["assets"])[0]), "finance": ln["AfDB"], "finance_wb": ln["WB"],
+    counts = {"assets": len(rows(mp["assets"])[0]), "finance": ln["AfDB"], "finance_wb": ln["WB"], "finance_afd": ln["AFD"],
               "ground": len(rows(mp["ground"])[0])}
     for k in ("pipelines", "cables", "china", "eu", "mattei"):
         counts[k] = len(rows(mp[k])[0])
@@ -211,7 +222,7 @@ def main():
         if label == "docs/dashboard.html":
             dash = p
         lnx = collections.Counter(col(p["finance"], "ln"))
-        got = {"assets": len(rows(p["assets"])[0]), "finance": lnx["AfDB"], "finance_wb": lnx["WB"],
+        got = {"assets": len(rows(p["assets"])[0]), "finance": lnx["AfDB"], "finance_wb": lnx["WB"], "finance_afd": lnx["AFD"],
                "ground": len(rows(p["ground"])[0])}
         for k in ("pipelines", "cables", "china", "eu", "mattei"):
             got[k] = len(rows(p[k])[0]) if k in p else None
@@ -232,7 +243,8 @@ def main():
     patterns = [
         (r"(\d[\d,]*) power units tracked", counts["assets"]),
         (r"(\d[\d,]*) projects financed by the African Development Bank", counts["finance"]),
-        (r"and (\d[\d,]*) by the World Bank", counts["finance_wb"]),
+        (r"(\d[\d,]*) by the World Bank", counts["finance_wb"]),
+        (r"(\d[\d,]*) financings by the Agence", counts["finance_afd"]),
         (r"(\d[\d,]*) construction works traced", counts["ground"]),
         (r"(\d[\d,]*) oil and gas pipeline segments", counts["pipelines"]),
         (r"(\d[\d,]*) submarine cables landing", counts["cables"]),
@@ -243,6 +255,7 @@ def main():
         (r"USD (\d[\d,.]*) billion of AfDB commitments",
          round(sum((u or 0) for u, l in zip(usd, lns) if l == "AfDB") / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of World Bank", round(sum((u or 0) for u, l in zip(usd, lns) if l == "WB") / 1000, 1)),
+        (r"USD (\d[\d,.]*) billion of AFD", round(sum((u or 0) for u, l in zip(usd, lns) if l == "AFD") / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of Chinese official", round(total("china", "usd_m") / 1000, 1)),
         (r"USD (\d[\d,.]*) billion of European Union", round(total("eu", "usd_m") / 1000, 1)),
         (r"EUR (\d[\d,.]*) billion of stated Piano Mattei", round(total("mattei", "eur_m") / 1000, 2)),
@@ -307,6 +320,8 @@ def main():
     claim("table: AfDB projects", r"African Development Bank, IATI 2\.03 activity files \| (\d[\d,]*) projects", counts["finance"])
     claim("table: World Bank files + projects", r"\((\d+) African country files \+ (\d+) regional\) \| (\d[\d,]*) projects",
           [meta["finance_wb"]["datasets"] - 2, 2, counts["finance_wb"]])
+    claim("table: AFD files + financings", r"\((\d+) African country files\) \| (\d[\d,]*) financings",
+          [meta["finance_afd"]["datasets"], counts["finance_afd"]])
     claim("table: OSM works", r"Overpass \| (\d[\d,]*) works", counts["ground"])
     claim("table: pipeline segments", r"\| (\d[\d,]*) routed segments", counts["pipelines"])
     claim("table: cables", r"\| (\d[\d,]*) cables \|", counts["cables"])

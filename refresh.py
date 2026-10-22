@@ -50,7 +50,7 @@ def main():
         sys.exit(f"unknown option(s): {' '.join(sorted(unknown))}\n{__doc__}")
 
     if "--build" not in args:
-        if run("Fetch the ten map sources", "fetch_sources.py") != 0:
+        if run("Fetch the map sources", "fetch_sources.py") != 0:
             sys.exit("\nfetch failed — nothing was rebuilt. Retry the failing layer alone, "
                      "then `python3 refresh.py --build`.")
         if not AFRICA_ONLY and run("Fetch the lender-profile data", "fetch_donors.py") != 0:

@@ -26,8 +26,8 @@ hand about twice a year; the header of each page says when.
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
 rivers, lakes and cities around Africa), with
-the eight data layers drawn as circles (power units, sized by MW), squares and
-diamonds (AfDB and World Bank projects, sized by commitment), triangles
+the eight data layers drawn as circles (power units, sized by MW), squares,
+diamonds and crosses (AfDB, World Bank and AFD projects, sized by commitment), triangles
 (Chinese-financed projects from AidData, 2000–2023, sized by commitment, with
 the works' OpenStreetMap footprint outlined from country zoom in), five- and
 four-pointed stars (EU-financed records: European Commission contracts and EIB
@@ -80,10 +80,11 @@ bloc (twelve so far: Russia, Turkey, Italy, China, the EU, the United States, Ge
 
 ## Sources
 
-Ten public datasets in eight layers, deliberately kept apart because they share no
+Eleven public datasets in eight layers, deliberately kept apart because they share no
 project identifier. Summing across them double-counts. Both pages show the same
-eight layers over the same records; the finance layer holds both lenders on each,
-drawn as squares (AfDB) and diamonds (World Bank), the EU finance layer holds
+eight layers over the same records; the finance layer holds three lenders on each,
+drawn as squares (AfDB), diamonds (World Bank) and crosses (AFD, Africa edition
+only), the EU finance layer holds
 the European Commission and the European Investment Bank, both drawn as stars,
 and the Piano Mattei layer is the Italian Government's own project list, drawn
 as hexagons.
@@ -93,6 +94,7 @@ as hexagons.
 | Assets | Global Energy Monitor, Global Integrated Power Tracker | 4,295 power units | what asset is being built |
 | Finance | African Development Bank, IATI 2.03 activity files | 1,683 projects | who is paying, and how much |
 | Finance | World Bank, IATI 2.03 activity files (50 African country files + 2 regional) | 890 projects | the same, for the other big multilateral lender |
+| Finance | Agence française de développement (AFD), IATI 2.03 activity files (44 African country files) | 394 financings | the same, loan by loan and grant by grant, for France's development agency |
 | Ground truth | OpenStreetMap via Overpass | 3,700 works | what has physically broken ground |
 | Pipelines | Global Energy Monitor, Global Gas + Global Oil Infrastructure Trackers | 323 routed segments | where oil, NGL and gas move, or are meant to |
 | Cables | TeleGeography, Submarine Cable Map | 81 cables | where the continent's bandwidth comes ashore, owned by whom, due when |
@@ -108,7 +110,39 @@ diamonds, AfDB squares, and the two are never added into one project cost. The E
 added on 2026-10-02 (`fetch_sources.py eu`); the Piano Mattei layer on 2026-10-07
 (`fetch_sources.py mattei`), its records joining the lender filter as "Piano
 Mattei (Italy)" (`ln=IT`). The EU layer was; its records join the lender filter
-as "European Union institutions" (`ln=EU`).
+as "European Union institutions" (`ln=EU`). AFD joined the finance layer as its
+third lender on 2026-10-21 (`fetch_sources.py afd`, `ln=AFD`, its own "France"
+family in the rail), drawn as crosses.
+
+**AFD in the finance layer** (Africa edition only; `afd_files` in `region.py`)
+is the Agence française de développement's IATI 2.03 files, one per African
+country (`afd-sn` …), published on data.gouv.fr under the French Government's
+Licence Ouverte (dataset "Données de l'aide au développement de l'AFD"). Its
+multi-country file (`afd-multipays`) mixes African and other recipients and is
+left out. Each file has two levels: the project (hierarchy 1, no money, no
+location) and the financings under it (hierarchy 2, with the commitment and
+disbursement transactions and one unnamed point each), so **one AFD record is a
+financing**, a loan or a grant: a project with both is two crosses at one point.
+The same DAC infrastructure filter, sector shares and status mapping as the
+other two lenders apply. AFD files its policy loans as project aid (aid-type
+C01), so its budget support is told by its own words instead
+(`AFD_BUDGET_WORDS`: "financement budgétaire", "prêt (souverain) de politique
+publique", "appui budgétaire" in the title or description), which on
+2026-10-21 left out ten financings of four projects (South Africa's
+just-transition budget financing, Egypt's electricity policy loan, Morocco's
+water policy financing, Mauritius's water policy loan). Amounts are euros,
+converted at the EU layer's rate (`EUR_USD`) and never added to the other
+lenders. **Location:** AFD publishes no exactness, location class or place
+name. In every country file one point carries most financings, whatever their
+sector: the agency's office, sometimes a neighbouring country's (Dakar for
+Senegal, Gambia and Guinea-Bissau; Nairobi for Kenya and Somalia; Addis Ababa
+for Ethiopia and Sudan). `_afd_points()` moves a financing at any file's
+most-used point to its country's centre (or the island point) and flags it
+`office_point`; any other point is kept and flagged `place_given`, which the
+builders rank with the named places (precision 1) and the card calls "a point
+AFD gives". The Liberia file also holds two Sri Lankan financings, which the
+placement window drops. AFD's files hold signed financings only, under
+implementation or completed, so it has no announced, approved or stalled records.
 
 **Counting rules for money** (since the fact-check of 14 Oct 2026, see
 `factcheck/2026-10-14-homepage/`). The fetchers write the amount the totals add
@@ -444,7 +478,15 @@ do report to the CRS) carries a second debt series for the Gulf-based funds
 (Arab Fund 921, OPEC Fund 951, Islamic Development Bank 976, BADEA 953, the
 Arab technical-assistance fund 980) and no FDI series; Japan reports an FDI
 figure for South Africa only; Norway and Sweden publish no African FDI
-partner, so the Nordic stock is Denmark, Finland and Iceland. The OECD's
+partner, so the Nordic stock is Denmark, Finland and Iceland. Since
+2026-10-22 the France spec also names a map layer (`"layer"`): the pack
+carries `afd_layer_block`, the map's AFD records (`iati_afd_finance.geojson`,
+the finance layer's crosses) aggregated by `layer_block` as /eu/ aggregates
+the EU layer, with the loan and grant split (`kind`, `kind_usd`, from the IATI
+finance-type), commitments by the year of the first commitment transaction
+(`commitment_year`), the two placement tiers and what the fetch left out; the
+page shows it as its own section, map crosses and three charts, and never
+adds it to the CRS dollars. The OECD's
 public endpoint answers bursts with HTTP 429; `_csv_rows` waits and retries.
 With twelve profiles the row on the map and the dashboard shows the badges
 only (the button title carries the name); the profiles show the names and wrap.

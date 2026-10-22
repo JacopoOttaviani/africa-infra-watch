@@ -138,6 +138,10 @@ SOURCE_INFO = {
     "finance": {"name": BANK_NAME, "lic": REGION.bank["lic"], "url": REGION.bank["registry"]},
     "finance_wb": {"name": "World Bank", "lic": "CC BY 4.0",
                    "url": "https://d-portal.iatistandard.org/ctrack.html?publisher=44000#view=main"},
+    # AFD's IATI files sit on data.gouv.fr under the French Government's
+    # Licence Ouverte (dataset "Données de l'aide au développement de l'AFD")
+    "finance_afd": {"name": "Agence française de développement", "lic": "Licence Ouverte / Open Licence",
+                    "url": "https://d-portal.iatistandard.org/ctrack.html?publisher=FR-3#view=main"},
     "ground": {"name": "OpenStreetMap", "lic": "ODbL 1.0",
                "url": "https://www.openstreetmap.org/copyright"},
     "pipelines": {"name": "Global Energy Monitor", "lic": "CC BY 4.0",
@@ -161,10 +165,11 @@ SOURCE_INFO = {
                "url": "https://www.governo.it/en/piano-mattei/progetti/"},
 }
 # The layers each page draws. Both pages show the same eight layers over the
-# same records, and both split the finance layer between its two lenders, so
-# both carry the World Bank source card.
+# same records, and both split the finance layer between its lenders, so
+# both carry the World Bank source card, and in Africa AFD's.
+FINANCE_KEYS = ("finance", "finance_wb") + (("finance_afd",) if getattr(REGION, "afd_files", None) else ())
 MAP_LAYERS = tuple(k for layer in REGION.layers
-                   for k in ((layer, "finance_wb") if layer == "finance" else (layer,)))
+                   for k in (FINANCE_KEYS if layer == "finance" else (layer,)))
 DASHBOARD_LAYERS = MAP_LAYERS
 
 # Lender profiles: one page per lending country or bloc, served at
@@ -670,6 +675,7 @@ def sources(meta, keys=MAP_LAYERS):
     a, f, g = meta.get("assets", {}), meta.get("finance", {}), meta.get("ground", {})
     p, c, w = meta.get("pipelines", {}), meta.get("cables", {}), meta.get("finance_wb", {})
     ch, eu, pm = meta.get("china", {}), meta.get("eu", {}), meta.get("mattei", {})
+    fa = meta.get("finance_afd", {})
     rows = [
         {"k": "assets", **SOURCE_INFO["assets"],
          "detail": f"Global Integrated Power Tracker, release {a.get('release', 'unknown')}",
@@ -682,6 +688,10 @@ def sources(meta, keys=MAP_LAYERS):
         {"k": "finance_wb", **SOURCE_INFO["finance_wb"],
          "detail": f"IATI 2.03 activity files, {w.get('datasets', '?')} {REGION.adj} country and regional datasets",
          "fresh": w.get("fresh") or fmt_date(w.get("fetched"))},
+        {"k": "finance_afd", **SOURCE_INFO["finance_afd"],
+         "detail": f"IATI 2.03 activity files, {fa.get('datasets', '?')} {REGION.adj} country datasets "
+                   "(the financings under each project)",
+         "fresh": fa.get("fresh") or fmt_date(fa.get("fetched"))},
         {"k": "ground", **SOURCE_INFO["ground"],
          "detail": "Overpass API, significant road/rail/air classes",
          "fresh": g.get("fresh") or fmt_date(g.get("fetched"))},
@@ -729,7 +739,10 @@ def payload_meta(meta, keys=MAP_LAYERS):
                                   "envelopes_dropped", "eib_left_out", "eib_other_funder", "generated")},
             # what the IATI fetch left out of the two banks, so the Methodology can say so
             "finance_meta": {"afdb_budget_support": (meta.get("finance") or {}).get("budget_support"),
-                             "wb_budget_support": (meta.get("finance_wb") or {}).get("budget_support")},
+                             "wb_budget_support": (meta.get("finance_wb") or {}).get("budget_support"),
+                             **({f"afd_{k}": (meta.get("finance_afd") or {}).get(k)
+                                 for k in ("budget_support", "office_points", "at_office", "place_given")}
+                                if "finance_afd" in keys else {})},
             "cables_meta": {k: (meta.get("cables") or {}).get(k)
                             for k in ("landing_points", "landing_sites", "length_estimated")},
             "pipes_meta": {k: (meta.get("pipelines") or {}).get(k)
@@ -861,13 +874,14 @@ LICENSE_URL = {"CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
                "© TeleGeography (map CC BY-SA 4.0)": "https://www2.telegeography.com/cite-telegeography-map",
                "ODbL 1.0": "https://opendatacommons.org/licenses/odbl/1-0/",
                "ODC-By 1.0 (footprints ODbL)": "https://opendatacommons.org/licenses/by/1-0/",
-               "CC BY 3.0 IT (gazetteer ODbL)": "https://creativecommons.org/licenses/by/3.0/it/"}
+               "CC BY 3.0 IT (gazetteer ODbL)": "https://creativecommons.org/licenses/by/3.0/it/",
+               "Licence Ouverte / Open Licence": "https://www.etalab.gouv.fr/wp-content/uploads/2014/05/Licence_Ouverte.pdf"}
 
 # layers drawn but not offered as a download (build_map.NOT_REDISTRIBUTED)
 NO_DOWNLOAD = {"cables"}
 
 LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": f"iati_{REGION.bank['publisher']}_finance.geojson",
-              "finance_wb": "iati_worldbank_finance.geojson",
+              "finance_wb": "iati_worldbank_finance.geojson", "finance_afd": "iati_afd_finance.geojson",
               "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
               "cables": "telegeography_cables.geojson", "china": "aiddata_china_finance.geojson",
               "eu": "iati_eu_finance.geojson", "mattei": "piano_mattei.geojson"}
@@ -898,8 +912,11 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
         n_afdb = sum(1 for r in f if r[fc.index("ln")] == BANK)
         n_wb = sum(1 for r in f if r[fc.index("ln")] == "WB")
         usd_wb = sum((r[fc.index("usd_m")] or 0) for r in f if r[fc.index("ln")] == "WB")
+        n_afd = sum(1 for r in f if r[fc.index("ln")] == "AFD")
+        usd_afd = sum((r[fc.index("usd_m")] or 0) for r in f if r[fc.index("ln")] == "AFD")
     else:
         n_afdb, n_wb, usd_wb = len(f), (meta.get("finance_wb") or {}).get("activities") or 0, 0
+        n_afd, usd_afd = (meta.get("finance_afd") or {}).get("activities") or 0, 0
 
     def count(layer, key):
         if layer is None:
@@ -920,7 +937,8 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
         rows, cols = _rows(layer)
         return sum((r[cols.index(col)] or 0) for r in rows) if col in cols else 0
 
-    return {"assets": len(a), "finance": n_afdb, "finance_wb": n_wb, "finance_total": len(f),
+    return {"assets": len(a), "finance": n_afdb, "finance_wb": n_wb, "finance_afd": n_afd,
+            "usd_bn_afd": usd_afd / 1000, "finance_total": len(f),
             "ground": len(g),
             "pipelines": count(pipelines, "pipelines"), "cables": count(cables, "cables"),
             "pipe_km": total(pipelines, "km"),
@@ -949,7 +967,10 @@ def facts_sentence(facts):
     s = (f"{facts['assets']:,} power units tracked by Global Energy Monitor, "
          f"{facts['finance']:,} projects financed by the {BANK_NAME}")
     if facts.get("finance_wb"):
-        s += f" and {facts['finance_wb']:,} by the World Bank"
+        s += (f", {facts['finance_wb']:,} by the World Bank" if facts.get("finance_afd")
+              else f" and {facts['finance_wb']:,} by the World Bank")
+    if facts.get("finance_afd"):
+        s += f" and {facts['finance_afd']:,} financings by the Agence française de développement (AFD)"
     s += f", {facts['ground']:,} construction works traced in OpenStreetMap"
     if facts.get("pipelines"):
         s += f", {facts['pipelines']:,} oil and gas pipeline segments from Global Energy Monitor"
@@ -974,11 +995,14 @@ def facts_totals(facts):
     if facts["gw"]:
         parts.append(f"about {facts['gw']:,.0f} GW of generating capacity across all statuses")
     if facts["usd_bn"]:
+        afd = facts.get("usd_bn_afd") or 0
         if facts.get("usd_bn_wb"):
-            parts.append(f"USD {facts['usd_bn'] - facts['usd_bn_wb']:,.1f} billion of {BANK} commitments, "
-                         f"{bank_rate}, and USD {facts['usd_bn_wb']:,.1f} billion of World Bank "
-                         f"commitments, each the infrastructure share of the lender's own commitment, "
-                         f"budget support and cancelled projects left out")
+            parts.append(f"USD {facts['usd_bn'] - facts['usd_bn_wb'] - afd:,.1f} billion of {BANK} commitments, "
+                         f"{bank_rate}, " + ("" if afd else "and ")
+                         + f"USD {facts['usd_bn_wb']:,.1f} billion of World Bank commitments"
+                         + (f" and USD {afd:,.1f} billion of AFD commitments, converted at {EUR_NOTE}" if afd else "")
+                         + ", each the infrastructure share of the lender's own commitment, "
+                         "budget support and cancelled projects left out")
         else:
             parts.append(f"USD {facts['usd_bn']:,.1f} billion of {BANK} commitments, {bank_rate}")
     if facts.get("china_usd_bn"):
@@ -1021,6 +1045,10 @@ def structured_data(facts, *, path, title, description, kind):
                               "activity files: title, recipient country or region, status, DAC "
                               "sector, commitment and disbursement in USD, and the Bank's geocoded "
                               "project locations with their location class.",
+                "finance_afd": f"Infrastructure financings of the Agence française de développement in {REGION.name} "
+                               "from its IATI 2.03 activity files: title, recipient country, status, DAC "
+                               "sector, commitment and disbursement in EUR, and AFD's point where it is not "
+                               "the agency's office (otherwise the country's centre).",
                 "ground": "Roads (motorway to secondary), railways and airports under "
                           f"construction or proposed in {REGION.name}, traced by OpenStreetMap mappers, "
                           "as line geometries with status, operator and opening date.",
@@ -1303,6 +1331,14 @@ def write_site_index(facts):
                        "  share or the whole project's value, so they are shown on their own and never added to\n"
                        "  the lenders' commitments.") if mattei else "")
     mattei_not_added = ", and the Piano Mattei\n  figures are not added to any of them" if mattei else ""
+    # AFD, France's development agency, the finance layer's third lender (Africa only)
+    afd = bool(facts.get("finance_afd"))
+    afd_glyph = ", crosses AFD financings" if afd else ""
+    afd_money = (" AFD, France's development agency, publishes in euros too, converted at the same\n"
+                 "  rate; one AFD record is one financing (a loan or a grant) under a project, and its\n"
+                 "  policy loans, which it files as project aid, are left out as budget support by their\n"
+                 "  own words (\"financement budgétaire\", \"prêt de politique publique\").") if afd else ""
+    afd_limit = ", France's development agency AFD" if afd else ""
     mattei_bullet = ((f"- The Piano Mattei layer is the Italian Government's own list of the plan's projects, all of\n"
                       f"  them, not an infrastructure subset: {facts.get('mattei_edu') or 'many'} of the {facts['mattei']:,} carry the\n"
                       "  education, training and culture pillar. Narrow by sector to keep the ones that build\n"
@@ -1350,7 +1386,7 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the {NUM_WORD[len(REGION.layers)]} layers (finance holds two lenders, EU finance the Commission and the EIB{mattei_plan}) with filters
+- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the {NUM_WORD[len(REGION.layers)]} layers (finance holds {'three' if afd else 'two'} lenders, EU finance the Commission and the EIB{mattei_plan}) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
@@ -1388,7 +1424,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   (1 announced, 2 under construction, 3-4 operating, 5-6 stalled); a Commission financing
   decision still in the pipeline is an announced record.{mattei_status}
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
-  squares are {BANK} projects and diamonds World Bank projects, both sized by commitment, thin lines are construction ways as
+  squares are {BANK} projects and diamonds World Bank projects{afd_glyph}, {'all' if afd else 'both'} sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
   with their {REGION.adj} landing points, triangles are Chinese-financed projects sized by
   commitment, with the project's OpenStreetMap footprint drawn as a thin outline where
@@ -1405,14 +1441,14 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   {EUR_NOTE}; a Commission contract carries the contracted amount, a financing decision with
   no contract yet its whole envelope, once however many country copies repeat it, an EIB
   operation the signed amount (the Bank's file repeats each commitment transaction per
-  tranche record; the distinct ones are summed).{mattei_amounts}
+  tranche record; the distinct ones are summed).{afd_money}{mattei_amounts}
 
 ## Limits
 
-- Money is two multilateral lenders, {BANK} and the World Bank, the European Union's
+- Money is two multilateral lenders, {BANK} and the World Bank{afd_limit}, the European Union's
   institutions (the Commission and the EIB, each publishing its own share to IATI), plus
   Chinese official finance as AidData reconstructs it from public sources. Private,
-  domestic-budget, EU member states' bilateral and other-lender finance is not here. Read
+  domestic-budget, {'other ' if afd else ''}EU member states' bilateral and other-lender finance is not here. Read
   totals as each lender's exposure, not as investment in {REGION.name}. Each lender's total is
   shown on its own line and never added into one project cost{mattei_not_added}.
 {mattei_bullet}- The EU layer is the Commission's contracts (one record per grant, delegation agreement or
