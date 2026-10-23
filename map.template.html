@@ -151,6 +151,10 @@
   .is-off div.fh{opacity:.45}
   .offnote + .lyr,.offnote + .fam{margin-top:0}
   .offnote button{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  /* each panel's own switch: all off while any is on, all back on once none is */
+  .allsw{margin-left:8px;font-size:11px;font-weight:600;color:var(--accent)}
+  .allsw:hover:not(:disabled){text-decoration:underline;text-underline-offset:2px}
+  .allsw:disabled{color:var(--ink-3);opacity:.45;cursor:default}
   /* what the map shows: what is built, who is paying for it, or both */
   .seg{display:flex;gap:2px;padding:3px;background:var(--surface-2);border-radius:4px}
   .seg button{flex:1;padding:6px 4px;border-radius:3px;font-size:12px;font-weight:600;color:var(--ink-3);text-align:center}
@@ -565,12 +569,12 @@
     </div>
 
     <div class="panel map-only">
-      <h3>Layers <span class="hint">what is built</span></h3>
+      <h3>Layers <span class="hint">what is built<button class="allsw" id="layersall"></button></span></h3>
       <div id="layers"></div>
     </div>
 
     <div class="panel map-only">
-      <h3>Lenders <span class="hint">who is paying</span></h3>
+      <h3>Lenders <span class="hint">who is paying<button class="allsw" id="lendersall"></button></span></h3>
       <p class="railnote">Each lender's projects are records of their own, not a filter on the layers above: switching China off hides the Chinese loans, not the power plants they paid for.</p>
       <div id="lenders"></div>
     </div>
@@ -1542,6 +1546,12 @@ function counts(){
 
 /* the panel the Show switch hides keeps its buttons, greyed, with a way back */
 const offNote = what => `<p class="offnote">Hidden while the map shows ${what}. <button data-side="all">Show both</button></p>`;
+/* the switch in a panel's header: all off while any is on, all on once none is */
+function allSwitch(b, any, off, what, flip){
+  b.textContent = any ? "All off" : "All on";
+  b.title = any ? `Switch every ${what} off` : `Switch every ${what} back on`;
+  b.disabled = off; b.onclick = flip;
+}
 function renderSide(){
   document.querySelectorAll("#side [data-side]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.side===S_.side)));
 }
@@ -1556,6 +1566,8 @@ function renderLayers(c){
   el("layers").querySelectorAll("[data-l]").forEach(b =>
     b.onclick = () => { S_.layers[b.dataset.l] = !S_.layers[b.dataset.l]; apply(); });
   el("layers").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S_.side = b.dataset.side; apply(); });
+  const any = RAIL_LAYERS.some(k=>S_.layers[k]);
+  allSwitch(el("layersall"), any, off, "layer", () => { for(const k of RAIL_LAYERS) S_.layers[k] = !any; apply(); });
 }
 function renderLenders(c){
   const off = S_.side==="built";
@@ -1577,6 +1589,8 @@ function renderLenders(c){
     b.onclick = () => { const ks = LENDER_FAMILY[+b.dataset.fam][1], on = !ks.every(k=>S_.lenders[k]);
       for(const k of ks) S_.lenders[k] = on; syncLayers(); apply(); });
   el("lenders").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S_.side = b.dataset.side; apply(); });
+  const any = LENDER_ORDER.some(k=>S_.lenders[k]);
+  allSwitch(el("lendersall"), any, off, "lender", () => { for(const k of LENDER_ORDER) S_.lenders[k] = !any; syncLayers(); apply(); });
 }
 function renderStatuses(c){
   el("statuses").innerHTML = STATUS_ORDER.map(s => `
