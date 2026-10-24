@@ -286,30 +286,27 @@
   .mapbr .proj-note{position:static;max-width:none}
 
   /* The title card is the map card's header. It names what the frame shows
-     (the kicker, "Africa" or a country, the × back to the continent), with
+     ("Africa" or a country, the × back to the continent), with
      the facts line beside the name on wide screens and under it on narrow
      ones. The legend is the card's footer. Neither sits over the canvas, so
      the visualisation is never hidden; the zoom buttons are the only overlay. */
-  .maptitle{display:flex;align-items:flex-start;justify-content:space-between;gap:10px 28px;padding:12px 16px 11px;background:var(--surface);border-bottom:1px solid var(--rule)}
+  .maptitle{display:flex;align-items:center;justify-content:space-between;gap:10px 28px;padding:7px 16px 7px;background:var(--surface);border-bottom:1px solid var(--rule)}
   .maptitle .mt-head{flex:none;max-width:58%}
-  .maptitle .kicker{display:block}
-  .maptitle .mt-row{display:flex;align-items:flex-start;gap:10px}
-  .maptitle h2{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:1;margin:3px 0 0;text-wrap:balance}
+  .maptitle .mt-row{display:flex;align-items:center;gap:10px}
+  .maptitle h2{font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1;margin:0;text-wrap:balance}
   .maptitle.is-country h2{color:var(--accent-ink)}
-  .maptitle .mt-clear{flex:none;margin-top:6px;width:22px;height:22px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink-3);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .maptitle .mt-clear{flex:none;width:20px;height:20px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink-3);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
   .maptitle .mt-clear:hover{color:var(--ink);background:var(--surface-3)}
   .maptitle .mt-clear[hidden]{display:none}
-  .maptitle .mt-side{flex:1 1 240px;min-width:0;text-align:right;padding-top:3px}
+  .maptitle .mt-side{flex:1 1 240px;min-width:0;text-align:right}
   .maptitle .mt-facts{margin:0;font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--ink-2)}
   .maptitle .mt-facts b{font-weight:600;color:var(--ink)}
-  .maptitle .mt-foot{margin:6px 0 0;padding-top:5px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  @media (max-width:1020px){.maptitle h2{font-size:28px}}
   @media (max-width:600px){
-    .maptitle{display:block;padding:10px 12px 9px}
+    .maptitle{display:block;padding:7px 12px 7px}
     .maptitle .mt-head{max-width:none}
-    .maptitle .mt-side{text-align:left;padding-top:0}
-    .maptitle .mt-facts{margin-top:8px;font-size:10.5px;line-height:1.5}
-    .maptitle h2{font-size:24px}
+    .maptitle .mt-side{text-align:left}
+    .maptitle .mt-facts{margin-top:5px;font-size:10.5px;line-height:1.5}
+    .maptitle h2{font-size:20px}
   }
   .zoomers .rst{font-size:10px;font-weight:700;letter-spacing:.04em}
   .legend{display:flex;flex-direction:column;gap:5px;padding:8px 16px 9px;background:var(--surface);border-top:1px solid var(--rule);font-size:11px}
@@ -802,7 +799,6 @@ Country outlines: Natural Earth. Built 24 Oct 2026 by
       <div class="mapwrap" id="mapwrap">
         <div class="maptitle" id="maptitle" aria-live="polite">
           <div class="mt-head">
-            <span class="kicker">AfricaWatch</span>
             <div class="mt-row">
               <h2 id="mtname">Africa</h2>
               <button class="mt-clear" id="mtclear" hidden title="Back to the whole continent" aria-label="Clear country filter">×</button>
@@ -810,7 +806,6 @@ Country outlines: Natural Earth. Built 24 Oct 2026 by
           </div>
           <div class="mt-side">
             <p class="mt-facts" id="mtfacts"></p>
-            <p class="mt-foot" id="mtfoot"></p>
           </div>
         </div>
         <div class="mapbox" id="mapbox">
@@ -1121,7 +1116,6 @@ const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_constructi
 const STAGE_LABEL  = {announced:"Pipeline",approved:"Committed",under_construction:"Disbursing",operating:"Closed",stalled:"Cancelled"};
 const statusLabel  = r => r.status==null && r.lender ? "No stage published" : (r.lender ? STAGE_LABEL : STATUS_LABEL)[r.status] || "—";
 const LAYER_ORDER  = R.layers;
-const HOME_HOST    = "https://jacopoottaviani.com/africa-infra-watch/".replace(/^https?:\/\//,"").replace(/\/$/,"");
 const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",finance_afd:"Development finance",finance_bmz:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei",gateway:"Global Gateway"};
 const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World Bank` + (R.lenders.includes("AFD") ? " · AFD" : "") + (R.lenders.includes("GIZ") ? " · BMZ" : ""),finance_wb:"World Bank",finance_afd:"AFD",finance_bmz:"BMZ",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal",gateway:"European Commission · flagship list"};
 /* The rail lists the data in two groups. "Layers" is what is built: power
@@ -1745,7 +1739,7 @@ function renderTitle(){
   el("mtclear").hidden = !iso;
   const counts = Object.fromEntries(LAYER_ORDER.map(k=>[k,0]));
   for(const r of VIS) counts[r.layer]++;
-  const parts = LAYER_ORDER.filter(k=>counts[k]).map(k => `${fmt(counts[k])} ${FACT_NOUN[k][counts[k]===1?0:1]}`);
+  const parts = LAYER_ORDER.filter(k=>counts[k]).map(k => `<b>${fmt(counts[k])}</b> ${FACT_NOUN[k][counts[k]===1?0:1]}`);
   let lead = `<b>${fmt(VIS.length)}</b> ${VIS.length===1?"record":"records"}`;
   if(!iso){
     const isos = new Set(); for(const r of VIS) for(const i of (r.isos||[r.iso])) if(i) isos.add(i);
@@ -1753,7 +1747,6 @@ function renderTitle(){
   }
   const filtered = S.q || S.sector || S.status.size!==STATUS_ORDER.length || S.stage.size!==STATUS_ORDER.length || LAYER_ORDER.some(k=>!S.layers[k]) || LENDER_ORDER.some(k=>!S.lenders[k]);
   el("mtfacts").innerHTML = lead + (parts.length ? `<span class="mt-more"> · ${parts.join(" · ")}</span>` : "") + (filtered ? ` <span style="color:var(--ink-3)">· filtered</span>` : "");
-  el("mtfoot").textContent = `${HOME_HOST} · data as of ${DATA.meta.built}`;
 }
 
 function renderKpis(){
