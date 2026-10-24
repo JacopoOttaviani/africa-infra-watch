@@ -460,6 +460,11 @@
   .pill.sidesw button[aria-pressed="true"]{background:var(--accent);color:#fff}
   .pill.sidesw button:hover:not([aria-pressed="true"]){color:var(--ink)}
   html[data-host="pages"] .pill.toggle.pages-only{display:flex}
+  /* the top row's controls share the menu bar's height (.snav, 34px, in
+     shared.LMENU_CSS), so their tops and bottoms line up across the map */
+  .hud-tl > .pill,.hud-tl > .ib{height:34px;box-sizing:border-box}
+  .hud-tl > .ib{width:34px}
+  .pill.sidesw button{align-self:stretch;display:flex;align-items:center}
 
   /* cluster overlay: Leaflet places the icons, the canvas keeps the pointer.
      Only the Leaflet CSS the overlay needs (no tiles, controls or popups). */

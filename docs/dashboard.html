@@ -252,6 +252,11 @@
   .pill.sidesw button{padding:3px 9px;border-radius:2px;color:var(--ink-3)}
   .pill.sidesw button[aria-pressed="true"]{background:var(--accent);color:#fff}
   .pill.sidesw button:hover:not([aria-pressed="true"]){color:var(--ink)}
+  /* the top bar's controls share the menu bar's height (.snav, 34px, in
+     shared.LMENU_CSS), so their tops and bottoms line up across the page */
+  .topbar > .pill,.topbar > .ib{height:34px;box-sizing:border-box}
+  .topbar > .ib{width:34px}
+  .pill.sidesw button{align-self:stretch;display:flex;align-items:center}
 
   /* ---------- kpis ---------- */
   /* one tile per KPI, always on a single row; the tiles shrink with the column and scroll sideways on phones */
