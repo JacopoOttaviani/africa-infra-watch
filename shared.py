@@ -1459,6 +1459,12 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 
 - The sources share no project identifier. They are separate layers, never added into one
   project cost: {an(BANK)}-financed power plant can legitimately appear in several.
+- Two maps, each with its own filters: Built, for the works, and Financed, for the lenders'
+  records of their loans and grants.
+- Two sets of words for the same five steps: a status for the works (announced, approved,
+  under construction, operating, stalled) and a stage for a lender's record (pipeline,
+  committed, disbursing, closed, cancelled). Closed means the money was spent, not that
+  the works run.
 - Five shared statuses. Announced: GEM announced, IATI status 1, OSM proposed. Approved:
   GEM pre-construction (permits, land or finance still being sought), {an(BANK)} activity still
   at IATI status 1 whose commitment is on record (past board approval), AidData

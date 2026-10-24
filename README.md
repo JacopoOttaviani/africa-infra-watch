@@ -45,10 +45,13 @@ becomes the country filter and is framed; a project is flown to and its card
 opened, as a click on its marker would, after switching back on any filter that
 hid it. The flight goes deep enough for the marker to leave its donut, up to
 town scale (`Q_ZOOM`). A
-**Show** switch above the filters, on map and dashboard alike (`show=built` /
-`show=paid` in the map's hash), limits the view to what is built or to the
-lenders' own records, so one project is not drawn twice; the panel it hides
-keeps its buttons, greyed. Each record card lists up to five records from other
+**Built / Financed** switch, in the rail and on the map itself, on map and
+dashboard alike (`show=paid` in the hash; Built is the default), moves between
+two maps, each with its own filters: on Built the works' statuses (`s=`) and
+layers, on Financed the lenders' stages, Pipeline, Committed, Disbursing, Closed
+and Cancelled (`m=`), and the lenders. The same five keys and colours, so a
+closed loan is never counted as an operating plant. Country and search carry
+over; a sector the other map has no records in is dropped. Each record card lists up to five records from other
 sources that may be **the same project**: same sector, and either a rare word of
 the name shared within 50 km or both locations precise and within 2 km. They
 are leads, never merged or summed. A

@@ -165,6 +165,8 @@
   .chip .cn{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
   .chip[aria-pressed="false"]{background:transparent;color:var(--ink-3);border-style:dashed}
   .chip[aria-pressed="false"] .sw{opacity:.3}
+  /* two maps, Built and Financed: each shows only its own panels, tiles and legend */
+  body[data-side="built"] [data-mode="paid"],body[data-side="paid"] [data-mode="built"]{display:none!important}
 
   .narrow{display:grid;grid-template-columns:1fr 1fr;gap:6px}
   select{width:100%;padding:7px 28px 7px 9px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);min-width:0;-webkit-appearance:none;appearance:none;text-overflow:ellipsis;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%2371827A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M1 1l4 4 4-4'/></svg>");background-repeat:no-repeat;background-position:right 11px center}
@@ -211,6 +213,11 @@
   .pill.toggle[aria-pressed="true"]:hover{background:var(--accent-ink)}
   .pill.toggle[aria-pressed="true"] .hole{fill:var(--accent)}
   .pill.toggle:disabled{opacity:.5;cursor:default}
+  /* the top bar's own Built / Financed switch, so a phone need not open the drawer */
+  .pill.sidesw{padding:2px;gap:2px}
+  .pill.sidesw button{padding:3px 9px;border-radius:2px;color:var(--ink-3)}
+  .pill.sidesw button[aria-pressed="true"]{background:var(--accent);color:#fff}
+  .pill.sidesw button:hover:not([aria-pressed="true"]){color:var(--ink)}
 
   /* ---------- kpis ---------- */
   /* one tile per KPI, always on a single row; the tiles shrink with the column and scroll sideways on phones */
@@ -510,27 +517,26 @@
     </div>
 
     <div class="panel">
-      <h3>Status <span class="hint">colour = status</span></h3>
-      <div class="chips" id="statuses"></div>
-    </div>
-
-    <div class="panel">
-      <h3>Show <span class="hint">a project can be in both</span></h3>
-      <div class="seg" id="side" role="group" aria-label="What the dashboard shows">
-        <button data-side="all" title="What is built and who is paying for it">Both</button>
-        <button data-side="built" title="What is built: power units, works on the ground, pipelines, cables">Built</button>
-        <button data-side="paid" title="Who is paying: the lenders' own project records">Financed</button>
+      <h3>Map <span class="hint">each with its own filters</span></h3>
+      <div class="seg sidesw" id="side" role="group" aria-label="Which map">
+        <button data-side="built" title="What is built or planned: the works themselves, at every stage from announced to operating">Built</button>
+        <button data-side="paid" title="Who is paying: the lenders' own records of their loans and grants">Financed</button>
       </div>
     </div>
 
     <div class="panel">
+      <h3><span><span data-mode="built">Status</span><span data-mode="paid">Stage</span></span> <span class="hint"><span data-mode="built">how far the works are</span><span data-mode="paid">where the loan or grant stands</span></span></h3>
+      <div class="chips" id="statuses" data-mode="built"></div>
+      <div class="chips" id="stages" data-mode="paid"></div>
+    </div>
+
+    <div class="panel" data-mode="built">
       <h3>Layers <span class="hint">what is built<button class="allsw" id="layersall"></button></span></h3>
       <div id="layers"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-mode="paid">
       <h3>Lenders <span class="hint">who is paying<button class="allsw" id="lendersall"></button></span></h3>
-      <p class="railnote">Each lender's projects are records of their own, not a filter on the layers above: switching China off hides the Chinese loans, not the power plants they paid for.</p>
       <div id="lenders"></div>
     </div>
 
@@ -560,6 +566,7 @@
         <button class="ib menu" id="railopen" aria-label="Open filters" title="Filters and selection">
           <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
+        <span class="pill sidesw" role="group" aria-label="Which map"><button data-side="built" title="What is built or planned: the works themselves, at every stage from announced to operating">Built</button><button data-side="paid" title="Who is paying: the lenders' own records of their loans and grants">Financed</button></span>
         <span class="pill"><span class="m" id="vis">0</span> records</span>
         <button class="pill toggle" id="cluster" aria-pressed="false" title="Group nearby records into donuts sized by count and sliced by status">Cluster markers</button>
       </div>
@@ -613,7 +620,7 @@
         </div>
         <div class="card">
           <header>
-            <h3>What is being built</h3>
+            <h3><span data-mode="built">What is being built</span><span data-mode="paid">What is being financed</span></h3>
             <span class="hint" id="sechint">by sector</span>
           </header>
           <div class="body"><div class="tech" id="bysector"></div></div>
@@ -640,7 +647,7 @@
                 <th class="sortable" data-k="name">Project <span class="ar">↕</span></th>
                 <th class="sortable" data-k="country">Country <span class="ar">↕</span></th>
                 <th>Layer</th>
-                <th class="sortable" data-k="status">Status <span class="ar">↕</span></th>
+                <th class="sortable" data-k="status"><span data-mode="built">Status</span><span data-mode="paid">Stage</span> <span class="ar">↕</span></th>
                 <th class="sortable" data-k="kind">Sector / tech <span class="ar">↕</span></th>
                 <th class="sortable" data-k="size">Scale <span class="ar">↕</span></th>
               </tr>
@@ -865,6 +872,11 @@ const cap = s => s[0].toUpperCase() + s.slice(1);
 /* ---------------- vocabulary ---------------- */
 const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
 const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_construction:"Under construction",operating:"Operating",stalled:"Stalled"};
+/* a lender's record runs on another clock than the works: the same five steps
+   and colours, in the money's words. A closed loan has paid out; nothing in its
+   record says the works run, so it is never counted as Operating */
+const STAGE_LABEL  = {announced:"Pipeline",approved:"Committed",under_construction:"Disbursing",operating:"Closed",stalled:"Cancelled"};
+const statusLabel  = r => (r.lender ? STAGE_LABEL : STATUS_LABEL)[r.status] || "—";
 const LAYER_ORDER  = R.layers;
 const HOME_HOST    = "__HOME_URL__".replace(/^https?:\/\//,"").replace(/\/$/,"");
 const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",finance_afd:"Development finance",finance_bmz:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei"};
@@ -906,6 +918,11 @@ const LINE_LAYERS  = ["cables","pipelines","ground"];   /* drawing order: thin w
    nothing, so they stay drawn as lines in the cluster view too. */
 const UNCLUSTERED  = new Set(["pipelines","cables"]);
 const clustered    = r => !UNCLUSTERED.has(r.layer);
+/* OpenStreetMap files its works as road, rail or airport, the lenders as transport:
+   Transport takes in all four, the three stay listed under it */
+const SECTOR_FAM = {road:"transport", rail:"transport", air:"transport"};
+/* the sectors each map has records in, Transport where its three are (filled once the records are read) */
+const SECTORS_ON = {built:new Set(), paid:new Set()};
 const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",health:"Health",education:"Education",government:"Government buildings",social:"Social infrastructure",agriculture:"Agriculture",road:"Road",rail:"Rail",air:"Airport",other:"Other / multi-sector"};
 const SHORT        = {assets:"GEM", finance:BANK, finance_wb:"World Bank", finance_afd:"AFD", finance_bmz:"BMZ", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", eu_eib:"EIB", mattei:"Piano Mattei"};
 const sectorLabel  = s => SECTOR_LABEL[s] || (s ? s[0].toUpperCase()+s.slice(1) : "Other");
@@ -913,9 +930,10 @@ const sectorLabel  = s => SECTOR_LABEL[s] || (s ? s[0].toUpperCase()+s.slice(1) 
 const S = {
   layers:Object.fromEntries(LAYER_ORDER.map(k=>[k,true])),
   lenders:allLendersOn(),
-  status:new Set(STATUS_ORDER),
+  status:new Set(STATUS_ORDER),   /* the works' statuses */
+  stage:new Set(STATUS_ORDER),    /* the lenders' records' stages, the same five keys */
   country:"", sector:"", q:"",
-  side:"all",      /* "all", "built" (the four layers) or "paid" (the lenders' records) */
+  side:"built",    /* which map: "built" (the four layers) or "paid" (the lenders' records) */
   sort:{k:"size",dir:-1},
   picked:null,
   hover:null,      /* the country under the pointer, shaded as a hint that it can be picked */
@@ -1037,16 +1055,20 @@ const inCountry = r => !S.country || (r.isos ? r.isos.includes(S.country) : r.is
 function syncLayers(){
   for(const L of ["finance","china","eu","mattei"]) S.layers[L] = LENDER_ORDER.some(k => LENDER_LAYER[k]===L && S.lenders[k]);
 }
-/* the Show switch sits over the two panels: it hides one side without
-   touching the buttons, so switching back restores them as they were */
-const onSide = r => S.side==="all" || (S.side==="paid") === !!r.lender;
+/* two maps: Built draws the works, Financed the lenders' records. Each keeps
+   its own panels, so switching back finds the other's filters as they were */
+const onSide = r => (S.side==="paid") === !!r.lender;
+const sideOf = r => r.lender ? "paid" : "built";
+const SIDE_NAME = {built:"Built", paid:"Financed"};
 const shown = r => onSide(r) && S.layers[r.layer] && (!r.lender || S.lenders[r.lender]);
+const statusSet = r => r.lender ? S.stage : S.status;
+const inSector = r => !S.sector || r.sector===S.sector || SECTOR_FAM[r.sector]===S.sector;
 /* every filter but one, so a panel can count what it would show if its own filter were open */
 const passBut = (r, skip) =>
   (skip==="layer"   || shown(r)) &&
-  (skip==="status"  || S.status.has(r.status)) &&
+  (skip==="status"  || statusSet(r).has(r.status)) &&
   (skip==="country" || inCountry(r)) &&
-  (skip==="sector"  || !S.sector || r.sector===S.sector) &&
+  (skip==="sector"  || inSector(r)) &&
   (!S.q || r.text.includes(S.q));
 const pass = r => passBut(r, null);
 let VIS = [];
@@ -1469,7 +1491,7 @@ function renderTitle(){
     const isos = new Set(); for(const r of VIS) for(const i of (r.isos||[r.iso])) if(i) isos.add(i);
     lead += ` across <b>${isos.size}</b> countries and territories`;
   }
-  const filtered = S.q || S.sector || S.side!=="all" || S.status.size!==STATUS_ORDER.length || LAYER_ORDER.some(k=>!S.layers[k]) || LENDER_ORDER.some(k=>!S.lenders[k]);
+  const filtered = S.q || S.sector || S.status.size!==STATUS_ORDER.length || S.stage.size!==STATUS_ORDER.length || LAYER_ORDER.some(k=>!S.layers[k]) || LENDER_ORDER.some(k=>!S.lenders[k]);
   el("mtfacts").innerHTML = lead + (parts.length ? `<span class="mt-more"> · ${parts.join(" · ")}</span>` : "") + (filtered ? ` <span style="color:var(--ink-3)">· filtered</span>` : "");
   el("mtfoot").textContent = `${HOME_HOST} · data as of ${DATA.meta.built}`;
 }
@@ -1502,84 +1524,94 @@ function renderKpis(){
     ["Chinese finance", "$" + fmt1(cnUsd/1000) + "bn", `${fmt(N.length)} projects ${CN_SPAN} · AidData, ${CN_BASE} USD`],
     ["Commission / EIB", "€" + fmt1((euEur-euEurEib)/1000) + "bn<br>€" + fmt1(euEurEib/1000) + "bn", `${fmt(E.length)} EU-financed records · each institution counted apart`],
     ...(HAS("mattei") ? [["Piano Mattei", "€" + fmt1(pmEur/1000) + "bn", `${fmt(M.length)} projects · ${fmt(pmOn)} ongoing · stated by Italy's portal`]] : []),
-    ["Under construction", fmt(VIS.filter(r=>r.status==="under_construction").length), "records across active layers"],
+    S.side==="paid"
+      ? ["Disbursing", fmt(VIS.filter(r=>r.status==="under_construction").length), "lenders' records still paying out"]
+      : ["Under construction", fmt(VIS.filter(r=>r.status==="under_construction").length), "records across active layers"],
   ];
-  el("kpis").innerHTML = K.map(([t,v,s]) => `
+  /* each map's own tiles */
+  const BUILT_KPI = new Set(["Power pipeline", "Works on the ground", "Pipeline segments", "Submarine cables", "Under construction"]);
+  el("kpis").innerHTML = K.filter(([t]) => BUILT_KPI.has(t) === (S.side==="built")).map(([t,v,s]) => `
     <div class="kpi${filtered?" is-filtered":""}">
       <dt>${t}</dt><dd>${v}</dd><span class="sub">${s}</span>
     </div>`).join("");
 }
 
-/* the panel the Show switch hides keeps its buttons, greyed, with a way back */
-const offNote = what => `<p class="offnote">Hidden while the dashboard shows ${what}. <button data-side="all">Show both</button></p>`;
 /* the switch in a panel's header: all off while any is on, all on once none is */
-function allSwitch(b, any, off, what, flip){
+function allSwitch(b, any, what, flip){
   b.textContent = any ? "All off" : "All on";
   b.title = any ? `Switch every ${what} off` : `Switch every ${what} back on`;
-  b.disabled = off; b.onclick = flip;
+  b.onclick = flip;
+}
+/* to the other map; a sector it has no records in is dropped, or the page
+   would go empty with no visible reason. Country and search carry over */
+function switchSide(v){
+  S.side = v;
+  if(S.sector && !SECTORS_ON[v].has(S.sector)) S.sector = "";
 }
 function renderSide(){
-  document.querySelectorAll("#side [data-side]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.side===S.side)));
+  document.body.dataset.side = S.side;
+  document.querySelectorAll(".sidesw [data-side]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.side===S.side)));
 }
 function renderLayers(){
   const counts = Object.fromEntries(LAYER_ORDER.map(k=>[k,0]));
   for(const r of ALL) if(passBut(r,"layer")) counts[r.layer]++;
-  const off = S.side==="paid";
-  el("layers").innerHTML = (off ? offNote("who is paying") : "") + RAIL_LAYERS.map(k => `
-    <button class="lyr" data-l="${k}" aria-pressed="${S.layers[k]}"${off?" disabled":""}>
+  el("layers").innerHTML = RAIL_LAYERS.map(k => `
+    <button class="lyr" data-l="${k}" aria-pressed="${S.layers[k]}">
       <span class="glyph">${glyph[k]("currentColor")}</span>
       <span class="lt"><b>${LAYER_LABEL[k]}</b><span>${LAYER_SUB[k]}</span></span>
       <span class="lc">${fmt(counts[k])}</span>
     </button>`).join("");
   el("layers").querySelectorAll("[data-l]").forEach(b =>
     b.onclick = () => { S.layers[b.dataset.l] = !S.layers[b.dataset.l]; apply(); });
-  el("layers").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S.side = b.dataset.side; apply(); });
   const any = RAIL_LAYERS.some(k=>S.layers[k]);
-  allSwitch(el("layersall"), any, off, "layer", () => { for(const k of RAIL_LAYERS) S.layers[k] = !any; apply(); });
+  allSwitch(el("layersall"), any, "layer", () => { for(const k of RAIL_LAYERS) S.layers[k] = !any; apply(); });
 }
 
 function renderLenders(){
   const counts = Object.fromEntries(LENDER_ORDER.map(k=>[k,0]));
   for(const r of ALL) if(r.lender && passBut(r,"layer")) counts[r.lender]++;
-  const off = S.side==="built";
   const famState = ks => ks.every(k=>S.lenders[k]) ? "true" : ks.some(k=>S.lenders[k]) ? "mixed" : "false";
-  el("lenders").innerHTML = (off ? offNote("what is built") : "") + LENDER_FAMILY.map(([fam, ks], i) => `
+  el("lenders").innerHTML = LENDER_FAMILY.map(([fam, ks], i) => `
     <div class="fam">${ks.length>1
-      ? `<button class="fh" data-fam="${i}" aria-pressed="${famState(ks)}"${off?" disabled":""} title="Switch all ${esc(fam)} on or off">${fam}</button>`
+      ? `<button class="fh" data-fam="${i}" aria-pressed="${famState(ks)}" title="Switch all ${esc(fam)} on or off">${fam}</button>`
       : `<div class="fh">${fam}</div>`}${ks.map(k => `
-    <button class="lyr" data-ln="${k}" aria-pressed="${S.lenders[k]}"${off?" disabled":""}>
+    <button class="lyr" data-ln="${k}" aria-pressed="${S.lenders[k]}">
       <span class="glyph">${glyph[LENDER_GLYPH[k]]("currentColor")}</span>
       <span class="lt"><b>${LENDER_NAME[k]}</b><span>${k} · ${LENDER_SUB[k]}</span></span>
       <span class="lc">${fmt(counts[k])}</span>
     </button>`).join("")}</div>`).join("");
-  el("lenders").classList.toggle("is-off", off);
   el("lenders").querySelectorAll("[data-ln]").forEach(b =>
     b.onclick = () => { S.lenders[b.dataset.ln] = !S.lenders[b.dataset.ln]; syncLayers(); apply(); });
   /* a family switch turns all its lenders on, unless all are on already */
   el("lenders").querySelectorAll("[data-fam]").forEach(b =>
     b.onclick = () => { const ks = LENDER_FAMILY[+b.dataset.fam][1], on = !ks.every(k=>S.lenders[k]);
       for(const k of ks) S.lenders[k] = on; syncLayers(); apply(); });
-  el("lenders").querySelectorAll("[data-side]").forEach(b => b.onclick = () => { S.side = b.dataset.side; apply(); });
   const any = LENDER_ORDER.some(k=>S.lenders[k]);
-  allSwitch(el("lendersall"), any, off, "lender", () => { for(const k of LENDER_ORDER) S.lenders[k] = !any; syncLayers(); apply(); });
+  allSwitch(el("lendersall"), any, "lender", () => { for(const k of LENDER_ORDER) S.lenders[k] = !any; syncLayers(); apply(); });
 }
 
+/* the same five colours on each map: the works' statuses on Built, the
+   lenders' stages on Financed, each its own filter */
 function renderStatuses(){
-  const counts = {};
-  for(const r of ALL) if(passBut(r,"status")) counts[r.status] = (counts[r.status]||0)+1;
-  el("statuses").innerHTML = STATUS_ORDER.map(s => `
-    <button class="chip ${s}" data-s="${s}" aria-pressed="${S.status.has(s)}">
+  const works = {}, money = {};
+  for(const r of ALL) if(passBut(r,"status")){ const t = r.lender ? money : works; t[r.status] = (t[r.status]||0)+1; }
+  const row = (id, set, label, n) => {
+    el(id).innerHTML = STATUS_ORDER.map(s => `
+    <button class="chip ${s}" data-s="${s}" aria-pressed="${set.has(s)}">
       <span class="sw" style="background:${statusColor(s)}"></span>
-      <span class="cl">${STATUS_LABEL[s]}</span>
-      <span class="cn">${fmt(counts[s]||0)}</span>
+      <span class="cl">${label[s]}</span>
+      <span class="cn">${fmt(n[s]||0)}</span>
     </button>`).join("");
-  el("statuses").querySelectorAll("[data-s]").forEach(b =>
-    b.onclick = () => {
-      const s = b.dataset.s;
-      if(S.status.has(s)){ if(S.status.size>1) S.status.delete(s); }
-      else S.status.add(s);
-      apply();
-    });
+    el(id).querySelectorAll("[data-s]").forEach(b =>
+      b.onclick = () => {
+        const s = b.dataset.s;
+        if(set.has(s)){ if(set.size>1) set.delete(s); }
+        else set.add(s);
+        apply();
+      });
+  };
+  row("statuses", S.status, STATUS_LABEL, works);
+  row("stages", S.stage, STAGE_LABEL, money);
 }
 
 /* each option counts what picking it would show under the other filters; one
@@ -1594,37 +1626,43 @@ function renderSelects(){
   const nc = {}, ns = {}; let anyC = 0, anyS = 0;
   for(const r of ALL){
     if(passBut(r,"country")){ anyC++; for(const i of (r.isos||[r.iso])) if(i) nc[i] = (nc[i]||0)+1; }
-    if(passBut(r,"sector")){ anyS++; ns[r.sector] = (ns[r.sector]||0)+1; }
+    if(passBut(r,"sector")){ anyS++; ns[r.sector] = (ns[r.sector]||0)+1;
+      const p = SECTOR_FAM[r.sector]; if(p) ns[p] = (ns[p]||0)+1; }
   }
   el("country").innerHTML = opt("", "All countries", anyC, !S.country) +
     isos.map(i => opt(i, esc(NAMES[i]||i), nc[i], S.country===i)).join("");
-  const secs = [...new Set(ALL.map(r=>r.sector).filter(Boolean))].sort();
+  const all = new Set(ALL.map(r=>r.sector).filter(Boolean));
+  for(const s of [...all]) if(SECTOR_FAM[s]) all.add(SECTOR_FAM[s]);
+  const secs = [...all].filter(s=>!SECTOR_FAM[s]).sort().flatMap(p => [p, ...[...all].filter(s=>SECTOR_FAM[s]===p).sort()]);
   el("sector").innerHTML = opt("", "All sectors", anyS, !S.sector) +
-    secs.map(s => opt(s, sectorLabel(s), ns[s], S.sector===s)).join("");
+    secs.filter(s => SECTORS_ON[S.side].has(s)).map(s => opt(s, (SECTOR_FAM[s] ? "\u00a0\u00a0\u00a0" : "") + sectorLabel(s), ns[s], S.sector===s)).join("");
 }
 
 function renderLegend(){
-  const ink = css("--ink");
-  el("legend").innerHTML = `
-    <div class="col">
-      <span class="lh">Shape = source</span>
+  const ink = css("--ink"), paid = S.side==="paid";
+  const built = `
       <div class="lg">${glyph.assets(ink)}<span><b>Power unit</b> · sized by MW</span></div>
+      <div class="lg">${glyph.ground(ink)}<span><b>Works</b> · traced way</span></div>
+      <div class="lg">${glyph.pipelines(ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
+      <div class="lg">${glyph.cables(ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
+`;
+  const money = `
       <div class="lg">${glyph.finance(ink)}<span><b>${BANK} project</b> · sized by $</span></div>
       <div class="lg">${glyph.finance_wb(ink)}<span><b>World Bank project</b> · same layer, other lender</span></div>
       ${HAS_AFD ? `<div class="lg">${glyph.finance_afd(ink)}<span><b>AFD financing</b> · same layer, France's agency</span></div>` : ""}
       ${HAS_BMZ ? `<div class="lg">${glyph.finance_bmz(ink)}<span><b>German project (BMZ)</b> · by GIZ, KfW or others</span></div>` : ""}
-      <div class="lg">${glyph.ground(ink)}<span><b>Works</b> · traced way</span></div>
-      <div class="lg">${glyph.pipelines(ink)}<span><b>Pipeline</b> · oil or gas route</span></div>
-      <div class="lg">${glyph.cables(ink)}<span><b>Submarine cable</b> · dot = landing</span></div>
       <div class="lg">${glyph.china(ink)}<span><b>Chinese-financed</b> · sized by $, AidData</span></div>
       <div class="lg">${glyph.eu(ink)}<span><b>European Commission</b> · sized by €</span></div>
       <div class="lg">${glyph.eu_eib(ink)}<span><b>EIB operation</b> · same layer, other institution</span></div>
-<!--__IF:mattei__-->      <div class="lg">${glyph.mattei(ink)}<span><b>Piano Mattei</b> · sized by stated €, Italian Government</span></div><!--__ENDIF__-->
-      ${S.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = status</span></div>` : ""}
+<!--__IF:mattei__-->      <div class="lg">${glyph.mattei(ink)}<span><b>Piano Mattei</b> · sized by stated €, Italian Government</span></div><!--__ENDIF__-->`;
+  el("legend").innerHTML = `
+    <div class="col">
+      <span class="lh">Shape = source</span>${paid ? money : built}
+      ${S.cluster ? `<div class="lg">${donutGlyph()}<span><b>Donut</b> · nearby records, slices = ${paid ? "stage" : "status"}</span></div>` : ""}
     </div>
     <div class="col status">
-      <span class="lh">Colour = status</span>
-      ${STATUS_ORDER.map(s => `<div class="lg"><span class="sw ${s}" style="background:${statusColor(s)}"></span><span>${STATUS_LABEL[s]}</span></div>`).join("")}
+      <span class="lh">Colour = ${paid ? "stage" : "status"}</span>
+      ${STATUS_ORDER.map(s => `<div class="lg"><span class="sw ${s}" style="background:${statusColor(s)}"></span><span>${(paid ? STAGE_LABEL : STATUS_LABEL)[s]}</span></div>`).join("")}
     </div>`;
 }
 
@@ -1694,7 +1732,7 @@ function renderSel(){
   };
   const rows = [
     ["Country", esc(r.layer==="pipelines"||r.layer==="cables" ? (r.isos||[r.iso]).filter(Boolean).map(i=>NAMES[i]||i).join(", ") || "—" : r.country)],
-    ["Status", STATUS_LABEL[r.status]||"—"],
+    ["Status", statusLabel(r)],
     ["Layer", `${LAYER_LABEL[r.layer]} <i>· ${sourceOf(r)}</i>`],
   ];
   let note = "", links = [];
@@ -1802,7 +1840,7 @@ function renderSel(){
     rows.push(["Programme", `Piano Mattei per l'Africa <i>· Italian Government portal</i>`]);
     rows.push(["Pillar", esc(f.dirs||"—")]);
     if(f.obj) rows.push(["Objective", esc(f.obj)]);
-    rows.push(["Stage", `${esc(f.stage)} <i>· the portal's progress bar, read as ${STATUS_LABEL[r.status].toLowerCase()}</i>`]);
+    rows.push(["Stage", `${esc(f.stage)} <i>· the portal's progress bar, read as ${statusLabel(r).toLowerCase()}</i>`]);
     rows.push(["Stated amount", f.eur_m!=null ? num("€"+fmt1(f.eur_m)+"m", `$${fmt1(f.usd_m)}m`) : (f.amt ? `not counted <i>· ${esc(f.amt)}</i>` : "not stated")]);
     if(f.amt && !plain && f.eur_m!=null) rows.push(["As printed", esc(f.amt) + (f.shared ? " <i>· one envelope shared by four memoranda; only the country's own part is counted</i>" : "")]);
     if(f.funds) rows.push(["Funded from", esc(f.funds)]);
@@ -1858,7 +1896,7 @@ const TWIN_STOP = new Set(`project projects programme program phase support cons
   growth inclusive private public facilitation green clean renewable sustainable resilience resilient climate smart
   digital lake lakes river valley falls gas oil pipeline cable submarine`.split(/\s+/));
 const foldName = s => (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-const sectorFam = s => s==="road" || s==="rail" || s==="air" ? "transport" : s;
+const sectorFam = s => SECTOR_FAM[s] || s;
 const sourceKey = r => r.lender || r.layer;
 /* traced routes and cable landings are exact; a point layer only where its source says so (a new layer: add it here) */
 const precise = r => r.layer==="assets" ? !!r.ref.exact : r.layer==="finance" || r.layer==="china" ? r.ref.prec===0
@@ -1908,10 +1946,10 @@ function twins(r){
 }
 const twinWhere = t => (t.shared.length ? `name shares “${t.shared.join("”, “")}” · ` : "") + (t.km < 1 ? "under 1 km" : `${fmt1(t.km)} km`) + " away";
 const twinSource = r => r.lender ? LENDER_NAME[r.lender] : LAYER_SUB[r.layer];
-/* a match the Show switch alone hides opens with the switch back on Both */
-const passIfBoth = r => { const was = S.side; S.side = "all"; const ok = pass(r); S.side = was; return ok; };
-const twinHidden = r => pass(r) ? "" : passIfBoth(r) ? " · opens with Show set to Both" : " · hidden by the filters";
-function openTwin(r){ if(!pass(r) && passIfBoth(r)){ S.side = "all"; apply(); } pickRec(r); }
+/* a match on the other map opens there */
+const passOnItsMap = r => { const was = S.side, sec = S.sector; switchSide(sideOf(r)); const ok = pass(r); S.side = was; S.sector = sec; return ok; };
+const twinHidden = r => pass(r) ? "" : passOnItsMap(r) ? ` · on the ${SIDE_NAME[sideOf(r)]} map` : " · hidden by the filters";
+function openTwin(r){ if(!pass(r) && passOnItsMap(r)){ switchSide(sideOf(r)); writeHash(); apply(); } pickRec(r); }
 
 /* ---------------- rendering: table ---------------- */
 function renderTable(){
@@ -1930,7 +1968,7 @@ function renderTable(){
       <td class="dim">${esc(r.country)}</td>
       <td class="dim lyr-cell">${glyphOf(r)(toneColor(r.layer))}${sourceOf(r)}</td>
       <td><span class="badge ${r.status}" style="color:${statusColor(r.status)}">
-        <span class="sw" style="background:${statusColor(r.status)}"></span>${STATUS_LABEL[r.status]||"—"}</span></td>
+        <span class="sw" style="background:${statusColor(r.status)}"></span>${statusLabel(r)}</span></td>
       <td class="dim">${esc(r.kind)}</td>
       <td class="num">${r.size==null?"—":fmt1(r.size)+" <span style='color:var(--ink-3)'>"+r.unit+"</span>"}</td>
     </tr>`).join("") || `<tr><td colspan="6" style="padding:26px;text-align:center;color:var(--ink-3)">No records match these filters.</td></tr>`;
@@ -2080,10 +2118,17 @@ el("zrst").onclick = () => resetView();
    frames the country (or countries) it sits in; clearing the filter returns
    to the continent. The view eases over ~400 ms; any manual pan or zoom
    interrupts it. */
+/* #c=KE&show=paid: the country and the map are in the address, so a link can
+   open them; the Map view link opens the same map */
+function writeHash(){
+  const h = [S.country && "c="+S.country, S.side==="paid" && "show=paid"].filter(Boolean).join("&");
+  try{ history.replaceState(null, "", h ? "#"+h : location.pathname+location.search); }catch{ /* sandboxed */ }
+  const ml = document.querySelector('.tabs a[href^="index.html"]');
+  if(ml) ml.href = "index.html" + (S.side==="paid" ? "#show=paid" : "");
+}
 function setCountry(iso){
   S.country = iso || "";
-  /* #c=KE: the country is in the address, so a link can open it */
-  try{ history.replaceState(null, "", S.country ? "#c="+S.country : location.pathname+location.search); }catch{ /* sandboxed */ }
+  writeHash();
   apply();
   if(S.country) zoomToIsos([S.country]); else resetView();
 }
@@ -2223,7 +2268,7 @@ function qRender(){
   const row = (o, i) => `<div class="qopt" role="option" id="qo${i}" data-i="${i}" aria-selected="false">` + (o.c
     ? `<span class="g">${PIN}</span><span class="t"><b>${qMark(o.c.n, toks)}</b><i>Country · ${fmt(qCount(o.c.iso))} records with these filters</i></span>`
     : `<span class="g">${glyphOf(o.r)(statusColor(o.r.status))}</span><span class="t"><b>${qMark(o.r.name, toks)}</b>`
-      + `<i>${esc(o.r.country)} · ${esc(twinSource(o.r))}${o.p.units.length>1 ? ` · ${fmt(o.p.units.length)} units` : ""}${qShown(o.r) ? "" : " · hidden by the filters; opening it lifts them"}</i></span>`) + `</div>`;
+      + `<i>${esc(o.r.country)} · ${esc(twinSource(o.r))}${o.p.units.length>1 ? ` · ${fmt(o.p.units.length)} units` : ""}${qShown(o.r) ? "" : onSide(o.r) ? " · hidden by the filters; opening it lifts them" : ` · on the ${SIDE_NAME[sideOf(o.r)]} map`}</i></span>`) + `</div>`;
   let html = "";
   if(nC) html += `<div role="group" aria-label="Countries"><div class="qh" aria-hidden="true">Countries</div>${qOpts.slice(0, nC).map(row).join("")}</div>`;
   if(qOpts.length>nC) html += `<div role="group" aria-label="Projects"><div class="qh" aria-hidden="true">Projects${ps.length>Q_PROJECTS ? ` · ${Q_PROJECTS} of ${fmt(ps.length)}` : ""}</div>`
@@ -2249,15 +2294,15 @@ function qClose(){
   box.hidden = true; el("qlist").innerHTML = ""; qOpts = []; qAct = -1;
   el("q").setAttribute("aria-expanded", "false"); el("q").removeAttribute("aria-activedescendant");
 }
-/* switch back on whatever hides the record: its side of the Show switch, its
+/* switch back on whatever hides the record: the map it is on, its
    layer or lender, its status, and the country and sector filters */
 function qReveal(r){
   if(qShown(r)) return;
-  if(!onSide(r)) S.side = "all";
+  if(!onSide(r)){ switchSide(sideOf(r)); writeHash(); }
   if(r.lender){ S.lenders[r.lender] = true; syncLayers(); } else S.layers[r.layer] = true;
-  S.status.add(r.status);
+  statusSet(r).add(r.status);
   if(!inCountry(r)) S.country = "";
-  if(S.sector && r.sector!==S.sector) S.sector = "";
+  if(!inSector(r)) S.sector = "";
 }
 /* how close to fly, as a canvas scale: deep enough for the record's own
    marker to leave its donut, or, when the donut holds only the same project
@@ -2323,13 +2368,13 @@ el("qbox").addEventListener("mousemove", e => { const o = e.target.closest(".qop
 
 el("reset").onclick = () => {
   S.layers = Object.fromEntries(LAYER_ORDER.map(k=>[k,true])); S.lenders = allLendersOn();
-  S.status=new Set(STATUS_ORDER); S.country=""; S.sector=""; S.q=""; S.side="all";
+  S.status=new Set(STATUS_ORDER); S.stage=new Set(STATUS_ORDER); S.country=""; S.sector=""; S.q="";
   resetView();
   S.picked=null; el("q").value="";
   view.k=1; view.tx=0; view.ty=0;
   apply();
 };
-document.querySelectorAll("#side [data-side]").forEach(b => b.onclick = () => { S.side = b.dataset.side; apply(); });
+document.querySelectorAll(".sidesw [data-side]").forEach(b => b.onclick = () => { switchSide(b.dataset.side); writeHash(); apply(); });
 document.querySelectorAll("thead th.sortable").forEach(th =>
   th.onclick = () => {
     const k = th.dataset.k;
@@ -2517,14 +2562,15 @@ const srcKey = r => r.layer==="finance" && r.lender==="WB" ? "finance_wb" : r.la
 const SRC_SHORT = {...SHORT, eu:"Commission"};
 function clusterTip(c){
   const kids = c.getAllChildMarkers(), by = {}, byL = Object.fromEntries(SRC_ORDER.map(k=>[k,0]));
-  for(const m of kids){ by[m.rec.status] = (by[m.rec.status]||0)+1; byL[srcKey(m.rec)]++; }
-  const rows = STATUS_ORDER.filter(s=>by[s]).map(s =>
-    `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${STATUS_LABEL[s]}</span><b>${fmt(by[s])}</b></div>`).join("");
+  /* the works' statuses, then the lenders' stages: a closed loan is not an operating plant */
+  for(const m of kids){ const k = (m.rec.lender ? "m:" : "g:") + m.rec.status; by[k] = (by[k]||0)+1; byL[srcKey(m.rec)]++; }
+  const rows = [["g:",STATUS_LABEL],["m:",STAGE_LABEL]].flatMap(([p,lab]) => STATUS_ORDER.filter(s=>by[p+s]).map(s =>
+    `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${lab[s]}</span><b>${fmt(by[p+s])}</b></div>`)).join("");
   const src = SRC_ORDER.filter(k=>byL[k]).map(k => `${fmt(byL[k])} ${SRC_SHORT[k]}`).join(" · ");
   return `<div class="tn">${fmt(kids.length)} records</div>${rows}<div class="tr"><span>Source</span><b>${src}</b></div><div class="tr hint">Click to zoom in</div>`;
 }
 function recTip(hit){
-  const bits = [["Status", STATUS_LABEL[hit.status]||"—"], [hit.isos ? "Countries" : "Country", esc(hit.country)]];
+  const bits = [["Status", statusLabel(hit)], [hit.isos ? "Countries" : "Country", esc(hit.country)]];
   if(hit.size!=null) bits.push([hit.unit, fmt1(hit.size)]);
   bits.push(["Source", sourceOf(hit)]);
   return `<div class="tn">${esc(hit.name)}</div>` +
@@ -2556,6 +2602,9 @@ new MutationObserver(()=>apply()).observe(document.documentElement, {attributes:
    on load and when only the address's hash changes */
 const hashCountry = () => { const m = location.hash.match(/[#&]c=([A-Z]{2})(?![A-Za-z])/); return m && NAMES[m[1]] ? m[1] : ""; };
 S.country = hashCountry();
+if(/[#&]show=paid(?![\w])/.test(location.hash)) S.side = "paid";
+for(const r of ALL) if(r.sector){ const t = SECTORS_ON[sideOf(r)]; t.add(r.sector); if(SECTOR_FAM[r.sector]) t.add(SECTOR_FAM[r.sector]); }
+writeHash();
 addEventListener("hashchange", () => { const c = hashCountry(); if(c !== S.country) setCountry(c); });
 renderSources(); renderLede(); fit(); apply();
 if(S.country) zoomToIsos([S.country]);

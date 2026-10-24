@@ -3,7 +3,7 @@
 > An interactive map and dashboard of announced, approved and ongoing infrastructure in
 > Africa, for investors, researchers and journalists. Compiled from twelve public datasets:
 > 4,295 power units tracked by Global Energy Monitor, 1,683 projects financed by the African Development Bank, 890 by the World Bank, 394 financings by the Agence française de développement (AFD) and 1,615 projects paid for by Germany's development ministry (BMZ) and carried out by GIZ, KfW and others, 3,700 construction works traced in OpenStreetMap, 323 oil and gas pipeline segments from Global Energy Monitor and 81 submarine cables landing in Africa from TeleGeography, plus 2,487 infrastructure projects financed by Chinese official lenders and agencies between 2000 and 2023, from AidData, and 2,008 infrastructure projects financed by the European Union's institutions, the European Commission and the European Investment Bank, via IATI, and the 76 projects of Italy's Piano Mattei per l'Africa as the Italian Government's portal lists them. Together they describe about 1,094 GW of generating capacity across all statuses; USD 75.1 billion of AfDB commitments, converted at 1 SDR = 1.35 USD (IMF, 9 Oct 2026), USD 98.3 billion of World Bank commitments, USD 11.8 billion of AFD commitments and USD 16.5 billion of BMZ commitments, both converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026), each the infrastructure share of the lender's own commitment, budget support and cancelled projects left out; USD 222.2 billion of Chinese official commitments to infrastructure over 2000–2023, in constant 2023 dollars as AidData publishes them; USD 30.1 billion of European Union commitments, Commission contracts and EIB loans, converted at 1 EUR = 1.1206 USD (ECB reference rate, 9 Oct 2026); EUR 4.39 billion of stated Piano Mattei project amounts, the figures the Italian Government's portal prints, which may include other funders' shares.
-> Snapshot built 23 Oct 2026; data is refreshed by hand about twice a year.
+> Snapshot built 24 Oct 2026; data is refreshed by hand about twice a year.
 
 Made by Jacopo Ottaviani (https://www.linkedin.com/in/jacopo-ottaviani/). Free to use; cite the underlying sources by name.
 Site: https://jacopoottaviani.com/africa-infra-watch/
@@ -57,6 +57,12 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 
 - The sources share no project identifier. They are separate layers, never added into one
   project cost: an AfDB-financed power plant can legitimately appear in several.
+- Two maps, each with its own filters: Built, for the works, and Financed, for the lenders'
+  records of their loans and grants.
+- Two sets of words for the same five steps: a status for the works (announced, approved,
+  under construction, operating, stalled) and a stage for a lender's record (pipeline,
+  committed, disbursing, closed, cancelled). Closed means the money was spent, not that
+  the works run.
 - Five shared statuses. Announced: GEM announced, IATI status 1, OSM proposed. Approved:
   GEM pre-construction (permits, land or finance still being sought), an AfDB activity still
   at IATI status 1 whose commitment is on record (past board approval), AidData
