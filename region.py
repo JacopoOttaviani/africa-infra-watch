@@ -332,16 +332,15 @@ def region_payload(region=REGION):
     lenders = ([bank["code"], "WB"] + (["AFD"] if afd else []) + (list(BMZ_LENDERS) if bmz else [])
                + ["EC", "EIB", "CN"] + (["IT"] if "mattei" in region.layers else [])
                + (["GG"] if "gateway" in region.layers else []))
-    family = [["Multilateral banks", [bank["code"], "WB"]], ["European Union", ["EC", "EIB"]], ["China", ["CN"]]]
+    # the Commission's flagship list sits with the EU's two lenders, though it carries no money
+    family = [["Multilateral banks", [bank["code"], "WB"]],
+              ["European Union", ["EC", "EIB"] + (["GG"] if "gateway" in region.layers else [])], ["China", ["CN"]]]
     if afd:
         family.append(["France", ["AFD"]])
     if bmz:
         family.append(["Germany", list(BMZ_LENDERS)])
     if "mattei" in region.layers:
         family.append(["Italy", ["IT"]])
-    # the Commission's flagship list: no money, so a family of its own beside the EU's lenders
-    if "gateway" in region.layers:
-        family.append(["Global Gateway", ["GG"]])
     return {
         "key": region.key, "name": region.name, "adj": region.adj, "kicker": region.kicker,
         "regional": region.regional_label, "landings": region.landings_label, "wide": region.wide,

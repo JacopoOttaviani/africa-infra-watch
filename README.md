@@ -284,8 +284,10 @@ carry neither: they are drawn as one-size pentagons in a neutral ink, add to no
 total, and pass the Financed map's stage filter only while every stage is
 selected (`passBut` in both templates; a cluster's tooltip counts them as "No
 stage published"). They join the lender filter as "Global Gateway flagships
-(EU)" (`ln=GG`, layer key `w`), in a "Global Gateway" family of their own,
-because the EU family's tiles sum the Commission's and the EIB's euros. Location
+(EU)" (`ln=GG`, layer key `w`), in the "European Union" family beside the
+Commission and the EIB; a family only groups the rail's buttons and switches
+them together, while totals go by layer, so the flagships add nothing to the
+EU's euros. Location
 is the country's interior point for a one-country flagship and, for several
 countries or none, the Commission's Africa-wide point in Chad that the EU layer
 uses for regional programmes. The map's sector comes from the Commission's area
