@@ -18,7 +18,8 @@ Afterwards, look at the result locally
 then commit and push; GitHub Pages redeploys main:/docs within a minute or two.
 
 The fetch takes well over an hour (1 h 45 min in October 2026: 80 minutes for
-the ten map sources, then 25 for debt and the lender profiles), most of it the
+the ten map sources, then 25 for debt and the lender profiles, and a few for the
+Global Gateway list, up to ten when its page cache is cold), most of it the
 OpenStreetMap pass, which walks the continent in latitude bands to stay inside
 Overpass's rate limits. If one
 source fails, fix or retry that layer alone (`python3 fetch_sources.py osm`)
@@ -38,9 +39,9 @@ BASEMAP = REGION.data_dir / REGION.basemap_10m
 AFRICA_ONLY = REGION.key != "africa"
 
 
-def run(label, script):
+def run(label, script, *args):
     print(f"\n=== {label}", flush=True)   # flush: the children write to the same pipe
-    return subprocess.run([sys.executable, str(ROOT / script)], cwd=ROOT).returncode
+    return subprocess.run([sys.executable, str(ROOT / script), *args], cwd=ROOT).returncode
 
 
 def main():
@@ -59,6 +60,11 @@ def main():
             print("\nfetch_debt.py failed — the debt section is rebuilt from data/debt.json", flush=True)
 
     if "--basemap" in args or not BASEMAP.exists():
+        # the map's Global Gateway layer: the Commission's flagship list, read by
+        # the deep dive's script (it also rebuilds the unlinked draft page)
+        if "gateway" in REGION.layers and run("Fetch the Global Gateway flagship list",
+                                              "build_global_gateway.py", "--fetch") != 0:
+            print("\nbuild_global_gateway.py --fetch failed — the layer keeps data/global_gateway.geojson", flush=True)
         if run("Build the Natural Earth basemap", "fetch_basemap.py") != 0:
             sys.exit("\nbasemap build failed")
     else:
@@ -79,7 +85,7 @@ def main():
         print("\nbuild_social.py failed — the previous docs/social.png stays", flush=True)
     scripts = ["build_dashboard.py", "build_map.py"]
     if not AFRICA_ONLY:
-        scripts += ["build_donors.py", "build_debt.py", "build_compare.py", "build_corridors.py"]
+        scripts += ["build_donors.py", "build_debt.py", "build_compare.py", "build_corridors.py", "build_global_gateway.py"]
     for script in scripts:
         if run(f"Build {script}", script) != 0:
             sys.exit(f"\n{script} failed")

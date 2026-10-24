@@ -1,0 +1,144 @@
+<!-- Global Gateway in Africa: the prose and section order of
+     docs/global-gateway/. Tokens (double-underscore names) are filled by
+     build_global_gateway.py from data/global_gateway.geojson (the
+     Commission's flagship map and project pages), the Commission's tracker
+     and the map's EU finance layer, so every figure the page states comes
+     from them.
+     Colours: the five areas of partnership take the first five slots of the
+     site's validated categorical order (the debt page's --dg-*: blue, orange,
+     aqua, yellow, magenta), in the order of the Commission's own list, checked
+     for colour-blind separation of neighbours in both themes; the light theme's
+     aqua, yellow and magenta fall under 3:1 against the surface, so every
+     marker has a tooltip and the table restates everything. The head map is
+     one hue (--gg-*), darker for more flagships. Filled dots are one-country
+     flagships, rings regional ones, so the shape carries what colour does not. -->
+<style>
+  :root{
+    --ga-energy:#2a78d6; --ga-transport:#eb6834; --ga-digital:#1baf7a; --ga-health:#eda100; --ga-edu:#e87ba4;
+    --gg-1:#86b6ef; --gg-2:#3987e5; --gg-3:#1c5cab;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ga-energy:#3987e5; --ga-transport:#d95926; --ga-digital:#199e70; --ga-health:#c98500; --ga-edu:#d55181;
+      --gg-1:#184f95; --gg-2:#2a78d6; --gg-3:#6da7ec;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ga-energy:#3987e5; --ga-transport:#d95926; --ga-digital:#199e70; --ga-health:#c98500; --ga-edu:#d55181;
+    --gg-1:#184f95; --gg-2:#2a78d6; --gg-3:#6da7ec;
+  }
+
+  section h2{scroll-margin-top:80px}
+  .mono{font-family:var(--mono);font-size:11px;white-space:nowrap}
+  .keys{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:8px;font-size:12px;color:var(--ink-2)}
+  .dk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .gk{width:10px;height:10px;border-radius:2px;flex:none;display:inline-block;margin-right:6px;vertical-align:-1px}
+  .gk.ga-energy{background:var(--ga-energy)} .gk.ga-transport{background:var(--ga-transport)} .gk.ga-digital{background:var(--ga-digital)}
+  .gk.ga-health{background:var(--ga-health)} .gk.ga-edu{background:var(--ga-edu)}
+
+  /* the map's markers: filled for one country, a ring for a regional flagship */
+  circle.ga{stroke:var(--surface);stroke-width:1.2;fill-opacity:.92}
+  circle.ga.energy{fill:var(--ga-energy)} circle.ga.transport{fill:var(--ga-transport)} circle.ga.digital{fill:var(--ga-digital)}
+  circle.ga.health{fill:var(--ga-health)} circle.ga.edu{fill:var(--ga-edu)}
+  circle.ga.gr{fill:var(--surface);fill-opacity:1;stroke-width:2.2}
+  circle.ga.gr.energy{stroke:var(--ga-energy)} circle.ga.gr.transport{stroke:var(--ga-transport)} circle.ga.gr.digital{stroke:var(--ga-digital)}
+  circle.ga.gr.health{stroke:var(--ga-health)} circle.ga.gr.edu{stroke:var(--ga-edu)}
+  .sw.ga-energy{background:var(--ga-energy);opacity:1} .sw.ga-transport{background:var(--ga-transport);opacity:1}
+  .sw.ga-digital{background:var(--ga-digital);opacity:1} .sw.ga-health{background:var(--ga-health);opacity:1}
+  .sw.ga-edu{background:var(--ga-edu);opacity:1}
+  .shapes{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;color:var(--ink-2);margin:-2px 0 10px}
+  .shapes .sw{opacity:1;background:var(--ink-2)}
+  .shapes .sw.gr{background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink-2)}
+
+  .tblbox{margin-top:10px}
+  .tblbox>summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--accent-ink);list-style:none;display:inline-flex;align-items:center;gap:6px}
+  .tblbox>summary::-webkit-details-marker{display:none}
+  .tblbox>summary::before{content:"";border:4px solid transparent;border-left-color:currentColor;margin-left:2px;transition:transform .15s}
+  .tblbox[open]>summary::before{transform:rotate(90deg) translate(2px,2px)}
+  #c-area .bar,#c-ctry .bar,#c-team .bar{fill:var(--accent)}
+  td.area{white-space:nowrap}
+</style>
+
+<div class="head">
+  <span class="kicker">Deep dive · European Union</span>
+  <h1>Global Gateway in Africa</h1>
+  <p class="lede"><strong>The European Commission lists __N__ Global Gateway flagship projects in Africa, in __N_COUNTRIES__ countries, and gives no amount and no stage for any of them.</strong> Global Gateway is the European Union's banner for the infrastructure, energy, digital, health and education projects that it, its member states and their development banks back abroad, "Team Europe" in the Commission's words; it aims to mobilise up to EUR 300 bn. The flagships are the projects the Commission picks to show for it. Its own map gives each one an identifier, its countries, an area of partnership and a page, and most pages name the Team Europe members involved and a few milestones. That list is drawn here.</p>
+  <p class="lede"><strong>Climate and energy leads, with __TOP_AREA_N__ of the __N__ flagships (__TOP_AREA_PCT__%); __TOP_CTRY__ are named most.</strong> The money is elsewhere and not by project: the Commission's tracker says EUR __TRACKER_SSA__ bn was "mobilised" in Sub-Saharan Africa over 2021–2024, with no project, country or year behind the figure. The EU institutions' own records on the map pair by hand with __N_MATCHED__ of the flagships: EUR __MATCHED_EC_EUR_M__ m of the Commission's grants and contracts and EUR __MATCHED_EIB_EUR_M__ m signed by the EIB, kept apart, never added together and never a flagship's cost.</p>
+  <p class="asof">The Commission's Global Gateway map, data file last changed <b>__WIDGET_MODIFIED__</b>, and the flagships' pages, read <b>__FETCHED__</b> · the Commission's tracker, last changed <b>__TRACKER_MODIFIED__</b> · © European Union, CC BY 4.0</p>
+</div>
+
+<dl class="kpis">
+  <div class="kpi"><dt>__N__</dt><dd><b>flagships in Africa</b> on the Commission's list: __N_COUNTRY_LEVEL__ in one country, __N_REGIONAL__ regional, __N_GLOBAL__ global</dd></div>
+  <div class="kpi"><dt>__N_COUNTRIES__</dt><dd><b>African countries</b> named by at least one; __TOP_CTRY__ most often</dd></div>
+  <div class="kpi"><dt>__N_BEYOND__ of __N_TEAM__</dt><dd><b>pages name a member state or a bank beside the Commission</b>: __N_STATES__ a member state, __N_BANKS__ the EIB or the EBRD</dd></div>
+  <div class="kpi"><dt>EUR __TRACKER_SSA__ bn</dt><dd><b>"mobilised" in Sub-Saharan Africa, 2021–2024</b>, by the Commission's tracker, which splits it by no project</dd></div>
+</dl>
+
+<section id="map-section">
+  <h2>Where the flagships are</h2>
+  <p class="lead">Each flagship is drawn at every African country it names, at that country's interior point. The Commission's map has one point per country and nothing finer, so the dots are spread around the point to be pointed at, not placed: a dot is a flagship in a country, not a site. Regional flagships are rings, drawn once in each country they name; __N_NOCTRY__ name no country and sit at the Commission's Africa-wide point in Chad, the one the map's EU layer uses for regional programmes.</p>
+  <div class="legend" aria-label="Areas of partnership">__LEGEND__</div>
+  <div class="shapes"><span class="dk"><span class="sw"></span>one country</span><span class="dk"><span class="sw gr"></span>regional, in each country it names</span></div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 __MAP_W__ __MAP_H__" role="img" aria-label="Map of Africa with the Commission's Global Gateway flagships, one dot per flagship and country, coloured by area of partnership">
+      <rect width="__MAP_W__" height="__MAP_H__" fill="var(--sea)"></rect>
+      <g id="land"><!--__LAND__--></g>
+    </svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="mapnote">Some flagships name a place in their text (a dam, a port, a corridor), but the Commission gives no coordinates, and none are guessed here. The five areas of partnership are the Commission's; a flagship with two areas is coloured by the first.</p>
+
+  <div class="charts">
+    <div class="chart"><h3>Flagships by area of partnership</h3><p class="sub">Number of flagships, by the first area the Commission gives.</p><svg id="c-area" viewBox="0 0 520 130" role="img" aria-label="Bar chart of Global Gateway flagships in Africa by area of partnership"></svg></div>
+    <div class="chart"><h3>Countries named most often</h3><p class="sub">Number of flagships naming the country, one-country and regional together.</p><svg id="c-ctry" viewBox="0 0 520 300" role="img" aria-label="Bar chart of the African countries named by the most Global Gateway flagships"></svg></div>
+  </div>
+</section>
+
+<section id="team">
+  <h2>Who is named behind them</h2>
+  <p class="lead">The pages list the "Team Europe members involved" for __N_TEAM__ of the __N__ flagships (__N_NO_PAGE__ have no page). __N_EC__ name the Commission. __N_MEMBERS__ member states appear at least once, led by __TOP_MEMBERS__. A name on the list is a partner, not a share: no page says who pays what. The member states' own agencies are national money and have their own lender pages where the site has one (France's AFD and Germany's KfW and GIZ are also on the map).</p>
+  <div class="charts">
+    <div class="chart"><h3>Team Europe members named</h3><p class="sub">Number of flagships whose page names the member; the Commission, the member states and the two banks.</p><svg id="c-team" viewBox="0 0 520 300" role="img" aria-label="Bar chart of the Team Europe members named on the most Global Gateway flagship pages in Africa"></svg></div>
+  </div>
+</section>
+
+<section id="list">
+  <h2>The list</h2>
+  <p class="lead">Every flagship, as the Commission's map and its page give it. The title links to the Commission's page. Countries outside Africa that a flagship also names (a cable to Europe, a programme shared with Asia) are shown greyed. The milestones are the page's own words; most pages give one or two, and none gives a date or a stage.</p>
+  __TABLE_FLAGSHIPS__
+</section>
+
+<section id="money">
+  <h2>What the money records say</h2>
+  <p class="lead">There are two sets of figures for Global Gateway, and only one of them reaches a flagship. The Commission's tracker counts EUR __TRACKER_TOTAL__ bn "mobilised" worldwide over 2021–2024, EUR __TRACKER_SSA__ bn (__TRACKER_SSA_PCT__%) of it in Sub-Saharan Africa, about USD __TRACKER_SSA_USD__ bn. North Africa sits in a line with the Middle East and Türkiye (EUR __TRACKER_MENA__ bn), so the tracker gives no African total. The tracker names no project, country or year, and "mobilised" counts the member states' banks, the EIB and the EBRD, and, by the strategy's own aim, private money, so it is not what the Union spent.</p>
+  <p>The second set is the EU institutions' own: the Commission's contracts and financing decisions and the European Investment Bank's operations, which each publishes to IATI and which are the map's EU finance layer. The IATI files carry no flagship identifier, so a flagship and a record are paired here only where the record's title, or the decision above it, plainly names the same works, plant, programme or corridor, checked by hand. __N_MATCHED__ flagships pair with at least one record. __N_MATCHED_EC__ pair with __MATCHED_EC_RECS__ Commission records: EUR __MATCHED_EC_EUR_M__ m committed, and __MATCHED_EC_NOAMOUNT__ records still in preparation with no amount. __N_MATCHED_EIB__ pair with __MATCHED_EIB_RECS__ EIB operations: EUR __MATCHED_EIB_EUR_M__ m signed, and __MATCHED_EIB_NOAMOUNT__ cancelled or suspended and not counted; __MATCHED_BOTH__ records of both. The two institutions' figures are shown side by side and never added: a Commission grant and an EIB loan to the same works are different money, and each is the institution's own share. __MATCHED_OLD__ Neither covers the member states' development banks that many of the pages name, and only the sectors the layer keeps are searched (transport, energy, communications, water, industry and trade), so a health or education flagship's contracts are mostly outside it. NaturAfrica, the Commission's conservation programme, is the largest Commission pairing because the programme name is on every one of its contracts.</p>
+  __TABLE_PAIRED__
+  <h3>Records that say "Global Gateway"</h3>
+  <p>A different cut of the same layer: __GG_N__ records name Global Gateway in their title, description or the decision above them, EUR __GG_EUR_M__ m counted, about USD __GG_USD_M__ m (__EUR_NOTE__), and __GG_NOAMOUNT__ more are still in preparation with no amount. They are corridor programmes, support facilities and studies more than works; __MATCHED_GG__ among the paired records above.</p>
+  __TABLE_LAYER__
+  <p class="note">The corridors that Global Gateway names as strategic are on the <a href="../corridors/">corridors page</a>, beside the other lists that name them; the Medusa submarine cable, a flagship here, is in the map's cables layer.</p>
+</section>
+
+<section id="method">
+  <h2>How to read this page</h2>
+  <dl class="spec">
+    <dt>One record is</dt><dd><b>One flagship</b>: one identifier on the Commission's Global Gateway map (a few flagships carry a list of identifiers and are one record). A flagship is African when the map lists it under an African country or its Sub-Saharan Africa point, or under its Mediterranean point (which mixes North Africa with the Middle East) when its page names an African country or North Africa. Regional flagships appear on the Commission's map under each country they name; here they are one record.</dd>
+    <dt>Location</dt><dd>The country's interior point, the site's usual point for a country, for every African country a flagship names; the Commission's map has one point per country too. A flagship that names no country sits at the Commission's Africa-wide point in Chad, as the map's EU layer places regional programmes. The data file, and the main map's Global Gateway layer, keep one point per flagship: the country's for a one-country flagship, the Africa-wide point otherwise.</dd>
+    <dt>Status</dt><dd>None. The Commission publishes no stage for a flagship, and the milestones on a page are undated sentences. No stage is inferred from them, and none that other trackers assign is used.</dd>
+    <dt>Money</dt><dd>None per flagship: the Commission publishes no amount for any of them. The tracker's regional figure and the EU layer's records are shown beside the list and never added to each other. The list's last two columns are what the Commission committed and what the EIB signed in the records that name the same works, in euros as published, each on its own and never added; neither is the flagship's cost or the Union's whole share.</dd>
+    <dt>Not here, and why</dt><dd>
+      <ul class="tight">
+        <li><b>Global Gateway projects that are not flagships.</b> The Commission says the list is not exhaustive.</li>
+        <li><b>EFSD+ guarantees</b>, the main Global Gateway instrument, have no commitment transaction in the IATI files and leave no record on the map.</li>
+        <li><b>Amounts and stages</b> per flagship, which the Commission does not publish.</li>
+      </ul>
+    </dd>
+    <dt>Sources and licences</dt><dd>
+      <ul class="tight">
+        <li><b>European Commission</b>, the Global Gateway map on <a href="__GG_PAGE__">its Global Gateway page</a> (its data file, <a href="__WIDGET__">data.json</a>) and the flagships' pages under <a href="__LIST_PAGE__">Global Gateway projects</a>; © European Union, <a href="__LEGAL__">CC BY 4.0</a>. Read and reshaped here: one record per flagship, country names to codes, the pages' "Key information" and milestones joined to the map's records.</li>
+        <li><b>European Commission</b>, the Global Gateway tracker on <a href="__TRACKER_PAGE__">the International Partnerships Global Gateway page</a>, "Total Global Gateway investments mobilised 2021 – 2024", its regional split only; © European Union, CC BY 4.0.</li>
+        <li><b>European Commission</b>, DG INTPA and DG NEAR IATI activity files (CC BY 4.0), as the map's EU finance layer.</li>
+      </ul>
+    </dd>
+  </dl>
+</section>

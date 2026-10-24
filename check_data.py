@@ -36,6 +36,7 @@ LAYERS = {
     "aiddata_china_finance": ("china", 1000),
     "iati_eu_finance": ("eu", 800),
     "piano_mattei": ("mattei", 50),
+    "global_gateway": ("gateway", 100),
 }
 LAYERS = {k: v for k, v in LAYERS.items() if v[0] in REGION.layers or v[0] == "finance_wb"
           or (v[0] == "finance_afd" and getattr(REGION, "afd_files", None))

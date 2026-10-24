@@ -90,7 +90,7 @@ SITE_NAME = "AfricaWatch" if REGION.key == "africa" else "InfraRadar"
 # The edition's regional development bank, AfDB or ADB: short name, full name.
 BANK = REGION.bank["code"]
 BANK_NAME = REGION.bank["name"]
-NUM_WORD = {7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}
+NUM_WORD = {7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen"}
 # "noindex" while an edition is built but not yet published (region.py)
 ROBOTS = "noindex,nofollow" if REGION.noindex else "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
 
@@ -168,6 +168,10 @@ SOURCE_INFO = {
     # legali); the gazetteer coordinates behind the named places are OpenStreetMap's
     "mattei": {"name": "Italian Government", "lic": "CC BY 3.0 IT (gazetteer ODbL)",
                "url": "https://www.governo.it/en/piano-mattei/progetti/"},
+    # the data file behind the Global Gateway map on commission.europa.eu and the
+    # flagships' pages: EU website content, CC BY 4.0 by the Commission's legal notice
+    "gateway": {"name": "European Commission, Global Gateway", "lic": "CC BY 4.0",
+                "url": "https://international-partnerships.ec.europa.eu/policies/global-gateway/global-gateway-projects_en"},
 }
 # The layers each page draws. Both pages show the same eight layers over the
 # same records, and both split the finance layer between its lenders, so
@@ -284,12 +288,14 @@ DEEP_THEMES = [
     ("debt", "Who Africa owes", "Debt by creditor, 2000–2024, from the World Bank", "debt.json"),
     ("compare", "Seven lenders side by side", "Debt, aid and what each one builds, compared", "donors"),
     ("corridors", "Africa's strategic corridors", "Railways, ports and pipelines: who pays and who builds", "corridors.json"),
+    ("global-gateway", "Global Gateway in Africa", "The EU's flagship projects: where, what for and with whom",
+     "global_gateway.geojson"),
 ]
 
 # The menu bar names a theme by one short word; its full title is the
 # tooltip, the dropdown's card and the footer's link. A theme missing here
 # shows its title in the bar.
-DEEP_SHORT = {"debt": "Debt", "compare": "Compare", "corridors": "Corridors"}
+DEEP_SHORT = {"debt": "Debt", "compare": "Compare", "corridors": "Corridors", "global-gateway": "Global Gateway"}
 
 DEEP_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/>'
              '<path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>')
@@ -740,7 +746,32 @@ def sources(meta, keys=MAP_LAYERS):
                    "one page per project, read in its Italian and English versions",
          "fresh": pm.get("fresh") or fmt_date(pm.get("fetched"))},
     ]
+    if "gateway" in keys:
+        gg = gateway_meta()
+        rows.append({"k": "gateway", **SOURCE_INFO["gateway"],
+                     "detail": "Global Gateway flagship projects: the data file behind the map on the Commission's "
+                               "Global Gateway page and each flagship's page (countries, area of partnership, Team "
+                               "Europe members, milestones); the Commission publishes no amount or stage",
+                     "fresh": gg.get("fresh") or "unknown"})
     return [r for r in rows if r["k"] in keys]
+
+
+def gateway_meta():
+    """The Global Gateway layer's fetch facts, which build_global_gateway.py
+    keeps in the layer's own file rather than in meta.json: when it was read,
+    when the Commission last changed its map's data file, and how the
+    flagships were placed."""
+    f = DATA / "global_gateway.geojson"
+    if not f.exists():
+        return {}
+    doc = json.loads(f.read_text())
+    m, feats = dict(doc.get("meta") or {}), doc["features"]
+    m["records"] = len(feats)
+    m["country_point"] = sum(1 for x in feats if x["properties"].get("geo_precision") == 2)
+    m["regional"] = len(feats) - m["country_point"]
+    m["no_page"] = sum(1 for x in feats if not x["properties"].get("page_read"))
+    m["fresh"] = fmt_date(m["fetched"]) if m.get("fetched") else None
+    return m
 
 
 def payload_meta(meta, keys=MAP_LAYERS):
@@ -778,6 +809,11 @@ def payload_meta(meta, keys=MAP_LAYERS):
             "mattei_meta": {k: (meta.get("mattei") or {}).get(k)
                             for k in ("stages", "named_place", "named_area", "country_point",
                                       "multi_country", "with_amount", "partner_countries")}}
+    # how the Global Gateway list was read and placed, so the Methodology can say so
+    if "gateway" in keys:
+        gg = gateway_meta()
+        out["gateway_meta"] = {k: gg.get(k) for k in ("records", "country_point", "regional", "no_page",
+                                                      "widget_modified", "fresh")}
     # the words, frame and lenders of this edition (DATA.region in the
     # templates); Africa's values are the templates' defaults, so its payload
     # carries none and is unchanged
@@ -913,7 +949,8 @@ LAYER_FILE = {"assets": "gem_power_assets.geojson", "finance": f"iati_{REGION.ba
               "finance_bmz": "iati_bmz_finance.geojson",
               "ground": "osm_construction.geojson", "pipelines": "gem_oil_gas_pipelines.geojson",
               "cables": "telegeography_cables.geojson", "china": "aiddata_china_finance.geojson",
-              "eu": "iati_eu_finance.geojson", "mattei": "piano_mattei.geojson"}
+              "eu": "iati_eu_finance.geojson", "mattei": "piano_mattei.geojson",
+              "gateway": "global_gateway.geojson"}
 
 
 def _rows(layer):
@@ -924,7 +961,8 @@ def _rows(layer):
     return list(layer), []
 
 
-def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None, eu=None, mattei=None, meta=None):
+def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None, eu=None, mattei=None, meta=None,
+               gateway=None):
     """Counts and totals of the snapshot being built, for the crawlable text.
     A page that does not draw a layer passes None for it and the count comes
     from meta.json, so the JSON-LD still describes every file the site
@@ -978,6 +1016,9 @@ def site_facts(assets, finance, ground, pipelines=None, cables=None, china=None,
             "china": count(china, "china"), "china_usd_bn": total(china, "usd_m") / 1000,
             "eu": count(eu, "eu"), "eu_usd_bn": total(eu, "usd_m") / 1000,
             "mattei": count(mattei, "mattei"), "mattei_eur_bn": total(mattei, "eur_m") / 1000,
+            # the flagship list keeps its count in its own file, not in meta.json
+            "gateway": (len(_rows(gateway)[0]) if gateway is not None
+                        else (gateway_meta().get("records") or 0) if "gateway" in REGION.layers else 0),
             "gw": mw / 1000, "usd_bn": usd / 1000, "usd_bn_wb": usd_wb / 1000,
             "afdb_approx_pct": afdb_approx, "mattei_edu": m_edu, "china_country_pct": china_country,
             "sources": sources(meta), "built": today(), "meta": meta}
@@ -1023,6 +1064,9 @@ def facts_sentence(facts):
     if facts.get("mattei"):
         s += (f", and the {facts['mattei']:,} projects of Italy's Piano Mattei per l'Africa as the "
               f"Italian Government's portal lists them")
+    if facts.get("gateway"):
+        s += (f", and the {facts['gateway']:,} Global Gateway flagship projects the European Commission "
+              f"lists in {REGION.name}, which it publishes with no amount or stage")
     return s
 
 
@@ -1131,7 +1175,14 @@ def structured_data(facts, *, path, title, description, kind):
                           "stated amount in euros and the portal's progress stage (identified, "
                           "formulated, approved, ongoing, completed), placed on the site the "
                           "description names, the country's point or, for a programme across "
-                          "several countries, one Africa-wide point for the layer."}[k]
+                          "several countries, one Africa-wide point for the layer.",
+                "gateway": "The European Union's Global Gateway flagship projects as the European "
+                           "Commission lists them: the data file behind the map on its Global Gateway "
+                           "page and each flagship's page, with the Commission's identifier, countries, "
+                           "area of partnership, type, the Team Europe members involved and the "
+                           "milestones the page names. No amount and no stage are published. Placed at "
+                           "the country's point, or for a flagship of several countries or none at the "
+                           f"Commission's {REGION.wide} point, {REGION.eu_point_where}."}[k]
         d = {"@type": "Dataset", "@id": site_url(f"#dataset-{k}"),
              "name": f"{SITE_NAME}: {src['name']} layer",
              "description": f"{what} {n:,} records in this snapshot. {src['detail']}.",
@@ -1337,6 +1388,7 @@ def write_site_index(facts):
             *([("debt/", "monthly", "0.8"), ("data/debt.json", "monthly", "0.3")] if (DOCS / "debt" / "index.html").exists() else []),
             *([("compare/", "monthly", "0.8"), ("data/compare.json", "monthly", "0.3")] if (DOCS / "compare" / "index.html").exists() else []),
             *([("corridors/", "monthly", "0.8"), ("data/corridors.json", "monthly", "0.3")] if (DOCS / "corridors" / "index.html").exists() else []),
+            *([("global-gateway/", "monthly", "0.8")] if (DOCS / "global-gateway" / "index.html").exists() else []),
             *[("data/donors/" + d["slug"] + ".json", "monthly", "0.3") for d in DONORS],
             ("llms.txt", "monthly", "0.3"),
             ("data/meta.json", "monthly", "0.2"), ("data/map.json", "monthly", "0.2")]
@@ -1400,6 +1452,23 @@ def write_site_index(facts):
                       "  not a site.\n") if mattei else "")
     mattei_link = ("- [Piano Mattei per l'Africa, project portal of the Italian Government](https://www.governo.it/en/piano-mattei/progetti/)\n"
                    if mattei else "")
+    # the EU's Global Gateway flagship list (Africa only): a list, not money
+    gateway = bool(facts.get("gateway"))
+    gateway_plan = ", Global Gateway the Commission's flagship list" if gateway else ""
+    gateway_status = ((" Global Gateway flagships: the Commission publishes\n  no stage, so they carry none and "
+                       "show only while every stage is selected.") if gateway else "")
+    gateway_glyph = (", pentagons are Global Gateway\n  flagships, all one size and in a neutral colour, since "
+                     "the Commission publishes no amount or stage" if gateway else "")
+    gateway_bullet = ((f"- The Global Gateway layer is the European Commission's own list of the {facts['gateway']:,}\n"
+                       "  flagships it names in the region, read from the data file behind the map on its Global\n"
+                       "  Gateway page and from each flagship's page (countries, area of partnership, the Team\n"
+                       "  Europe members involved, milestones). It carries no amount and no stage, so nothing is\n"
+                       "  summed and no status is shown; the list is not exhaustive by the Commission's own word.\n"
+                       "  A flagship sits at its country's point, or, for several countries or none, at the\n"
+                       f"  Commission's regional point, {REGION.eu_point_where}. The contracts behind some flagships are\n"
+                       "  in the EU layer; the two share no identifier.\n") if gateway else "")
+    gateway_link = ("- [Global Gateway flagship projects, European Commission](https://international-partnerships.ec.europa.eu/policies/global-gateway/global-gateway-projects_en)\n"
+                    if gateway else "")
     if BANK == "AfDB":
         counterpart = "the\n  borrowing government's counterpart funds that the AfDB files beside its own, "
         bank_currency = (f"AfDB publishes in SDR, converted at a\n  fixed, stated rate: {SDR_NOTE}. "
@@ -1437,13 +1506,13 @@ Site: {SITE_URL}
 
 ## Pages
 
-- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the {NUM_WORD[len(REGION.layers)]} layers (finance holds {'four' if bmz else 'three' if afd else 'two'} lenders, EU finance the Commission and the EIB{mattei_plan}) with filters
+- [{SITE_NAME}, map]({SITE_URL}): full-screen map of the {NUM_WORD[len(REGION.layers)]} layers (finance holds {'four' if bmz else 'three' if afd else 'two'} lenders, EU finance the Commission and the EIB{mattei_plan}{gateway_plan}) with filters
   by layer, status, country and sector, a viewport summary, a "largest in view" list, detail
   cards linking to each source record, optional marker clustering and Sentinel-2 satellite
   imagery, and a Methodology tab. The view is encoded in the URL hash, so views can be shared.
 - [{SITE_NAME}, dashboard view]({site_url('dashboard.html')}): the same records as a page
   with KPIs, a country map, bar charts by country and sector, and a sortable table.
-{donor_pages}{"- [Debt: who African governments owe, creditor by creditor](" + site_url("debt/") + "): World Bank International Debt Statistics by creditor, with a card on the dashboard. Data: " + site_url("data/debt.json") + chr(10) if (DOCS / "debt" / "index.html").exists() else ""}{"- [Compare the lenders](" + site_url("compare/") + "): the seven lender profiles side by side, with filters by lender, region or country, year and measure: where each one's money goes (small-multiple maps and a who-leads-where map), what it funds (sector mix), how it is lent (grants, loans, delivery channels, concentration) and how its exposure moved since 2000. Data: " + site_url("data/compare.json") + chr(10) if (DOCS / "compare" / "index.html").exists() else ""}{"- [Africa's strategic corridors](" + site_url("corridors/") + "): a hand-kept register of Africa's main cross-border transport and energy corridors (LAPSSET, Lobito, TAZARA, the standard gauge railways, EACOP, the Saharan and Atlantic gas pipelines and others), on one map, piece by piece, with each piece's stage and who lends for, owns and builds it, every line sourced. Data: " + site_url("data/corridors.json") + chr(10) if (DOCS / "corridors" / "index.html").exists() else ""}
+{donor_pages}{"- [Debt: who African governments owe, creditor by creditor](" + site_url("debt/") + "): World Bank International Debt Statistics by creditor, with a card on the dashboard. Data: " + site_url("data/debt.json") + chr(10) if (DOCS / "debt" / "index.html").exists() else ""}{"- [Compare the lenders](" + site_url("compare/") + "): the seven lender profiles side by side, with filters by lender, region or country, year and measure: where each one's money goes (small-multiple maps and a who-leads-where map), what it funds (sector mix), how it is lent (grants, loans, delivery channels, concentration) and how its exposure moved since 2000. Data: " + site_url("data/compare.json") + chr(10) if (DOCS / "compare" / "index.html").exists() else ""}{"- [Africa's strategic corridors](" + site_url("corridors/") + "): a hand-kept register of Africa's main cross-border transport and energy corridors (LAPSSET, Lobito, TAZARA, the standard gauge railways, EACOP, the Saharan and Atlantic gas pipelines and others), on one map, piece by piece, with each piece's stage and who lends for, owns and builds it, every line sourced. Data: " + site_url("data/corridors.json") + chr(10) if (DOCS / "corridors" / "index.html").exists() else ""}{"- [Global Gateway in Africa](" + site_url("global-gateway/") + "): the European Union's Global Gateway flagship projects as the European Commission lists them, with no amount or stage since it publishes none: where they are, their area of partnership, the Team Europe members named behind each, the Commission's investment tracker, and the Commission's contracts and EIB operations on the map that name the same works, paired by hand and kept apart. Data: " + site_url("data/global_gateway.geojson") + chr(10) if (DOCS / "global-gateway" / "index.html").exists() else ""}
 ## Data
 
 The compiled payload the map draws, one JSON with column-wise layers:
@@ -1479,14 +1548,14 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   (MoUs, letters of intent), umbrella agreements and loans that buy a stake are left out,
   so the layer has no announced records and no double-counted money. EU finance: IATI statuses as for {BANK}
   (1 announced, 2 under construction, 3-4 operating, 5-6 stalled); a Commission financing
-  decision still in the pipeline is an announced record.{mattei_status}
+  decision still in the pipeline is an announced record.{mattei_status}{gateway_status}
 - Shape is source, colour is status, size is scale: circles are power units sized by MW,
   squares are {BANK} projects and diamonds World Bank projects{afd_glyph}, {'all' if afd else 'both'} sized by commitment, thin lines are construction ways as
   traced, haloed lines are pipeline routes, lines ending in dots are submarine cables
   with their {REGION.adj} landing points, triangles are Chinese-financed projects sized by
   commitment, with the project's OpenStreetMap footprint drawn as a thin outline where
   AidData geocoded it precisely, stars are EU-financed records (European Commission
-  contracts and decisions, EIB operations) sized by commitment{mattei_glyph}. Dashed lines are not yet built.
+  contracts and decisions, EIB operations) sized by commitment{mattei_glyph}{gateway_glyph}. Dashed lines are not yet built.
 - Amounts are commitments (IATI transaction type 2), counted as the infrastructure share of
   the lender's own commitment by its own sector percentages (and, for the EIB, the {REGION.adj}
   share by its recipient percentages). Left out: budget support (IATI aid-type A01/A02), {counterpart}EIB fund
@@ -1508,7 +1577,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
   domestic-budget, {'other ' if afd else ''}EU member states' bilateral and other-lender finance is not here. Read
   totals as each lender's exposure, not as investment in {REGION.name}. Each lender's total is
   shown on its own line and never added into one project cost{mattei_not_added}.
-{mattei_bullet}- The EU layer is the Commission's contracts (one record per grant, delegation agreement or
+{mattei_bullet}{gateway_bullet}- The EU layer is the Commission's contracts (one record per grant, delegation agreement or
   works contract under a financing decision; a decision is a record only when none of its
   contracts is published yet) and the EIB's operations. The Commission's points are either
   a named place or the country's default point; the EIB publishes no locations, so its
@@ -1533,7 +1602,7 @@ satellite layer is EOX Sentinel-2 cloudless (CC BY-NC-SA), site build only, off 
 - [Global Energy Monitor, Global Integrated Power Tracker](https://globalenergymonitor.org/projects/global-integrated-power-tracker/)
 - [{BANK_NAME} on d-portal, IATI's data explorer]({REGION.bank['registry']})
 - [European Commission, DG International Partnerships](https://d-portal.iatistandard.org/ctrack.html?publisher=XI-IATI-EC_INTPA#view=main){near} and the [European Investment Bank](https://d-portal.iatistandard.org/ctrack.html?publisher=XM-DAC-918-3#view=main) on d-portal
-{mattei_link}- [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
+{mattei_link}{gateway_link}- [AidData, Global Chinese Development Finance Dataset 3.0](https://www.aiddata.org/data/aiddatas-global-chinese-development-finance-dataset-version-3-0) and its [geospatial companion on GitHub](https://github.com/aiddata/gcdf-geospatial-data)
 - [OpenStreetMap copyright and licence](https://www.openstreetmap.org/copyright)
 - [Natural Earth](https://www.naturalearthdata.com/)
 """)

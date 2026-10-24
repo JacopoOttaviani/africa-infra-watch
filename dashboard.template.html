@@ -159,6 +159,7 @@
   .seg button:hover:not([aria-pressed="true"]){color:var(--ink-2)}
 
   .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chipnote{margin:7px 0 0;font-size:11px;line-height:1.4;color:var(--ink-3)}
   .chip{display:inline-flex;gap:6px;align-items:center;padding:4px 8px 4px 6px;border:1px solid var(--rule);border-radius:2px;background:var(--surface);font-size:12px;font-weight:500}
   .chip .sw{width:9px;height:9px;border-radius:50%;flex:none}
   .chip.stalled .sw{background:transparent!important;border:2px solid var(--st-stalled)}
@@ -436,7 +437,7 @@
   .src .sk{font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
   .src .sn{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:-.008em}
   .src .sf{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
-  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.finance_wb,.sk.finance_afd,.sk.finance_bmz,.sk.cables,.sk.eu{color:var(--st-approved)} .sk.ground,.sk.mattei{color:var(--st-construction)}
+  .sk.assets,.sk.china{color:var(--st-operating)} .sk.pipelines{color:var(--copper)} .sk.finance,.sk.finance_wb,.sk.finance_afd,.sk.finance_bmz,.sk.cables,.sk.eu{color:var(--st-approved)} .sk.ground,.sk.mattei{color:var(--st-construction)} .sk.gateway{color:var(--ink-2)}
   /* the site's footer (shared.site_footer), then when the page was built */
   footer.foot{margin-top:28px;padding-top:26px;border-top:1px solid var(--rule)}
   footer.foot .sf-meta{margin:26px 0 0;padding-top:12px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--ink-3)}
@@ -528,6 +529,7 @@
       <h3><span><span data-mode="built">Status</span><span data-mode="paid">Stage</span></span> <span class="hint"><span data-mode="built">how far the works are</span><span data-mode="paid">where the loan or grant stands</span></span></h3>
       <div class="chips" id="statuses" data-mode="built"></div>
       <div class="chips" id="stages" data-mode="paid"></div>
+      <p class="chipnote" id="stagenote" data-mode="paid" hidden></p>
     </div>
 
     <div class="panel" data-mode="built">
@@ -586,7 +588,7 @@
           </div>
         </div>
         <div class="mapbox" id="mapbox">
-          <canvas id="map" role="img" aria-label="Map of __REGION__ with power assets, __BANK__ projects, Chinese-financed projects, EU-financed projects, <!--__IF:mattei__-->Piano Mattei projects, <!--__ENDIF__-->construction works, oil and gas pipelines and submarine cables"></canvas>
+          <canvas id="map" role="img" aria-label="Map of __REGION__ with power assets, __BANK__ projects, Chinese-financed projects, EU-financed projects, <!--__IF:mattei__-->Piano Mattei projects, <!--__ENDIF__--><!--__IF:gateway__-->Global Gateway flagships, <!--__ENDIF__-->construction works, oil and gas pipelines and submarine cables"></canvas>
           <div id="lmap" hidden aria-hidden="true"></div>
           <div class="zoomers">
             <button class="ib" id="zin" title="Zoom in" aria-label="Zoom in">+</button>
@@ -679,7 +681,9 @@
               <strong>where the European Union's own money goes</strong> (the European
               Commission's contracts and the European Investment Bank's operations, from their
               IATI activity files)<!--__IF:mattei__--> and <strong>what Italy's Piano Mattei has put on the map</strong>
-              (the Italian Government's project portal, one page per project)<!--__ENDIF__-->.
+              (the Italian Government's project portal, one page per project)<!--__ENDIF__--><!--__IF:gateway__-->,
+              with <strong>the projects the EU puts forward as Global Gateway flagships</strong> beside them (the
+              European Commission's own list, which gives no amount or stage)<!--__ENDIF__-->.
             </p>
             <p>
               They share no project identifier, so they are shown as __N_LAYERS__ map layers over a common
@@ -721,6 +725,13 @@
                 domestic-budget, <!--__IF:africa__-->other <!--__ENDIF__-->EU member states' and other-lender finance is <strong>not</strong> here.
                 Read totals as each lender's exposure, not as investment in __REGION__.
               </li>
+<!--__IF:gateway__-->              <li class="caveat">
+                <strong>The Global Gateway layer is a list, not money.</strong> One record is one flagship on the
+                European Commission's list, read from the data file behind the map on its Global Gateway page
+                and from the flagship's page. The Commission publishes no amount and no stage, so the layer adds
+                to no total and shows only while every stage is selected; a flagship sits at its country's point,
+                or, for several countries or none, at the Commission's __WIDE__ point, __EU_WHERE__.
+              </li><!--__ENDIF__-->
 <!--__IF:mattei__-->              <li class="caveat">
                 <strong>The Piano Mattei layer is a government's own list.</strong> One record is one page of
                 the Italian Government's project portal, the whole plan as published, training and culture
@@ -853,9 +864,9 @@ const CN_SPAN = `${CN_Y[0]}–${CN_Y[1]}`;
 const R = Object.assign({key:"africa", name:"Africa", adj:"African", kicker:"Geopolitics of Africa",
   regional:"Africa, regional", landings:"African landings", wide:"Africa-wide", land:"the continent",
   eu_point_note:"the Commission's point for Africa, in Chad", eu_point_where:"in Chad",
-  layers:["assets","finance","ground","pipelines","cables","china","eu","mattei"],
-  lenders:["AfDB","WB","AFD","GIZ","KfW","BMZ","EC","EIB","CN","IT"],
-  family:[["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["France",["AFD"]], ["Germany",["GIZ","KfW","BMZ"]], ["Italy",["IT"]]],
+  layers:["assets","finance","ground","pipelines","cables","china","eu","mattei","gateway"],
+  lenders:["AfDB","WB","AFD","GIZ","KfW","BMZ","EC","EIB","CN","IT","GG"],
+  family:[["Multilateral banks",["AfDB","WB"]], ["European Union",["EC","EIB"]], ["China",["CN"]], ["France",["AFD"]], ["Germany",["GIZ","KfW","BMZ"]], ["Italy",["IT"]], ["Global Gateway",["GG"]]],
   bank:{code:"AfDB", name:"African Development Bank", group:"African Development Bank Group", currency:"XDR",
         file:"iati_afdb_finance.geojson", logo:"african-development-bank", home:"https://www.afdb.org/"},
   center:[17, 2], zoom_win:[-30, -45, 70, 45], bounds:{x0:-19, y0:-36, x1:53, y1:39}, home_exclude:["CV","MU","SC"]},
@@ -863,7 +874,7 @@ const R = Object.assign({key:"africa", name:"Africa", adj:"African", kicker:"Geo
 const BANK = R.bank.code, LAND = R.land;
 const HAS = k => R.layers.includes(k);
 const an = w => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
-const NUM_WORD = {7:"seven", 8:"eight", 9:"nine", 10:"ten", 11:"eleven", 12:"twelve"};
+const NUM_WORD = {7:"seven", 8:"eight", 9:"nine", 10:"ten", 11:"eleven", 12:"twelve", 13:"thirteen"};
 /* one public dataset per source card, and the EU card is two (Commission and EIB) */
 const N_DATASETS = NUM_WORD[DATA.meta.sources.length + 1] || String(DATA.meta.sources.length + 1);
 const N_LAYERS = NUM_WORD[R.layers.length] || String(R.layers.length);
@@ -876,11 +887,11 @@ const STATUS_LABEL = {announced:"Announced",approved:"Approved",under_constructi
    and colours, in the money's words. A closed loan has paid out; nothing in its
    record says the works run, so it is never counted as Operating */
 const STAGE_LABEL  = {announced:"Pipeline",approved:"Committed",under_construction:"Disbursing",operating:"Closed",stalled:"Cancelled"};
-const statusLabel  = r => (r.lender ? STAGE_LABEL : STATUS_LABEL)[r.status] || "—";
+const statusLabel  = r => r.status==null && r.lender ? "No stage published" : (r.lender ? STAGE_LABEL : STATUS_LABEL)[r.status] || "—";
 const LAYER_ORDER  = R.layers;
 const HOME_HOST    = "__HOME_URL__".replace(/^https?:\/\//,"").replace(/\/$/,"");
-const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",finance_afd:"Development finance",finance_bmz:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei"};
-const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World Bank` + (R.lenders.includes("AFD") ? " · AFD" : "") + (R.lenders.includes("GIZ") ? " · BMZ" : ""),finance_wb:"World Bank",finance_afd:"AFD",finance_bmz:"BMZ",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal"};
+const LAYER_LABEL  = {assets:"Power assets",finance:"Development finance",finance_wb:"Development finance",finance_afd:"Development finance",finance_bmz:"Development finance",ground:"Ground truth",pipelines:"Oil & gas pipelines",cables:"Submarine cables",china:"Chinese finance",eu:"EU finance",mattei:"Piano Mattei",gateway:"Global Gateway"};
+const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World Bank` + (R.lenders.includes("AFD") ? " · AFD" : "") + (R.lenders.includes("GIZ") ? " · BMZ" : ""),finance_wb:"World Bank",finance_afd:"AFD",finance_bmz:"BMZ",ground:"OpenStreetMap",pipelines:"Global Energy Monitor",cables:"TeleGeography",china:"AidData · " + CN_SPAN,eu:"European Commission · EIB",mattei:"Italian Government · project portal",gateway:"European Commission · flagship list"};
 /* The rail lists the data in two groups. "Layers" is what is built: power
    units, works on the ground, pipelines, cables. "Lenders" is who is paying:
    the finance layer's two banks (squares and diamonds), in Africa AFD
@@ -891,10 +902,10 @@ const LAYER_SUB    = {assets:"Global Energy Monitor",finance:`${BANK} · World B
    the layer flags keeps working. */
 const RAIL_LAYERS  = ["assets","ground","pipelines","cables"];
 const LENDER_ORDER = R.lenders;
-const LENDER_NAME  = {AfDB:"African Development Bank", ADB:"Asian Development Bank", WB:"World Bank", AFD:"Agence française de développement", GIZ:"GIZ, for Germany's BMZ", KfW:"KfW Development Bank, for BMZ", BMZ:"BMZ, through NGOs and others", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)"};
-const LENDER_SUB   = {AfDB:"IATI activity files", ADB:"IATI activity files", WB:"IATI activity files", AFD:"IATI activity files", GIZ:"BMZ IATI files", KfW:"BMZ IATI files", BMZ:"BMZ IATI files", EC:R.key==="africa" ? "DG INTPA · DG NEAR · IATI" : "DG INTPA · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal"};
-const LENDER_LAYER = {AfDB:"finance", ADB:"finance", WB:"finance", AFD:"finance", GIZ:"finance", KfW:"finance", BMZ:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei"};
-const LENDER_GLYPH = {AfDB:"finance", ADB:"finance", WB:"finance_wb", AFD:"finance_afd", GIZ:"finance_bmz", KfW:"finance_bmz", BMZ:"finance_bmz", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei"};
+const LENDER_NAME  = {AfDB:"African Development Bank", ADB:"Asian Development Bank", WB:"World Bank", AFD:"Agence française de développement", GIZ:"GIZ, for Germany's BMZ", KfW:"KfW Development Bank, for BMZ", BMZ:"BMZ, through NGOs and others", EC:"European Commission", EIB:"European Investment Bank", CN:"Chinese official lenders", IT:"Piano Mattei (Italy)", GG:"Global Gateway flagships (EU)"};
+const LENDER_SUB   = {AfDB:"IATI activity files", ADB:"IATI activity files", WB:"IATI activity files", AFD:"IATI activity files", GIZ:"BMZ IATI files", KfW:"BMZ IATI files", BMZ:"BMZ IATI files", EC:R.key==="africa" ? "DG INTPA · DG NEAR · IATI" : "DG INTPA · IATI", EIB:"IATI activity file", CN:"AidData · " + CN_SPAN, IT:"Government project portal", GG:"Commission's list · no money"};
+const LENDER_LAYER = {AfDB:"finance", ADB:"finance", WB:"finance", AFD:"finance", GIZ:"finance", KfW:"finance", BMZ:"finance", EC:"eu", EIB:"eu", CN:"china", IT:"mattei", GG:"gateway"};
+const LENDER_GLYPH = {AfDB:"finance", ADB:"finance", WB:"finance_wb", AFD:"finance_afd", GIZ:"finance_bmz", KfW:"finance_bmz", BMZ:"finance_bmz", EC:"eu", EIB:"eu_eib", CN:"china", IT:"mattei", GG:"gateway"};
 const LENDER_FAMILY = R.family;
 const HAS_AFD = R.lenders.includes("AFD");
 /* the BMZ file's three codes: GIZ, KfW and BMZ for every other channel; one glyph for all three */
@@ -911,7 +922,7 @@ const OECD_SECTOR  = {110:"Education",120:"Health",130:"Population and reproduct
 /* the footprint outlines appear from about three times the continent frame */
 const FOOTPRINT_K  = 3;
 /* the colour each layer's glyph takes in the table: a status tone, so the legend stays one palette */
-const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"copper",cables:"approved",china:"operating",eu:"approved",mattei:"under_construction"};
+const LAYER_TONE   = {assets:"operating",finance:"approved",ground:"under_construction",pipelines:"copper",cables:"approved",china:"operating",eu:"approved",mattei:"under_construction",gateway:null};
 const LINE_LAYERS  = ["cables","pipelines","ground"];   /* drawing order: thin works last, on top */
 /* Cluster markers regroups point-like records. Pipelines and submarine cables
    are routes across countries and seas: a donut at their midpoint would say
@@ -924,7 +935,7 @@ const SECTOR_FAM = {road:"transport", rail:"transport", air:"transport"};
 /* the sectors each map has records in, Transport where its three are (filled once the records are read) */
 const SECTORS_ON = {built:new Set(), paid:new Set()};
 const SECTOR_LABEL = {energy:"Energy",transport:"Transport",ict:"ICT",water:"Water",industry:"Industry",trade:"Trade",environment:"Environment",health:"Health",education:"Education",government:"Government buildings",social:"Social infrastructure",agriculture:"Agriculture",road:"Road",rail:"Rail",air:"Airport",other:"Other / multi-sector"};
-const SHORT        = {assets:"GEM", finance:BANK, finance_wb:"World Bank", finance_afd:"AFD", finance_bmz:"BMZ", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", eu_eib:"EIB", mattei:"Piano Mattei"};
+const SHORT        = {assets:"GEM", finance:BANK, finance_wb:"World Bank", finance_afd:"AFD", finance_bmz:"BMZ", ground:"OSM", pipelines:"GEM O&G", cables:"TeleGeography", china:"AidData", eu:"EU", eu_eib:"EIB", mattei:"Piano Mattei", gateway:"Global Gateway"};
 const sectorLabel  = s => SECTOR_LABEL[s] || (s ? s[0].toUpperCase()+s.slice(1) : "Other");
 
 const S = {
@@ -940,7 +951,8 @@ const S = {
   cluster:false,
 };
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const statusColor = s => css("--st-" + (s==="under_construction" ? "construction" : (s||"stalled")));
+/* a record with no stage (the Global Gateway flagships) takes a neutral ink */
+const statusColor = s => s==null ? css("--ink-2") : css("--st-" + (s==="under_construction" ? "construction" : s));
 const toneColor = layer => LAYER_TONE[layer]==="copper" ? css("--copper") : statusColor(LAYER_TONE[layer]);
 const esc = s => String(s??"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const NAMES = DATA.names;
@@ -964,6 +976,7 @@ const CABLES  = inflate("cables",    DATA.cables);
 const CHINA   = inflate("china",     DATA.china);
 const EU      = inflate("eu",        DATA.eu);
 const MATTEI  = inflate("mattei",    DATA.mattei);
+const GATEWAY = inflate("gateway",   DATA.gateway || {cols:[], rows:[]});
 const GROUND  = DATA.ground.map(g => ({
   _layer:"ground", name:g.n, iso:g.iso, status:g.st, sector:g.sec,
   cls:g.cls, wd:g.wd, oid:g.oid, g:g.g,
@@ -1046,6 +1059,16 @@ function unify(){
     place:pm.place, prec:pm.prec,
     text:words(pm.name, pm.name_it, pm.dirs, pm.obj, pm.impl, pm.partners, pm.intl, pm.funds, pm.place, NAMES[pm.iso], ...(pm.isos||[]).map(i=>NAMES[i]), pm.stage, "italy italia piano mattei plan"),
   });
+  /* Global Gateway flagships: the Commission's list, no stage and no amount
+     (status and size empty: a neutral pentagon, one size), at the country's
+     point or the Commission's Africa-wide point */
+  for(const g of GATEWAY) out.push({
+    ref:g, layer:"gateway", lender:"GG", name:g.name||"(untitled flagship)", iso:g.iso||null, isos:g.isos||null,
+    country:g.isos ? countryList(g.isos, g.iso) : (g.iso?(NAMES[g.iso]||g.iso):R.regional), status:null, kind:sectorLabel(g.sector||"other"),
+    sector:g.sector||"other", size:null, unit:"", lon:g.lon, lat:g.lat,
+    place:g.place, prec:g.prec,
+    text:words(g.name, g.desc, g.area, g.type, g.team, g.ms, g.place, g.outside, NAMES[g.iso], ...(g.isos||[]).map(i=>NAMES[i]), g.id, g.iid, "global gateway team europe flagship eu european union commission"),
+  });
   return out;
 }
 const ALL = unify();
@@ -1053,7 +1076,7 @@ const ALL = unify();
 const inCountry = r => !S.country || (r.isos ? r.isos.includes(S.country) : r.iso===S.country);
 /* a finance layer is on while any of its lenders is */
 function syncLayers(){
-  for(const L of ["finance","china","eu","mattei"]) S.layers[L] = LENDER_ORDER.some(k => LENDER_LAYER[k]===L && S.lenders[k]);
+  for(const L of ["finance","china","eu","mattei","gateway"]) S.layers[L] = LENDER_ORDER.some(k => LENDER_LAYER[k]===L && S.lenders[k]);
 }
 /* two maps: Built draws the works, Financed the lenders' records. Each keeps
    its own panels, so switching back finds the other's filters as they were */
@@ -1066,7 +1089,7 @@ const inSector = r => !S.sector || r.sector===S.sector || SECTOR_FAM[r.sector]==
 /* every filter but one, so a panel can count what it would show if its own filter were open */
 const passBut = (r, skip) =>
   (skip==="layer"   || shown(r)) &&
-  (skip==="status"  || statusSet(r).has(r.status)) &&
+  (skip==="status"  || (r.status==null ? statusSet(r).size===STATUS_ORDER.length : statusSet(r).has(r.status))) &&
   (skip==="country" || inCountry(r)) &&
   (skip==="sector"  || inSector(r)) &&
   (!S.q || r.text.includes(S.q));
@@ -1283,7 +1306,7 @@ function draw(){
   /* points: AfDB = squares and the World Bank diamonds, assets = circles sized by capacity, Chinese finance = triangles
      sized by commitment; big first so small stay on top.
      While clustering, the overlay draws them (as donuts or uniform marks). */
-  const pts = S.cluster ? [] : VIS.filter(r => r.layer==="assets" || r.layer==="finance" || r.layer==="china" || r.layer==="eu" || r.layer==="mattei");
+  const pts = S.cluster ? [] : VIS.filter(r => r.layer==="assets" || r.layer==="finance" || r.layer==="china" || r.layer==="eu" || r.layer==="mattei" || r.layer==="gateway");
   pts.sort((a,b) => (b.size||0)-(a.size||0));
   for(const r of pts){
     const x = px(r.lon), y = py(r.lat);
@@ -1314,6 +1337,10 @@ function draw(){
     } else if(r.layer==="mattei"){
       const d = 2.7 + Math.min(3.2, Math.sqrt((r.size||0))/10);   /* a flat-topped hexagon */
       for(let i=0;i<6;i++){ const a=i*Math.PI/3, sx=x+d*Math.cos(a), sy=y+d*Math.sin(a); if(i) ctx.lineTo(sx,sy); else ctx.moveTo(sx,sy); }
+      ctx.closePath();
+    } else if(r.layer==="gateway"){
+      const d = 3.6;   /* a pentagon, one point up, one size: a flagship has no amount */
+      for(let i=0;i<5;i++){ const a=-Math.PI/2+i*2*Math.PI/5, sx=x+d*Math.cos(a), sy=y+d*Math.sin(a); if(i) ctx.lineTo(sx,sy); else ctx.moveTo(sx,sy); }
       ctx.closePath();
     } else {
       const rad = 2.3 + Math.min(9, Math.sqrt((r.size||0))/7.5);
@@ -1361,12 +1388,12 @@ function nearest(mx,my){
   const consider = (d2, thr, r) => { const rel = d2/(thr*thr); if(rel<bestRel){ bestRel=rel; best=r; } };
   /* while clustering, points and traced works live in the overlay (clusterHit) */
   if(!S.cluster) for(const r of VIS){
-    if(r.layer!=="assets" && r.layer!=="finance" && r.layer!=="china" && r.layer!=="eu" && r.layer!=="mattei") continue;
+    if(r.layer!=="assets" && r.layer!=="finance" && r.layer!=="china" && r.layer!=="eu" && r.layer!=="mattei" && r.layer!=="gateway") continue;
     const dx = px(r.lon)-mx, dy = py(r.lat)-my;
     consider(dx*dx+dy*dy, 12, r);
   }
   for(const r of VIS){
-    if(r.layer==="assets" || r.layer==="finance" || r.layer==="eu" || r.layer==="mattei") continue;
+    if(r.layer==="assets" || r.layer==="finance" || r.layer==="eu" || r.layer==="mattei" || r.layer==="gateway") continue;
     if(r.layer==="china"){ if(!r.ref.g || view.k < FOOTPRINT_K) continue; }   /* a drawn footprint answers the pointer */
     else if(S.cluster && clustered(r)) continue;
     if(r.layer==="cables" && r.ref.lps){
@@ -1433,6 +1460,7 @@ const glyph = {
   eu:      col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8.00 1.70L9.59 6.12L14.28 6.26L10.57 9.13L11.88 13.64L8.00 11.00L4.12 13.64L5.43 9.13L1.72 6.26L6.41 6.12Z" fill="${col}"/></svg>`,
   eu_eib:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="${STAR4.fill}" fill="${col}"/></svg>`,
   mattei:  col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M14.3 8L11.15 13.46L4.85 13.46L1.7 8L4.85 2.54L11.15 2.54Z" fill="${col}"/></svg>`,
+  gateway: col => `<svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2L14.09 6.42L11.76 13.58L4.24 13.58L1.91 6.42Z" fill="${col}"/></svg>`,
 };
 /* a record's own glyph: the finance layer's lenders differ by shape */
 const glyphOf = r => (r.layer==="finance" && r.lender==="WB" ? glyph.finance_wb : r.layer==="finance" && r.lender==="AFD" ? glyph.finance_afd
@@ -1469,7 +1497,7 @@ function renderLede(){
   el("lede").innerHTML =
     `What is being built across ${R.name}, and who is paying for it. ${cap(N_DATASETS)} public datasets on one map: power
      plants, pipelines, cables and road, rail and airport works, plus the projects of the ${BANK}, the World
-     Bank, ${HAS_AFD ? "France's AFD, " : ""}${HAS_BMZ ? "Germany's BMZ, " : ""}China${HAS("mattei") ? ", the EU and Italy's Piano Mattei" : " and the EU"}. Charts and a table follow; every figure
+     Bank, ${HAS_AFD ? "France's AFD, " : ""}${HAS_BMZ ? "Germany's BMZ, " : ""}China${HAS("mattei") ? ", the EU and Italy's Piano Mattei" : " and the EU"}${HAS("gateway") ? ", with the EU's Global Gateway flagships beside them" : ""}. Charts and a table follow; every figure
      carries its source.`;
 }
 
@@ -1477,7 +1505,7 @@ function renderLede(){
    single blended "projects" count would double-count an AfDB-financed power
    plant that OSM contributors have also traced. */
 /* the card in the map's corner: what is framed, and how much of it there is */
-const FACT_NOUN = {assets:["power unit","power units"], finance:R.lenders.includes("AFD") ? ["development-finance project","development-finance projects"] : ["bank project","bank projects"], ground:["work","works"], pipelines:["pipeline","pipelines"], cables:["cable","cables"], china:["Chinese-financed project","Chinese-financed projects"], eu:["EU-financed record","EU-financed records"], mattei:["Piano Mattei project","Piano Mattei projects"]};
+const FACT_NOUN = {assets:["power unit","power units"], finance:R.lenders.includes("AFD") ? ["development-finance project","development-finance projects"] : ["bank project","bank projects"], ground:["work","works"], pipelines:["pipeline","pipelines"], cables:["cable","cables"], china:["Chinese-financed project","Chinese-financed projects"], eu:["EU-financed record","EU-financed records"], mattei:["Piano Mattei project","Piano Mattei projects"], gateway:["Global Gateway flagship","Global Gateway flagships"]};
 function renderTitle(){
   const iso = S.country;
   el("maptitle").classList.toggle("is-country", !!iso);
@@ -1498,7 +1526,7 @@ function renderTitle(){
 
 function renderKpis(){
   const by = k => VIS.filter(r => r.layer===k);
-  const A = by("assets"), F = by("finance"), G = by("ground"), P = by("pipelines"), C = by("cables"), N = by("china"), E = by("eu"), M = by("mattei");
+  const A = by("assets"), F = by("finance"), G = by("ground"), P = by("pipelines"), C = by("cables"), N = by("china"), E = by("eu"), M = by("mattei"), GG = by("gateway");
   const cnUsd = N.reduce((a,r)=>a+(r.size||0),0);
   const euEurEib = E.filter(r=>r.ref.pub==="EIB").reduce((a,r)=>a+(r.ref.eur_m||0),0), euEur = E.reduce((a,r)=>a+(r.ref.eur_m||0),0);
   const pmEur = M.reduce((a,r)=>a+(r.ref.eur_m||0),0), pmOn = M.filter(r=>r.status==="under_construction").length;
@@ -1524,6 +1552,7 @@ function renderKpis(){
     ["Chinese finance", "$" + fmt1(cnUsd/1000) + "bn", `${fmt(N.length)} projects ${CN_SPAN} · AidData, ${CN_BASE} USD`],
     ["Commission / EIB", "€" + fmt1((euEur-euEurEib)/1000) + "bn<br>€" + fmt1(euEurEib/1000) + "bn", `${fmt(E.length)} EU-financed records · each institution counted apart`],
     ...(HAS("mattei") ? [["Piano Mattei", "€" + fmt1(pmEur/1000) + "bn", `${fmt(M.length)} projects · ${fmt(pmOn)} ongoing · stated by Italy's portal`]] : []),
+    ...(HAS("gateway") ? [["Global Gateway", fmt(GG.length), "flagships on the Commission's list · no amount or stage published"]] : []),
     S.side==="paid"
       ? ["Disbursing", fmt(VIS.filter(r=>r.status==="under_construction").length), "lenders' records still paying out"]
       : ["Under construction", fmt(VIS.filter(r=>r.status==="under_construction").length), "records across active layers"],
@@ -1612,6 +1641,10 @@ function renderStatuses(){
   };
   row("statuses", S.status, STATUS_LABEL, works);
   row("stages", S.stage, STAGE_LABEL, money);
+  /* the Global Gateway flagships carry no stage: say so under the chips, which do not count them */
+  const ns = (money)["null"] || 0;
+  el("stagenote").hidden = !ns;
+  el("stagenote").textContent = ns ? `${fmt(ns)} Global Gateway ${ns===1 ? "flagship carries" : "flagships carry"} no stage and ${ns===1 ? "shows" : "show"} only while every stage is on` : "";
 }
 
 /* each option counts what picking it would show under the other filters; one
@@ -1654,7 +1687,8 @@ function renderLegend(){
       <div class="lg">${glyph.china(ink)}<span><b>Chinese-financed</b> · sized by $, AidData</span></div>
       <div class="lg">${glyph.eu(ink)}<span><b>European Commission</b> · sized by €</span></div>
       <div class="lg">${glyph.eu_eib(ink)}<span><b>EIB operation</b> · same layer, other institution</span></div>
-<!--__IF:mattei__-->      <div class="lg">${glyph.mattei(ink)}<span><b>Piano Mattei</b> · sized by stated €, Italian Government</span></div><!--__ENDIF__-->`;
+<!--__IF:mattei__-->      <div class="lg">${glyph.mattei(ink)}<span><b>Piano Mattei</b> · sized by stated €, Italian Government</span></div><!--__ENDIF__-->
+<!--__IF:gateway__-->      <div class="lg">${glyph.gateway(statusColor(null))}<span><b>Global Gateway flagship</b> · one size, no stage published</span></div><!--__ENDIF__-->`;
   el("legend").innerHTML = `
     <div class="col">
       <span class="lh">Shape = source</span>${paid ? money : built}
@@ -1855,6 +1889,23 @@ function renderSel(){
     links.push([f.url, "Piano Mattei portal page"]);
     if(f.url_it) links.push([f.url_it, "portal page in Italian"]);
     note = `As the Italian Government's Piano Mattei portal states it. The amount is the portal's figure, which may be the whole project's value or Italy's share; converted at ${esc(DATA.meta.eur_note)} and never added to the lenders' commitments.`;
+  } else if(r.layer==="gateway"){
+    rows.push(["Programme", `Global Gateway <i>· a flagship on the European Commission's list</i>`]);
+    rows.push(["Area", esc(f.area||"—") + ` <i>· the Commission's area of partnership</i>`]);
+    if(f.outside) rows.push(["Also in", esc(f.outside)]);
+    rows.push(["Type", esc(f.type||"—")]);
+    rows.push(["Team Europe", f.team ? esc(f.team) : "not given <i>· no project page</i>"]);
+    rows.push(["Stage", "none published <i>· shown while every stage is selected</i>"]);
+    rows.push(["Amount", "none published <i>· the list attaches no amount to a flagship</i>"]);
+    /* the EU layer's records that name the same works, paired by hand: each institution on its own row */
+    if(f.ec_n) rows.push(["Commission records", num("€"+fmt1(f.ec_m)+"m", `${f.ec_n} record${f.ec_n===1?"":"s"} naming the same works${f.ec_nc ? `, ${f.ec_nc} with no amount yet` : ""}`)]);
+    if(f.eib_n) rows.push(["EIB operations", num("€"+fmt1(f.eib_m)+"m", `${f.eib_n} operation${f.eib_n===1?"":"s"} naming the same works${f.eib_nc ? `, ${f.eib_nc} not counted` : ""}`)]);
+    if(f.ms) rows.push(["Milestones", esc(f.ms) + " <i>· as the page words them, undated</i>"]);
+    rows.push(["Geo precision", f.prec===2 ? "country only <i>· the Commission places a flagship no finer</i>"
+      : `${R.wide} <i>· several countries or none, drawn at the Commission's regional point, ${R.eu_point_where}</i>`]);
+    rows.push(["Commission id", `<span class="num">${esc(f.id)}</span>`]);
+    if(f.url) links.push([f.url, "Commission's flagship page"]);
+    note = `As the European Commission lists it, on its Global Gateway map and the flagship's page. A flagship is a label; the money behind it is in the lenders' records where it is published at all, never on this record.${f.ec_n || f.eib_n ? " The Commission and EIB rows are the EU layer's records naming the same works, paired by hand, each on its own and never added together." : ""}`;
   }
   rows.push(["Coordinates", `<span class="num">${r.lat.toFixed(3)}, ${r.lon.toFixed(3)}</span>`]);
 
@@ -2398,13 +2449,14 @@ el("scrim").onclick = () => railToggle(false);
    hit-testing; Leaflet only places the icons. */
 let LM = null, CG = null, lview = null, lpending = false, lt = null;
 const lzoom = () => Math.log2(base*view.k*180/256);
-const STATUS_VAR = s => "--st-" + (s==="under_construction" ? "construction" : s);
+const STATUS_VAR = s => s==null || s==="null" ? "--ink-2" : "--st-" + (s==="under_construction" ? "construction" : s);
 const donutSize = n => Math.round(Math.min(56, 30 + 8*Math.log10(Math.max(1, n))));
 const shortN = n => n>=10000 ? Math.round(n/1000)+"k" : n>=1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"k" : String(n);
 /* arcs of a ring, one per status present, in status order from 12 o'clock */
 function donutArcs(by, n, c, r, gap){
   const C = 2*Math.PI*r; let off = 0, out = "";
-  for(const s of STATUS_ORDER.filter(s=>by[s])){
+  /* "null": records with no stage (the Global Gateway flagships), last, in a neutral ink */
+  for(const s of [...STATUS_ORDER, "null"].filter(s=>by[s])){
     const len = C*by[s]/n, on = Math.max(0, len-gap);
     out += `<circle cx="${c}" cy="${c}" r="${r}" style="stroke:var(${STATUS_VAR(s)})" stroke-dasharray="${on.toFixed(2)} ${(C-on).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;
     off += len;
@@ -2458,6 +2510,8 @@ function iconFor(r){
     html = r.status==="stalled"
       ? `<svg class="hex" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.9 8L10.95 13.11L5.05 13.11L2.1 8L5.05 2.89L10.95 2.89Z" fill="none" stroke="${v}" stroke-width="1.5" stroke-linejoin="round"/></svg>`
       : `<svg class="hex" viewBox="0 0 16 16" aria-hidden="true"><path d="M14.9 8L11.45 13.98L4.55 13.98L1.1 8L4.55 2.02L11.45 2.02Z" fill="${v}" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
+  } else if(r.layer==="gateway"){
+    html = `<svg class="hex" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2L14.85 6.18L12.23 14.24L3.77 14.24L1.15 6.18Z" fill="var(--ink-2)" stroke="var(--surface)" stroke-width="1" stroke-linejoin="round" opacity=".92"/></svg>`;
   } else html = `<i class="pm ${r.layer} ${r.status}${r.lender==="WB"?" wb":""}"></i>`;
   return (ICONS[k] = L.divIcon({className:"pmw", iconSize:[14,14], html}));
 }
@@ -2553,7 +2607,7 @@ function clusterClick(m){
   const kFit = Math.min((W-140)/(Math.max(dw,1e-6)*base), (H-140)/(Math.max(dh,1e-6)*base));
   animateTo((b.getWest()+b.getEast())/2, (b.getSouth()+b.getNorth())/2, Math.min(KMAX, Math.max(kFit, view.k*2)));
 }
-const SRC_ORDER = ["assets","finance","finance_wb","finance_afd","finance_bmz","ground","pipelines","cables","china","eu","eu_eib","mattei"]
+const SRC_ORDER = ["assets","finance","finance_wb","finance_afd","finance_bmz","ground","pipelines","cables","china","eu","eu_eib","mattei","gateway"]
   .filter(k => HAS(k) || k==="finance_wb" || k==="eu_eib" || (k==="finance_afd" && HAS_AFD) || (k==="finance_bmz" && HAS_BMZ));
 const srcKey = r => r.layer==="finance" && r.lender==="WB" ? "finance_wb" : r.layer==="finance" && r.lender==="AFD" ? "finance_afd"
   : r.layer==="finance" && DE_LN.has(r.lender) ? "finance_bmz"
@@ -2565,7 +2619,9 @@ function clusterTip(c){
   /* the works' statuses, then the lenders' stages: a closed loan is not an operating plant */
   for(const m of kids){ const k = (m.rec.lender ? "m:" : "g:") + m.rec.status; by[k] = (by[k]||0)+1; byL[srcKey(m.rec)]++; }
   const rows = [["g:",STATUS_LABEL],["m:",STAGE_LABEL]].flatMap(([p,lab]) => STATUS_ORDER.filter(s=>by[p+s]).map(s =>
-    `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${lab[s]}</span><b>${fmt(by[p+s])}</b></div>`)).join("");
+    `<div class="tr"><span><i class="sw" style="background:${statusColor(s)}"></i>${lab[s]}</span><b>${fmt(by[p+s])}</b></div>`)).join("")
+    /* the Global Gateway flagships carry no stage */
+    + (by["m:null"] ? `<div class="tr"><span><i class="sw" style="background:${statusColor(null)}"></i>No stage published</span><b>${fmt(by["m:null"])}</b></div>` : "");
   const src = SRC_ORDER.filter(k=>byL[k]).map(k => `${fmt(byL[k])} ${SRC_SHORT[k]}`).join(" · ");
   return `<div class="tn">${fmt(kids.length)} records</div>${rows}<div class="tr"><span>Source</span><b>${src}</b></div><div class="tr hint">Click to zoom in</div>`;
 }

@@ -39,7 +39,7 @@ OUT = ROOT / ("map.html" if REGION.key == "africa" else f"map.{REGION.key}.html"
 from build_dashboard import (  # noqa: E402
     NAME_TO_ISO, ISO_TO_NAME, DAC_SECTOR, SDR_USD,
     build_lookup, locate, load, build_pipelines, build_cables, build_china, build_eu, eu_summary,
-    build_mattei, mattei_summary,
+    build_mattei, mattei_summary, build_gateway, gateway_summary,
 )
 from fetch_basemap import dp  # noqa: E402
 from shared import (  # noqa: E402
@@ -297,6 +297,12 @@ def main():
         mattei = build_mattei(idx, rnd=r)
         print(f"   {mattei_summary(mattei)}")
 
+    gateway = None
+    if "gateway" in REGION.layers:
+        print("gateway …")
+        gateway = build_gateway(idx, rnd=r)
+        print(f"   {gateway_summary(gateway)}")
+
     names = {}
     for c in basemap["countries"]:
         if c["af"] and c["iso"]:
@@ -319,6 +325,7 @@ def main():
         "china": china,
         "eu": eu,
         "mattei": mattei,
+        "gateway": gateway,
     }
     blob = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
     html = inline_vendor(brand_assets(TEMPLATE.read_text(), here="map"))
@@ -330,13 +337,13 @@ def main():
     OUT.write_text(html.replace("/*__PAYLOAD__*/", blob))
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
-    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei"):
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei", "gateway"):
         if payload.get(k) is not None:
             print(f"   {k:8s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
 
     # 2. GitHub Pages build: complete document, payload fetched at runtime by a
     #    module script (top-level await), with a loading state until it lands.
-    n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables, china, eu, mattei) if x)
+    n_records = sum(len(x["rows"]) for x in (assets, finance, ground, pipelines, cables, china, eu, mattei, gateway) if x)
     # The data URL carries a digest of the payload. Pages and CDN caches keep
     # index.html and map.json for ten minutes each, independently; without
     # this a freshly deployed page can load the previous deploy's data and
@@ -367,7 +374,7 @@ async function loadPayload(){{
     pages = pages.replace(marker, '<script type="module">\nconst DATA = await loadPayload();', 1)
     DOCS.mkdir(parents=True, exist_ok=True)
     (DOCS / "data").mkdir(exist_ok=True)
-    facts = site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei)
+    facts = site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei, gateway=gateway)
     (DOCS / "index.html").write_text(wrap_document(
         pages, title=SITE_NAME, path="", kind="map", facts=facts,
         description=f"Interactive open-data map of infrastructure across {REGION.name}: power plants and "
@@ -378,7 +385,8 @@ async function loadPayload(){{
                        if any(ln == "AFD" for _, ln in FINANCE_FILES) else "and World Bank projects, ") +
                     f"Chinese-financed infrastructure {china_span()[0]}–{china_span()[1]} (AidData), "
                     "European Union finance (European Commission and EIB), "
-                    + ("Italy's Piano Mattei projects, " if mattei is not None else "") +
+                    + ("Italy's Piano Mattei projects, " if mattei is not None else "")
+                    + ("the European Commission's Global Gateway flagship projects, " if gateway is not None else "") +
                     "construction works traced in OpenStreetMap and submarine cables "
                     "(TeleGeography). Filter by country, status and sector."))
     write_site_index(facts)

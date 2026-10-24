@@ -19,5 +19,7 @@ data/.aiddata_cache/
 /dashboard.*.html
 # USGS MCS PDF and other downloads for the minerals page (fetch_minerals.py refills it)
 data/.minerals_cache/
+# the Commission's Global Gateway map, tracker and project pages (build_global_gateway.py --fetch refills it)
+data/.gg_cache/
 # USGS Africa mineral industries GIS (2021), downloaded by hand from ScienceBase (~630 MB; fetch_minerals.py facilities reads it)
 data/Africa_GIS*.zip

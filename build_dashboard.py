@@ -662,6 +662,45 @@ def mattei_summary(m):
             f"({', '.join(f'{v} {k.lower()}' for k, v in sorted(by.items(), key=lambda kv: -kv[1]))})")
 
 
+# The EU's Global Gateway flagships, shared with build_map.py like the Piano
+# Mattei: one point per flagship as build_global_gateway.py writes it (the
+# country's interior point, or the Commission's Africa-wide point for a
+# flagship of several countries or none). The Commission publishes no stage and
+# no amount, so status and money stay empty; the countries, the area of
+# partnership, the Team Europe members and the milestones go to the card, and
+# so do the EU layer's records that name the same works, as
+# build_global_gateway.py pairs them by hand: the Commission's and the EIB's
+# apart (count, euros counted, records not counted), never summed.
+def build_gateway(idx, rnd=r):
+    rows = []
+    for f in load("global_gateway.geojson"):
+        p = f["properties"]
+        lon, lat = f["geometry"]["coordinates"]
+        cts = p.get("countries") or []
+        rows.append([
+            (p.get("name") or "").strip()[:140] or None, p.get("country") or "",
+            rnd(lon), rnd(lat), p.get("sector") or "other", p.get("geo_precision"),
+            (p.get("location_name") or "")[:48] or None, p.get("project_id"), p.get("initiative_id"),
+            p.get("area"), p.get("initiative_type"), " · ".join(p.get("team_europe") or []) or None,
+            " · ".join(m[:160] for m in (p.get("milestones") or [])[:4]) or None,
+            p.get("project_url"), cts if len(cts) > 1 else None,
+            (p.get("description") or "")[:360] or None, ", ".join(p.get("countries_outside") or []) or None,
+            *[v for k in ("paired_ec", "paired_eib") for v in
+              ((p[k]["records"], p[k]["eur_m"], p[k]["not_counted"]) if p.get(k) else (None, None, None))],
+        ])
+    return {"cols": ["name", "iso", "lon", "lat", "sector", "prec", "place", "id", "iid", "area", "type",
+                     "team", "ms", "url", "isos", "desc", "outside",
+                     "ec_n", "ec_m", "ec_nc", "eib_n", "eib_m", "eib_nc"],
+            "rows": rows}
+
+
+def gateway_summary(g):
+    """One line for the build log: flagships, and how many are drawn at a country's point."""
+    c = g["cols"]
+    one = sum(1 for x in g["rows"] if x[c.index("prec")] == 2)
+    return f"{len(g['rows']):,} Global Gateway flagships ({one} at a country's point, {len(g['rows']) - one} Africa-wide)"
+
+
 # ------------------------------------------------------------------- build
 
 def main():
@@ -713,6 +752,12 @@ def main():
         mattei = build_mattei(idx)
         print(f"   {mattei_summary(mattei)}")
 
+    gateway = None
+    if "gateway" in REGION.layers:
+        print("gateway …")
+        gateway = build_gateway(idx)
+        print(f"   {gateway_summary(gateway)}")
+
     labels = build_labels()
     print(f"   {len(labels):,} country labels")
 
@@ -749,6 +794,7 @@ def main():
         "china": china,
         "eu": eu,
         "mattei": mattei,
+        "gateway": gateway,
         # country-year debt by creditor for the "Who it owes" box; None until
         # fetch_debt.py has run, and for an edition without a debt section
         # (the box then hides itself)
@@ -763,7 +809,7 @@ def main():
     OUT.write_text(page)
     kb = OUT.stat().st_size / 1024
     print(f"\npayload {len(blob.encode()) / 1024:.0f} KB → {OUT.name} {kb:.0f} KB")
-    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei"):
+    for k in ("basemap", "assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei", "gateway"):
         if payload.get(k) is not None:
             print(f"   {k:9s} {len(json.dumps(payload[k], separators=(',', ':'), ensure_ascii=False).encode()) / 1024:6.0f} KB")
     if kb > 15000:
@@ -773,7 +819,7 @@ def main():
     DOCS.mkdir(exist_ok=True)
     (DOCS / "dashboard.html").write_text(wrap_document(
         page, title=SITE_NAME, path="dashboard.html", kind="dashboard",
-        facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei),
+        facts=site_facts(assets, finance, ground, pipelines, cables, china, eu, mattei, gateway=gateway),
         description=f"Dashboard of announced, approved and ongoing infrastructure in {REGION.name}: "
                     f"power plants and oil and gas pipelines (Global Energy Monitor), {REGION.bank['name']}, "
                     + ("World Bank, French development agency (AFD) and German development ministry (BMZ) finance, "
@@ -782,7 +828,8 @@ def main():
                        if any(ln == "AFD" for _, ln in FINANCE_FILES) else "and World Bank finance, ") +
                     "Chinese-financed projects "
                     f"{china_span()[0]}–{china_span()[1]} (AidData), European Union finance (European Commission and EIB), "
-                    + ("Italy's Piano Mattei projects, " if mattei is not None else "") +
+                    + ("Italy's Piano Mattei projects, " if mattei is not None else "")
+                    + ("the European Commission's Global Gateway flagship projects, " if gateway is not None else "") +
                     "construction works from OpenStreetMap and submarine cables (TeleGeography), "
                     "with charts by country and sector and a sortable project table."))
     print(f"→ {(DOCS / 'dashboard.html').relative_to(ROOT)}")

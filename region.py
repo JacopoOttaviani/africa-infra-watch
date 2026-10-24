@@ -25,8 +25,8 @@ What a region holds, and who reads it:
                 files and conventions), the World Bank's country files, the
                 Commission's country and regional files, the Commission's point
                 for region-wide programmes
-  layers        which of the site's layers the edition has (no Piano Mattei
-                outside Africa, no debt box, no deep dives)
+  layers        which of the site's layers the edition has (no Piano Mattei or
+                Global Gateway flagships outside Africa, no debt box, no deep dives)
   words         the name, adjective and kicker the pages print
 
 The Africa literals here are the ones the scripts carried until the Southeast
@@ -213,7 +213,7 @@ AFRICA = Region(
     eu_region_point=(17.7578122, 11.5024338),   # lon, lat: the Commission's point for Africa-wide activities
     eu_point_where="in Chad",
     aiddata_regions={"Africa"}, aiddata_by_iso3=False,
-    layers=("assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei"),
+    layers=("assets", "finance", "ground", "pipelines", "cables", "china", "eu", "mattei", "gateway"),
     debt=True, noindex=False,
 )
 
@@ -330,7 +330,8 @@ def region_payload(region=REGION):
     afd = bool(getattr(region, "afd_files", None))
     bmz = bool(getattr(region, "bmz_files", None))
     lenders = ([bank["code"], "WB"] + (["AFD"] if afd else []) + (list(BMZ_LENDERS) if bmz else [])
-               + ["EC", "EIB", "CN"] + (["IT"] if "mattei" in region.layers else []))
+               + ["EC", "EIB", "CN"] + (["IT"] if "mattei" in region.layers else [])
+               + (["GG"] if "gateway" in region.layers else []))
     family = [["Multilateral banks", [bank["code"], "WB"]], ["European Union", ["EC", "EIB"]], ["China", ["CN"]]]
     if afd:
         family.append(["France", ["AFD"]])
@@ -338,6 +339,9 @@ def region_payload(region=REGION):
         family.append(["Germany", list(BMZ_LENDERS)])
     if "mattei" in region.layers:
         family.append(["Italy", ["IT"]])
+    # the Commission's flagship list: no money, so a family of its own beside the EU's lenders
+    if "gateway" in region.layers:
+        family.append(["Global Gateway", ["GG"]])
     return {
         "key": region.key, "name": region.name, "adj": region.adj, "kicker": region.kicker,
         "regional": region.regional_label, "landings": region.landings_label, "wide": region.wide,

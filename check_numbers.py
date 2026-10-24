@@ -101,7 +101,9 @@ def main():
     section("1. data/*.geojson against data/meta.json")
     for stem, fs in feats.items():
         k = key_of[stem]
-        check(f"{stem}: features == meta.{k}.records", len(fs), meta[k]["records"])
+        # the Global Gateway list keeps its facts in its own file, not in meta.json
+        recs = shared.gateway_meta()["records"] if k == "gateway" else meta[k]["records"]
+        check(f"{stem}: features == {'its own meta' if k == 'gateway' else 'meta.' + k}.records", len(fs), recs)
     for stem, k in (("iati_afdb_finance", "finance"), ("iati_worldbank_finance", "finance_wb"),
                     ("iati_afd_finance", "finance_afd"), ("iati_bmz_finance", "finance_bmz")):
         check(f"{stem}: distinct iati_id == meta.{k}.activities",
@@ -229,11 +231,36 @@ def main():
           (shared.SDR_NOTE, shared.EUR_NOTE))
     for part, src in (("eu_meta", eu), ("mattei_meta", pm), ("china_left_out", ch)):
         check(f"map: {part} == meta", mp["meta"][part], {k: src.get(k) for k in mp["meta"][part]})
+    # the Global Gateway list keeps its count in its own file (build_global_gateway.py), not in meta.json
+    if mp.get("gateway") is not None:
+        gm = shared.gateway_meta()
+        gw_rows = rows(mp["gateway"])[0]
+        check("map: gateway rows == global_gateway.geojson features", len(gw_rows), gm["records"])
+        check("map: gateway_meta == shared.gateway_meta()", mp["meta"]["gateway_meta"],
+              {k: gm.get(k) for k in mp["meta"]["gateway_meta"]})
+        gc = rows(mp["gateway"])[1]
+        check("gateway: a row at the Africa-wide point for every flagship of several countries or none",
+              sum(1 for x in gw_rows if x[gc.index("prec")] == 3), gm["regional"])
+        # the hand pairs the data file carries are the ones MATCHES / EIB_MATCHES give against today's EU layer
+        import build_global_gateway as GG
+        grecs, _ = GG.load()
+        gp = GG.matched(grecs, GG.eu_layer())
+        stamped = {f["properties"]["project_id"]: sorted(i for k in ("paired_ec", "paired_eib")
+                                                         for i in ((f["properties"].get(k) or {}).get("iati_ids") or []))
+                   for f in feats["global_gateway"]}
+        check("gateway: paired records in the data file == the hand-kept pairs now",
+              {k: v for k, v in stamped.items() if v}, {k: sorted(r["iati_id"] for r in v) for k, v in gp.items()})
+        check("gateway: map rows' Commission and EIB euros == the data file's",
+              (round(sum(x[gc.index("ec_m")] or 0 for x in gw_rows), 1), round(sum(x[gc.index("eib_m")] or 0 for x in gw_rows), 1)),
+              (round(sum((f["properties"].get("paired_ec") or {}).get("eur_m") or 0 for f in feats["global_gateway"]), 1),
+               round(sum((f["properties"].get("paired_eib") or {}).get("eur_m") or 0 for f in feats["global_gateway"]), 1)))
 
     counts = {"assets": len(rows(mp["assets"])[0]), "finance": ln["AfDB"], "finance_wb": ln["WB"], "finance_afd": ln["AFD"],
               "finance_bmz": bmz_rows, "ground": len(rows(mp["ground"])[0])}
     for k in ("pipelines", "cables", "china", "eu", "mattei"):
         counts[k] = len(rows(mp[k])[0])
+    if mp.get("gateway") is not None:
+        counts["gateway"] = len(rows(mp["gateway"])[0])
 
     # ------------------------------------------------------------------
     section("4. every other build ships the same records")
@@ -252,6 +279,8 @@ def main():
                "finance_bmz": lnx["GIZ"] + lnx["KfW"] + lnx["BMZ"], "ground": len(rows(p["ground"])[0])}
         for k in ("pipelines", "cables", "china", "eu", "mattei"):
             got[k] = len(rows(p[k])[0]) if k in p else None
+        if "gateway" in counts:
+            got["gateway"] = len(rows(p["gateway"])[0]) if p.get("gateway") else None
         check(f"{label}: layer counts == map payload", got, counts)
         srcs = (p.get("meta") or {}).get("sources")
         if srcs is not None:
@@ -278,6 +307,7 @@ def main():
         (r"(\d[\d,]*) infrastructure projects financed by Chinese", counts["china"]),
         (r"(\d[\d,]*) infrastructure projects financed by the European Union", counts["eu"]),
         (r"the (\d[\d,]*) projects of Italy", counts["mattei"]),
+        (r"the (\d[\d,]*) Global Gateway flagship projects", counts.get("gateway")),
         (r"about (\d[\d,]*) GW of generating", round(total("assets", "mw") / 1000)),
         (r"USD (\d[\d,.]*) billion of AfDB commitments",
          round(sum((u or 0) for u, l in zip(usd, lns) if l == "AfDB") / 1000, 1)),

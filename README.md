@@ -26,13 +26,15 @@ hand about twice a year; the header of each page says when.
 The map is the map-first view: a full-screen Web Mercator canvas over a Natural
 Earth 1:10m basemap (the whole world's coastlines and borders, with provinces,
 rivers, lakes and cities around Africa), with
-the eight data layers drawn as circles (power units, sized by MW), squares,
+the nine data layers drawn as circles (power units, sized by MW), squares,
 diamonds, crosses and inverted triangles (AfDB, World Bank, AFD and BMZ projects, sized by commitment), triangles
 (Chinese-financed projects from AidData, 2000–2023, sized by commitment, with
 the works' OpenStreetMap footprint outlined from country zoom in), five- and
 four-pointed stars (EU-financed records: European Commission contracts and EIB
 operations, sized by commitment), hexagons (the projects of Italy's Piano Mattei, sized by
-the amount the Government's portal states), thin lines
+the amount the Government's portal states), pentagons (the EU's Global Gateway
+flagships, one size and a neutral colour, since the Commission publishes no amount or
+stage), thin lines
 (construction ways traced in OpenStreetMap), haloed lines (oil and gas pipeline
 routes) and lines ending in dots (submarine cables, dots at their African
 landing points). Filters, a viewport summary, a "largest in view" list, per-record
@@ -70,7 +72,7 @@ figures are computed from the same payload the map draws, so they cannot drift.
 The dashboard is the page-first view of the same data, in the same frame: the
 map's left rail (brand, lede, data-as-of line, view tabs, search, Layers, Status,
 Narrow, and a Selection panel in place of the map's lists) beside a scrolling
-column of KPIs, a smaller equirectangular map of all eight layers over Natural
+column of KPIs, a smaller equirectangular map of all nine layers over Natural
 Earth 1:110m, charts by country and sector, and a sortable table. The rail
 becomes a drawer below 880 px on both pages. Pipeline and cable routes are
 thinned harder for the dashboard and clipped to a window around its frame at
@@ -83,15 +85,16 @@ bloc (twelve so far: Russia, Turkey, Italy, China, the EU, the United States, Ge
 
 ## Sources
 
-Eleven public datasets in eight layers, deliberately kept apart because they share no
+Thirteen public datasets in nine layers, deliberately kept apart because they share no
 project identifier. Summing across them double-counts. Both pages show the same
-eight layers over the same records; the finance layer holds four lenders on each,
+nine layers over the same records; the finance layer holds four lenders on each,
 drawn as squares (AfDB), diamonds (World Bank), crosses (AFD) and inverted
 triangles (Germany's BMZ, split by GIZ, KfW and other channels; AFD and BMZ in
 the Africa edition only), the EU finance layer holds
 the European Commission and the European Investment Bank, both drawn as stars,
-and the Piano Mattei layer is the Italian Government's own project list, drawn
-as hexagons.
+the Piano Mattei layer is the Italian Government's own project list, drawn
+as hexagons, and the Global Gateway layer is the European Commission's own list
+of its flagships, drawn as pentagons.
 
 | Layer | Source | Records | Answers |
 |---|---|---|---|
@@ -106,6 +109,7 @@ as hexagons.
 | Chinese finance | AidData, China's Global Loans and Grants Dataset 1.0, located with GCDF 3.0 + Geospatial GCDF 3.0 | 2,487 projects | what Chinese official lenders committed to infrastructure 2000–2023, where, on what terms, what got built |
 | EU finance | European Commission (DG INTPA, DG NEAR), IATI 2.03 activity files (61 African country and regional files) + European Investment Bank, IATI 2.02 global activity file | 2,008 records | what the EU's own institutions have contracted and signed for infrastructure, through whom, and how much is paid out |
 | Piano Mattei | Italian Government (Presidency of the Council of Ministers), Piano Mattei per l'Africa project portal, 76 project pages in Italian and English | 76 projects | what Italy counts under its Mattei Plan, where, at what stage, through whom, and for how much as the Government states it |
+| Global Gateway | European Commission, the data file behind the map on its Global Gateway page + 119 flagship pages | 133 flagships | which projects the EU puts forward as Global Gateway flagships, in which countries and areas, and which Team Europe members it names behind them (no amount, no stage) |
 
 The two line layers and the World Bank lender were added in September 2026
 (`fetch_sources.py pipes cables wb`), the Chinese finance layer on
@@ -265,6 +269,36 @@ a site. The 18 partner countries are the nine pilots of 2024 (Algeria, Côte
 d'Ivoire, Egypt, Ethiopia, Kenya, Morocco, Mozambique, Republic of the Congo,
 Tunisia), the five added in 2025 (Angola, Ghana, Mauritania, Senegal, Tanzania)
 and the four of 2026 (DR Congo, Gabon, Rwanda, Zambia).
+
+**The Global Gateway layer** (2026-10-24, Africa only) is the European
+Commission's own list of its Global Gateway flagships, read by
+`build_global_gateway.py --fetch`: the data file behind the map on the
+Commission's Global Gateway page (a Europa webtools widget; identifier, title,
+scope, area of partnership, a sentence and a page link per flagship, listed
+under each country it names) and each flagship's page on
+international-partnerships.ec.europa.eu ("Key information": type, countries,
+Team Europe members involved, initiative id; and its milestones), © European
+Union, CC BY 4.0. One record per Commission identifier: 133 flagships in 37
+countries. The Commission publishes **no amount and no stage**, so the records
+carry neither: they are drawn as one-size pentagons in a neutral ink, add to no
+total, and pass the Financed map's stage filter only while every stage is
+selected (`passBut` in both templates; a cluster's tooltip counts them as "No
+stage published"). They join the lender filter as "Global Gateway flagships
+(EU)" (`ln=GG`, layer key `w`), in a "Global Gateway" family of their own,
+because the EU family's tiles sum the Commission's and the EIB's euros. Location
+is the country's interior point for a one-country flagship and, for several
+countries or none, the Commission's Africa-wide point in Chad that the EU layer
+uses for regional programmes. The map's sector comes from the Commission's area
+of partnership, with the "climate and energy" flagships that are water,
+conservation, farming or raw materials set by hand (`SECTOR_FIX`). The fetch
+keeps its facts in the layer's own file (`meta` in
+`data/global_gateway.geojson`, read by `shared.gateway_meta()`), not in
+meta.json, and its downloads in `data/.gg_cache/` (the Commission's site
+answers bursts with HTTP 429, so pages are read one every few seconds).
+The deep dive `docs/global-gateway/` (in the menu since 2026-10-24) reads
+the same file and pairs flagships by hand with the EU layer's records, the
+Commission's (`MATCHES`) and the EIB's (`EIB_MATCHES`) apart; the pairs are
+written into the data file (`paired_ec`, `paired_eib`) for the map's cards.
 Status vocabulary for them: GEM `proposed` is *announced*, `construction`, `operating`
 and `shelved`/`cancelled`/`idle` as *stalled*; TeleGeography's *in service* is
 *operating*, and a *planned* cable is *under construction* when its ready-for-service
@@ -322,7 +356,7 @@ every page.
 **Menu bar and footer.** Every page carries the same menu bar
 (`shared.site_nav`): Map, Dashboard, then the deep dives (the themes by name,
 from `DEEP_THEMES` with the short words in `DEEP_SHORT`: Debt, Compare,
-Corridors; then a **Lender profiles** dropdown, single countries apart from
+Corridors, Global Gateway; then a **Lender profiles** dropdown, single countries apart from
 groups of countries, `DONOR_BLOCS`), then Methodology and a LinkedIn-blue
 **Contact me** (the author's LinkedIn, in a new tab). The dropdown is named
 apart from the rail's Lenders filter on purpose: the filter narrows the map,
@@ -727,8 +761,8 @@ Two outputs from one template, because they run in different places:
 
 - `map.html` / `dashboard.html` — **artifact builds**, payload inlined. The
   Claude publishing sandbox blocks runtime requests to any host, so there is no
-  tile server and no `fetch()`; everything ships inside the page (9.2 MB and
-  4.5 MB; the ceiling is 16 MB).
+  tile server and no `fetch()`; everything ships inside the page (10.1 MB and
+  5.3 MB; the ceiling is 16 MB).
 - `docs/` — the **site build** for GitHub Pages. `index.html` is a complete
   HTML document (doctype, head, favicon, social tags) that loads
   `data/map.json` at runtime via a module script with a loading state, so the
@@ -1127,14 +1161,20 @@ These each cost real time to find. They are not in any of the upstream docs.
   only what already exists, so it cannot answer "announced" or "ongoing".
 - **World Bank IATI files** were evaluated on 2026-09-18 and added the same
   day as the second lender in the finance layer (see above).
-- **The EU's Global Gateway flagship list** is a political label on a PDF, not a
-  dataset: no identifiers, amounts or coordinates. The contracts and loans
-  beneath it are what the Commission and the EIB publish to IATI, which is the
-  EU finance layer added on 2026-10-02. Italy's Piano Mattei is a political
-  label too, but its portal is a dataset in all but format: one page per
-  project with a stable slug, countries, implementer, funding source, amount
-  and stage, which is why it is a layer (2026-10-07) and the Global Gateway
-  list is not.
+- **The EU's Global Gateway flagship list** is a political label, not a
+  money record: the contracts and loans beneath it are what the Commission and
+  the EIB publish to IATI, which is the EU finance layer added on 2026-10-02.
+  It was first seen as a PDF with no identifiers; since then (checked
+  2026-10-24) the map on the Commission's Global Gateway page reads a data
+  file that gives every flagship an identifier, its countries, an area of
+  partnership and a page naming the Team Europe members involved, but still
+  no amount, no stage and no point finer than a country. Italy's Piano Mattei
+  portal states an amount and a stage per project; the Global Gateway list
+  states neither, and became a layer on 2026-10-24 all the same, drawn as a
+  list (one size, no stage) rather than as money; see "The Global Gateway
+  layer" above. Its deep dive, `build_global_gateway.py` →
+  docs/global-gateway/, pairs its flagships by hand with the EU layer's
+  records where both name the same works.
 - **Italy's own IATI files** (AICS; the registry has no Foreign Ministry or
   Cassa Depositi publisher, and its `cdp` is CDP Worldwide) were not joined
   to the Piano Mattei layer, and are read only on the Italy profile (2026-10-19). They carry Italy's whole cooperation portfolio,
