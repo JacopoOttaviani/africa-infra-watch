@@ -725,7 +725,6 @@ const NUM_WORD = {7:"seven", 8:"eight", 9:"nine", 10:"ten", 11:"eleven", 12:"twe
 /* one public dataset per source card, and the EU card is two (Commission and EIB) */
 const N_DATASETS = NUM_WORD[DATA.meta.sources.length + 1] || String(DATA.meta.sources.length + 1);
 const N_LAYERS = NUM_WORD[R.layers.length] || String(R.layers.length);
-const cap = s => s[0].toUpperCase() + s.slice(1);
 
 /* ================= vocabulary ================= */
 const STATUS_ORDER = ["announced","approved","under_construction","operating","stalled"];
@@ -1576,9 +1575,7 @@ function renderLede(){
     `<span title="${esc(s.name)}: ${esc(s.detail)}"><em>${SHORT[s.k]}</em> <b>${esc(s.fresh)}</b></span>`).join(" · ")
     + ` · <span title="Built ${esc(DATA.meta.built)}">refreshed twice a year</span>`;
   el("lede").innerHTML =
-    `What is being built across ${R.name}, and who is paying for it. ${cap(N_DATASETS)} public datasets on two maps. Built: power
-     plants, pipelines, cables and road, rail and airport works. Financed: the projects of the ${BANK}, the World
-     Bank, ${HAS_AFD ? "France's AFD, " : ""}${HAS_BMZ ? "Germany's BMZ, " : ""}China${HAS("mattei") ? ", the EU and Italy's Piano Mattei" : " and the EU"}${HAS("gateway") ? ", with the EU's Global Gateway flagships beside them" : ""}. Click a marker for its record and source.`;
+    `What is being built across ${R.name}, and who is paying for it. Click a marker for its record and source.`;
 }
 
 /* Each panel counts what it would show with its own filter open: the same
