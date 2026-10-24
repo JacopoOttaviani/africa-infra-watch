@@ -341,9 +341,9 @@ LMENU_CSS = """
   .sn-dd .lm-car{width:11px;height:11px;margin:0 -3px 0 -3px;transition:transform .15s}
   .sn-dd[open] .lm-car{transform:rotate(180deg)}
   .sn-cur{font-weight:500;opacity:.72}
-  /* Contact me: the bar's one filled item, in LinkedIn's blue, with the footer button's
-     shine and logo flip (lishine, liflip) */
-  .sn-a.sn-contact{position:relative;margin-left:4px;overflow:hidden;isolation:isolate;background:#0A66C2;color:#fff}
+  /* Contact me: LinkedIn's logo alone, the bar's one filled item, in LinkedIn's blue, with
+     the footer button's shine and logo flip (lishine, liflip) */
+  .sn-a.sn-contact{position:relative;margin-left:4px;padding:0 7px;overflow:hidden;isolation:isolate;background:#0A66C2;color:#fff}
   .sn-a.sn-contact::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-130%)}
   .sn-a.sn-contact svg{stroke:none;overflow:visible}
   .sn-a.sn-contact:hover,.sn-a.sn-contact:focus-visible{background:#0B74DB;color:#fff}
@@ -364,11 +364,11 @@ LMENU_CSS = """
   .snav:not(.sn-app) .sn-k{display:none}
   @media (max-width:1100px){.snav:not(.sn-app) .sn-t{display:none}.snav:not(.sn-app) .sn-more{display:block}}
   @media (max-width:1000px){
-    .snav:not(.sn-app) .sn-x,.snav:not(.sn-app) .sn-ml,.snav:not(.sn-app) .sn-meth .sn-l,.snav:not(.sn-app) .sn-contact .sn-l{display:none}
+    .snav:not(.sn-app) .sn-x,.snav:not(.sn-app) .sn-ml,.snav:not(.sn-app) .sn-meth .sn-l{display:none}
     .snav:not(.sn-app) .sn-ms{display:inline-flex}
     .snav:not(.sn-app) .sn-meth .sn-ico{display:block}
     .snav:not(.sn-app) .lm-site{display:grid}
-    .snav:not(.sn-app) .sn-meth,.snav:not(.sn-app) .sn-contact{padding:0 7px}
+    .snav:not(.sn-app) .sn-meth{padding:0 7px}
     .snav:not(.sn-app) .sn-more.cur>.sn-a{background:none;color:var(--ink)}
     .snav:not(.sn-app) .sn-more.cur[open]>.sn-a{background:var(--surface-2)}
   }
@@ -376,11 +376,11 @@ LMENU_CSS = """
   @media (max-width:1533px){.snav.sn-app .sn-k{display:none}}
   @media (max-width:1453px){.snav.sn-app .sn-t{display:none}.snav.sn-app .sn-more{display:block}}
   @media (max-width:1233px){
-    .snav.sn-app .sn-x,.snav.sn-app .sn-ml,.snav.sn-app .sn-meth .sn-l,.snav.sn-app .sn-contact .sn-l{display:none}
+    .snav.sn-app .sn-x,.snav.sn-app .sn-ml,.snav.sn-app .sn-meth .sn-l{display:none}
     .snav.sn-app .sn-ms{display:inline-flex}
     .snav.sn-app .sn-meth .sn-ico{display:block}
     .snav.sn-app .lm-site{display:grid}
-    .snav.sn-app .sn-meth,.snav.sn-app .sn-contact{padding:0 7px}
+    .snav.sn-app .sn-meth{padding:0 7px}
   }
 
   /* the dropdown panels */
@@ -496,7 +496,7 @@ NAV_SCRIPT = (
 def site_nav(current=None):
     """The menu bar on every page: Map, Dashboard, then the deep dives (the
     themes by name, the lender profiles in a dropdown), then Methodology and
-    Contact me (the author's LinkedIn), and on the map a coffee cup after
+    Contact me (the author's LinkedIn, its logo alone), and on the map a coffee cup after
     it. As the window narrows the themes and
     lenders fold into one "Deep dives" dropdown, then everything but
     Methodology and Contact me into "Menu" (LMENU_CSS). The
@@ -590,7 +590,7 @@ def site_nav(current=None):
     bar.append(meth)
     bar.append(f'<a class="sn-a sn-contact" href="{AUTHOR_URL}" target="_blank" rel="noopener noreferrer" '
                f'title="Contact {esc(AUTHOR_NAME)} on LinkedIn (opens in a new tab)" '
-               f'aria-label="Contact me on LinkedIn (opens in a new tab)">{LINKEDIN_ICON}<span class="sn-l">Contact me</span></a>')
+               f'aria-label="Contact me on LinkedIn (opens in a new tab)">{LINKEDIN_ICON}</a>')
     if current == "map":
         # the home's support cup sits in the bar beside Contact me; the other pages keep their own coffee button
         bar.append(f'<a class="sn-a sn-coffee" href="{COFFEE_URL}" target="_blank" rel="noopener noreferrer" '
