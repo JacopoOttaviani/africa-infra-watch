@@ -2890,9 +2890,10 @@ writeHash();
 addEventListener("hashchange", () => { const c = hashCountry(); if(c !== S.country) setCountry(c); });
 renderSources(); renderLede(); fit(); apply();
 if(S.country) zoomToIsos([S.country]);
-/* Unclustered from the start: the dashboard opens on the records themselves,
-   and Cluster markers is one click away when the marks crowd. The state boots
-   at cluster:false, so apply() above has already drawn the individual marks. */
+/* Clustered from the start, as on the map: thousands of marks in the map
+   frame read as noise; a few dozen donuts read as a distribution. The state
+   boots at cluster:false and setCluster turns it on once Leaflet is there. */
+setCluster(true);
 </script>
 </body>
 </html>
