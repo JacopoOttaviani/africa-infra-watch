@@ -128,7 +128,7 @@
   .made a:hover{color:var(--accent);border-color:var(--accent)}
   .lede{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:4px 0 0}
   .lede strong{color:var(--ink);font-weight:600}
-  .asof{margin:6px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3)}
+  .asof{margin:0;padding:12px 20px 16px;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3)}
   .asof b{font-weight:500;color:var(--ink-2)}
   .asof em{font-style:normal;color:var(--ink-3)}
   .close{display:none;width:30px;height:30px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);font-size:16px;line-height:1}
@@ -793,7 +793,6 @@ async function loadPayload(){
 </svg><h1><span class="wm-r">Africa</span>Watch</h1></a></div>
       <p class="made">made with <span class="heart" aria-hidden="true">♥</span><span class="sr">love</span> by Jacopo Ottaviani (<a href="https://www.linkedin.com/in/jacopo-ottaviani/" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani on LinkedIn">LinkedIn</a>, <a href="https://jacopoottaviani.com/" target="_blank" rel="noopener noreferrer" title="Jacopo Ottaviani's website">Web</a>)</p>
       <p class="lede" id="lede"></p>
-      <p class="asof" id="asof"></p>
       <nav class="tabs map-only" aria-label="View">
         <button class="tab" data-t="map" aria-current="true">Map view</button>
         <a class="tab pages-only" href="dashboard.html">Dashboard view</a>
@@ -861,6 +860,8 @@ async function loadPayload(){
       <h3>Contents</h3>
       <nav class="toc" id="toc" aria-label="Methodology sections"></nav>
     </div>
+
+    <p class="asof" id="asof"></p>
 
     <footer class="railfoot"><div class="sf"><div class="sf-grid"><div class="sf-brand"><a class="sf-home" href="index.html"><svg class="mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1em" height="1em">
 
